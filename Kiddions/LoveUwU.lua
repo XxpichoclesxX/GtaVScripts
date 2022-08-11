@@ -177,7 +177,7 @@ OnlMenu:add_array_item("Sesiones Online", {"Unirse Sezion publica", "Iniciar Sez
 OnlMenu:add_action("Bypasear Error De Transaxion", function() if globals.get_int(4535612) == 20 or globals.get_int(4535612) == 4 then globals.set_int(4535606, 0) end end)
 OnlMenu:add_action("Remover tiempo de espera de VIP O MC", function() stats.set_int("MPPLY_VIPGAMEPLAYDISABLEDTIMER", 0) end)
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-local TrolMenu = mainMenu:add_submenu("Trolio")u
+local TrolMenu = mainMenu:add_submenu("Trolio")
 TrolMenu:add_action("En un futuro no muy lejano...", function() end)
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local function GetUndeadOffradar()
@@ -556,4 +556,16 @@ mmVmenu:add_float_range("Sale Specialist Dealer", 0.5, 2, 1000, function() retur
 mmVmenu:add_float_range("Upgrade Cost Showroom", 0.25, 0, 1000, function() return globals.get_float(281606) end, function(value) globals.set_float(281606, value) end)
 mmVmenu:add_float_range("Upgrade Cost Specialist Dealer", 0.25, 0, 1000, function() return globals.get_float(281607) end, function(value) globals.set_float(281607, value) end)
 mmVmenu:add_action("-----Testeado:solo public; ~Max=310k------------", function() end)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+local monMenu = dinMenu:add_submenu("Lup De Dineroz$$$")
+monMenu:add_action("Super Inzeguro tu, Cuidao", function() end)
+monMenu:add_action("No selexionar muxhas al mismo tienpo", function() end)
+monMenu:add_action("Despues de una esperar 2m", function() end)
+monMenu:add_action("para la siguiente", function() end)
+monMenu:add_toggle("500k/ 30s", function() return enable1 end, function() enable1 = not enable1 while enable1 == true do Loop1(enable1) end end) local function Loop2(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(p) end end
+monMenu:add_toggle("750k/ 30s", function() return enable2 end, function() enable2 = not enable2 while enable2 == true do Loop2(enable2) end end) local function Loop3(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(z) g(m, x) s(z) g(m, k) s(q) end end
+monMenu:add_toggle("1M/ 60s", function() return enable3 end, function() enable3 = not enable3 while enable3 == true do Loop3(enable3) end end) local function Loop4(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(q) end end
+monMenu:add_toggle("1.5M/ 60s", function() return enable4 end, function() enable4 = not enable4 while enable4 == true do Loop4(enable4) end end) local function Loop5(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(r) end end
+monMenu:add_toggle("3M/ 120s", function() return enable5 end, function() enable5 = not enable5 while enable5 == true do Loop5(enable5) end end)
+monMenu:add_action("-----Testeado:solo public, INZEGURO!!!------------", function() end)
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
