@@ -495,21 +495,21 @@ end)
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local vehMenu = mainMenu:add_submenu("Vehiculos")
 vehMenu:add_action("Fase de testeo", function() end)
---vehMenu:add_action("En un futuro no muy lejano...", function() end)
---vehMenu:add_action("Me dio weba la verdad, putos nativos de", function() end)
---vehMenu:add_action("los coches <333", function() end)
+vehMenu:add_action("En un futuro no muy lejano...", function() end)
+vehMenu:add_action("Me dio weba la verdad, putos nativos de", function() end)
+vehMenu:add_action("los coches <333", function() end)
 
-local function OnVehicleChanged(oldVehicle, newVehicle)
-	if newVehicle ~= nil then
-		if newVehicle:get_model_hash() == 0x586765fb then
-			newVehicle:set_number_plate_text('borrar')
-		end
+--local function OnVehicleChanged(oldVehicle, newVehicle)
+--	if newVehicle ~= nil then
+--		if newVehicle:get_model_hash() == 0x586765fb then
+--			newVehicle:set_number_plate_text('borrar')
+--		end
 	
-		-- newVehicle:set_health(1000)
-	end
-end
+--		-- newVehicle:set_health(1000)
+--	end
+--end
 
-vehMenu:add_toggle("Borrar Veh Cercanos", function(), OnVehicleChanged)
+vehMenu:add_toggle("Borrar Veh Cercanos", OnVehicleChanged)
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local dinMenu = mainMenu:add_submenu("Dineroz $$$")
