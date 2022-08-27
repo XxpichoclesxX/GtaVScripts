@@ -5,13 +5,13 @@ local script_version = 0.1
 util.toast("Bienvenide Al Script!!")
 local response = false
 local localVer = 2.03
-async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
+async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/blob/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
     if localVer ~= currentVer then
-        util.toast("Hay una actualizacion disponible (posiblemente), reinicia para actualizarlo.")
+        util.toast("Hay una actualizacion disponible, reinicia para actualizarlo.")
         menu.action(menu.my_root(), "Actualizar Lua", {}, "", function()
-            async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeStand.lua',function(a)
+            async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/blob/main/Stand/lib/RyzeStand.lua',function(a)
                 local err = select(2,load(a))
                 if err then
                     util.toast("Hubo un fallo porfavor procede a la actualizacion manual con github.")
@@ -103,42 +103,6 @@ function raycast_gameplay_cam(flag, distance)
     return {p1, p2, p3, p4}
 end
 
-vehicle_uses = 0
-
-function mod_uses(type, incr)
-    -- this func is a patch. every time the script loads, all the toggles load and set their state. in some cases this makes the _uses optimization negative and breaks things. this prevents that.
-    if incr < 0 and is_loading then
-        -- ignore if script is still loading
-        return
-    end
-    if type == "vehicle" then
-        if vehicle_uses <= 0 and incr < 0 then
-            return
-        end
-        vehicle_uses = vehicle_uses + incr
-    elseif type == "pickup" then
-        if pickup_uses <= 0 and incr < 0 then
-            return
-        end
-        pickup_uses = pickup_uses + incr
-    elseif type == "ped" then
-        if ped_uses <= 0 and incr < 0 then
-            return
-        end
-        ped_uses = ped_uses + incr
-    elseif type == "player" then
-        if player_uses <= 0 and incr < 0 then
-            return
-        end
-        player_uses = player_uses + incr
-    elseif type == "object" then
-        if object_uses <= 0 and incr < 0 then
-            return
-        end
-        object_uses = object_uses + incr
-    end
-end
-
 function direction()
     local c1 = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER.PLAYER_PED_ID(), 0, 5, 0)
     local res = raycast_gameplay_cam(-1, 1000)
@@ -183,10 +147,6 @@ local function kick_player_out_of_veh(player_id)
 
         util.yield()
     end
-end
-
-local function get_transition_state(pid)
-    return memory.read_int(memory.script_global(((2689235 + 1) + (pid * 453)) + 230))
 end
 
 local function get_random_pos_on_radius(pos, radius)
@@ -567,13 +527,6 @@ players.on_join(function(player_id)
 
     crashes = menu.list(malicious, "Crasheos", {}, "Crasheos Op", function(); end)
 
-    local begcrash = {
-		"Hey bro, it would be pretty poggers to close your game for me",
-		"pwease cwash yowour game fowor me",
-		"Close your game. I'm not asking.",
-		"Please close your game, please please please please please",
-	}
-
     menu.action(crashes, "Crasheo V1", {}, "Bloqueado por menus populares", function()
 		menu.trigger_commands("smstext" .. PLAYER.GET_PLAYER_NAME(pid).. " " .. begcrash[math.random(1, #begcrash)])
 		util.yield()
@@ -877,13 +830,13 @@ menu.toggle(protects, "Modo Panico", {"panic"}, "Esto renderiza un modo de anti-
     local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
     local UnblockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Disabled")
     if on_toggle then
-        util.toast("Modo panico activado... suerte")
+        notification("Modo panico activado... suerte", colors.green)
         menu.trigger_commands("desyncall on")
         menu.trigger_command(BlockIncSyncs)
         menu.trigger_command(BlockNetEvents)
         menu.trigger_commands("anticrashcamera on")
     else
-        util.toast("Modo panico desactivado...")
+        notification("Modo panico desactivado...", colors.red)
         menu.trigger_commands("desyncall off")
         menu.trigger_command(UnblockIncSyncs)
         menu.trigger_command(UnblockNetEvents)
@@ -1409,47 +1362,47 @@ menu.action(army, "Limpiar G", {}, "", function()
     end
 end)
 
-colorizev_root = menu.list(fun, "Colorear coches", {"lancescriptcolorize"}, "Pinta los coches de alrededor!")
+--colorizev_root = menu.list(fun, "Colorear coches", {"lancescriptcolorize"}, "Pinta los coches de alrededor!")
 
-custom_r = 254
-menu.slider(colorizev_root, "Custom R", {"colorizecustomr"}, "", 1, 255, 254, 1, function(s)
-    custom_r = s
-end)
+--custom_r = 254
+--menu.slider(colorizev_root, "Custom R", {"colorizecustomr"}, "", 1, 255, 254, 1, function(s)
+--    custom_r = s
+--end)
 
-custom_g = 2
-menu.slider(colorizev_root, "Custom G", {"colorizecustomg"}, "", 1, 255, 2, 1, function(s)
-    custom_g = s
-end)
+--custom_g = 2
+--menu.slider(colorizev_root, "Custom G", {"colorizecustomg"}, "", 1, 255, 2, 1, function(s)
+--    custom_g = s
+--end)
 
-custom_b = 252
-menu.slider(colorizev_root, "Custom B", {"colorizecustomb"}, "", 1, 255, 252, 1, function(s)
-    custom_b = s
-end)
+--custom_b = 252
+--menu.slider(colorizev_root, "Custom B", {"colorizecustomb"}, "", 1, 255, 252, 1, function(s)
+--    custom_b = s
+--end)
 
-menu.action(colorizev_root, "RGB preset: Stand magenta", {"rpstandmagenta"}, "g", function(on_click)
-    menu.trigger_commands("colorizecustomr 254")
-    menu.trigger_commands("colorizecustomg 2")
-    menu.trigger_commands("colorizecustomb 252")
-end)
+--menu.action(colorizev_root, "RGB preset: Stand magenta", {"rpstandmagenta"}, "g", function(on_click)
+--    menu.trigger_commands("colorizecustomr 254")
+ --   menu.trigger_commands("colorizecustomg 2")
+ --   menu.trigger_commands("colorizecustomb 252")
+--end)
 
-menu.toggle(colorizev_root, "Colorize vehicles", {"colorizevehicles"}, "Colorizes all nearby vehicles with the valus you set! Turn on rainbow to RGB this ;", function(on)
-    if on then
-        colorize_cars = true
-        custom_rgb = true
-        mod_uses("vehicle", 1)
-    else
-        colorize_cars = false
-        custom_rgb = false
-        mod_uses("vehicle", -1)
-    end
-end, false)
+--menu.toggle(colorizev_root, "Colorize vehicles", {"colorizevehicles"}, "Colorizes all nearby vehicles with the valus you set! Turn on rainbow to RGB this ;", function(on)
+--    if on then
+--        colorize_cars = true
+--        custom_rgb = true
+--        mod_uses("vehicle", 1)
+--    else
+--        colorize_cars = false
+--        custom_rgb = false
+--        mod_uses("vehicle", -1)
+--    end
+--end, false)
 
-menu.toggle(colorizev_root, "Rainbow", {"rainbowvehicles"}, "Requires colorize vehicles to be turned on.", function(on)
-    if not colorize_cars then
-        menu.trigger_commands("colorizevehicles on")
-    end
-    custom_rgb = not on
-end, false)
+--menu.toggle(colorizev_root, "Rainbow", {"rainbowvehicles"}, "Requires colorize vehicles to be turned on.", function(on)
+--    if not colorize_cars then
+--        menu.trigger_commands("colorizevehicles on")
+--    end
+--    custom_rgb = not on
+--end, false)
 
 local nuke_gun_toggle = menu.toggle(fun, "Arma Nuclear", {"JSnukeGun"}, "El rpg dispara nukes", function(toggle)
     nuke_running = toggle	
