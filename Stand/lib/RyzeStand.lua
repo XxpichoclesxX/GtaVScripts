@@ -172,6 +172,7 @@ players.on_join(function(player_id)
     menu.divider(menu.player_root(player_id), "RyzeScript")
     local malicious = menu.list(menu.player_root(player_id), "Malicioso")
     local trolling = menu.list(menu.player_root(player_id), "Troleado")
+    local vehicle = menu.list(menu.player_root(player_id), "Vehiculo")
 
     local explosion = 18
     local explosion_names = {
@@ -526,6 +527,36 @@ players.on_join(function(player_id)
     end)
 
 
+    local options <const> = {"Lazer", "Mammatus",  "Cuban800"}
+	menu.action_slider(malicious, ("Kamikaze (Test)"), {}, "", options, function (index, plane)
+		local hash <const> = util.joaat(plane)
+		request_model(hash)
+		local targetPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+		local pos = players.get_position(targetPed, 20.0, 20.0)
+		pos.z = pos.z + 30.0
+		local plane = entities.create_vehicle(hash, pos, 0.0)
+		players.get_position(plane, targetPed, true)
+		VEHICLE.SET_VEHICLE_FORWARD_SPEED(plane, 150.0)
+		VEHICLE.CONTROL_LANDING_GEAR(plane, 3)
+	end)
+
+
+    local msg = ("Ya lo siguen los mercenarios")
+
+	menu.action(trolling, ("Enviar Mercenarios"), {}, "", function()
+		if NETWORK.NETWORK_IS_SESSION_STARTED() and NETWORK.NETWORK_IS_PLAYER_ACTIVE(pid) and
+		not PED.IS_PED_INJURED(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)) and not is_player_in_interior(pid) then
+
+			if not NETWORK.NETWORK_IS_SCRIPT_ACTIVE("am_gang_call", 1, true, 0) then
+				local bits_addr = memory.script_global(1853348 + (players.user() * 834 + 1) + 140)
+				memory.write_int(bits_addr, SetBit(memory.read_int(bits_addr), 1))
+				write_global.int(1853348 + (players.user() * 834 + 1) + 141, pid)
+			else
+				notification:help(msg, HudColour.red)
+			end
+		end
+	end) 
+
 
 
     crashes = menu.list(malicious, "Crasheos", {}, "Crasheos Op", function(); end)
@@ -620,6 +651,8 @@ players.on_join(function(player_id)
         end
     end)
 
+
+
     local glitchVeh = false
     local glitchVehCmd
     glitchVehCmd = menu.toggle(trolling, "Glitchear Coche", {"glitchvehicle"}, "", function(toggle) -- credits to soul reaper for base concept
@@ -683,9 +716,6 @@ players.on_join(function(player_id)
             end
         end
     end)
-
-
-
 
 end)
 
@@ -816,7 +846,20 @@ menu.toggle_loop(detections, "Arma En Interior", {}, "", function()
     end
 end)
 
+menu.toggle_loop(detections, "Es Hacker", {}, "", function()
+    for _, pid in ipairs(players.list(false, true, true)) do
+        local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local reason = PLAYER.NETWORK_PLAYER_GET_CHEATER_REASON(pid)
+        if players.NETWORK_PLAYER_IS_CHEATER(pid) then
+            util.draw_debug_text(players.get_name(pid) .. " Estan por banearle :u")
+            util.draw_debug_text(detections.reason(pid) .. " Razon:")
+            break
+        end
+    end
+end)
 
+--------------------------------------------------------------------------------------------------------------------------------
+--Online
 menu.toggle_loop(online, "Adicto de SH", {}, "Una manera de tener script host", function()
     if players.get_script_host() ~= players.user() and get_transition_state(players.user()) ~= 0 then
         menu.trigger_command(menu.ref_by_path("Players>"..players.get_name_with_tags(players.user())..">Friendly>Give Script Host"))
