@@ -2,16 +2,17 @@ util.keep_running()
 util.require_natives(1651208000)
 
 
+
 util.toast("Bienvenide Al Script!!")
 local response = false
 local localVer = 0.3
-async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/blob/main/Stand/lib/RyzeScriptVersion.lua", function(output)
+async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
     if localVer ~= currentVer then
         util.toast("Hay una actualizacion disponible, reinicia para actualizarlo.")
         menu.action(menu.my_root(), "Actualizar Lua", {}, "", function()
-            async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/blob/main/Stand/lib/RyzeStand.lua',function(a)
+            async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeStand.lua',function(a)
                 local err = select(2,load(a))
                 if err then
                     util.toast("Hubo un fallo porfavor procede a la actualizacion manual con github.")
