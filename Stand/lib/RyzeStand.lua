@@ -5,7 +5,6 @@ util.require_natives(1651208000)
 local script_version = 0.1
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 2.03
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/blob/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
