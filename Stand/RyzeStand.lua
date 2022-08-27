@@ -1,7 +1,7 @@
 util.keep_running()
 util.require_natives(1651208000)
 
-local script_version = 0.1
+local script_version = 0.2
 util.toast("Bienvenide Al Script!!")
 
 
@@ -855,18 +855,6 @@ menu.toggle_loop(anticage, "Anti Jaula", {"anticage"}, "", function()
         end
         SHAPETEST.RELEASE_SCRIPT_GUID_FROM_ENTITY(obj_handle)
     end
-end)
-
-menu.toggle_loop(protects, "Bloquear PTFX", {}, "", function()
-    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
-    GRAPHICS.REMOVE_PARTICLE_FX_IN_RANGE(coords.x, coords.y, coords.z, 400)
-    GRAPHICS.REMOVE_PARTICLE_FX_FROM_ENTITY(players.user_ped())
-end)
-
-menu.toggle_loop(protections, "Block Fire Lag", {}, "", function()
-    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
-    FIRE.STOP_FIRE_IN_RANGE(coords.x, coords.y, coords.z, 100)
-    FIRE.STOP_ENTITY_FIRE(players.user_ped())
 end)
 
 
