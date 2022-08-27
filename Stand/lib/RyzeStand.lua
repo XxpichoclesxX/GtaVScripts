@@ -103,6 +103,8 @@ function raycast_gameplay_cam(flag, distance)
     return {p1, p2, p3, p4}
 end
 
+vehicle_uses = 0
+
 function mod_uses(type, incr)
     -- this func is a patch. every time the script loads, all the toggles load and set their state. in some cases this makes the _uses optimization negative and breaks things. this prevents that.
     if incr < 0 and is_loading then
