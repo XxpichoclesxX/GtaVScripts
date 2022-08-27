@@ -9,7 +9,7 @@ async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/St
     currentVer = tonumber(output)
     response = true
     if localVer ~= currentVer then
-        util.toast("Hay una actualizacion disponible, reinicia para actualizarlo.")
+        util.toast("Hay una actualizacion disponible (posiblemente), reinicia para actualizarlo.")
         menu.action(menu.my_root(), "Actualizar Lua", {}, "", function()
             async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeStand.lua',function(a)
                 local err = select(2,load(a))
