@@ -69,12 +69,6 @@ function rotation_to_direction(rotation)
     return direction
 end
 
-function log(content)
-    if verbose then
-        util.log("[RyzeScript] " .. content)
-    end
-end
-
 function raycast_gameplay_cam(flag, distance)
     local ptr1, ptr2, ptr3, ptr4 = memory.alloc(), memory.alloc(), memory.alloc(), memory.alloc()
     local cam_rot = CAM.GET_GAMEPLAY_CAM_ROT(0)
@@ -113,10 +107,8 @@ function mod_uses(type, incr)
     -- this func is a patch. every time the script loads, all the toggles load and set their state. in some cases this makes the _uses optimization negative and breaks things. this prevents that.
     if incr < 0 and is_loading then
         -- ignore if script is still loading
-        log("Not incrementing use var of type " .. type .. " by " .. incr .. "- script is loading")
         return
     end
-    log("Incrementing use var of type " .. type .. " by " .. incr)
     if type == "vehicle" then
         if vehicle_uses <= 0 and incr < 0 then
             return
