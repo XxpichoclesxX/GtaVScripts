@@ -1105,6 +1105,18 @@ menu.slider(protects, "Radio de limpiar", {"clearradius"}, "Radio para limpiar",
     radius = s
 end)
 
+menu.toggle_loop(protects, "Bloquear Lag/Fuego", {}, "", function()
+    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
+    FIRE.STOP_FIRE_IN_RANGE(coords.x, coords.y, coords.z, 100)
+    FIRE.STOP_ENTITY_FIRE(players.user_ped())
+end)
+
+menu.toggle_loop(protects, "Bloquear PTFX", {}, "", function()
+    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
+    GRAPHICS.REMOVE_PARTICLE_FX_IN_RANGE(coords.x, coords.y, coords.z, 400)
+    GRAPHICS.REMOVE_PARTICLE_FX_FROM_ENTITY(players.user_ped())
+end)
+
 --------------------------------------------------------------------------------------------------------------------------------
 -- Coches
 menu.toggle_loop(vehicles, "GodMode Silencioso", {}, "No lo detectaran la mayoria de menus (Exclusivo de Ryze)", function()
