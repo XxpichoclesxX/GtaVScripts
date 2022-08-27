@@ -1346,132 +1346,246 @@ end
 
 Text("Protexiones")
 Text("----------")
+local function CeoKick(bool)
+	if bool then 
+		globals.set_bool(1664101, true) 
+	else
+		globals.set_bool(1664101, false)
+	end
+end
+
+local function CeoBan(bool)
+	if bool then 
+		globals.set_bool(1664123, true) 
+	else
+		globals.set_bool(1664123, false)
+	end
+end
+
 local function SoundSpam(bool)
 	if bool then 
-		globals.set_bool(1659419, true)
+		globals.set_bool(1663996, true)
+		globals.set_bool(1664365, true)
+		globals.set_bool(1663509, true)
+		globals.set_bool(1664649, true)
+		globals.set_bool(1664175, true)
+		globals.set_bool(1663536, true)
+
 	else
-		globals.set_bool(1659419, false)
+		globals.set_bool(1663996, false)
+		globals.set_bool(1664365, false)
+		globals.set_bool(1663509, false)
+		globals.set_bool(1664649, false)
+		globals.set_bool(1664175, false)
+		globals.set_bool(1663536, false)
 	end
 end
 
-local function Kick(bool)
-	if bool then 
-		globals.set_bool(1660149, true)  
-		globals.set_bool(1660054, true)
-		globals.set_bool(1659403, true)
-		globals.set_bool(1659406, true)
-		globals.set_bool(1659407, true)
-		globals.set_bool(1659408, true)
-		globals.set_bool(1659409, true)
-		globals.set_bool(1659410, true)
-		globals.set_bool(1659438, true)
-		globals.set_bool(1659733, true)
-		globals.set_bool(1659772, true)
-		globals.set_bool(1659775, true)
-		globals.set_bool(1659885, true)
-		globals.set_bool(1659889, true)
-		globals.set_bool(1659895, true)
-		globals.set_bool(1659897, true)
-		globals.set_bool(1659905, true)
-		globals.set_bool(1659906, true)
-		globals.set_bool(1659935, true)
-		globals.set_bool(1659943, true)
-		globals.set_bool(1659972, true)
-		globals.set_bool(1659974, true)
-		globals.set_bool(1659979, true)
-		globals.set_bool(1660004, true)
-		globals.set_bool(1660019, true)
-		globals.set_bool(1660020, true)
-		globals.set_bool(1660025, true)
-		globals.set_bool(1660027, true)
-		globals.set_bool(1660040, true)
-		globals.set_bool(1660041, true)
-		globals.set_bool(1660042, true)
-		globals.set_bool(1660043, true)
-		globals.set_bool(1660047, true)
-		globals.set_bool(1660048, true)
-		globals.set_bool(1660054, true)
-		globals.set_bool(1660055, true)
-		globals.set_bool(1660056, true)
-		globals.set_bool(1660106, true)
-		globals.set_bool(1660141, true)
-		globals.set_bool(1660144, true)
-		globals.set_bool(1660146, true)
-		globals.set_bool(1660149, true)
-		globals.set_bool(1660150, true)
-		globals.set_bool(1660183, true)
-		globals.set_bool(1659857, true)	
-		globals.set_bool(1660133, true)
-		globals.set_bool(1659934, true)	
-		globals.set_bool(1659939, true)
+local function InfiniteLoad(bool)
+	if bool then 		
+		globals.set_bool(1664064, true) 
+		globals.set_bool(1664201, true)
 	else
-		globals.set_bool(1659996, false)
-		globals.set_bool(1660054, false)
-		globals.set_bool(1659403, false)
-		globals.set_bool(1659406, false)
-		globals.set_bool(1659407, false)
-		globals.set_bool(1659408, false)
-		globals.set_bool(1659409, false)
-		globals.set_bool(1659410, false)
-		globals.set_bool(1659438, false)
-		globals.set_bool(1659733, false)
-		globals.set_bool(1659775, false)
-		globals.set_bool(1659885, false)
-		globals.set_bool(1659889, false)
-		globals.set_bool(1659895, false)
-		globals.set_bool(1659897, false)
-		globals.set_bool(1659905, false)
-		globals.set_bool(1659906, false)
-		globals.set_bool(1659935, false)
-		globals.set_bool(1659943, false)
-		globals.set_bool(1659972, false)
-		globals.set_bool(1659974, false)
-		globals.set_bool(1659979, false)
-		globals.set_bool(1660004, false)
-		globals.set_bool(1660019, false) 
-		globals.set_bool(1660020, false)
-		globals.set_bool(1660025, false)		
-		globals.set_bool(1660027, false)	
-		globals.set_bool(1660040, false)	
-		globals.set_bool(1660041, false)
-		globals.set_bool(1660042, false)
-		globals.set_bool(1660043, false)
-		globals.set_bool(1660047, false)
-		globals.set_bool(1660048, false)
-		globals.set_bool(1660054, false) 
-		globals.set_bool(1660055, false)
-		globals.set_bool(1660056, false)
-		globals.set_bool(1660106, false)
-		globals.set_bool(1660141, false)
-		globals.set_bool(1660144, false)
-		globals.set_bool(1660146, false)
-		globals.set_bool(1660149, false) 
-		globals.set_bool(1660150, false)
-		globals.set_bool(1660183, false)
-		globals.set_bool(1659857, false)
-		globals.set_bool(1660133, false)
-		globals.set_bool(1659934, false)
-		globals.set_bool(1659939, false)
+		globals.set_bool(1664064, false)
+		globals.set_bool(1664201, false)
 	end
 end
 
-local function Spectate(bool) 
+
+local function Collectibles(bool)
 	if bool then 
-		globals.set_bool(1660461, true)
+		globals.set_bool(1664330, true)
 	else
-		globals.set_bool(1660461, false)
+		globals.set_bool(1664330, false)
+	end
+end
+
+local function PassiveMode(bool)
+	if bool then 
+		globals.set_bool(1664113, true)
+	else
+		globals.set_bool(1664113, false)
+	end
+end
+
+local function TransactionError(bool) 
+	if bool then 
+		globals.set_bool(1663914, true)
+	else
+		globals.set_bool(1663914, false)
+	end
+end
+
+local function RemoveMoneyMessage(bool) 
+	if bool then 
+		globals.set_bool(1663997, true)
+		globals.set_bool(1663543, true)
+		globals.set_bool(1663541, true)
+		globals.set_bool(1664174, true)
+
+	else
+		globals.set_bool(1663997, false)
+		globals.set_bool(1663543, false)
+		globals.set_bool(1663541, false)
+		globals.set_bool(1664174, false)
+
+	end
+end
+
+local function Bounty(bool) 
+	if bool then 
+		globals.set_bool(1663583, true)
+	else
+		globals.set_bool(1663583, false)
+	end
+end
+
+local function ExtraTeleport(bool) 
+	if bool then 
+		globals.set_bool(1664355, true) 
+		globals.set_bool(1664359, true) 
+	else
+		globals.set_bool(1664355, false) 
+		globals.set_bool(1664359, false) 
+	end
+end
+
+
+local function ClearWanted(bool) 
+	if bool then 
+		globals.set_bool(1664055, true)
+	else
+		globals.set_bool(1664055, false)
+	end
+end
+
+local function OffTheRadar(bool) 
+	if bool then 
+		globals.set_bool(1664057, true)
+	else
+		globals.set_bool(1664057, false)
+	end
+end
+
+local function SendCutscene(bool) 
+	if bool then 
+		globals.set_bool(1664320, true)
+	else
+		globals.set_bool(1664320, false)
+	end
+end
+
+local function Godmode(bool) 
+	if bool then 
+		globals.set_bool(1664419, true)
+	else
+		globals.set_bool(1664419, false)
 	end
 end
 
 local function PersonalVehicleDestroy(bool) 
 	if bool then 
-		globals.set_bool(1659872, true)
+		globals.set_bool(1663592, true)
+		globals.set_bool(1664180, true) 
+		globals.set_bool(1664064, true)
+		
 	else
-		globals.set_bool(1659872, false)
+		globals.set_bool(1663592, false)
+		globals.set_bool(1664180, false) 
+		globals.set_bool(1664064, false) 
 	end
 end
 
-protMenu:add_toggle("Bloqear SpamDeSonido", function()
+local function SeKick(bool) 
+	if bool then 
+		globals.set_bool(1664153, true)
+		globals.set_bool(1664270, true) 
+		globals.set_bool(1664168, true)
+		
+	else
+		globals.set_bool(1663592, false)
+		globals.set_bool(1664270, false) 
+		globals.set_bool(1664168, false) 
+	end
+end
+
+local function SeCrash(bool) 
+	if bool then 
+		globals.set_bool(1664068, true)
+		globals.set_bool(1664180, true) 
+		globals.set_bool(1664145, true)
+		globals.set_bool(1664360, true)
+		
+	else
+		globals.set_bool(1664068, false)
+		globals.set_bool(1664180, false) 
+		globals.set_bool(1664145, false) 
+		globals.set_bool(1664360, false)
+	end
+end
+
+local function All(bool) 
+	CeoKick(bool)
+	CeoBan(bool)
+	SoundSpam(bool)
+	InfiniteLoad(bool)
+	PassiveMode(bool)
+	TransactionError(bool)
+	RemoveMoneyMessage(bool)
+	Bounty(bool)
+	ClearWanted(bool)
+	OffTheRadar(bool)
+	PersonalVehicleDestroy(bool)
+	SendCutscene(bool)
+	Godmode(bool)
+	Collectibles(bool)
+	ExtraTeleport(bool)
+	SeCrash(bool)
+	SeKick(bool)
+end
+
+pro:add_toggle("Aktivar todo", function()
+	return boolall
+end, function()
+	boolall = not boolall
+	All(boolall)
+	
+end)
+Text("--")
+
+pro:add_toggle("Blokiar SE-Kick", function()
+	return sek
+end, function()
+	sek = not sek
+	SeKick(boolsek)
+	
+end)
+
+pro:add_toggle("Blokiar SE-Crash", function()
+	return boolsec
+end, function()
+	boolsec = not boolsec
+	SeCrash(boolsec)
+	
+end)
+
+pro:add_toggle("Blokiar Ceo Kick", function()
+	return boolktsp
+end, function()
+	boolktsp = not boolktsp
+	CeoKick(boolktsp)
+	
+end)
+
+pro:add_toggle("Blokiar Ceo Ban", function()
+	return boolcb
+end, function()
+	boolcb = not boolcb
+	CeoBan(boolcb)
+	
+end)
+
+pro:add_toggle("Blokiar sonido no deseado", function()
 	return boolsps
 end, function()
 	boolsps = not boolsps
@@ -1479,23 +1593,63 @@ end, function()
 	
 end)
 
-protMenu:add_toggle("Bloqear kickeos (Beta XD)", function()
-	return boolk
+pro:add_toggle("Blokiar pantalla de carga infinita", function()
+	return boolil
 end, function()
-	boolk = not boolk
-	Kick(boolk)
+	boolil = not boolil
+	InfiniteLoad(boolil)
 	
 end)
 
-protMenu:add_toggle("Bloqear spectear (puede buguearte)", function()
-	return boolspe
+pro:add_toggle("Blokiar modo pasivo", function()
+	return boolb
 end, function()
-	boolspe = not boolspe
-	Spectate(boolspe)
+	boolb = not boolb
+	PassiveMode(boolb)
 	
 end)
 
-protMenu:add_toggle("Blokiar Destruxion De Tu Veh", function()
+pro:add_toggle("Blokiar error de transacción", function()
+	return boolte
+end, function()
+	boolte = not boolte
+	TransactionError(boolte)
+	
+end)
+
+pro:add_toggle("Blokiar notificaciones modificadas/SMS", function()
+	return boolrm
+end, function()
+	boolrm = not boolrm
+	RemoveMoneyMessage(boolrm)
+	
+end)
+
+pro:add_toggle("Blokiar recompensa", function()
+	return boolbo
+end, function()
+	boolbo = not boolbo
+	Bounty(boolbo)
+	
+end)
+
+pro:add_toggle("Blokiar Borrar buscado", function()
+	return boolclw
+end, function()
+	boolclw = not boolclw
+	ClearWanted(boolclw)
+	
+end)
+
+pro:add_toggle("Blokiar fuera del radar", function()
+	return boolotr
+end, function()
+	boolotr = not boolotr
+	OffTheRadar(boolotr)
+	
+end)
+
+pro:add_toggle("Blokiar destrucción de vehículos personales", function()
 	return boolpvd
 end, function()
 	boolpvd = not boolpvd
@@ -1503,6 +1657,37 @@ end, function()
 	
 end)
 
+pro:add_toggle("Blokiar enviar a escena", function()
+	return boolstc
+end, function()
+	boolstc = not boolstc
+	SendCutscene(boolstc)
+	
+end)
+
+pro:add_toggle("Blokiar Eliminar Modo Dios", function()
+	return boolgod
+end, function()
+	boolgod = not boolgod
+	Godmode(boolgod)
+	
+end)
+
+pro:add_toggle("Blokiar dar coleccionables", function()
+	return boolgc
+end, function()
+	boolgc = not boolgc
+	Collectibles(boolgc)
+	
+end)
+
+pro:add_toggle("Blokiar Cayo perico y tp a la playa", function()
+	return boolcbt
+end, function()
+	boolcbt = not boolcbt
+	ExtraTeleport(boolcbt)
+	
+end)
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --local vehMenu = mainMenu:add_submenu("Vehiculos")
 --vehMenu:add_action("En un futuro no muy lejano...", function() end)
