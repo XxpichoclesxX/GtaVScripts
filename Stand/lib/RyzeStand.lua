@@ -1,6 +1,7 @@
 util.keep_running()
 util.require_natives(1651208000)
 
+
 local script_version = 0.1
 util.toast("Bienvenide Al Script!!")
 local response = false
@@ -272,6 +273,8 @@ players.on_join(function(player_id)
             menu.set_value(freeze_toggle, false)
         end
     end)
+
+
 
 
 
@@ -820,6 +823,14 @@ menu.toggle_loop(online, "Adicto de SH", {}, "Una manera de tener script host", 
     end
 end)
 
+local maxHealth <const> = 328
+menu.toggle_loop(online, ("Fuera Del Radar Muerto"), {"undeadotr"}, "", function()
+	if ENTITY.GET_ENTITY_MAX_HEALTH(players.user_ped()) ~= 0 then
+		ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), 0)
+	end
+end, function ()
+	ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), maxHealth)
+end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 --Protecciones
@@ -1092,7 +1103,8 @@ end)
 
 menu.slider(protects, "Radio de limpiar", {"clearradius"}, "Radio para limpiar", 100, 10000, 100, 100, function(s)
     radius = s
-  end)
+end)
+
 --------------------------------------------------------------------------------------------------------------------------------
 -- Coches
 menu.toggle_loop(vehicles, "GodMode Silencioso", {}, "No lo detectaran la mayoria de menus (Exclusivo de Ryze)", function()
@@ -1455,6 +1467,7 @@ function executeNuke(pos)
     FIRE.ADD_EXPLOSION(pos.x -8, pos.y +8, pos.z + nuke_height, 82, 10, true, false, 1, false)
     FIRE.ADD_EXPLOSION(pos.x -8, pos.y -8, pos.z + nuke_height, 82, 10, true, false, 1, false)
 end
+
 --------------------------------------------------------------------------------------------------------------------------------
 -- Misc
 --local visual_stuff = {
@@ -1493,7 +1506,7 @@ local misc = menu.list(menu.my_root(), "Misc", {}, "")
 
 menu.hyperlink(menu.my_root(), "Entra al discord!", "https://discord.gg/BNbSHhunPv")
 local credits = menu.list(misc, "Creditos", {}, "")
-menu.action(credits, "Emir, Joju, Pepe, Ady, Vicente, Joju, Sammy", {}, "Esto no seria posible sin ellos, me dieron inspiracion y ganas de seguir este proyecto, los quiero <3", function()
+menu.action(credits, "Emir, Joju, Pepe, Ady, Vicente, Sammy", {}, "Esto no seria posible sin ellos, me dieron inspiracion y ganas de seguir este proyecto, los quiero <3", function()
 end)
 menu.action(credits, "JinxScript", {}, "Me dieron todas las ideas junto con algunos nativos y funciones, ya que soy nuevo en lua de stand :3.", function()
 end)
