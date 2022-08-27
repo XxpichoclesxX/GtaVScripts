@@ -841,13 +841,11 @@ menu.toggle(protects, "Modo Panico", {"panic"}, "Esto renderiza un modo de anti-
     local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
     local UnblockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Disabled")
     if on_toggle then
-        notification("Modo panico activado... suerte", colors.green)
         menu.trigger_commands("desyncall on")
         menu.trigger_command(BlockIncSyncs)
         menu.trigger_command(BlockNetEvents)
         menu.trigger_commands("anticrashcamera on")
     else
-        notification("Modo panico desactivado...", colors.red)
         menu.trigger_commands("desyncall off")
         menu.trigger_command(UnblockIncSyncs)
         menu.trigger_command(UnblockNetEvents)
