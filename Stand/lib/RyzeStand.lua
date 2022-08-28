@@ -5,7 +5,7 @@ util.require_natives(1651208000)
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 0.4
+local localVer = 0.5
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -849,10 +849,8 @@ end)
 menu.toggle_loop(detections, "Es Hacker", {}, "", function()
     for _, pid in ipairs(players.list(false, true, true)) do
         local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-        local reason = PLAYER.NETWORK_PLAYER_GET_CHEATER_REASON(pid)
         if players.NETWORK_PLAYER_IS_CHEATER(pid) then
             util.draw_debug_text(players.get_name(pid) .. " Estan por banearle :u")
-            util.draw_debug_text(detections.reason(pid) .. " Razon:")
             break
         end
     end
