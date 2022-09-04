@@ -5,7 +5,7 @@ util.require_natives(1651208000)
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 0.5
+local localVer = 0.6
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -566,6 +566,29 @@ players.on_join(function(player_id)
 		util.yield()
 		menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(pid))
 	end)
+
+    menu.action(crashes, "Inbloqueable", {}, "Inbloqueable (Por Ahora)", function()
+        local user = players.user()
+        local user_ped = players.user_ped()
+        local pos = players.get_position(user)
+        BlockSyncs(pid, function() 
+            util.yield(100)
+            PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user(), 0xFBF7D21F)
+            WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user_ped, 0xFBAB5776, 100, false)
+            TASK.TASK_PARACHUTE_TO_TARGET(user_ped, pos.x, pos.y, pos.z)
+            util.yield(200)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(user_ped)
+            util.yield(500)
+            WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user_ped, 0xFBAB5776, 100, false)
+            PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user)
+            util.yield(1000)
+            for i = 1, 5 do
+                util.spoof_script("freemode", SYSTEM.WAIT)
+            end
+            ENTITY.SET_ENTITY_HEALTH(user_ped, 0)
+            NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(pos, 0, false, false, 0)
+        end)
+    end)
 
     menu.divider(crashes, "Luego agregare mas.")
     menu.divider(crashes, "(Ryze Exclusivo)")
