@@ -70,6 +70,23 @@ function rotation_to_direction(rotation)
     return direction
 end
 
+local function BlockSyncs(pid, callback)
+    for _, i in ipairs(players.list(false, true, true)) do
+        if i ~= pid then
+            local outSync = menu.ref_by_rel_path(menu.player_root(i), "Outgoing Syncs>Block")
+            menu.trigger_command(outSync, "on")
+        end
+    end
+    util.yield(10)
+    callback()
+    for _, i in ipairs(players.list(false, true, true)) do
+        if i ~= pid then
+            local outSync = menu.ref_by_rel_path(menu.player_root(i), "Outgoing Syncs>Block")
+            menu.trigger_command(outSync, "off")
+        end
+    end
+end
+
 function raycast_gameplay_cam(flag, distance)
     local ptr1, ptr2, ptr3, ptr4 = memory.alloc(), memory.alloc(), memory.alloc(), memory.alloc()
     local cam_rot = CAM.GET_GAMEPLAY_CAM_ROT(0)
