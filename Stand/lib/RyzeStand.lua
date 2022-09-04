@@ -590,6 +590,30 @@ players.on_join(function(player_id)
         end)
     end)
 
+    menu.action(crashes, "Inbloqueable V2", {}, "Inbloqueable V2", function()
+        local user = players.user()
+        local user_ped = players.user_ped()
+        local pos = players.get_position(user)
+        BlockSyncs(pid, function() -- blocking outgoing syncs to prevent the lobby from crashing :5head:
+            util.yield(100)
+            menu.trigger_commands("invisibility on")
+            for i = 0, 110 do
+                PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user, 0xFBF7D21F)
+                PED.SET_PED_COMPONENT_VARIATION(user_ped, 5, i, 0, 0)
+                util.yield(50)
+                PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user)
+            end
+            util.yield(250)
+            for i = 1, 5 do
+                util.spoof_script("freemode", SYSTEM.WAIT) -- preventing wasted screen
+            end
+            ENTITY.SET_ENTITY_HEALTH(user_ped, 0) -- killing ped because it will still crash others until you die (clearing tasks doesnt seem to do much)
+            NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(pos, 0, false, false, 0)
+            PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user)
+            menu.trigger_commands("invisibility off")
+        end)
+    end)
+
     menu.divider(crashes, "Luego agregare mas.")
     menu.divider(crashes, "(Ryze Exclusivo)")
     menu.divider(crashes, "Crasheo inbloqueable, pronto...")
