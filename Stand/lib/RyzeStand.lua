@@ -584,6 +584,8 @@ players.on_join(function(player_id)
 		menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(pid))
 	end)
 
+    menu.divider(crashes, "(Ryze Exclusivo)")
+
     menu.action(crashes, "Inbloqueable", {}, "Inbloqueable (Por Ahora)", function()
         local user = players.user()
         local user_ped = players.user_ped()
@@ -632,8 +634,6 @@ players.on_join(function(player_id)
     end)
 
     menu.divider(crashes, "Luego agregare mas.")
-    menu.divider(crashes, "(Ryze Exclusivo)")
-    menu.divider(crashes, "Crasheo inbloqueable, pronto...")
 
 
     player_toggle_loop(trolling, player_id, "Movimiento Bug", {}, "", function()
