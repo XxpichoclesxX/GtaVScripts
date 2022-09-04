@@ -1,11 +1,10 @@
 util.keep_running()
 util.require_natives(1651208000)
-
-
+util.require_natives("natives-1660775568-uno")
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 0.6
+local localVer = 0.7
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -68,6 +67,10 @@ function rotation_to_direction(rotation)
         z =  math.sin(adjusted_rotation.x)
     }
     return direction
+end
+
+local function get_interior_player_is_in(pid)
+    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 243)) 
 end
 
 local function BlockSyncs(pid, callback)
@@ -578,11 +581,18 @@ players.on_join(function(player_id)
 
     crashes = menu.list(malicious, "Crasheos", {}, "Crasheos Op", function(); end)
 
-    menu.action(crashes, "Crasheo V1", {}, "Bloqueado por menus populares", function()
-		menu.trigger_commands("smstext" .. PLAYER.GET_PLAYER_NAME(pid).. " " .. begcrash[math.random(1, #begcrash)])
-		util.yield()
-		menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(pid))
-	end)
+    --local begcrash = {
+	--	"Hey bro, it would be pretty poggers to close your game for me",
+	--	"pwease cwash yowour game fowor me",
+	--	"Close your game. I'm not asking.",
+	--	"Please close your game, please please please please please",
+	--}
+
+    --menu.action(crashes, "Crasheo V1", {}, "Bloqueado por menus populares", function()
+	--	menu.trigger_commands("smstext" .. PLAYER.GET_PLAYER_NAME(pid).. " " .. begcrash[math.random(1, #begcrash)])
+	--	util.yield()
+	--	menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(pid))
+	--end)
 
     menu.divider(crashes, "(Ryze Exclusivo)")
 
@@ -786,7 +796,7 @@ end)
 
 
 
-menu.slider(world, "Transparencia Local", {"transparency"}, "", 0, 100, 100, 20, function(value)
+menu.slider(world, "Transparencia Local", {"transparency"}, "No funciona muy bien ahora, intentare arreglarlo luego", 0, 100, 100, 20, function(value)
     if value > 80 then
         ENTITY.RESET_ENTITY_ALPHA(players.user_ped())
     else
@@ -920,6 +930,63 @@ menu.toggle_loop(detections, "Es Hacker", {}, "", function()
     end
 end)
 
+menu.toggle_loop(detections, "Correr Rapido", {}, "Detecta si corre mas rapido", function()
+    for _, pid in ipairs(players.list(false, true, true)) do
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local ped_speed = (ENTITY.GET_ENTITY_SPEED(ped)* 2.236936)
+        if not util.is_session_transition_active() and get_interior_player_is_in(pid) == 0 and get_transition_state(pid) ~= 0 
+        and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_IN_ANY_VEHICLE(ped, false)
+        and not TASK.IS_PED_STILL(ped) and not PED.IS_PED_JUMPING(ped) and not ENTITY.IS_ENTITY_IN_AIR(ped) and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped)
+        and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(pid)) <= 300.0 and ped_speed > 30 then -- fastest run speed is about 18ish mph but using 25 to give it some headroom to prevent false positives
+            util.toast(players.get_name(pid) .. " Usa correr rapido")
+            break
+        end
+    end
+end)
+
+menu.toggle_loop(detections, "Noclip", {}, "Detecta si el jugador esta levitando", function()
+    for _, pid in ipairs(players.list(false, true, true)) do
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local ped_ptr = entities.handle_to_pointer(ped)
+        local vehicle = PED.GET_VEHICLE_PED_IS_USING(ped)
+        local oldpos = players.get_position(pid)
+        util.yield()
+        local currentpos = players.get_position(pid)
+        local vel = ENTITY.GET_ENTITY_VELOCITY(ped)
+        if not util.is_session_transition_active() and players.exists(pid)
+        and get_interior_player_is_in(pid) == 0 and get_transition_state(pid) ~= 0
+        and not PED.IS_PED_IN_ANY_VEHICLE(ped, false) -- too many false positives occured when players where driving. so fuck them. lol.
+        and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped)
+        and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped) and not PED.IS_PED_USING_SCENARIO(ped)
+        and not TASK.GET_IS_TASK_ACTIVE(ped, 160) and not TASK.GET_IS_TASK_ACTIVE(ped, 2)
+        and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(pid)) <= 395.0 -- 400 was causing false positives
+        and ENTITY.GET_ENTITY_HEIGHT_ABOVE_GROUND(ped) > 0.0 and not ENTITY.IS_ENTITY_IN_AIR(ped) and entities.player_info_get_game_state(ped_ptr) == 0
+        and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
+        and vel.x == 0.0 and vel.y == 0.0 and vel.z == 0.0 
+        and TASK.IS_PED_STILL(ped) then
+            util.toast(players.get_name(pid) .. " Esta usando Noclip")
+            util.log(players.get_name(pid) .. " Esta usando Noclip")
+            break
+        end
+    end
+end)
+
+menu.toggle_loop(detections, "Spectateando", {}, "Detecta si te espectea o a alguien mas", function()
+    for _, pid in ipairs(players.list(false, true, true)) do
+        for i, interior in ipairs(interior_stuff) do
+            local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+            if not util.is_session_transition_active() and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior
+            and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
+                if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(pid)) < 15.0 and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(pid)) > 20.0 then
+                    util.toast(players.get_name(pid) .. " Esta especteandote")
+                elseif v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(pid)) < v3.distance(ENTITY.GET_ENTITY_COORDS(ped, false), players.get_cam_pos(pid)) - 5 then
+                    util.toast(players.get_name(pid) .. " Esta spectando a alguien")
+                    break
+                end
+            end
+        end
+    end
+end)
 --------------------------------------------------------------------------------------------------------------------------------
 --Online
 menu.toggle_loop(online, "Adicto de SH", {}, "Una manera de tener script host", function()
@@ -937,6 +1004,10 @@ end, function ()
 	ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), maxHealth)
 end)
 
+
+menu.action(online, "Desbloquear M16", {""}, "", function()
+    memory.write_int(memory.script_global(262145 + 524401), 1)
+end)
 --------------------------------------------------------------------------------------------------------------------------------
 --Protecciones
 
@@ -1222,9 +1293,9 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- Coches
-menu.toggle_loop(vehicles, "GodMode Silencioso", {}, "No lo detectaran la mayoria de menus (Exclusivo de Ryze)", function()
+menu.toggle_loop(vehicles, "GodMode Silencioso", {}, "No sera detectado por la mayoria de menus", function()
     ENTITY.SET_ENTITY_PROOFS(entities.get_user_vehicle_as_handle(), true, true, true, true, true, 0, 0, true)
-    end, function() ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(player), false, false, false, false, false, 0, 0, false)
+    end, function() ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(players.user(), false), false, false, false, false, false, 0, 0, false)
 end)
 
 menu.toggle_loop(vehicles, "Luces Indicadoras", {}, "", function()
@@ -1315,27 +1386,6 @@ rapid_khanjali = menu.toggle_loop(vehicles, "Fuego Rapido Khanjali", {}, "", fun
     else
         util.toast("Entra a un khanjali.")
         menu.trigger_command(rapid_khanjali, "apagao")
-    end
-end)
-
-mph_plate = false
-menu.toggle(vehicles, "Placa De Velocidad", {"speedplate"}, "Placa que muestra la velocidad de tu coche", function(on)
-    if on then
-        if player_cur_car ~= 0 then
-            original_plate = VEHICLE.GET_VEHICLE_NUMBER_PLATE_TEXT(player_cur_car)
-        else
-            util.toast("No estabas en un vehiculo (placa inrevertible).")
-            original_plate = "RYZE"
-        end
-        mph_plate = true
-    else
-        if player_cur_car ~= 0 then
-            if original_plate == nil then
-                original_plate = "RYZE"
-            end
-            VEHICLE.SET_VEHICLE_NUMBER_PLATE_TEXT(player_cur_car, original_plate)
-        end
-        mph_plate = false
     end
 end)
 
