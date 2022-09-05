@@ -586,6 +586,8 @@ players.on_join(function(player_id)
 	--	"pwease cwash yowour game fowor me",
 	--	"Close your game. I'm not asking.",
 	--	"Please close your game, please please please please please",
+	--	"Bro im not asking plz. CLoseit'",
+	--	"Craaash iiiit come on!",
 	--}
 
     --menu.action(crashes, "Crasheo V1", {}, "Bloqueado por menus populares", function()
