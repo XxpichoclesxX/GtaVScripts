@@ -1,7 +1,7 @@
---This was coded and rebuild by XxpichoclesxX#0427
---Love ya this is a rebuild of past codes and some improovements that some friends helped me with
+-- This was coded and rebuild by XxpichoclesxX#0427
+-- Love ya this is a rebuild of past codes and some improovements that some friends helped me with
 -- Enjoy this and if you find any bug just write me on discord (XxpichoclesxX#0427)
---With love Picho <3
+-- With love Picho <3
 
 require_game_build(2699) -- v1.61
 
