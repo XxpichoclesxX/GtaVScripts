@@ -4,7 +4,7 @@ util.require_natives("natives-1660775568-uno")
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 0.9
+local localVer = 1.0
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -929,27 +929,26 @@ end)
 --Detecciones
 menu.toggle_loop(detections, "Godmode", {}, "Saldran en modo debug si se detectan.", function()
     for _, pid in ipairs(players.list(false, true, true)) do
-        local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-        local pos = ENTITY.GET_ENTITY_COORDS(player, false)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
         for i, interior in ipairs(interior_stuff) do
-            if (players.is_godmode(pid) or not ENTITY._GET_ENTITY_CAN_BE_DAMAGED(player)) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(player) and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior then
-                util.draw_debug_text(players.get_name(pid) .. " Tiene godmode :o")
+            if (players.is_godmode(pid) or not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(ped)) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior then
+                util.draw_debug_text(players.get_name(pid) .. " Esta en godmode")
                 break
             end
         end
     end 
 end)
 
-
 menu.toggle_loop(detections, "Godmode De Coche", {}, "Saldran en modo debug si se detectan.", function()
     for _, pid in ipairs(players.list(false, true, true)) do
-        local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-        local pos = ENTITY.GET_ENTITY_COORDS(player, false)
-        local player_veh = PED.GET_VEHICLE_PED_IS_USING(player)
-        if PED.IS_PED_IN_ANY_VEHICLE(player, true) then
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
+        local player_veh = PED.GET_VEHICLE_PED_IS_USING(ped)
+        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
             for i, interior in ipairs(interior_stuff) do
-                if not ENTITY._GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(player) and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior then
-                    util.draw_debug_text(players.get_name(pid) .. " Su coche tiene godmode :o")
+                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior then
+                    util.draw_debug_text(players.get_name(pid) .. " Su coche tiene GodMode")
                     break
                 end
             end
@@ -959,11 +958,11 @@ end)
 
 menu.toggle_loop(detections, "Arma Modeada", {}, "", function()
     for _, pid in ipairs(players.list(false, true, true)) do
-        local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
         for i, hash in ipairs(modded_weapons) do
             local weapon_hash = util.joaat(hash)
-            if WEAPON.HAS_PED_GOT_WEAPON(player, weapon_hash, false) then
-                util.draw_debug_text(players.get_name(pid) .. " Tiene arma modeada")
+            if WEAPON.HAS_PED_GOT_WEAPON(ped, weapon_hash, false) and (WEAPON.IS_PED_ARMED(ped, 7) or TASK.GET_IS_TASK_ACTIVE(ped, 8) or TASK.GET_IS_TASK_ACTIVE(ped, 9)) then
+                util.toast(players.get_name(pid) .. " Esta usando arma mod")
                 break
             end
         end
@@ -977,6 +976,17 @@ menu.toggle_loop(detections, "Coche Modeada", {}, "", function()
             if modelHash == util.joaat(name) then
                 util.draw_debug_text(players.get_name(pid) .. " Tiene coche modeado")
                 break
+            end
+        end
+    end
+end)
+
+menu.toggle_loop(detections, "Coche sin salir", {}, "Detecta si alguien usa un coche sin haber salido.", function()
+    for _, pid in ipairs(players.list(false, true, true)) do
+        local modelHash = players.get_vehicle_model(pid)
+        for i, name in ipairs(unreleased_vehicles) do
+            if modelHash == util.joaat(name) then
+                util.draw_debug_text(players.get_name(pid) .. " Conduce un coche sin haber salido")
             end
         end
     end
@@ -1028,16 +1038,14 @@ menu.toggle_loop(detections, "Noclip", {}, "Detecta si el jugador esta levitando
         if not util.is_session_transition_active() and players.exists(pid)
         and get_interior_player_is_in(pid) == 0 and get_transition_state(pid) ~= 0
         and not PED.IS_PED_IN_ANY_VEHICLE(ped, false) -- too many false positives occured when players where driving. so fuck them. lol.
-        and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped)
+        and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped)
         and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped) and not PED.IS_PED_USING_SCENARIO(ped)
         and not TASK.GET_IS_TASK_ACTIVE(ped, 160) and not TASK.GET_IS_TASK_ACTIVE(ped, 2)
         and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(pid)) <= 395.0 -- 400 was causing false positives
-        and ENTITY.GET_ENTITY_HEIGHT_ABOVE_GROUND(ped) > 0.0 and not ENTITY.IS_ENTITY_IN_AIR(ped) and entities.player_info_get_game_state(ped_ptr) == 0
+        and ENTITY.GET_ENTITY_HEIGHT_ABOVE_GROUND(ped) > 5.0 and not ENTITY.IS_ENTITY_IN_AIR(ped) and entities.player_info_get_game_state(ped_ptr) == 0
         and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
-        and vel.x == 0.0 and vel.y == 0.0 and vel.z == 0.0 
-        and TASK.IS_PED_STILL(ped) then
-            util.toast(players.get_name(pid) .. " Esta usando Noclip")
-            util.log(players.get_name(pid) .. " Esta usando Noclip")
+        and vel.x == 0.0 and vel.y == 0.0 and vel.z == 0.0 then
+            util.toast(players.get_name(pid) .. " Esta usando noclip")
             break
         end
     end
@@ -1050,10 +1058,24 @@ menu.toggle_loop(detections, "Spectateando", {}, "Detecta si te espectea o a alg
             if not util.is_session_transition_active() and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior
             and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
                 if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(pid)) < 15.0 and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(pid)) > 20.0 then
-                    util.toast(players.get_name(pid) .. " Esta especteandote")
-                elseif v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(pid)) < v3.distance(ENTITY.GET_ENTITY_COORDS(ped, false), players.get_cam_pos(pid)) - 5 then
-                    util.toast(players.get_name(pid) .. " Esta spectando a alguien")
+                    util.toast(players.get_name(pid) .. " Te esta especteando")
                     break
+                end
+            end
+        end
+    end
+end)
+
+menu.toggle_loop(detections, "Teleport", {}, "Detecta si el jugador se teletransporta", function()
+    for _, pid in ipairs(players.list(false, true, true)) do
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        if not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
+            local oldpos = players.get_position(pid)
+            util.yield(500)
+            local currentpos = players.get_position(pid)
+            for i, interior in ipairs(interior_stuff) do
+                if v3.distance(oldpos, currentpos) > 500 and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z and get_interior_player_is_in(pid) == interior then
+                    util.toast(players.get_name(pid) .. " Se teletransporto")
                 end
             end
         end
@@ -1137,6 +1159,25 @@ menu.toggle_loop(anticage, "Anti Jaula", {"anticage"}, "", function()
             end
         end
         SHAPETEST.RELEASE_SCRIPT_GUID_FROM_ENTITY(obj_handle)
+    end
+end)
+
+menu.toggle_loop(protects, "Anti-Mugger", {}, "", function() -- thx nowiry for improving my method :D
+    if NETWORK.NETWORK_IS_SCRIPT_ACTIVE("am_gang_call", 0, true, 0) then
+        local ped_netId = memory.script_local("am_gang_call", 63 + 10 + (0 * 7 + 1))
+        local sender = memory.script_local("am_gang_call", 287)
+        local target = memory.script_local("am_gang_call", 288)
+        local player = players.user()
+
+        util.spoof_script("am_gang_call", function()
+            if (memory.read_int(sender) ~= player and memory.read_int(target) == player 
+            and NETWORK.NETWORK_DOES_NETWORK_ID_EXIST(memory.read_int(ped_netId)) 
+            and NETWORK.NETWORK_REQUEST_CONTROL_OF_NETWORK_ID(memory.read_int(ped_netId))) then
+                local mugger = NETWORK.NET_TO_PED(memory.read_int(ped_netId))
+                entities.delete_by_handle(mugger)
+                util.toast("Mugger bloqueado de:" .. players.get_name(memory.read_int(sender)))
+            end
+        end)
     end
 end)
 
