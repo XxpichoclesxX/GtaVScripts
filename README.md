@@ -1,5 +1,5 @@
 # GtaVScripts
-# This are my own made colections of scripts for modding engines you can freely use in Gta V Campaign or Online
+Im presenting you some Gta V Scripts for online or campaign, these are made by me so if you find an error please dm to discord. (XxpichoclesxX#0427)
 1- A really nice lua, complement for kiddions modding engine for Gta V, im not aware of use you can do to this shitty lua script.
 
 
