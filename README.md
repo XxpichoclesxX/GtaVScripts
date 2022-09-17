@@ -10,4 +10,4 @@ Im presenting you some Gta V Scripts for online or campaign, these are made by m
 -  Probably Stand script is going to take a little bit more than kiddions, by now, kiddions script is in stand by <3
 
 ## Last update Kiddions: 09/13/2022
-## Last update Stand: 09/13/2022
+## Last update Stand: 09/17/2022
