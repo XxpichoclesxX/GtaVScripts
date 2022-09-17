@@ -4,7 +4,7 @@ util.require_natives(1651208000)
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 1.1
+local localVer = 1.2
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -140,7 +140,7 @@ function raycast_gameplay_cam(flag, distance)
     SHAPETEST.GET_SHAPE_TEST_RESULT(
         SHAPETEST.START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE(
             cam_pos.x, 
-            cam_pos.y, 
+            cam_pos.y, -
             cam_pos.z, 
             destination.x, 
             destination.y, 
@@ -204,6 +204,10 @@ local function kick_player_out_of_veh(player_id)
 
         util.yield()
     end
+end
+
+local function get_transition_state(pid)
+    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 230))
 end
 
 local function get_random_pos_on_radius(pos, radius)
@@ -810,7 +814,7 @@ players.on_join(function(player_id)
     end)
 
 
-    local glitch_player_list = menu.list(trolling, "Glitch Player", {"glitchdelay"}, "")
+    local glitch_player_list = menu.list(trolling, "Glitchear Jugador", {"glitchdelay"}, "")
     local object_stuff = {
         names = {
             "Ferris Wheel",
@@ -843,13 +847,13 @@ players.on_join(function(player_id)
         object_hash = util.joaat(object_stuff.objects[index])
     end)
 
-    menu.slider(glitch_player_list, "Spawn Delay", {"spawndelay"}, "", 0, 3000, 50, 10, function(amount)
+    menu.slider(glitch_player_list, "Delay De Spanw", {"spawndelay"}, "", 0, 3000, 50, 10, function(amount)
         delay = amount
     end)
 
     local glitchPlayer = false
     local glitchPlayer_toggle
-    glitchPlayer_toggle = menu.toggle(glitch_player_list, "Glitch Player", {}, "", function(toggled)
+    glitchPlayer_toggle = menu.toggle(glitch_player_list, "Glitchear jugador", {}, "", function(toggled)
         glitchPlayer = toggled
 
         while glitchPlayer do
@@ -857,12 +861,12 @@ players.on_join(function(player_id)
             local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
             if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 400.0 
             and v3.distance(pos, players.get_cam_pos(players.user())) > 400.0 then
-                util.toast("Player is out of rendering distance. :/")
+                util.toast("Jugador fuera de la distancia de renderizado. :/")
                 menu.set_value(glitchPlayer_toggle, false);
             break end
 
             if not players.exists(player_id) then 
-                util.toast("Player doesn't exist. :/")
+                util.toast("Jugador no existe. :/")
                 menu.set_value(glitchPlayer_toggle, false);
             break end
             local glitch_hash = object_hash
@@ -885,7 +889,7 @@ players.on_join(function(player_id)
 
     local glitchVeh = false
     local glitchVehCmd
-    glitchVehCmd = menu.toggle(trolling, "Glitch Vehicle", {"glitchvehicle"}, "", function(toggle) -- credits to soul reaper for base concept
+    glitchVehCmd = menu.toggle(trolling, "Glitchear Coche", {"glitchvehicle"}, "", function(toggle) -- credits to soul reaper for base concept
         glitchVeh = toggle
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
@@ -994,6 +998,11 @@ players.on_join(function(player_id)
                 break
             end
         end)
+
+    player_toggle_loop(trolling, player_id, "Spam De Sonido", {}, "", function()
+        util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, math.random(1, 0x6)})
+        util.yield()
+    end)
 
 
     menu.toggle_loop(friendly, "Dar godmode silensioso", {}, "No lo detectaran mod menus gratuitos", function()
@@ -1246,12 +1255,19 @@ end)
 --------------------------------------------------------------------------------------------------------------------------------
 --Online
 
--- Not working uwu
---menu.toggle_loop(self, "Adicto SH", {}, "Te buelbez adicto al script houst", function()
---    if players.get_script_host() ~= players.user() and get_transition_state(players.user()) ~= 0 then
---        menu.trigger_command(menu.ref_by_path("Players>"..players.get_name_with_tags(players.user())..">Friendly>Give Script Host"))
---    end
---end)
+menu.toggle_loop(online, "Adicto SH", {}, "Te buelbez adicto al script houst", function()
+    if players.get_script_host() ~= players.user() and get_transition_state(players.user()) ~= 0 then
+        menu.trigger_command(menu.ref_by_path("Players>"..players.get_name_with_tags(players.user())..">Friendly>Give Script Host"))
+    end
+end)
+
+menu.toggle(online, "Anti-Chat", {}, "Hace que no salga cuando estas escribiendo el 'icono' encima de ti", function(on)
+	if on then
+		menu.trigger_commands("hidetyping on")
+	else
+		menu.trigger_commands("hidetyping off")
+	end
+end)
 
 local maxHealth <const> = 328
 menu.toggle_loop(online, ("Fuera Del Radar Muerto"), {"undeadotr"}, "", function()
@@ -1265,8 +1281,24 @@ end)
 menu.action(online, "Dar M16", {""}, "", function()
     memory.write_int(memory.script_global(262145 + 32775), 1)
 end)
+
+joining = false
+menu.toggle(online, "Notificacion De Jugador", {}, "Avisa cuando un jugador entra a la sesion", function(on_toggle)
+	if on_toggle then
+		joining = true
+	else
+		joining = false
+	end
+end)
 --------------------------------------------------------------------------------------------------------------------------------
 --Protecciones
+
+menu.action(protects, "Forzar Parar Todos Los Sonidos", {"stopsounds"}, "", function()
+    for i=-1,100 do
+        AUDIO.STOP_SOUND(i)
+        AUDIO.RELEASE_SOUND_ID(i)
+    end
+end)
 
 menu.toggle(protects, "Modo Panico", {"panic"}, "Esto renderiza un modo de anti-crash quitando todo tipo de evento del juego a toda costa.", function(on_toggle)
     local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
@@ -1636,23 +1668,23 @@ end)
 --------------------------------------------------------------------------------------------------------------------------------
 -- Diversion
 menu.toggle(fun, "Piloto Tesla", {}, "", function(toggled)
-    local player = players.user_ped()
-    local playerpos = ENTITY.GET_ENTITY_COORDS(player, false)
+    local ped = players.user_ped()
+    local playerpos = ENTITY.GET_ENTITY_COORDS(ped, false)
     local tesla_ai = util.joaat("u_m_y_baygor")
     local tesla = util.joaat("raiden")
     request_model(tesla_ai)
     request_model(tesla)
     if toggled then     
-        if PED.IS_PED_IN_ANY_VEHICLE(player, true) then
+        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
             menu.trigger_commands("deletevehicle")
         end
 
         tesla_ai_ped = entities.create_ped(26, tesla_ai, playerpos, 0)
         tesla_vehicle = entities.create_vehicle(tesla, playerpos, 0)
-        ENTITY.SET_ENTITY_INVINCIBLE(tesla_ai_ped, true)
+        ENTITY.SET_ENTITY_INVINCIBLE(tesla_ai_ped, true) 
         ENTITY.SET_ENTITY_VISIBLE(tesla_ai_ped, false)
         PED.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(tesla_ai_ped, true)
-        PED.SET_PED_INTO_VEHICLE(player, tesla_vehicle, -2)
+        PED.SET_PED_INTO_VEHICLE(ped, tesla_vehicle, -2)
         PED.SET_PED_INTO_VEHICLE(tesla_ai_ped, tesla_vehicle, -1)
         PED.SET_PED_KEEP_TASK(tesla_ai_ped, true)
         VEHICLE.SET_VEHICLE_COLOURS(tesla_vehicle, 111, 111)
@@ -1662,10 +1694,10 @@ menu.toggle(fun, "Piloto Tesla", {}, "", function(toggled)
         menu.trigger_commands("performance")
 
         if HUD.IS_WAYPOINT_ACTIVE() then
-	    	local pos = HUD.GET_BLIP_COORDS(HUD.GET_FIRST_BLIP_INFO_ID(8))
-            TASK.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(tesla_ai_ped, tesla_vehicle, pos.x, pos.y, pos.z, 20, 786603, 0)
+            local pos = HUD.GET_BLIP_COORDS(HUD.GET_FIRST_BLIP_INFO_ID(8))
+            TASK.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(tesla_ai_ped, tesla_vehicle, pos, 20.0, 786603, 0)
         else
-            TASK.TASK_VEHICLE_DRIVE_WANDER(tesla_ai_ped, tesla_vehicle, 20, 786603)
+            TASK.TASK_VEHICLE_DRIVE_WANDER(tesla_ai_ped, tesla_vehicle, 20.0, 786603)
         end
     else
         if tesla_ai_ped ~= nil then 
@@ -1831,8 +1863,6 @@ end
 --    {"Underwater", "underwater"},
 --}
 
-local misc = menu.list(menu.my_root(), "Misc", {}, "")
-
 --local visual_fidelity = menu.list(misc, "Visuales", {}, "")
 --for id, data in pairs(visual_stuff) do
 --    local effect_name = data[1]
@@ -1847,7 +1877,15 @@ local misc = menu.list(menu.my_root(), "Misc", {}, "")
 --    end)
 --end 
 
+local misc = menu.list(menu.my_root(), "Misc", {}, "")
 
+menu.toggle(misc, "Modo Screenshot", {}, "Para que puedas tomar fotitos <3", function(on)
+	if on then
+		menu.trigger_commands("screenshot on")
+	else
+		menu.trigger_commands("screenshot off")
+	end
+end)
 
 
 menu.hyperlink(menu.my_root(), "Entra al discord!", "https://discord.gg/BNbSHhunPv")
