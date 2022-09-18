@@ -1707,47 +1707,47 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- Diversion
-menu.toggle(fun, "Piloto Tesla", {}, "", function(toggled)
-    local ped = players.user_ped()
-    local playerpos = ENTITY.GET_ENTITY_COORDS(ped, false)
-    local tesla_ai = util.joaat("u_m_y_baygor")
-    local tesla = util.joaat("raiden")
-    request_model(tesla_ai)
-    request_model(tesla)
-    if toggled then     
-        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
-            menu.trigger_commands("deletevehicle")
-        end
-
-        tesla_ai_ped = entities.create_ped(26, tesla_ai, playerpos, 0)
-        tesla_vehicle = entities.create_vehicle(tesla, playerpos, 0)
-        ENTITY.SET_ENTITY_INVINCIBLE(tesla_ai_ped, true) 
-        ENTITY.SET_ENTITY_VISIBLE(tesla_ai_ped, false)
-        PED.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(tesla_ai_ped, true)
-        PED.SET_PED_INTO_VEHICLE(ped, tesla_vehicle, -2)
-        PED.SET_PED_INTO_VEHICLE(tesla_ai_ped, tesla_vehicle, -1)
-        PED.SET_PED_KEEP_TASK(tesla_ai_ped, true)
-        VEHICLE.SET_VEHICLE_COLOURS(tesla_vehicle, 111, 111)
-        VEHICLE.SET_VEHICLE_MOD(tesla_vehicle, 23, 8, false)
-        VEHICLE.SET_VEHICLE_MOD(tesla_vehicle, 15, 1, false)
-        VEHICLE.SET_VEHICLE_EXTRA_COLOURS(tesla_vehicle, 111, 147)
-        menu.trigger_commands("performance")
-
-        if HUD.IS_WAYPOINT_ACTIVE() then
-            local pos = HUD.GET_BLIP_COORDS(HUD.GET_FIRST_BLIP_INFO_ID(8))
-            TASK.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(tesla_ai_ped, tesla_vehicle, pos, 20.0, 786603, 0)
-        else
-            TASK.TASK_VEHICLE_DRIVE_WANDER(tesla_ai_ped, tesla_vehicle, 20.0, 786603)
-        end
-    else
-        if tesla_ai_ped ~= nil then 
-            entities.delete_by_handle(tesla_ai_ped)
-        end
-        if tesla_vehicle ~= nil then 
-            entities.delete_by_handle(tesla_vehicle)
-        end
-    end
-end)
+--menu.toggle(fun, "Piloto Tesla", {}, "", function(toggled)
+--    local ped = players.user_ped()
+--    local playerpos = ENTITY.GET_ENTITY_COORDS(ped, false)
+--    local tesla_ai = util.joaat("u_m_y_baygor")
+--    local tesla = util.joaat("raiden")
+--    request_model(tesla_ai)
+--    request_model(tesla)
+--    if toggled then     
+--       if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
+--            menu.trigger_commands("deletevehicle")
+--        end
+--
+--        tesla_ai_ped = entities.create_ped(26, tesla_ai, playerpos, 0)
+--        tesla_vehicle = entities.create_vehicle(tesla, playerpos, 0)
+--        ENTITY.SET_ENTITY_INVINCIBLE(tesla_ai_ped, true) 
+--        ENTITY.SET_ENTITY_VISIBLE(tesla_ai_ped, false)
+--        PED.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(tesla_ai_ped, true)
+--        PED.SET_PED_INTO_VEHICLE(ped, tesla_vehicle, -2)
+--        PED.SET_PED_INTO_VEHICLE(tesla_ai_ped, tesla_vehicle, -1)
+--        PED.SET_PED_KEEP_TASK(tesla_ai_ped, true)
+--        VEHICLE.SET_VEHICLE_COLOURS(tesla_vehicle, 111, 111)
+--        VEHICLE.SET_VEHICLE_MOD(tesla_vehicle, 23, 8, false)
+--        VEHICLE.SET_VEHICLE_MOD(tesla_vehicle, 15, 1, false)
+--        VEHICLE.SET_VEHICLE_EXTRA_COLOURS(tesla_vehicle, 111, 147)
+--        menu.trigger_commands("performance")
+--
+--        if HUD.IS_WAYPOINT_ACTIVE() then
+--            local pos = HUD.GET_BLIP_COORDS(HUD.GET_FIRST_BLIP_INFO_ID(8))
+--            TASK.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(tesla_ai_ped, tesla_vehicle, pos, 20.0, 786603, 0)
+--        else
+--            TASK.TASK_VEHICLE_DRIVE_WANDER(tesla_ai_ped, tesla_vehicle, 20.0, 786603)
+--        end
+--    else
+--        if tesla_ai_ped ~= nil then 
+--            entities.delete_by_handle(tesla_ai_ped)
+--        end
+--        if tesla_vehicle ~= nil then 
+--            entities.delete_by_handle(tesla_vehicle)
+--        end
+--    end
+--end)
 
 
 menu.toggle_loop(fun, "Gato Mascota", {}, "", function()
