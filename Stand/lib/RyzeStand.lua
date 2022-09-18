@@ -4,7 +4,7 @@ util.require_natives(1651208000)
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 1.4
+local localVer = 1.5
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -279,6 +279,15 @@ players.on_join(function(player_id)
     local trolling = menu.list(menu.player_root(player_id), "Troleado")
     local friendly = menu.list(menu.player_root(player_id), "Amigable")
     --local vehicle = menu.list(menu.player_root(player_id), "Vehiculo")
+
+    function RequestControl(entity)
+        local tick = 0
+        while not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(entity) and tick < 100000 do
+            util.yield()
+            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(entity)
+            tick = tick + 1
+        end
+    end
 
     local explosion = 18
     local explosion_names = {
@@ -820,6 +829,17 @@ players.on_join(function(player_id)
         end
     end)
 
+    menu.action(antimodder, "Remover godmode de carro V2", {}, "", function()
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local veh = PED.GET_VEHICLE_PED_IS_IN(p)
+        if PED.IS_PED_IN_ANY_VEHICLE(p) then
+            RequestControl(veh)
+            ENTITY.SET_ENTITY_INVINCIBLE(veh, false)
+        else
+            util.toast(players.get_name(player_id).. " No esta en un coche")
+        end
+    end)
+
     menu.divider(crashes, "Luego agregare mas.")
 
 
@@ -835,6 +855,99 @@ players.on_join(function(player_id)
         menu.trigger_commands("invisibility off")
         menu.trigger_commands("otr")
         ENTITY.SET_ENTITY_COORDS_NO_OFFSET(my_ped, my_pos)
+    end)
+
+    local function GiveWeapon(attacker)
+        if (weapon0 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(unarmed, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, unarmed, 1, false, true)
+        elseif (weapon1 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(machete, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, machete, 1, false, true)
+        elseif (weapon2 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(pistol, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, pistol, 1, false, true)
+        elseif (weapon3 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(stungun, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, stungun, 1, false, true)
+        elseif (weapon4 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(atomizer, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, atomizer, 1, false, true)
+        elseif (weapon5 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(shotgun, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, shotgun, 1, false, true)
+        elseif (weapon6 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(sniper, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, sniper, 1, false, true)
+        elseif (weapon7 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(microsmg, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, microsmg, 1, false, true)
+        elseif (weapon8 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(minigun, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, minigun, 1, false, true)
+        elseif (weapon9 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(RPG, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, RPG, 1, false, true)
+        elseif (weapon10 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(hellbringer, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, hellbringer, 1, false, true)
+        elseif (weapon11 == true) then
+            WEAPON.REQUEST_WEAPON_ASSET(railgun, 31, 0)
+            WEAPON.GIVE_WEAPON_TO_PED(attacker, railgun, 1, false, true)
+        end
+    end
+
+    local function setAttribute(attacker)
+        PED.SET_PED_COMBAT_ATTRIBUTES(attacker, 38, true)
+        PED.SET_PED_COMBAT_ATTRIBUTES(attacker, 5, true)
+        PED.SET_PED_COMBAT_ATTRIBUTES(attacker, 0, true)
+        PED.SET_PED_COMBAT_ATTRIBUTES(attacker, 12, true)
+        PED.SET_PED_COMBAT_ATTRIBUTES(attacker, 22, true)
+        PED.SET_PED_COMBAT_ATTRIBUTES(attacker, 54, true)
+        PED.SET_PED_COMBAT_RANGE(attacker, 4)
+        PED.SET_PED_COMBAT_ABILITY(attacker, 3)
+    end
+
+    local pclpid = {}
+    
+    menu.action(trolling, "Clonar", {}, "Clona al jugador en un ped", function()
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local c = ENTITY.GET_ENTITY_COORDS(p)
+        local pclone = entities.create_ped(26, ENTITY.GET_ENTITY_MODEL(p), c, 0)
+        pclpid [#pclpid + 1] = pclone 
+        PED.CLONE_PED_TO_TARGET(p, pclone)
+    end)
+
+    menu.action(trolling, "Clonar Con Arma 'Test'", {}, "Clona al jugador en un ped con arma", function()
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local c = ENTITY.GET_ENTITY_COORDS(p)
+        aclone = entities.create_ped(26, ENTITY.GET_ENTITY_MODEL(p), c, 0) --spawn clone
+        PED.CLONE_PED_TO_TARGET(p, aclone)
+        GiveWeapon(aclone)
+        setAttribute(aclone)
+        TASK.TASK_COMBAT_PED(aclone, p, 0, 16)
+        if (isImmortal == true) then
+            ENTITY.SET_ENTITY_CAN_BE_DAMAGED(aclone, false)
+        end
+    end)
+
+    menu.action(trolling, "Chop 'Test'", {}, "Saca un chop", function()
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local c = ENTITY.GET_ENTITY_COORDS(p)
+        STREAMING.REQUEST_MODEL(chop)
+        while not STREAMING.HAS_MODEL_LOADED(chop) do
+            STREAMING.REQUEST_MODEL(chop)
+            util.yield()
+        end
+        local achop = entities.create_ped(26, chop, c, 0) --spawn chop
+        TASK.TASK_COMBAT_PED(achop , p, 0, 16)
+        setAttribute(achop)
+        if (isImmortal == true) then
+            ENTITY.SET_ENTITY_CAN_BE_DAMAGED(achop , false)
+        end
+        if not STREAMING.HAS_MODEL_LOADED(chop) then
+            util.toast("No se puede cargar el modelo")
+        end
     end)
 
     player_toggle_loop(trolling, player_id, "Movimiento Bug", {}, "", function()
@@ -1043,6 +1156,241 @@ players.on_join(function(player_id)
         util.yield()
     end)
 
+    menu.action(trolling, "Teletransportar a los backrooms 'Test'", {}, "Les teletransporta a los backrooms", function()
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local c = ENTITY.GET_ENTITY_COORDS(p)
+        local defx = c.x
+        local defy = c.y 
+        local defz = c.z
+        local veh = PED.GET_VEHICLE_PED_IS_IN(p, true)
+        if PED.IS_PED_IN_ANY_VEHICLE(p, false) then
+            STREAMING.REQUEST_MODEL(floorbr)
+            while not STREAMING.HAS_MODEL_LOADED(floorbr) do
+                STREAMING.REQUEST_MODEL(floorbr)
+                util.yield()
+            end
+            STREAMING.REQUEST_MODEL(wallbr)
+            while not STREAMING.HAS_MODEL_LOADED(wallbr) do
+                STREAMING.REQUEST_MODEL(wallbr)
+                util.yield()
+            end
+            RequestControl(veh)
+            local success, floorcoords
+            repeat
+                success, floorcoords = util.get_ground_z(c.x, c.y)
+                util.yield()
+            until success
+            c.z = floorcoords - 100
+            ENTITY.SET_ENTITY_COORDS(veh, c.x, c.y, c.z, false, false, false, false)
+
+            local c = ENTITY.GET_ENTITY_COORDS(p)
+            local defz = c.z
+            c.z = defz - 2
+            local spawnedfloorbr = entities.create_object(floorbr, c)
+            c.z = c.z + 10
+            local spawnedroofbr = entities.create_object(floorbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedroofbr, 180.0, 0.0, 0.0, 1, true)
+
+            defz = c.z - 5
+            c.x = c.x + 4
+            c.z = defz
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.x = c.x - 8
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y - 8
+            c.x = defx + 10.5
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y - 14.5
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y - 7.2
+            c.x = defx + 3.5
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = defy + 6.5
+            c.x = defx + 11
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.x = defx - 12
+            c.y = defy + 4
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = defy - 7
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y - 10
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y - 7
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = defy - 10
+            c.x = defx - 19
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.x = defx - 3
+            c.y = defy + 6.5
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.x = defx + 25
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.x = c.x + 7
+            c.y = defy
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = defy - 14.5
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y - 7
+            c.x = c.x - 7
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y - 7
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y - 7
+            c.x = c.x - 7.5
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.x = c.x - 6.5
+            c.y = c.y - 6.5
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.x = c.x - 7.5
+            c.y = c.y - 7
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.x = c.x - 14
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.x = c.x - 6.5
+            c.y = c.y + 7
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.x = c.x - 7.5
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.x = c.x - 6.5
+            c.y = c.y + 7
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y + 14
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y + 14
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y + 14
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            c.y = c.y - 3.1
+            c.x = c.x + 5
+            local spawnedwall = entities.create_object(wallbr, c)
+            ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
+            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+
+            util.yield(500)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
+            util.yield(500)
+            entities.delete_by_handle(veh)
+        else
+            util.toast(players.get_name(player_id).. " No esta en un vehiculo")
+        end
+    end)
+
+    menu.toggle_loop(trolling, "Desabilitar Vehiculo", {}, "Es mejor que el de stand", function(toggle)
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
+        if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
+        else
+            local veh2 = PED.GET_VEHICLE_PED_IS_TRYING_TO_ENTER(p)
+            entities.delete_by_handle(veh2)
+        end
+    end)
+
+    menu.action(trolling, "DDoS", {}, "Los ddosea uwu", function()
+        util.toast("Se le envio un ataque ddos a " ..players.get_name(player_id))
+        local percent = 0
+        while percent <= 100 do
+            util.yield(100)
+            util.toast(percent.. "% done")
+            percent = percent + 1
+        end
+        util.yield(3000)
+        util.toast("Es broma, que esperabas?")
+    end)
+
 
     menu.toggle_loop(friendly, "Dar godmode silensioso", {}, "No lo detectaran mod menus gratuitos", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
@@ -1053,23 +1401,121 @@ players.on_join(function(player_id)
     end)
 
     menu.action(friendly, "Dartles nivel 25", {}, "Les da nivel 25 aprox (Thx jinx <3).", function()
-        util.trigger_script_event(1 << pid, {0xB9BA4D30, pid, 0x5, 0, 1, 1, 1})
+        util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x5, 0, 1, 1, 1})
         for i = 0, 9 do
-            util.trigger_script_event(1 << pid, {0xB9BA4D30, pid, 0x0, i, 1, 1, 1})
-            util.trigger_script_event(1 << pid, {0xB9BA4D30, pid, 0x1, i, 1, 1, 1})
-            util.trigger_script_event(1 << pid, {0xB9BA4D30, pid, 0x3, i, 1, 1, 1})
-            util.trigger_script_event(1 << pid, {0xB9BA4D30, pid, 0xA, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x0, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x1, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x3, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0xA, i, 1, 1, 1})
         end
         for i = 0, 1 do
-            util.trigger_script_event(1 << pid, {0xB9BA4D30, pid, 0x2, i, 1, 1, 1})
-            util.trigger_script_event(1 << pid, {0xB9BA4D30, pid, 0x6, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x2, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x6, i, 1, 1, 1})
         end
         for i = 0, 19 do
-            util.trigger_script_event(1 << pid, {0xB9BA4D30, pid, 0x4, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x4, i, 1, 1, 1})
         end
         for i = 0, 99 do
-            util.trigger_script_event(1 << pid, {0xB9BA4D30, pid, 0x9, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x9, i, 1, 1, 1})
             util.yield()
+        end
+    end)
+
+    menu.toggle_loop(friendly, "Dar fichas del casino", {"dropchips"}, "Se testeo por 3 semanas y parece seguro, sin embargo puede ser detectado en cualquier momento", function(toggle)
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local pos = ENTITY.GET_ENTITY_COORDS(p)
+        STREAMING.REQUEST_MODEL(card)
+        while not STREAMING.HAS_MODEL_LOADED(card) do
+            STREAMING.REQUEST_MODEL(card)
+            util.yield()
+        end
+        OBJECT.CREATE_AMBIENT_PICKUP(pickup, pos.x, pos.y, pos.z, 0, false, card, true, false) --spawn casino chips
+        if not STREAMING.HAS_MODEL_LOADED(card) then
+            util.toast("No se pudo cargar el modelo")
+        end
+    end)
+
+    menu.toggle_loop(friendly, "Dar vida", {"drophealth"}, "", function(toggle)
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local pos = ENTITY.GET_ENTITY_COORDS(p)
+        STREAMING.REQUEST_MODEL(health)
+        while not STREAMING.HAS_MODEL_LOADED(health) do
+            STREAMING.REQUEST_MODEL(health)
+            util.yield()
+        end
+        OBJECT.CREATE_AMBIENT_PICKUP(healthpickup, pos.x, pos.y, pos.z, 0, false, health, true, false) --spawn health
+        if not STREAMING.HAS_MODEL_LOADED(health) then
+            util.toast("No se pudo cargar el modelo")
+        end
+    end)
+
+    menu.toggle_loop(friendly, "Dar armadura", {"droparmor"}, "", function(toggle)
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local pos = ENTITY.GET_ENTITY_COORDS(p)
+        STREAMING.REQUEST_MODEL(armor)
+        while not STREAMING.HAS_MODEL_LOADED(armor) do
+            STREAMING.REQUEST_MODEL(armor)
+            util.yield()
+        end
+        OBJECT.CREATE_AMBIENT_PICKUP(armorpickup, pos.x, pos.y, pos.z, 0, false, armor, true, false) --spawn armor
+        if not STREAMING.HAS_MODEL_LOADED(armor) then
+            util.toast("No se pudo cargar el modelo")
+        end
+    end)
+
+    menu.action(friendly, "Ganar daño criminal", {}, "Haslos ganar el desafio siempre", function()
+        local fcartable = {}
+
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local c = ENTITY.GET_ENTITY_COORDS(p)
+        local defz = c.z
+        STREAMING.REQUEST_MODEL(expcar)
+        while not STREAMING.HAS_MODEL_LOADED(expcar) do
+            STREAMING.REQUEST_MODEL(expcar)
+            util.yield()
+        end
+        STREAMING.REQUEST_MODEL(floorbr)
+        while not STREAMING.HAS_MODEL_LOADED(floorbr) do
+            STREAMING.REQUEST_MODEL(floorbr)
+            util.yield()
+        end
+        local success, floorcoords
+        repeat
+            success, floorcoords = util.get_ground_z(c.x, c.y)
+            util.yield()
+        until success
+        floorcoords = floorcoords - 100
+        c.z = floorcoords
+        local floorrigp = entities.create_object(floorbr, c)
+        c.z = defz
+        c.z = c.z - 95 
+        for i = 1, 22 do
+            fcartable[#fcartable + 1] = entities.create_vehicle(expcar, c, 0) 
+        end
+        util.yield(1000)
+        FIRE.ADD_OWNED_EXPLOSION(p, c.x, c.y, floorcoords, exp, 100.0, true, false, 1.0) 
+        util.yield(500)
+        entities.delete_by_handle(floorrigp)
+        util.yield(1000)
+        
+        for i = 1, #fcartable do
+            entities.delete_by_handle(fcartable[i]) 
+            fcartable[i] = nil
+        end
+    end)
+
+    menu.toggle_loop(friendly, "Ganar Checkpoints", {}, "Haslos ganar los checkpoints del desafio", function()
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local c = ENTITY.GET_ENTITY_COORDS(p)
+        if PED.IS_PED_IN_ANY_VEHICLE(p) then
+            local veh = PED.GET_VEHICLE_PED_IS_IN(p, true)
+            RequestControl(veh)
+            local dblip = HUD.GET_NEXT_BLIP_INFO_ID(431)
+            local cdblip = HUD.GET_BLIP_COORDS(dblip)
+            ENTITY.SET_ENTITY_COORDS(veh, cdblip.x, cdblip.y, cdblip.z, false, false, false, false)
+            util.yield(1500)
+        else
+            util.toast(players.get_name(player_id).. " Tiene que estar en un vehiculo")
         end
     end)
 
@@ -1538,11 +1984,11 @@ menu.slider(protects, "Radio de limpiar", {"clearradius"}, "Radio para limpiar",
     radius = s
 end)
 
-menu.toggle_loop(protects, "Bloquear Lag/Fuego", {}, "", function()
-    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
-    FIRE.STOP_FIRE_IN_RANGE(coords.x, coords.y, coords.z, 100)
-    FIRE.STOP_ENTITY_FIRE(players.user_ped())
-end)
+--menu.toggle_loop(protects, "Bloquear Lag/Fuego", {}, "", function()
+--    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
+--    FIRE.STOP_FIRE_IN_RANGE(coords.x, coords.y, coords.z, 100)
+--    FIRE.STOP_ENTITY_FIRE(players.user_ped())
+--end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- Coches
@@ -1642,16 +2088,33 @@ rapid_khanjali = menu.toggle_loop(vehicles, "Fuego Rapido Khanjali", {}, "", fun
     end
 end)
 
+
 infcms = false
 menu.toggle(vehicles, "Contramedidas Infinitas", {"infinitecms"}, "Dara contramedidas infinitas.", function(on)
     infcms = on
 end)
+
+player_cur_car = 0
+if infcms then
+    if VEHICLE._GET_VEHICLE_COUNTERMEASURE_COUNT(player_cur_car) < 100 then
+        VEHICLE._SET_VEHICLE_COUNTERMEASURE_COUNT(player_cur_car, 100)
+    end
+end
 
 force_cm = false
 menu.toggle(vehicles, "Forzar Contramedidas", {"forcecms"}, "Fuerza las contramedidas en cualquier vehiculo a la tecla del claxon.", function(on)
     force_cm = on
     menu.trigger_commands("getgunsflaregun")
 end)
+
+if player_cur_car ~= 0 and force_cm then
+    log("force cm")
+    if PAD.IS_CONTROL_PRESSED(46, 46) then
+        local target = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER.PLAYER_PED_ID(), math.random(-5, 5), -30.0, math.random(-5, 5))
+        --MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target['x'], target['y'], target['z'], target['x'], target['y'], target['z'], 300.0, true, -1355376991, PLAYER.PLAYER_PED_ID(), true, false, 100.0)
+        MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target['x'], target['y'], target['z'], target['x'], target['y'], target['z'], 100.0, true, 1198879012, PLAYER.PLAYER_PED_ID(), true, false, 100.0)
+    end
+end
 
 get_vtable_entry_pointer = function(address, index)
     return memory.read_long(memory.read_long(address) + (8 * index))
@@ -1939,6 +2402,8 @@ end)
 menu.action(credits, "LanceScriptTEOF", {}, "Lo mismo que gLance con la diferencia que me ayudo en aprender sobre los nativos.", function()
 end)
 menu.action(credits, "Aaron", {}, "Gracias por ayudarme a entender el lua de stand y darme los primeros pasos", function()
+end)
+menu.action(credits, "Cxbr", {}, "Ayudo con la mayoria de opciones amigables <3", function()
 end)
 menu.action(credits, "Ustedes", {}, "Quienes descargan el script y me hacen sentir que al menos lo hice para mantener a la comunidad viva <3", function()
 end)
