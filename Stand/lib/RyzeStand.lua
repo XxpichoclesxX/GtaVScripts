@@ -4,7 +4,7 @@ util.require_natives(1651208000)
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 1.3
+local localVer = 1.4
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -51,11 +51,56 @@ local function get_entity_owner(addr)
     return players.user()
 end
 
+local function get_transition_state(pid)
+    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 230))
+end
+
+local function get_interior_player_is_in(pid)
+    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 243)) 
+end
+
+local function is_player_in_interior(pid)
+    return (memory.read_int(memory.script_global(0x2908D3 + 1 + (pid * 0x1C5) + 243)) ~= 0)
+end
+
 local function get_blip_coords(blipId)
     local blip = HUD.GET_FIRST_BLIP_INFO_ID(blipId)
     if blip ~= 0 then return HUD.GET_BLIP_COORDS(blip) end
     return v3(0, 0, 0)
 end
+
+local unreleased_vehicles = {
+    "Kanjosj",
+    "Postlude",
+    "Rhinehart",
+    "Tenf",
+    "Tenf2",
+    "Sentinel4",
+    "Weevil2",
+}
+
+local modded_vehicles = {
+    "dune2",
+    "tractor",
+    "dilettante2",
+    "asea2",
+    "cutter",
+    "mesa2",
+    "jet",
+    "skylift",
+    "policeold1",
+    "policeold2",
+    "armytrailer2",
+    "towtruck",
+    "towtruck2",
+    "cargoplane",
+}
+
+local modded_weapons = {
+    "weapon_railgun",
+    "weapon_stungun",
+    "weapon_digiscanner",
+}
 
 local spawned_objects = {}
 local ladder_objects = {}
@@ -277,18 +322,6 @@ players.on_join(function(player_id)
             --if not players.exists(player_id) then util.stop_thread() end
             callback()
         end)
-    end
-
-    local function get_transition_state(pid)
-        return memory.read_int(memory.script_global(((0x2908D3 + 1) + (player_id * 0x1C5)) + 230))
-    end
-    
-    local function get_interior_player_is_in(pid)
-        return memory.read_int(memory.script_global(((0x2908D3 + 1) + (player_id * 0x1C5)) + 243)) 
-    end
-    
-    local function is_player_in_interior(pid)
-        return (memory.read_int(memory.script_global(0x2908D3 + 1 + (player_id * 0x1C5) + 243)) ~= 0)
     end
 
     menu.toggle_loop(explosions, "Loop Explotar", {"customexplodeloop"}, "", function()
@@ -1110,7 +1143,7 @@ menu.toggle_loop(detections, "Godmode", {}, "Saldran en modo debug si se detecta
         local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
         for i, interior in ipairs(interior_stuff) do
             if (players.is_godmode(pid) or not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(ped)) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior then
-                util.draw_debug_text(players.get_name(pid) .. " Esta en godmode")
+                util.draw_debug_text(players.get_name(pid) .. " Tiene godmode")
                 break
             end
         end
@@ -1182,7 +1215,7 @@ end)
 menu.toggle_loop(detections, "Es Hacker", {}, "Detecta si el jugador lo estan por bannear", function()
     for _, pid in ipairs(players.list(false, true, true)) do
         local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-        if players.NETWORK_PLAYER_IS_CHEATER(pid) then
+        if NETWORK.NETWORK_PLAYER_IS_CHEATER(pid) then
             util.draw_debug_text(players.get_name(pid) .. " Estan por banearle :u")
             break
         end
