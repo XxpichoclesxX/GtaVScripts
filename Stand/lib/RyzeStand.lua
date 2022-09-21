@@ -4,7 +4,7 @@ util.require_natives(1651208000)
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 1.5
+local localVer = 1.6
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -49,24 +49,6 @@ local function get_entity_owner(addr)
         return owner
     end
     return players.user()
-end
-
-local function get_transition_state(pid)
-    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 230))
-end
-
-local function get_interior_player_is_in(pid)
-    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 243)) 
-end
-
-local function is_player_in_interior(pid)
-    return (memory.read_int(memory.script_global(0x2908D3 + 1 + (pid * 0x1C5) + 243)) ~= 0)
-end
-
-local function get_blip_coords(blipId)
-    local blip = HUD.GET_FIRST_BLIP_INFO_ID(blipId)
-    if blip ~= 0 then return HUD.GET_BLIP_COORDS(blip) end
-    return v3(0, 0, 0)
 end
 
 local unreleased_vehicles = {
@@ -280,6 +262,36 @@ players.on_join(function(player_id)
     local friendly = menu.list(menu.player_root(player_id), "Amigable")
     --local vehicle = menu.list(menu.player_root(player_id), "Vehiculo")
 
+
+
+    local function player_toggle_loop(root, player_id, menu_name, command_names, help_text, callback)
+        return menu.toggle_loop(root, menu_name, command_names, help_text, function()
+            if not players.exists(pid) then util.stop_thread() end
+            callback()
+        end)
+    end
+    
+    local function get_transition_state(pid)
+        return memory.read_int(memory.script_global(((0x2908D3 + 1) + (player_id * 0x1C5)) + 230))
+    end
+    
+    local function get_interior_player_is_in(pid)
+        return memory.read_int(memory.script_global(((0x2908D3 + 1) + (player_id * 0x1C5)) + 243)) 
+    end
+    
+    local function is_player_in_interior(pid)
+        return (memory.read_int(memory.script_global(0x2908D3 + 1 + (player_id * 0x1C5) + 243)) ~= 0)
+    end
+    
+    local function get_blip_coords(blipId)
+        local blip = HUD.GET_FIRST_BLIP_INFO_ID(blipId)
+        if blip ~= 0 then return HUD.GET_BLIP_COORDS(blip) end
+        return v3(0, 0, 0)
+    end
+
+
+
+
     function RequestControl(entity)
         local tick = 0
         while not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(entity) and tick < 100000 do
@@ -325,13 +337,6 @@ players.on_join(function(player_id)
                 explosion = 18
         end
     end)
-
-    local function player_toggle_loop(root, player_id, menu_name, command_names, help_text, callback)
-        return menu.toggle_loop(root, menu_name, command_names, help_text, function()
-            --if not players.exists(player_id) then util.stop_thread() end
-            callback()
-        end)
-    end
 
     menu.toggle_loop(explosions, "Loop Explotar", {"customexplodeloop"}, "", function()
         if players.exists(player_id) then
@@ -486,7 +491,7 @@ players.on_join(function(player_id)
     menu.action(trolling, "Tipo de freeze", {""}, "", function(cl)
         local number_of_cages = 10
         local ladder_hash = util.joaat("prop_towercrane_02el2")
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         pos.z -= 0.5
         request_model(ladder_hash)
@@ -2094,27 +2099,43 @@ menu.toggle(vehicles, "Contramedidas Infinitas", {"infinitecms"}, "Dara contrame
     infcms = on
 end)
 
-player_cur_car = 0
-if infcms then
-    if VEHICLE._GET_VEHICLE_COUNTERMEASURE_COUNT(player_cur_car) < 100 then
-        VEHICLE._SET_VEHICLE_COUNTERMEASURE_COUNT(player_cur_car, 100)
+if player_cur_car ~= 0 then
+    if everythingproof then
+        ENTITY.SET_ENTITY_PROOFS(player_cur_car, true, true, true, true, true, true, true, true)
+    end
+    if racemode then
+        VEHICLE.SET_VEHICLE_IS_RACING(player_cur_car, true)
+    end
+
+    if infcms then
+        if VEHICLE._GET_VEHICLE_COUNTERMEASURE_COUNT(player_cur_car) < 100 then
+            VEHICLE._SET_VEHICLE_COUNTERMEASURE_COUNT(player_cur_car, 100)
+        end
+    end
+
+    if shift_drift then
+        if PAD.IS_CONTROL_PRESSED(21, 21) then
+            VEHICLE.SET_VEHICLE_REDUCE_GRIP(player_cur_car, true)
+            VEHICLE._SET_VEHICLE_REDUCE_TRACTION(player_cur_car, 0.0)
+        else
+            VEHICLE.SET_VEHICLE_REDUCE_GRIP(player_cur_car, false)
+        end
     end
 end
 
-force_cm = false
-menu.toggle(vehicles, "Forzar Contramedidas", {"forcecms"}, "Fuerza las contramedidas en cualquier vehiculo a la tecla del claxon.", function(on)
-    force_cm = on
-    menu.trigger_commands("getgunsflaregun")
-end)
+--force_cm = false
+--menu.toggle(vehicles, "Forzar Contramedidas", {"forcecms"}, "Fuerza las contramedidas en cualquier vehiculo a la tecla del claxon.", function(on)
+--    force_cm = on
+--    menu.trigger_commands("getgunsflaregun")
+--end)
 
-if player_cur_car ~= 0 and force_cm then
-    log("force cm")
-    if PAD.IS_CONTROL_PRESSED(46, 46) then
-        local target = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER.PLAYER_PED_ID(), math.random(-5, 5), -30.0, math.random(-5, 5))
-        --MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target['x'], target['y'], target['z'], target['x'], target['y'], target['z'], 300.0, true, -1355376991, PLAYER.PLAYER_PED_ID(), true, false, 100.0)
-        MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target['x'], target['y'], target['z'], target['x'], target['y'], target['z'], 100.0, true, 1198879012, PLAYER.PLAYER_PED_ID(), true, false, 100.0)
-    end
-end
+--if player_cur_car ~= 0 and force_cm then
+--    if PAD.IS_CONTROL_PRESSED(46, 46) then
+--        local target = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER.PLAYER_PED_ID(player_id), math.random(-5, 5), -30.0, math.random(-5, 5))
+--        --MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target['x'], target['y'], target['z'], target['x'], target['y'], target['z'], 300.0, true, -1355376991, PLAYER.PLAYER_PED_ID(player_id), true, false, 100.0)
+--        MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target['x'], target['y'], target['z'], target['x'], target['y'], target['z'], 100.0, true, 1198879012, PLAYER.PLAYER_PED_ID(player_id), true, false, 100.0)
+--    end
+--end
 
 get_vtable_entry_pointer = function(address, index)
     return memory.read_long(memory.read_long(address) + (8 * index))
