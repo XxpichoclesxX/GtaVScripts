@@ -266,7 +266,7 @@ players.on_join(function(player_id)
 
     local function player_toggle_loop(root, player_id, menu_name, command_names, help_text, callback)
         return menu.toggle_loop(root, menu_name, command_names, help_text, function()
-            if not players.exists(pid) then util.stop_thread() end
+            if not players.exists(player_id) then util.stop_thread() end
             callback()
         end)
     end
