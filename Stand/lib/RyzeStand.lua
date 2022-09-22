@@ -1,10 +1,10 @@
 util.keep_running()
-util.require_natives("natives-1660775568-uno")
+util.require_natives("natives-1663599433-uno")
 util.require_natives(1651208000)
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 1.6
+local localVer = 1.7
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -460,21 +460,6 @@ players.on_join(function(player_id)
         ENTITY.FREEZE_ENTITY_POSITION(container, true)
     end)
 
-    menu.action(cage, "Jaula de Gas", {"gascage"}, "", function()
-        local gas_cage_hash = util.joaat("prop_gascage01")
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-        local pos = ENTITY.GET_ENTITY_COORDS(ped)
-        request_model(gas_cage_hash)
-        pos.z -= 1
-        local gas_cage = entities.create_object(gas_cage_hash, pos, 0)
-        pos.z += 1
-        local gas_cage2 = entities.create_object(gas_cage_hash, pos, 0)
-        spawned_objects[#spawned_objects + 1] = gas_cage
-        spawned_objects[#spawned_objects + 1] = gas_cage2
-        ENTITY.FREEZE_ENTITY_POSITION(gas_cage, true)
-        ENTITY.FREEZE_ENTITY_POSITION(gas_cage2, true)
-    end)
-
 
     menu.action(cage, "Borrar jaulas", {"clearcages"}, "", function()
         local entitycount = 0
@@ -727,6 +712,15 @@ players.on_join(function(player_id)
         end)
     end)
 
+    menu.action(crashes, "Inbloqueable V4 'Lo traje de 2T1'", {""}, "", function()
+        BlockSyncs(pid, function()
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            util.yield(1000)
+            entities.delete_by_handle(object)
+        end)
+    end)
+
     local kicks = menu.list(malicious, "Kicks", {}, "")
 
     menu.action(kicks, "Muerte Modo Libre", {}, "Los manda directo sin escalas al modo historia", function()
@@ -801,15 +795,6 @@ players.on_join(function(player_id)
             entities.delete_by_handle(spawned_vehs[i])
         end
     end)   
-
-    player_toggle_loop(kill_godmode, player_id, "Explotar", {}, "Lo blokean muchos", function()
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local pos = ENTITY.GET_ENTITY_COORDS(ped)
-        if not PED.IS_PED_DEAD_OR_DYING(ped) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) then
-            util.trigger_script_event(1 << player_id, {0xAD36AA57, player_id, 0x96EDB12F, math.random(0, 0x270F)})
-            FIRE.ADD_OWNED_EXPLOSION(players.user_ped(), pos, 2, 50, true, false, 0.0)
-        end
-    end)
 
     player_toggle_loop(antimodder, player_id, "Remover godmode", {}, "Lo blokean muchos", function()
         util.trigger_script_event(1 << player_id, {0xAD36AA57, player_id, 0x96EDB12F, math.random(0, 0x270F)})
