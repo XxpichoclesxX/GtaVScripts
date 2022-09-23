@@ -3,7 +3,7 @@
 -- Enjoy this and if you find any bug just write me on discord (XxpichoclesxX#0427)
 -- With love Picho <3
 
-require_game_build(2699) -- v1.61
+require_game_build(2699) -- v1.62
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local GTr = 2671447+59
@@ -46,6 +46,7 @@ local appMenu = modelMenu:add_submenu("Aparienzia")
 local PedSelf = {}
 PedSelf[joaat("mp_m_freemode_01")] = "Honvre"
 PedSelf[joaat("mp_f_freemode_01")] = "Mujer"
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local PedModelAnimal = {}
 PedModelAnimal[joaat("a_c_cat_01")] = "Cat" 
@@ -1226,6 +1227,7 @@ statMenu:add_int_range("Reiniciar LSCM (No para desbloquear)", 1, 1, 11, functio
 statMenu:add_action("-----------------------------------------", function() end)
 statMenu:add_int_range("Remover varo", 1000000, 1000000, 2000000000, function() return globals.get_int(282478) end, function(value) globals.set_int(282478, value) end) statMenu:add_action("Set the value then buy ballistic armour", function() end)
 statMenu:add_action("-----------------------------------------", function() end)
+statMenu:add_action("Habilidades 100%", function() stats.set_int(mpx .. "SCRIPT_INCREASE_DRIV", 100) stats.set_int(mpx .. "SCRIPT_INCREASE_FLY", 100) stats.set_int(mpx .. "SCRIPT_INCREASE_LUNG", 100) stats.set_int(mpx .. "SCRIPT_INCREASE_SHO", 100) stats.set_int(mpx .. "SCRIPT_INCREASE_STAM", 100) stats.set_int(mpx .. "SCRIPT_INCREASE_STL", 100) stats.set_int(mpx .. "SCRIPT_INCREASE_STRN", 100)
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local distMenu = OnlMenu:add_submenu("Stats de distansia")
 distMenu:add_float_range("Viajado(metros)", 10.00, 0.00, 99999.00, function() return stats.get_float("MPPLY_CHAR_DIST_TRAVELLED")/1000 end, function(value) stats.set_float("MPPLY_CHAR_DIST_TRAVELLED", value*1000) end)
