@@ -4,7 +4,7 @@ util.require_natives(1651208000)
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 1.8
+local localVer = 1.9
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -708,8 +708,8 @@ players.on_join(function(player_id)
         end)
     end)
 
-    menu.action(crashes, "Inbloqueable V4 'Lo traje de 2T1'", {""}, "", function()
-        BlockSyncs(pid, function()
+    menu.action(crashes, "Inbloqueable V4 '2T1'", {""}, "", function()
+        BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
             util.yield(1000)
@@ -1569,34 +1569,34 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 --Detecciones
---menu.toggle_loop(detections, "GodMode", {}, "Saldran en modo debug si se detectan.", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
---        local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
---        for i, interior in ipairs(interior_stuff) do
---            if (players.is_godmode(pid) or not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(ped)) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior then
---                util.draw_debug_text(players.get_name(pid) .. " Tiene Godmode")
---                break
---            end
---        end
---    end 
---end)
+menu.toggle_loop(detections, "GodMode", {}, "Saldran en modo debug si se detectan.", function()
+    for _, pid in ipairs(players.list(false, true, true)) do
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
+        for i, interior in ipairs(interior_stuff) do
+            if (players.is_godmode(pid) or not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(ped)) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior then
+                util.draw_debug_text(players.get_name(pid) .. " Tiene Godmode")
+                break
+            end
+        end
+    end 
+end)
 
---menu.toggle_loop(detections, "Godmode De Coche", {}, "Saldran en modo debug si se detectan.", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
---        local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
---        local player_veh = PED.GET_VEHICLE_PED_IS_USING(ped)
---        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
---            for i, interior in ipairs(interior_stuff) do
---                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior then
---                    util.draw_debug_text(players.get_name(pid) .. " Esta en carro con godmode")
---                    break
---                end
---            end
---        end
---    end 
---end)
+menu.toggle_loop(detections, "Godmode De Coche", {}, "Saldran en modo debug si se detectan.", function()
+    for _, pid in ipairs(players.list(false, true, true)) do
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
+        local player_veh = PED.GET_VEHICLE_PED_IS_USING(ped)
+        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
+            for i, interior in ipairs(interior_stuff) do
+                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior then
+                    util.draw_debug_text(players.get_name(pid) .. " Esta en carro con godmode")
+                    break
+                end
+            end
+        end
+    end 
+end)
 
 menu.toggle_loop(detections, "Arma Modeada", {}, "", function()
     for _, pid in ipairs(players.list(false, true, true)) do
