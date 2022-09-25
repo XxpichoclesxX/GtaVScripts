@@ -1,10 +1,9 @@
 util.keep_running()
-util.require_natives("natives-1663599433-uno")
-util.require_natives(1651208000)
+util.require_natives(1663599433)
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 1.9
+local localVer = 2.0
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/main/Stand/lib/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -185,6 +184,19 @@ function raycast_gameplay_cam(flag, distance)
     memory.free(ptr3)
     memory.free(ptr4)
     return {p1, p2, p3, p4}
+end
+
+function get_offset_from_gameplay_camera(distance)
+    local cam_rot = CAM.GET_GAMEPLAY_CAM_ROT(2)
+    local cam_pos = CAM.GET_GAMEPLAY_CAM_COORD()
+    local direction = rotation_to_direction(cam_rot)
+    local destination = 
+    { 
+        x = cam_pos.x + direction.x * distance, 
+        y = cam_pos.y + direction.y * distance, 
+        z = cam_pos.z + direction.z * distance 
+    }
+    return destination
 end
 
 function direction()
@@ -623,7 +635,7 @@ players.on_join(function(player_id)
 	--	menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(pid))
 	--end)
 
-    menu.action(crashes, "Modelo V2", {""}, "Funcando (Menus populares - Stand)", function()
+    menu.action(crashes, "Modelo V1", {""}, "Funcando (Menus populares - Stand)", function()
         local mdl = util.joaat('a_c_poodle')
         BlockSyncs(player_id, function()
             if request_model(mdl, 2) then
@@ -647,6 +659,29 @@ players.on_join(function(player_id)
             end
         end)
     end)
+
+    --menu.action(crashes, "Modelo V2", {""}, "", function()
+    --    local user = players.user()
+    --    local user_ped = players.user_ped()
+    --    local pos = players.get_position(user)
+    --    BlockSyncs(pid, function() 
+    --        util.yield(100)
+    --        PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user(), 0xFBF7D21F)
+    --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user_ped, 0xFBAB5776, 100, false)
+    --        TASK.TASK_PARACHUTE_TO_TARGET(user_ped, pos.x, pos.y, pos.z)
+    --        util.yield()
+    --        TASK.CLEAR_PED_TASKS_IMMEDIATELY(user_ped)
+    --        util.yield(250)
+    --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user_ped, 0xFBAB5776, 100, false)
+    --        PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user)
+    --        util.yield(1000)
+    --        for i = 1, 5 do
+    --            util.spoof_script("freemode", SYSTEM.WAIT)
+    --        end
+    --        ENTITY.SET_ENTITY_HEALTH(user_ped, 0)
+    --        NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(pos, 0, false, false, 0)
+    --    end)
+    --end)
 
     menu.divider(crashes, "(Ryze Exclusivo)")
 
@@ -677,36 +712,36 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
     end)
 
-    menu.action(crashes, "Inbloqueable V3 'Test'", {}, "Pasado de mi menu, no se si funcione", function()
-        local mdl = util.joaat("apa_mp_apa_yacht")
-        local user = players.user_ped()
-        BlockSyncs(pid, function()
-            util.yield(250)
-            local old_pos = ENTITY.GET_ENTITY_COORDS(user, false)
-            WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user, 0xFBAB5776, 100, false)
-            PLAYER.SET_PLAYER_HAS_RESERVE_PARACHUTE(players.user())
-            PLAYER.SET_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user(), mdl)
-            util.yield(50)
-            local pos = players.get_position(pid)
-            pos.z += 300
-            TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
-            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos, false, false, false)
-            repeat
-                util.yield()
-            until PED.GET_PED_PARACHUTE_STATE(user) == 0
-            PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
-            util.yield(50)
-            TASK.CLEAR_PED_TASKS(user)
-            util.yield(50)
-            PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
-            repeat
-                util.yield()
-            until PED.GET_PED_PARACHUTE_STATE(user) ~= 1
-            pcall(TASK.CLEAR_PED_TASKS_IMMEDIATELY, user)
-            PLAYER.CLEAR_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user())
-            pcall(ENTITY.SET_ENTITY_COORDS, user, old_pos, false, false)
-        end)
-    end)
+    --menu.action(crashes, "Inbloqueable V3 'Test'", {}, "Pasado de mi menu, no se si funcione", function()
+    --    local mdl = util.joaat("apa_mp_apa_yacht")
+    --    local user = players.user_ped()
+    --    BlockSyncs(player_id, function()
+    --        util.yield(250)
+    --        local old_pos = ENTITY.GET_ENTITY_COORDS(user, false)
+    --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user, 0xFBAB5776, 100, false)
+    --        PLAYER.SET_PLAYER_HAS_RESERVE_PARACHUTE(players.user())
+    --        PLAYER.SET_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user(), mdl)
+    --        util.yield(50)
+    --        local pos = players.get_position(player_id)
+    --        pos.z += 300
+    --        TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
+    --        ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos, false, false, false)
+    --        repeat
+    --            util.yield()
+    --        until PED.GET_PED_PARACHUTE_STATE(user) == 0
+    --        PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
+    --        util.yield(50)
+    --        TASK.CLEAR_PED_TASKS(user)
+    --        util.yield(50)
+    --        PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
+    --        repeat
+    --            util.yield()
+    --        until PED.GET_PED_PARACHUTE_STATE(user) ~= 1
+    --        pcall(TASK.CLEAR_PED_TASKS_IMMEDIATELY, user)
+    --        PLAYER.CLEAR_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user())
+    --        pcall(ENTITY.SET_ENTITY_COORDS, user, old_pos, false, false)
+    --    end)
+    --end)
 
     menu.action(crashes, "Inbloqueable V4 '2T1'", {""}, "", function()
         BlockSyncs(player_id, function()
@@ -736,7 +771,7 @@ players.on_join(function(player_id)
             util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x4, -1, 1, 1, 1})
             util.trigger_script_event(1 << player_id, {0x6A16C7F, player_id, memory.script_global(0x2908D3 + 1 + (player_id * 0x1C5) + 0x13E + 0x7)})
             util.trigger_script_event(1 << player_id, {0x63D4BFB1, players.user(), memory.read_int(memory.script_global(0x1CE15F + 1 + (player_id * 0x257) + 0x1FE))})
-            menu.trigger_commands("breakdown" .. players.get_name(player_id))
+            menu.trigger_commands("breakup" .. players.get_name(player_id))
         end)
     else
         menu.action(kicks, "Kickeo adaptivo V2", {}, "", function()
@@ -1722,7 +1757,7 @@ menu.toggle_loop(online, "Adicto SH", {}, "Te buelbez adicto al script houst", f
     end
 end)
 
-menu.toggle(online, "Anti-Chat", {}, "Hace que no salga cuando estas escribiendo el 'icono' encima de ti", function(on)
+menu.toggle(online, "Anti-Chat", {}, "Hace que no salga cuando estas escribiendo el 'icono' encima de ti", function()
 	if on then
 		menu.trigger_commands("hidetyping on")
 	else
@@ -1743,6 +1778,43 @@ menu.action(online, "Dar M16", {""}, "", function()
     memory.write_int(memory.script_global(262145 + 32775), 1)
 end)
 
+menu.toggle(online, "Sangre Fria 'Test'", {}, "Remueve tu señal termica.\nAlgunos jugadores pueden seguir viendote.", function(toggle)
+    if toggle then
+        PED.SET_PED_HEATSCALE_OVERRIDE(PLAYER.PLAYER_PED_ID(), 0)
+    else
+        PED.SET_PED_HEATSCALE_OVERRIDE(PLAYER.PLAYER_PED_ID(), 1)
+    end
+end)
+
+--menu.toggle(online, "Tiempo Real", {}, "Hace tu juego concordar con la hora actual de tu ubicacion.", function(toggle)
+--    irlTime = toggle
+--    local smoothTimeOn = menu.get_value(smoothTransitionCommand) == 1
+--    toggleSwitchState(smoothTransitionCommand, smoothTimeOn)
+--    util.create_tick_handler(function()
+--        menu.trigger_command(setClockCommand, os.date("%H:%M:%S"))
+--        return irlTime
+--    end)
+--    toggleSwitchState(smoothTransitionCommand, smoothTimeOn)
+--end)
+
+menu.toggle(online, "Armas Termicas 'Test'", {}, "Hace todas tus armas con mira termica con la tecla. E", function()
+    if PLAYER.IS_PLAYER_FREE_AIMING(PLAYER.PLAYER_PED_ID()) then
+        if PAD.IS_CONTROL_JUST_PRESSED(38, 38) then
+            if not GRAPHICS.GET_USINGSEETHROUGH() then
+                menu.trigger_command(thermal_command, "on")
+                GRAPHICS._SEETHROUGH_SET_MAX_THICKNESS(50)
+            else
+                menu.trigger_command(thermal_command, "off")
+                GRAPHICS.SET_SEETHROUGH(false)
+                GRAPHICS._SEETHROUGH_SET_MAX_THICKNESS(1) --default value is 1
+            end
+        end
+    elseif GRAPHICS.GET_USINGSEETHROUGH() then
+        menu.trigger_command(thermal_command, "off")
+        GRAPHICS._SEETHROUGH_SET_MAX_THICKNESS(1)
+    end
+end)
+
 joining = false
 menu.toggle(online, "Notificacion De Jugador", {}, "Avisa cuando un jugador entra a la sesion", function(on_toggle)
 	if on_toggle then
@@ -1751,6 +1823,17 @@ menu.toggle(online, "Notificacion De Jugador", {}, "Avisa cuando un jugador entr
 		joining = false
 	end
 end)
+
+local servicios = menu.list(online, "Servicios", {}, "")
+
+menu.action(servicios, "Pedir Heli", {}, "Pide un helicopter de lujo a tu ubicacion", function(on_toggle)
+    if NETWORK.NETWORK_IS_SESSION_ACTIVE() and
+	not NETWORK.NETWORK_IS_SCRIPT_ACTIVE("am_heli_taxi", -1, true, 0) then
+		write_global.int(2815059 + 876, 1)
+		write_global.int(2815059 + 883, 1)
+	end
+end)
+
 --------------------------------------------------------------------------------------------------------------------------------
 --Protecciones
 
@@ -1859,7 +1942,7 @@ menu.toggle_loop(protects, "Objetos F/", {"ghostobjects"}, "Deshabilita colision
         local net_obj = memory.read_long(obj_ptr + 0xd0)
         local obj_handle = entities.pointer_to_handle(obj_ptr)
         ENTITY.SET_ENTITY_ALPHA(obj_handle, 255, false)
-        CAM._DISABLE_CAM_COLLISION_FOR_ENTITY(obj_handle)
+        CAM.SET_GAMEPLAY_CAM_IGNORE_ENTITY_COLLISION_THIS_UPDATE(obj_handle)
         for i, data in ipairs(my_ents) do
             ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(obj_handle, data, false)
             ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(data, obj_handle, false)  
@@ -1876,7 +1959,7 @@ menu.toggle_loop(protects, "Vehiculos F/", {"ghostvehicles"}, "Deshabilita colis
         local net_veh = memory.read_long(veh_ptr + 0xd0)
         local veh_handle = entities.pointer_to_handle(veh_ptr)
         ENTITY.SET_ENTITY_ALPHA(veh_handle, 255, false)
-        CAM._DISABLE_CAM_COLLISION_FOR_ENTITY(veh_handle)
+        CAM.SET_GAMEPLAY_CAM_IGNORE_ENTITY_COLLISION_THIS_UPDATE(veh_handle)
         for i, data in ipairs(my_ents) do
             ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(veh_handle, data, false)
             ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(data, veh_handle, false)  
