@@ -3,7 +3,7 @@ util.require_natives(1663599433)
 
 util.toast("Bienvenide Al Script!!")
 local response = false
-local localVer = 2.0
+local localVer = 2.1
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -409,6 +409,19 @@ players.on_join(function(player_id)
         end
     end)
 
+    local cageveh = menu.list(trolling, "Enjaular Coches", {}, "")
+
+    menu.action(cageveh, "Enjaular Vehiculo", {"cage"}, "", function()
+        local container_hash = util.joaat("boxville3")
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped)
+        request_model(container_hash)
+        local container = entities.create_vehicle(container_hash, ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ped, 0.0, 2.0, 0.0), ENTITY.GET_ENTITY_HEADING(ped))
+        spawned_objects[#spawned_objects + 1] = container
+        ENTITY.SET_ENTITY_VISIBLE(container, false)
+        ENTITY.FREEZE_ENTITY_POSITION(container, true)
+    end)
+
 
     local cage = menu.list(trolling, "Enjaular Jugador", {}, "")
     menu.action(cage, "Jaula Electrica", {"electriccage"}, "", function(cl)
@@ -812,7 +825,7 @@ players.on_join(function(player_id)
             distance = 3
         end
 
-        local vehicle1 = entities.create_vehicle(vehicle, ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid), offset, distance, height), ENTITY.GET_ENTITY_HEADING(ped))
+        local vehicle1 = entities.create_vehicle(vehicle, ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ped, offset, distance, height), ENTITY.GET_ENTITY_HEADING(ped))
         local vehicle2 = entities.create_vehicle(vehicle, pos, 0)
         local vehicle3 = entities.create_vehicle(vehicle, pos, 0)
         local vehicle4 = entities.create_vehicle(vehicle, pos, 0)
@@ -2040,6 +2053,12 @@ end)
 
 menu.slider(protects, "Radio de limpiar", {"clearradius"}, "Radio para limpiar", 100, 10000, 100, 100, function(s)
     radius = s
+end)
+
+menu.toggle_loop(protects, "Anti-Bestia", {}, "Previene que te vuelvan la bestia con stand etc.", function()
+    if util.spoof_script("am_hunt_the_beast", SCRIPT.TERMINATE_THIS_THREAD) then
+        util.toast("Detectado script de bestia, parando script...")
+    end
 end)
 
 --menu.toggle_loop(protects, "Bloquear Lag/Fuego", {}, "", function()
