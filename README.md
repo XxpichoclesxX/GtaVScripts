@@ -18,8 +18,9 @@ This is a lua also for the paid modding engine called stand, it is a complement 
 Im also thinking on some extra features, like more protections and trolling options and much more than i have in today's version.
 
 No ETA also because as i said in kiddions script i dont know actually if im going to continue this by now, because of my classes and everything so, this is just a fun and helpfull project, if anyone want's to use it, is free and you can use my script has a template for free.
---------------------------------------------------------------------------------------------------
 
+
+--------------------------------------------------------------------------------------------------
 ## About
 -  Probably Stand script is going to take a little bit more than kiddions, by now, kiddions script is in stand by <3
 
