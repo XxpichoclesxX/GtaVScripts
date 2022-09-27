@@ -1812,13 +1812,13 @@ local maxps = menu.list(online, "Herramientas De Host", {}, "")
 menu.slider(maxps, "Jugadores Max", {}, "Maximo de jugadores en lobby\nsolo funciona cuando eres el host", 1, 32, 32, 1, function (value)
     if Stand_internal_script_can_run then
         NETWORK.NETWORK_SESSION_SET_MATCHMAKING_GROUP_MAX(0, value)
-        notification.notify("free slots",NETWORK.NETWORK_SESSION_GET_MATCHMAKING_GROUP_FREE(0))
+        util.toast("free slots",NETWORK.NETWORK_SESSION_GET_MATCHMAKING_GROUP_FREE(0))
     end
 end)
 menu.slider(maxps, "Espectadores Max", {}, "Espectadores maximos\nsolo funciona cuando eres el host", 0, 2, 2, 1, function (value)
     if Stand_internal_script_can_run then
         NETWORK.NETWORK_SESSION_SET_MATCHMAKING_GROUP_MAX(4, value)
-        notification.notify("free slots",NETWORK.NETWORK_SESSION_GET_MATCHMAKING_GROUP_FREE(4))
+        util.toast("free slots",NETWORK.NETWORK_SESSION_GET_MATCHMAKING_GROUP_FREE(4))
     end
 end)
 
