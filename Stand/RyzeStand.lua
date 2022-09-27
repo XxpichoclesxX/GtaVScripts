@@ -2,8 +2,9 @@ util.keep_running()
 util.require_natives(1663599433)
 
 util.toast("Bienvenide Al Script!!")
+util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.1
+local localVer = 2.2
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -30,6 +31,8 @@ repeat
     util.yield()
 until response
 
+--sleep(1500)
+
 local function request_model(model)
     STREAMING.REQUEST_MODEL(model)
 
@@ -49,16 +52,6 @@ local function get_entity_owner(addr)
     end
     return players.user()
 end
-
-local unreleased_vehicles = {
-    "Kanjosj",
-    "Postlude",
-    "Rhinehart",
-    "Tenf",
-    "Tenf2",
-    "Sentinel4",
-    "Weevil2",
-}
 
 local modded_vehicles = {
     "dune2",
@@ -1614,16 +1607,30 @@ menu.toggle_loop(world, "Campo De Fuerza", {"sforcefield"}, "", function()
     end
 end)
 
+menu.action(world, "Limpiar Area", {"cleararea"}, "Limpia todo en el area", function(on_click)
+    clear_area(clear_radius)
+    util.toast('Area limpia:3')
+end)
+
+menu.action(world, "Limpiar Mundo", {"clearworld"}, "Limpia literalmente todo lo del area incluyendo peds, coches, objetos, bools etc.", function(on_click)
+    clear_area(1000000)
+    util.toast('Mundo limpio :3')
+end)
+
+menu.slider(world, "Radio de limpiar", {"clearradius"}, "Radio para limpiar", 100, 10000, 100, 100, function(s)
+    radius = s
+end)
+
 
 --------------------------------------------------------------------------------------------------------------------------------
 --Detecciones
 menu.toggle_loop(detections, "GodMode", {}, "Saldran en modo debug si se detectan.", function()
-    for _, pid in ipairs(players.list(false, true, true)) do
+    for _, player_id in ipairs(players.list(false, true, true)) do
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
         for i, interior in ipairs(interior_stuff) do
-            if (players.is_godmode(pid) or not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(ped)) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior then
-                util.draw_debug_text(players.get_name(pid) .. " Tiene Godmode")
+            if (players.is_godmode(player_id) or not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(ped)) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior then
+                util.draw_debug_text(players.get_name(player_id) .. " Tiene Godmode")
                 break
             end
         end
@@ -1631,14 +1638,14 @@ menu.toggle_loop(detections, "GodMode", {}, "Saldran en modo debug si se detecta
 end)
 
 menu.toggle_loop(detections, "Godmode De Coche", {}, "Saldran en modo debug si se detectan.", function()
-    for _, pid in ipairs(players.list(false, true, true)) do
+    for _, player_id in ipairs(players.list(false, true, true)) do
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
         local player_veh = PED.GET_VEHICLE_PED_IS_USING(ped)
         if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
             for i, interior in ipairs(interior_stuff) do
-                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior then
-                    util.draw_debug_text(players.get_name(pid) .. " Esta en carro con godmode")
+                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior then
+                    util.draw_debug_text(players.get_name(player_id) .. " Esta en carro con godmode")
                     break
                 end
             end
@@ -1647,12 +1654,12 @@ menu.toggle_loop(detections, "Godmode De Coche", {}, "Saldran en modo debug si s
 end)
 
 menu.toggle_loop(detections, "Arma Modeada", {}, "", function()
-    for _, pid in ipairs(players.list(false, true, true)) do
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+    for _, player_id in ipairs(players.list(false, true, true)) do
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         for i, hash in ipairs(modded_weapons) do
             local weapon_hash = util.joaat(hash)
             if WEAPON.HAS_PED_GOT_WEAPON(ped, weapon_hash, false) and (WEAPON.IS_PED_ARMED(ped, 7) or TASK.GET_IS_TASK_ACTIVE(ped, 8) or TASK.GET_IS_TASK_ACTIVE(ped, 9)) then
-                util.toast(players.get_name(pid) .. " Esta usando arma mod")
+                util.toast(players.get_name(player_id) .. " Esta usando arma mod")
                 break
             end
         end
@@ -1660,11 +1667,11 @@ menu.toggle_loop(detections, "Arma Modeada", {}, "", function()
 end)
 
 menu.toggle_loop(detections, "Coche Modeada", {}, "", function()
-    for _, pid in ipairs(players.list(false, true, true)) do
-        local modelHash = players.get_vehicle_model(pid)
+    for _, player_id in ipairs(players.list(false, true, true)) do
+        local modelHash = players.get_vehicle_model(player_id)
         for i, name in ipairs(modded_vehicles) do
             if modelHash == util.joaat(name) then
-                util.draw_debug_text(players.get_name(pid) .. " Tiene coche modeado")
+                util.draw_debug_text(players.get_name(player_id) .. " Tiene coche modeado")
                 break
             end
         end
@@ -1672,20 +1679,21 @@ menu.toggle_loop(detections, "Coche Modeada", {}, "", function()
 end)
 
 menu.toggle_loop(detections, "Arma En Interior", {}, "", function()
-    for _, pid in ipairs(players.list(false, true, true)) do
-        local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-        if players.is_in_interior(pid) and WEAPON.IS_PED_ARMED(player, 7) then
-            util.draw_debug_text(players.get_name(pid) .. " Tiene un arma en interior")
+    for _, player_id in ipairs(players.list(false, true, true)) do
+        local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        if players.is_in_interior(player_id) and WEAPON.IS_PED_ARMED(player, 7) then
+            util.draw_debug_text(players.get_name(player_id) .. " Tiene un arma en interior")
             break
         end
     end
 end)
 
 menu.toggle_loop(detections, "Es Hacker", {}, "Detecta si el jugador lo estan por bannear", function()
-    for _, pid in ipairs(players.list(false, true, true)) do
-        local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-        if NETWORK.NETWORK_PLAYER_IS_CHEATER(pid) then
-            util.draw_debug_text(players.get_name(pid) .. " Estan por banearle :u")
+    for _, player_id in ipairs(players.list(false, true, true)) do
+        local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local reason = NETWORK.NETWORK_PLAYER_GET_CHEATER_REASON(player_id)
+        if NETWORK.NETWORK_PLAYER_IS_CHEATER(player_id) then
+            util.draw_debug_text(players.get_name(player_id) .. " Estan por banearle :u, razon:", reason)
             break
         end
     end
@@ -1731,13 +1739,13 @@ menu.toggle_loop(detections, "Noclip", {}, "Detecta si el jugador esta levitando
 end)
 
 menu.toggle_loop(detections, "Spectateando", {}, "Detecta si te espectea o a alguien mas", function()
-    for _, pid in ipairs(players.list(false, true, true)) do
+    for _, player_id in ipairs(players.list(false, true, true)) do
         for i, interior in ipairs(interior_stuff) do
-            local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-            if not util.is_session_transition_active() and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior
-            and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
-                if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(pid)) < 15.0 and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(pid)) > 20.0 then
-                    util.toast(players.get_name(pid) .. " Te esta viendo")
+            local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+            if not util.is_session_transition_active() and get_transition_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior
+            and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
+                if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(player_id)) < 15.0 and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 20.0 then
+                    util.toast(players.get_name(player_id) .. " Te esta viendo")
                     break
                 end
             end
@@ -1746,16 +1754,16 @@ menu.toggle_loop(detections, "Spectateando", {}, "Detecta si te espectea o a alg
 end)
 
 menu.toggle_loop(detections, "Teleport", {}, "Detecta si el jugador se teletransporta", function()
-    for _, pid in ipairs(players.list(false, true, true)) do
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-        if not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
-            local oldpos = players.get_position(pid)
+    for _, player_id in ipairs(players.list(false, true, true)) do
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        if not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
+            local oldpos = players.get_position(player_id)
             util.yield(1000)
-            local currentpos = players.get_position(pid)
+            local currentpos = players.get_position(player_id)
             for i, interior in ipairs(interior_stuff) do
                 if v3.distance(oldpos, currentpos) > 500 and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
-                and get_transition_state(pid) ~= 0 and get_interior_player_is_in(pid) == interior and PLAYER.IS_PLAYER_PLAYING(pid) and player.exists(pid) then
-                    util.toast(players.get_name(pid) .. " Se acaba de teletransportar")
+                and get_transition_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
+                    util.toast(players.get_name(player_id) .. " Se acaba de teletransportar")
                 end
             end
         end
@@ -1796,6 +1804,21 @@ menu.toggle(online, "Sangre Fria 'Test'", {}, "Remueve tu señal termica.\nAlgun
         PED.SET_PED_HEATSCALE_OVERRIDE(PLAYER.PLAYER_PED_ID(), 0)
     else
         PED.SET_PED_HEATSCALE_OVERRIDE(PLAYER.PLAYER_PED_ID(), 1)
+    end
+end)
+
+local maxps = menu.list(online, "Herramientas De Host", {}, "")
+
+menu.slider(maxps, "Jugadores Max", {}, "Maximo de jugadores en lobby\nsolo funciona cuando eres el host", 1, 32, 32, 1, function (value)
+    if Stand_internal_script_can_run then
+        NETWORK.NETWORK_SESSION_SET_MATCHMAKING_GROUP_MAX(0, value)
+        notification.notify("free slots",NETWORK.NETWORK_SESSION_GET_MATCHMAKING_GROUP_FREE(0))
+    end
+end)
+menu.slider(maxps, "Espectadores Max", {}, "Espectadores maximos\nsolo funciona cuando eres el host", 0, 2, 2, 1, function (value)
+    if Stand_internal_script_can_run then
+        NETWORK.NETWORK_SESSION_SET_MATCHMAKING_GROUP_MAX(4, value)
+        notification.notify("free slots",NETWORK.NETWORK_SESSION_GET_MATCHMAKING_GROUP_FREE(4))
     end
 end)
 
@@ -2039,20 +2062,6 @@ menu.toggle_loop(pool_limiter, "Activar limitador pool", {}, "", function()
             util.toast("[Esenciales de stand] Limpiando bools de objetos...")
         end
     end
-end)
-
-menu.action(protects, "Limpiar Area", {"cleararea"}, "Limpia todo en el area", function(on_click)
-    clear_area(clear_radius)
-    util.toast('Area limpia:3')
-end)
-
-menu.action(protects, "Limpiar Mundo", {"clearworld"}, "Limpia literalmente todo lo del area incluyendo peds, coches, objetos, bools etc.", function(on_click)
-    clear_area(1000000)
-    util.toast('Mundo limpio :3')
-end)
-
-menu.slider(protects, "Radio de limpiar", {"clearradius"}, "Radio para limpiar", 100, 10000, 100, 100, function(s)
-    radius = s
 end)
 
 menu.toggle_loop(protects, "Anti-Bestia", {}, "Previene que te vuelvan la bestia con stand etc.", function()
@@ -2499,6 +2508,11 @@ end)
 menu.action(credits, "Cxbr", {}, "Ayudo con la mayoria de opciones amigables <3", function()
 end)
 menu.action(credits, "Ustedes", {}, "Quienes descargan el script y me hacen sentir que al menos lo hice para mantener a la comunidad viva <3", function()
+end)
+
+util.on_stop(function ()
+    util.toast("Adious\nEspero te haya gustado :3")
+    util.toast("Limpiando...")
 end)
 
 players.dispatch_on_join()
