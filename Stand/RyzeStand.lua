@@ -31,7 +31,7 @@ repeat
     util.yield()
 until response
 
---sleep(1500)
+sleep(1500)
 
 local function request_model(model)
     STREAMING.REQUEST_MODEL(model)
