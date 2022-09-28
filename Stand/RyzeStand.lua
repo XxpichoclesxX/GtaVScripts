@@ -1,3 +1,9 @@
+-- This was created by XxpichoclesxX#0427 with some help already mentioned in credits.
+-- The original download site should be github.com/xxpichoclesxx, if you got this script from anyone selling it, you got sadly scammed.
+-- Also this is only for some new stand people because is a trolling and online feature script, not recovery.
+-- So enjoy and pls join my discord, to know when the script is updated or be able to participate in polls.
+
+
 util.keep_running()
 util.require_natives(1663599433)
 
