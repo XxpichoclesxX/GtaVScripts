@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.2
+local localVer = 2.3
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -37,7 +37,7 @@ repeat
     util.yield()
 until response
 
-sleep(1500)
+sleep(1300)
 
 local function request_model(model)
     STREAMING.REQUEST_MODEL(model)
@@ -1876,6 +1876,89 @@ menu.action(servicios, "Pedir Heli", {}, "Pide un helicopter de lujo a tu ubicac
 	end
 end)
 
+local bypasskick = menu.list(online, "Bypass Kick", {}, "Opciones que te permiten usar metodos para \n entrar a la sesion si te estan bloqueando.")
+
+menu.divider(bypasskick, "Metodos Normales")
+
+menu.toggle(bypasskick, "Metodo V1", {}, "Te da un tiempo limitado para que expulses al que te bloquea", function(on_toggle)
+    local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
+    local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
+    local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
+    local UnblockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Disabled")
+    if on_toggle then
+        menu.trigger_commands("nobgscript on")
+        menu.trigger_command(BlockIncSyncs)
+        menu.trigger_command(BlockNetEvents)
+        util.toast("Activado, ahora entra a su sesion y prepara el kick")
+    else
+        menu.trigger_commands("nobgscript off")
+        menu.trigger_command(UnblockIncSyncs)
+        menu.trigger_command(UnblockNetEvents)
+        util.toast("Listo, todo desactivado")
+    end
+end)
+
+--menu.toggle(bypasskick, "Metodo V2", {}, "Un poco mas funcional pero tambien con mas errores de red", function(on_toggle)
+--    local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
+--    local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
+--    local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
+--    local UnblockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Disabled")
+    --local BlockBailing = menu.ref_by_path("Online>Protections>Block Bailing>Player No Longer In Session>Enabled")
+    --local BlockBailing2 = menu.ref_by_path("Online>Protections>Block Bailing>Switching Primary Crew>Enabled")
+--    local BlockBailing3 = menu.ref_by_path("Online>Protections>Block Bailing>Spectating Related>Enabled")
+    --local BlockBailing4 = menu.ref_by_path("Online>Protections>Block Bailing>Other Reasons>Enabled")
+--    local UnblockBailing = menu.ref_by_path("Online>Protections>Block Bailing>Spectating Related>Disabled")
+--    if on_toggle then
+--        menu.trigger_commands("nobgscript on")
+--        menu.trigger_command(BlockIncSyncs)
+--        menu.trigger_command(BlockNetEvents)
+        --menu.trigger_command(BlockBailing)
+        --menu.trigger_command(BlockBailing2)
+        --menu.trigger_command(BlockBailing3)
+        --menu.trigger_command(BlockBailing4)
+--        util.toast("Activado, ahora entra a su sesion y prepara el kick")
+--    else
+--        menu.trigger_commands("nobgscript off")
+--        menu.trigger_command(UnblockIncSyncs)
+--        menu.trigger_command(UnblockNetEvents)
+--        --menu.trigger_command(UnblockBailing)
+--        util.toast("Listo, todo desactivado")
+--    end
+--end)
+
+--menu.divider(bypasskick, "Este metodo es distinto y echo para desarrolladores")
+--menu.divider(bypasskick, "Reciviras notificaciones de los eventos de red")
+--menu.divider(bypasskick, "Asi podras saber que te kickea o como y hacer un networksplit")
+-- In progress...
+
+--menu.toggle(bypasskick, "Metodo V3", {}, "Meotodo mas funcional, pero para desarrolladores, recibiras notificacion de todo evento", function(toggle)
+--local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
+--local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
+--local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
+--local UnblockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Disabled")
+--local BlockBailing = menu.ref_by_path("Online>Protections>Block Bailing>Player No Longer In Session>Enabled")
+--local BlockBailing2 = menu.ref_by_path("Online>Protections>Block Bailing>Switching Primary Crew>Enabled")
+--local BlockBailing3 = menu.ref_by_path("Online>Protections>Block Bailing>Spectating Related>Enabled")
+--local BlockBailing4 = menu.ref_by_path("Online>Protections>Block Bailing>Other Reasons>Enabled")
+--local UnblockBailing = menu.ref_by_path("Online>Protections>Block Bailing>Spectating Related>Disabled")
+--if on_toggle then
+--    menu.trigger_commands("nobgscript on")
+--    menu.trigger_command(BlockIncSyncs)
+--    menu.trigger_command(BlockNetEvents)
+--    menu.trigger_command(BlockBailing)
+--    menu.trigger_command(BlockBailing2)
+--    menu.trigger_command(BlockBailing3)
+--    menu.trigger_command(BlockBailing4)
+--    util.toast("Activado, ahora entra a su sesion y prepara el kick")
+--else
+--    menu.trigger_commands("nobgscript off")
+--    menu.trigger_command(UnblockIncSyncs)
+--    menu.trigger_command(UnblockNetEvents)
+--    menu.trigger_command(UnblockBailing)
+--    util.toast("Listo, todo desactivado")
+--end
+--end)
+
 --------------------------------------------------------------------------------------------------------------------------------
 --Protecciones
 
@@ -2321,6 +2404,23 @@ end)
 --end)
 
 
+--local randomizer = function(x)
+--    local r = math.random(1,3)
+--    return x[r]
+--end
+
+--array = {"1","1","2"}
+
+--menu.divider(fun, "Thx Holy <3")
+--menu.action(fun, "Jalar El Gatillo", {}, "Juega la ruleta rusa con tu juego", function()
+--    if randomizer(array) == "1" then
+--        util.toast("Sobreviviste :D")
+--    else
+--        util.log("Tu juego murio D:")
+--        ENTITY.APPLY_FORCE_TO_ENTITY(0, 0, 0, 0, 0, 0, 0, 0, 0, false, false, false, false, false)
+--    end
+--end)
+
 menu.toggle_loop(fun, "Gato Mascota", {}, "", function()
     if not jinx_pet or not ENTITY.DOES_ENTITY_EXIST(jinx_pet) then
         local jinx = util.joaat("a_c_cat_01")
@@ -2337,6 +2437,9 @@ end, function()
     entities.delete_by_handle(jinx_pet)
     jinx_pet = nil
 end)
+
+
+
 
 local jinx_army = {}
 local army = menu.list(fun, "Ataque G", {}, "")
@@ -2498,22 +2601,31 @@ menu.toggle(misc, "Modo Screenshot", {}, "Para que puedas tomar fotitos <3", fun
 	end
 end)
 
+--menu.toggle(misc, "Identificador de stand", {}, "Te hace invisible para otros usuarios de stand, pero tampoco los detectaras.", function(on_toggle)
+--    local standid = menu.ref_by_path("Online>Protections>Detections>Stand User Identification>Enabled")
+--    local unstandid = menu.ref_by_path("Online>Protections>Detections>Stand User Identification>Disabled")
+--    if on_toggle then
+--        menu.trigger_command(standid)
+--    else
+--        menu.trigger_command(unstandid)
+--    end
+--end)
 
 menu.hyperlink(menu.my_root(), "Entra al discord!", "https://discord.gg/BNbSHhunPv")
 local credits = menu.list(misc, "Creditos", {}, "")
-menu.action(credits, "Emir, Joju, Pepe, Ady, Vicente, Sammy", {}, "Esto no seria posible sin ellos, me dieron inspiracion y ganas de seguir este proyecto, los quiero <3", function()
+menu.action(credits, "Emir, Joju, Pepe, Ady, Vicente, Sammy", {}, "This will never be posible without them <3", function()
 end)
-menu.action(credits, "JinxScript", {}, "Me dieron todas las ideas junto con algunos nativos y funciones, ya que soy nuevo en lua de stand :3.", function()
+menu.action(credits, "JinxScript", {}, "Thx for many of the player detection :3.", function()
 end)
-menu.action(credits, "gLance", {}, "Ayuda con la mayoria de opciones de deteccion.", function()
+menu.action(credits, "gLance", {}, "He gave me a lot of help with Gta V natives.", function()
 end)
-menu.action(credits, "LanceScriptTEOF", {}, "Lo mismo que gLance con la diferencia que me ayudo en aprender sobre los nativos.", function()
+menu.action(credits, "LanceScriptTEOF", {}, "He helped me learn and understand Gta V natives", function()
 end)
-menu.action(credits, "Aaron", {}, "Gracias por ayudarme a entender el lua de stand y darme los primeros pasos", function()
+menu.action(credits, "Aaron", {}, "Thanks for helping me with my first steps in the stand lua api", function()
 end)
-menu.action(credits, "Cxbr", {}, "Ayudo con la mayoria de opciones amigables <3", function()
+menu.action(credits, "Cxbr", {}, "Thx for friendly features <3", function()
 end)
-menu.action(credits, "Ustedes", {}, "Quienes descargan el script y me hacen sentir que al menos lo hice para mantener a la comunidad viva <3", function()
+menu.action(credits, "Ustedes", {}, "Who download the script and give ideas for improvement <3", function()
 end)
 
 util.on_stop(function ()
