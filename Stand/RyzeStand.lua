@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.3
+local localVer = 2.5
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -37,27 +37,18 @@ repeat
     util.yield()
 until response
 
-sleep(1300)
+--local required <const> = {
+--    "lib/natives-1663599433.lua",
+--    "lib/ryzescript/sportmode.lua"
+--}
+--local scriptdir <const> = filesystem.scripts_dir()
+--for _, file in ipairs(required) do
+--	assert(filesystem.exists(scriptdir .. file), "archivo requerido no encontrado: " .. file)
+--end
 
-local function request_model(model)
-    STREAMING.REQUEST_MODEL(model)
+--spmode = require "ryzescript.sportmode"
 
-    while not STREAMING.HAS_MODEL_LOADED(model) do
-        util.yield()
-    end
-end
-
-local function get_entity_owner(addr)
-    if util.is_session_started() and not util.is_session_transition_active() then
-        local netObject = memory.read_long(addr + 0xD0)
-        if netObject == 0 then
-            return -1
-        end
-        local owner = memory.read_byte(netObject + 0x49)
-        return owner
-    end
-    return players.user()
-end
+sleep(1200)
 
 local modded_vehicles = {
     "dune2",
@@ -290,9 +281,10 @@ local fun = menu.list(menu.my_root(), "Diversion", {}, "")
 
 players.on_join(function(player_id)
     menu.divider(menu.player_root(player_id), "RyzeScript")
-    local malicious = menu.list(menu.player_root(player_id), "Malicioso")
-    local trolling = menu.list(menu.player_root(player_id), "Troleado")
-    local friendly = menu.list(menu.player_root(player_id), "Amigable")
+    local ryzescriptd = menu.list(menu.player_root(player_id), "RyzeScript")
+    local malicious = menu.list(ryzescriptd, "Malicioso")
+    local trolling = menu.list(ryzescriptd, "Troleador")
+    local friendly = menu.list(ryzescriptd, "Amigable")
     --local vehicle = menu.list(menu.player_root(player_id), "Vehiculo")
 
 
@@ -589,7 +581,7 @@ players.on_join(function(player_id)
 	menu.action_slider(malicious, ("Kamikaze"), {}, "", options, function (index, plane)
 		local hash <const> = util.joaat(plane)
 		request_model(hash)
-		local targetPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+		local targetPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
 		local pos = players.get_position(targetPed, 20.0, 20.0)
 		pos.z = pos.z + 30.0
 		local plane = entities.create_vehicle(hash, pos, 0.0)
@@ -863,6 +855,17 @@ players.on_join(function(player_id)
     end)
 
     menu.action(antimodder, "Remover godmode de carro V2", {}, "", function()
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local veh = PED.GET_VEHICLE_PED_IS_IN(p)
+        if PED.IS_PED_IN_ANY_VEHICLE(p) then
+            RequestControl(veh)
+            ENTITY.SET_ENTITY_INVINCIBLE(veh, false)
+        else
+            util.toast(players.get_name(player_id).. " No esta en un coche")
+        end
+    end)
+
+    menu.toggle_loop(antimodder, "Remover godmode de carro V3", {}, "", function()
         local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
         local veh = PED.GET_VEHICLE_PED_IS_IN(p)
         if PED.IS_PED_IN_ANY_VEHICLE(p) then
@@ -1190,7 +1193,7 @@ players.on_join(function(player_id)
     end)
 
     menu.action(trolling, "Teletransportar a los backrooms 'Test'", {}, "Les teletransporta a los backrooms", function()
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local c = ENTITY.GET_ENTITY_COORDS(p)
         local defx = c.x
         local defy = c.y 
@@ -1400,6 +1403,63 @@ players.on_join(function(player_id)
             util.toast(players.get_name(player_id).. " No esta en un vehiculo")
         end
     end)
+
+    control_veh_cmd = menu.toggle(trolling, "Controlar vehiculo del jugador", {}, "Solo funciona en vehiculos terrestres.", function(toggle)
+        control_veh = toggle
+
+        while control_veh do 
+            local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+            local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
+            local player_veh = PED.GET_VEHICLE_PED_IS_IN(ped)
+            local class = VEHICLE.GET_VEHICLE_CLASS(player_veh)
+            if not players.exists(player_id) then util.stop_thread() end
+
+            if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 1000.0 
+            and v3.distance(pos, players.get_cam_pos(players.user())) > 1000.0 then
+                util.toast("Jugador muy lejos.")
+                menu.set_value(control_veh_cmd, false)
+            return end
+
+            if class == 15 then
+                util.toast("El jugador esta en un helicoptero.")
+                menu.set_value(control_veh_cmd, false)
+            break end
+            
+            if class == 16 then
+                util.toast("El jugador esta en un avion.")
+                menu.set_value(control_veh_cmd, false)
+            return end
+
+            if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
+                if PAD.IS_CONTROL_PRESSED(0, 34) then
+                    while not PAD.IS_CONTROL_RELEASED(0, 34) do
+                        TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 7, 100)
+                        util.yield()
+                    end
+                elseif PAD.IS_CONTROL_PRESSED(0, 35) then
+                    while not PAD.IS_CONTROL_RELEASED(0, 35) do
+                        TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 8, 100)
+                        util.yield()
+                    end
+                elseif PAD.IS_CONTROL_PRESSED(0, 32) then
+                    while not PAD.IS_CONTROL_RELEASED(0, 32) do
+                        TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 23, 100)
+                        util.yield()
+                    end
+                elseif PAD.IS_CONTROL_PRESSED(0, 33) then
+                    while not PAD.IS_CONTROL_RELEASED(0, 33) do
+                        TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 28, 100)
+                        util.yield()
+                    end
+                end
+            else
+                util.toast("El jugador no esta en un vehiculo. :/")
+                menu.set_value(control_veh_cmd, false)
+            end
+            util.yield()
+        end
+    end)
+
 
     menu.toggle_loop(trolling, "Desabilitar Vehiculo", {}, "Es mejor que el de stand", function(toggle)
         local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
@@ -1805,6 +1865,16 @@ menu.action(online, "Dar M16", {""}, "", function()
     memory.write_int(memory.script_global(262145 + 32775), 1)
 end)
 
+menu.toggle_loop(online, "Aceptar La Union", {}, "Aceptara automaticamente pantallas de unirse", function() -- credits to jinx for letting me steal this
+    local message_hash = HUD.GET_WARNING_SCREEN_MESSAGE_HASH()
+    if message_hash == 15890625 or message_hash == -398982408 or message_hash == -587688989 then
+        PAD.SET_CONTROL_VALUE_NEXT_FRAME(2, 201, 1.0)
+        util.yield(200)
+    end
+end)
+
+
+
 menu.toggle(online, "Sangre Fria 'Test'", {}, "Remueve tu señal termica.\nAlgunos jugadores pueden seguir viendote.", function(toggle)
     if toggle then
         PED.SET_PED_HEATSCALE_OVERRIDE(PLAYER.PLAYER_PED_ID(), 0)
@@ -1840,20 +1910,21 @@ end)
 --end)
 
 menu.toggle(online, "Armas Termicas 'Test'", {}, "Hace todas tus armas con mira termica con la tecla. E", function()
+    local thermal_command = menu.ref_by_path("Game>Rendering>Thermal Vision", 33)
     if PLAYER.IS_PLAYER_FREE_AIMING(PLAYER.PLAYER_PED_ID()) then
         if PAD.IS_CONTROL_JUST_PRESSED(38, 38) then
             if not GRAPHICS.GET_USINGSEETHROUGH() then
                 menu.trigger_command(thermal_command, "on")
-                GRAPHICS._SEETHROUGH_SET_MAX_THICKNESS(50)
+                GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(50)
             else
                 menu.trigger_command(thermal_command, "off")
                 GRAPHICS.SET_SEETHROUGH(false)
-                GRAPHICS._SEETHROUGH_SET_MAX_THICKNESS(1) --default value is 1
+                GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(1) --default value is 1
             end
         end
     elseif GRAPHICS.GET_USINGSEETHROUGH() then
         menu.trigger_command(thermal_command, "off")
-        GRAPHICS._SEETHROUGH_SET_MAX_THICKNESS(1)
+        GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(1)
     end
 end)
 
@@ -1898,66 +1969,67 @@ menu.toggle(bypasskick, "Metodo V1", {}, "Te da un tiempo limitado para que expu
     end
 end)
 
---menu.toggle(bypasskick, "Metodo V2", {}, "Un poco mas funcional pero tambien con mas errores de red", function(on_toggle)
---    local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
---    local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
---    local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
---    local UnblockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Disabled")
-    --local BlockBailing = menu.ref_by_path("Online>Protections>Block Bailing>Player No Longer In Session>Enabled")
-    --local BlockBailing2 = menu.ref_by_path("Online>Protections>Block Bailing>Switching Primary Crew>Enabled")
---    local BlockBailing3 = menu.ref_by_path("Online>Protections>Block Bailing>Spectating Related>Enabled")
-    --local BlockBailing4 = menu.ref_by_path("Online>Protections>Block Bailing>Other Reasons>Enabled")
---    local UnblockBailing = menu.ref_by_path("Online>Protections>Block Bailing>Spectating Related>Disabled")
---    if on_toggle then
---        menu.trigger_commands("nobgscript on")
---        menu.trigger_command(BlockIncSyncs)
---        menu.trigger_command(BlockNetEvents)
-        --menu.trigger_command(BlockBailing)
-        --menu.trigger_command(BlockBailing2)
-        --menu.trigger_command(BlockBailing3)
-        --menu.trigger_command(BlockBailing4)
---        util.toast("Activado, ahora entra a su sesion y prepara el kick")
---    else
---        menu.trigger_commands("nobgscript off")
---        menu.trigger_command(UnblockIncSyncs)
---        menu.trigger_command(UnblockNetEvents)
---        --menu.trigger_command(UnblockBailing)
---        util.toast("Listo, todo desactivado")
---    end
---end)
+menu.toggle(bypasskick, "Metodo V2", {}, "Un poco mas funcional pero tambien con mas errores de red", function(on_toggle)
+    local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
+    local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
+    local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
+    local UnblockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Disabled")
+    local BlockBailing = menu.ref_by_path("Online>Protections>Block Bailing>Player No Longer In Session")
+    local BlockBailing2 = menu.ref_by_path("Online>Protections>Block Bailing>Switching Primary Crew")
+    local BlockBailing3 = menu.ref_by_path("Online>Protections>Block Bailing>Spectating Related")
+    local BlockBailing4 = menu.ref_by_path("Online>Protections>Block Bailing>Other Reasons")
+    if on_toggle then
+        menu.trigger_commands("nobgscript on")
+        menu.trigger_command(BlockIncSyncs)
+        menu.trigger_command(BlockNetEvents)
+        menu.trigger_command(BlockBailing, "on")
+        menu.trigger_command(BlockBailing2, "on")
+        menu.trigger_command(BlockBailing3, "on")
+        menu.trigger_command(BlockBailing4, "on")
+        util.toast("Activado, ahora entra a su sesion y prepara el kick")
+    else
+        menu.trigger_commands("nobgscript off")
+        menu.trigger_command(UnblockIncSyncs)
+        menu.trigger_command(UnblockNetEvents)
+        menu.trigger_command(BlockBailing3, "off")
+        util.toast("Listo, todo desactivado")
+    end
+end)
 
---menu.divider(bypasskick, "Este metodo es distinto y echo para desarrolladores")
---menu.divider(bypasskick, "Reciviras notificaciones de los eventos de red")
---menu.divider(bypasskick, "Asi podras saber que te kickea o como y hacer un networksplit")
--- In progress...
-
---menu.toggle(bypasskick, "Metodo V3", {}, "Meotodo mas funcional, pero para desarrolladores, recibiras notificacion de todo evento", function(toggle)
---local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
---local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
---local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
---local UnblockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Disabled")
---local BlockBailing = menu.ref_by_path("Online>Protections>Block Bailing>Player No Longer In Session>Enabled")
---local BlockBailing2 = menu.ref_by_path("Online>Protections>Block Bailing>Switching Primary Crew>Enabled")
---local BlockBailing3 = menu.ref_by_path("Online>Protections>Block Bailing>Spectating Related>Enabled")
---local BlockBailing4 = menu.ref_by_path("Online>Protections>Block Bailing>Other Reasons>Enabled")
---local UnblockBailing = menu.ref_by_path("Online>Protections>Block Bailing>Spectating Related>Disabled")
---if on_toggle then
---    menu.trigger_commands("nobgscript on")
---    menu.trigger_command(BlockIncSyncs)
---    menu.trigger_command(BlockNetEvents)
---    menu.trigger_command(BlockBailing)
---    menu.trigger_command(BlockBailing2)
---    menu.trigger_command(BlockBailing3)
---    menu.trigger_command(BlockBailing4)
---    util.toast("Activado, ahora entra a su sesion y prepara el kick")
---else
---    menu.trigger_commands("nobgscript off")
---    menu.trigger_command(UnblockIncSyncs)
---    menu.trigger_command(UnblockNetEvents)
---    menu.trigger_command(UnblockBailing)
---    util.toast("Listo, todo desactivado")
---end
---end)
+menu.toggle(bypasskick, "Metodo V3", {}, "Metodo mas funcional, pero para desarrolladores, recibiras notificacion de todo evento", function(on_toggle)
+local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
+local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
+local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
+local UnblockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Disabled")
+local BlockBailing = menu.ref_by_path("Online>Protections>Block Bailing>Player No Longer In Session")
+local BlockBailing2 = menu.ref_by_path("Online>Protections>Block Bailing>Switching Primary Crew")
+local BlockBailing3 = menu.ref_by_path("Online>Protections>Block Bailing>Spectating Related")
+local BlockBailing4 = menu.ref_by_path("Online>Protections>Block Bailing>Other Reasons")
+local ShowNotis = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Notification>Enabled")
+local BlockRaw = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
+local UnShowNotis = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Notification>Disabled")
+local UnBlockRaw = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
+if on_toggle then
+    menu.trigger_commands("nobgscript on")
+    menu.trigger_command(BlockIncSyncs)
+    menu.trigger_command(BlockNetEvents)
+    menu.trigger_command(BlockBailing, "on")
+    menu.trigger_command(BlockBailing2, "on")
+    menu.trigger_command(BlockBailing3, "on")
+    menu.trigger_command(BlockBailing4, "on")
+    menu.trigger_command(ShowNotis)
+    menu.trigger_command(BlockRaw)
+    util.toast("Activado, ahora entra a su sesion y prepara el kick")
+else
+    menu.trigger_commands("nobgscript off")
+    menu.trigger_command(UnblockIncSyncs)
+    menu.trigger_command(UnblockNetEvents)
+    menu.trigger_command(BlockBailing3, "off")
+    menu.trigger_command(UnShowNotis)
+    menu.trigger_command(UnBlockRaw)
+    util.toast("Listo, todo desactivado")
+end
+end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 --Protecciones
@@ -2011,11 +2083,11 @@ local values = {
 
 local anticage = menu.list(protects, "Proteccion Anti-Jaula", {}, "")
 local alpha = 160
-menu.slider(anticage, "Cage Alpha", {"cagealpha"}, "The ammount of transparency that objects will have. Set to 0 to auto delete cages.", 0, #values, 3, 1, function(amount)
+menu.slider(anticage, "Alpha de Jaula", {"cagealpha"}, "Transparencia de jaula. Si esta en 0 no la veras", 0, #values, 3, 1, function(amount)
     alpha = values[amount]
 end)
 
-menu.toggle_loop(anticage, "Enable Anti-Cage", {"anticage"}, "", function()
+menu.toggle_loop(anticage, "Anti Jaula", {"anticage"}, "", function()
     local user = players.user_ped()
     local veh = PED.GET_VEHICLE_PED_IS_USING(user)
     local my_ents = {user, veh}
@@ -2053,7 +2125,7 @@ menu.toggle_loop(protects, "Anti-Mugger", {}, "", function() -- thx nowiry for i
             and NETWORK.NETWORK_REQUEST_CONTROL_OF_NETWORK_ID(memory.read_int(ped_netId))) then
                 local mugger = NETWORK.NET_TO_PED(memory.read_int(ped_netId))
                 entities.delete_by_handle(mugger)
-                util.toast("Blocked mugger from " .. players.get_name(memory.read_int(sender)))
+                util.toast("Dinero falso bloqueado de: " .. players.get_name(memory.read_int(sender)))
             end
         end)
     end
@@ -2159,11 +2231,18 @@ menu.toggle_loop(protects, "Anti-Bestia", {}, "Previene que te vuelvan la bestia
     end
 end)
 
---menu.toggle_loop(protects, "Bloquear Lag/Fuego", {}, "", function()
---    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
---    FIRE.STOP_FIRE_IN_RANGE(coords.x, coords.y, coords.z, 100)
---    FIRE.STOP_ENTITY_FIRE(players.user_ped())
---end)
+menu.toggle_loop(protects, "Bloquear Fuego/Lag", {}, "", function()
+    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
+    GRAPHICS.REMOVE_PARTICLE_FX_IN_RANGE(coords.x, coords.y, coords.z, 400)
+    GRAPHICS.REMOVE_PARTICLE_FX_FROM_ENTITY(players.user_ped())
+end)
+
+menu.toggle_loop(protects, "Bloquear PTFX", {}, "", function()
+    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
+    GRAPHICS.REMOVE_PARTICLE_FX_IN_RANGE(coords.x, coords.y, coords.z, 400)
+    GRAPHICS.REMOVE_PARTICLE_FX_FROM_ENTITY(players.user_ped())
+end)
+
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- Coches
@@ -2338,7 +2417,10 @@ local better_heli_handling_offsets = {
     ["fWindMult"] = 0x58, --helps with removing some jitter
     ["fPitchStabilise"] = 0x3C --idk what it does but it seems to help
 }
-menu.slider_float(vehicles, "Potencia Helicoptero Real", {"heliThrust"}, "Potencia de los helis", 0, 1000, 50, 1, function (value)
+
+realheli = menu.list(vehicles, "Helicopteros", {}, "Opciones de control real en helicoptero")
+
+menu.slider_float(realheli, "Potencia Helicoptero Real", {"heliThrust"}, "Potencia de los helis", 0, 1000, 50, 1, function (value)
     local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
     if CflyingHandling then
         memory.write_float(CflyingHandling + thrust_offset, value * 0.01)
@@ -2346,7 +2428,7 @@ menu.slider_float(vehicles, "Potencia Helicoptero Real", {"heliThrust"}, "Potenc
         util.toast("Error\nentra en un heli")
     end
 end)
-menu.action(vehicles, "Modo helicoptero real", {"betterheli"}, "Deshabilita la estabilizacion vertical de los vtol para modo de funcionamiento real", function ()
+menu.action(realheli, "Modo helicoptero real", {"betterheli"}, "Deshabilita la estabilizacion vertical de los vtol para modo de funcionamiento real", function ()
     local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
     if CflyingHandling then
         for _, offset in pairs(better_heli_handling_offsets) do
@@ -2356,6 +2438,169 @@ menu.action(vehicles, "Modo helicoptero real", {"betterheli"}, "Deshabilita la e
     else
         util.toast("Error\nentra en un heli")
     end
+end)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--Impulse SportMode start
+
+
+sportmode = menu.list(vehicles, "Sportmode", {}, "El SportMode que todos recordaremos de Impusle :'3")
+
+PEDD = {
+	["GET_VEHICLE_PED_IS_IN"]=function(--[[Ped (int)]] ped,--[[BOOL (bool)]] includeLastVehicle)native_invoker.begin_call();native_invoker.push_arg_int(ped);native_invoker.push_arg_bool(includeLastVehicle);native_invoker.end_call("9A9112A0FE9A4713");return native_invoker.get_return_value_int();end,
+}
+PLAYERR = {
+	["PLAYER_PED_ID"]=function()native_invoker.begin_call();native_invoker.end_call("D80958FC74E988A6");return native_invoker.get_return_value_int();end,
+}
+CAMM = {
+	["GET_GAMEPLAY_CAM_ROT"]=function(--[[int]] rotationOrder)native_invoker.begin_call();native_invoker.push_arg_int(rotationOrder);native_invoker.end_call("837765A25378F0BB");return native_invoker.get_return_value_vector3();end,
+	["SET_CAM_ROT"]=--[[void]] function(--[[Cam (int)]] cam,--[[float]] rotX,--[[float]] rotY,--[[float]] rotZ,--[[int]] rotationOrder)native_invoker.begin_call();native_invoker.push_arg_int(cam);native_invoker.push_arg_float(rotX);native_invoker.push_arg_float(rotY);native_invoker.push_arg_float(rotZ);native_invoker.push_arg_int(rotationOrder);native_invoker.end_call("85973643155D0B07");end,
+	["_SET_GAMEPLAY_CAM_RELATIVE_ROTATION"]=--[[void]] function(--[[float]] roll,--[[float]] pitch,--[[float]] yaw)native_invoker.begin_call();native_invoker.push_arg_float(roll);native_invoker.push_arg_float(pitch);native_invoker.push_arg_float(yaw);native_invoker.end_call("48608C3464F58AB4");end,
+
+}
+ENTITYY = {
+	["SET_ENTITY_ROTATION"]=function(--[[Entity (int)]] entity,--[[float]] pitch,--[[float]] roll,--[[float]] yaw,--[[int]] rotationOrder,--[[BOOL (bool)]] p5)native_invoker.begin_call();native_invoker.push_arg_int(entity);native_invoker.push_arg_float(pitch);native_invoker.push_arg_float(roll);native_invoker.push_arg_float(yaw);native_invoker.push_arg_int(rotationOrder);native_invoker.push_arg_bool(p5);native_invoker.end_call("8524A8B0171D5E07");end,
+	["SET_ENTITY_COLLISION"]=function(--[[Entity (int)]] entity,--[[BOOL (bool)]] toggle,--[[BOOL (bool)]] keepPhysics)native_invoker.begin_call();native_invoker.push_arg_int(entity);native_invoker.push_arg_bool(toggle);native_invoker.push_arg_bool(keepPhysics);native_invoker.end_call("1A9205C1B9EE827F");end,
+	["APPLY_FORCE_TO_ENTITY"]=function(--[[Entity (int)]] entity,--[[int]] forceFlags,--[[float]] x,--[[float]] y,--[[float]] z,--[[float]] offX,--[[float]] offY,--[[float]] offZ,--[[int]] boneIndex,--[[BOOL (bool)]] isDirectionRel,--[[BOOL (bool)]] ignoreUpVec,--[[BOOL (bool)]] isForceRel,--[[BOOL (bool)]] p12,--[[BOOL (bool)]] p13)native_invoker.begin_call();native_invoker.push_arg_int(entity);native_invoker.push_arg_int(forceFlags);native_invoker.push_arg_float(x);native_invoker.push_arg_float(y);native_invoker.push_arg_float(z);native_invoker.push_arg_float(offX);native_invoker.push_arg_float(offY);native_invoker.push_arg_float(offZ);native_invoker.push_arg_int(boneIndex);native_invoker.push_arg_bool(isDirectionRel);native_invoker.push_arg_bool(ignoreUpVec);native_invoker.push_arg_bool(isForceRel);native_invoker.push_arg_bool(p12);native_invoker.push_arg_bool(p13);native_invoker.end_call("C5F68BE9613E2D18");end,
+	["FREEZE_ENTITY_POSITION"]=function(--[[Entity (int)]] entity,--[[BOOL (bool)]] toggle)native_invoker.begin_call();native_invoker.push_arg_int(entity);native_invoker.push_arg_bool(toggle);native_invoker.end_call("428CA6DBD1094446");end,
+}
+VEHICLEE = {
+	["SET_VEHICLE_FORWARD_SPEED"]=function(--[[Vehicle (int)]] vehicle,--[[float]] speed)native_invoker.begin_call();native_invoker.push_arg_int(vehicle);native_invoker.push_arg_float(speed);native_invoker.end_call("AB54A438726D25D5");end,
+	["SET_VEHICLE_GRAVITY"]=function(--[[Vehicle (int)]] vehicle,--[[BOOL (bool)]] toggle)native_invoker.begin_call();native_invoker.push_arg_int(vehicle);native_invoker.push_arg_bool(toggle);native_invoker.end_call("89F149B6131E57DA");end,
+	["SET_VEHICLE_EXTRA_COLOURS"]=--[[void]] function(--[[Vehicle (int)]] vehicle,--[[int]] pearlescentColor,--[[int]] wheelColor)native_invoker.begin_call();native_invoker.push_arg_int(vehicle);native_invoker.push_arg_int(pearlescentColor);native_invoker.push_arg_int(wheelColor);native_invoker.end_call("2036F561ADD12E33");end,
+
+}
+PADD = {
+	["IS_CONTROL_PRESSED"]=function(--[[int]] padIndex,--[[int]] control)native_invoker.begin_call();native_invoker.push_arg_int(padIndex);native_invoker.push_arg_int(control);native_invoker.end_call("F3A21BCD95725A4A");return native_invoker.get_return_value_bool();end,
+}
+
+veh = PEDD.GET_VEHICLE_PED_IS_IN(PLAYER.PLAYER_PED_ID(), false);
+local is_vehicle_flying = false
+local dont_stop = false
+local no_collision = false
+local speed = 6
+local reset_veloicty = false
+
+menu.toggle(sportmode, "Volar Con Coche", {"vehfly"}, "Te recomiendo poner una tecla a este comando.", function(on_click)
+    is_vehicle_flying = on_click
+    if reset_veloicty then 
+        ENTITYY.FREEZE_ENTITY_POSITION(veh, true)
+        util.yield()
+        ENTITYY.FREEZE_ENTITY_POSITION(veh, false)
+    end
+end)
+menu.slider(sportmode, "Velocidad", {}, "", 1, 100, 6, 1, function(on_change) 
+    speed = on_change
+end)
+menu.toggle(sportmode, "No pares", {}, "", function(on_click)
+    dont_stop = on_click
+end)
+menu.toggle(sportmode, "Resetear velocidad", {}, "Si no paras de moverte despues de apagarlo, dale aqui", function(on_click)
+    reset_veloicty = on_click
+end)
+menu.toggle(sportmode, "Sin Colision", {}, "", function(on_click)
+    no_collision = on_click
+end)
+
+
+vehicleroll = 0
+
+
+function do_vehicle_fly() 
+    veh = PEDD.GET_VEHICLE_PED_IS_IN(PLAYER.PLAYER_PED_ID(), false);
+    cam_pos = CAMM.GET_GAMEPLAY_CAM_ROT(0);
+    ENTITYY.SET_ENTITY_ROTATION(veh, cam_pos.x, vehicleroll, cam_pos.z, 2, true)
+    ENTITYY.SET_ENTITY_COLLISION(veh, not no_collision, true);
+    if PADD.IS_CONTROL_PRESSED(0, 108) then 
+        vehicleroll = vehicleroll -1
+    end
+
+    if PADD.IS_CONTROL_PRESSED(0, 109) then 
+        vehicleroll = vehicleroll +1
+       
+    end
+
+    local locspeed = speed*10
+    local locspeed2 = speed
+    if PADD.IS_CONTROL_PRESSED(0, 61) then 
+        locspeed = locspeed*2
+        locspeed2 = locspeed2*2
+    end
+
+    
+    if PADD.IS_CONTROL_PRESSED(2, 71) then
+        if dont_stop then
+            ENTITYY.APPLY_FORCE_TO_ENTITY(veh, 1, 0.0, speed, 0.0, 0.0, 0.0, 0.0, 0, 1, 1, 1, 0, 1)
+        else 
+            VEHICLEE.SET_VEHICLE_FORWARD_SPEED(veh, locspeed)
+        end
+	end
+    if PADD.IS_CONTROL_PRESSED(2, 72) then
+		local lsp = speed
+        if not PAD.IS_CONTROL_PRESSED(0, 61) then 
+            lsp = speed * 2
+        end
+        if dont_stop then
+            ENTITYY.APPLY_FORCE_TO_ENTITY(veh, 1, 0.0, 0 - (lsp), 0.0, 0.0, 0.0, 0.0, 0, 1, 1, 1, 0, 1)
+        else 
+            VEHICLEE.SET_VEHICLE_FORWARD_SPEED(veh, 0 - (locspeed));
+        end
+   end
+    if PADD.IS_CONTROL_PRESSED(2, 63) then
+        local lsp = (0 - speed)*2
+        if not PADD.IS_CONTROL_PRESSED(0, 61) then 
+            lsp = 0 - speed
+        end
+        if dont_stop then
+            ENTITYY.APPLY_FORCE_TO_ENTITY(veh, 1, (lsp), 0.0, 0.0, 0.0, 0.0, 0.0, 0, 1, 1, 1, 0, 1)
+        else 
+            ENTITYY.APPLY_FORCE_TO_ENTITY(veh, 1, 0 - (locspeed), 0.0, 0.0, 0.0, 0.0, 0.0, 0, 1, 1, 1, 0, 1);
+        end
+	end
+    if PADD.IS_CONTROL_PRESSED(2, 64) then
+        local lsp = speed
+        if not PAD.IS_CONTROL_PRESSED(0, 61) then 
+            lsp = speed*2
+        end
+        if dont_stop then
+            ENTITYY.APPLY_FORCE_TO_ENTITY(veh, 1, lsp, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 1, 1, 1, 0, 1)
+        else 
+            ENTITYY.APPLY_FORCE_TO_ENTITY(veh, 1, locspeed, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 1, 1, 1, 0, 1)
+        end
+    end
+	if not dont_stop and not PAD.IS_CONTROL_PRESSED(2, 71) and not PAD.IS_CONTROL_PRESSED(2, 72) then
+        VEHICLEE.SET_VEHICLE_FORWARD_SPEED(veh, 0.0);
+    end
+end
+
+
+util.create_tick_handler(function() 
+
+
+    -- Added by LAZ
+    if PEDD.GET_VEHICLE_PED_IS_IN(PLAYER.PLAYER_PED_ID(),false) == 0 then
+        if is_vehicle_flying then
+            menu.trigger_commands("vehfly")
+            util.toast("Sportmode apagado, no esta en un vehiculo")
+        end
+    else
+        if is_vehicle_flying then do_vehicle_fly() end
+
+
+    end
+
+    -- End Added by LAZ
+
+    VEHICLEE.SET_VEHICLE_GRAVITY(veh, not is_vehicle_flying) 
+    if not is_vehicle_flying then 
+        ENTITY.SET_ENTITY_COLLISION(veh, true, true);
+    end
+
+    return true
+end)
+util.on_stop(function() 
+    VEHICLEE.SET_VEHICLE_GRAVITY(veh, true)
+    ENTITYY.SET_ENTITY_COLLISION(veh, true, true);
 end)
 
 
@@ -2601,15 +2846,14 @@ menu.toggle(misc, "Modo Screenshot", {}, "Para que puedas tomar fotitos <3", fun
 	end
 end)
 
---menu.toggle(misc, "Identificador de stand", {}, "Te hace invisible para otros usuarios de stand, pero tampoco los detectaras.", function(on_toggle)
---    local standid = menu.ref_by_path("Online>Protections>Detections>Stand User Identification>Enabled")
---    local unstandid = menu.ref_by_path("Online>Protections>Detections>Stand User Identification>Disabled")
---    if on_toggle then
---        menu.trigger_command(standid)
---    else
---        menu.trigger_command(unstandid)
---    end
---end)
+menu.toggle(misc, "Identificador de stand", {}, "Te hace invisible para otros usuarios de stand, pero tampoco los detectaras.", function(on_toggle)
+    local standid = menu.ref_by_path("Online>Protections>Detections>Stand User Identification")
+    if on_toggle then
+        menu.trigger_command(standid, "on")
+    else
+        menu.trigger_command(standid, "off")
+    end
+end)
 
 menu.hyperlink(menu.my_root(), "Entra al discord!", "https://discord.gg/BNbSHhunPv")
 local credits = menu.list(misc, "Creditos", {}, "")
