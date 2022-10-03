@@ -2033,7 +2033,7 @@ menu.toggle(bypasskick, "Metodo V2", {}, "Un poco mas funcional pero tambien con
     end
 end)
 
-menu.toggle(bypasskick, "Metodo V3", {}, "Metodo mas funcional, pero para desarrolladores, recibiras notificacion de todo evento", function(on_toggle)
+menu.toggle(bypasskick, "Metodo V3", {}, "Metodo mas funcional, pero para desarrolladores, recibiras notificacion de todo evento de red", function(on_toggle)
 local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
 local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
 local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
