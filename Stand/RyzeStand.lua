@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.5
+local localVer = 2.6
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -285,7 +285,7 @@ players.on_join(function(player_id)
     local malicious = menu.list(ryzescriptd, "Malicioso")
     local trolling = menu.list(ryzescriptd, "Troleador")
     local friendly = menu.list(ryzescriptd, "Amigable")
-    --local vehicle = menu.list(menu.player_root(player_id), "Vehiculo")
+    local vehicle = menu.list(ryzescriptd, "Vehiculo")
 
 
 
@@ -1460,18 +1460,6 @@ players.on_join(function(player_id)
         end
     end)
 
-
-    menu.toggle_loop(trolling, "Desabilitar Vehiculo", {}, "Es mejor que el de stand", function(toggle)
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
-        if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
-            TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
-        else
-            local veh2 = PED.GET_VEHICLE_PED_IS_TRYING_TO_ENTER(p)
-            entities.delete_by_handle(veh2)
-        end
-    end)
-
     menu.action(trolling, "DDoS", {}, "Los ddosea uwu", function()
         util.toast("Se le envio un ataque ddos a " ..players.get_name(player_id))
         local percent = 0
@@ -1611,6 +1599,55 @@ players.on_join(function(player_id)
             util.toast(players.get_name(player_id).. " Tiene que estar en un vehiculo")
         end
     end)
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Vehicle
+
+
+    menu.action(vehicle, "Reparar Vehiculo", {}, "Les repara el vehiculo", function(toggle)
+        local player_ped = PLAYER.GET_PLAYER_PED(player_id)
+        local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(player_ped, include_last_vehicle_for_player_functions)
+        if player_vehicle == 0 then
+            util.toast(players.get_name(player_id) .. " no esta en ningun vehiculo.")
+        else
+            if NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(player_vehicle) then
+                VEHICLE.SET_VEHICLE_FIXED(player_vehicle)
+                util.toast(players.get_name(player_id) .. " vehiculo reparado")
+            else
+                util.toast(" No se pudo obtener el control del vehiculo.")
+            end
+        end
+    end)
+
+    menu.toggle_loop(vehicle, "Desabilitar Vehiculo", {}, "Es mejor que el de stand", function(toggle)
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
+        if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
+        else
+            local veh2 = PED.GET_VEHICLE_PED_IS_TRYING_TO_ENTER(p)
+            entities.delete_by_handle(veh2)
+        end
+    end)
+
+    menu.action(vehicle, "Desabilitar Vehiculo V2", {}, "Inbloqueable por stand '10/02'", function(toggle)
+        local player_ped = PLAYER.GET_PLAYER_PED(pid)
+        local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(player_ped, include_last_vehicle_for_player_functions)
+        if player_vehicle == 0 then
+            util.toast(players.get_name(player_id) .. " No esta en ningun vehiculo.")
+        else
+            local is_running = VEHICLE.GET_IS_VEHICLE_ENGINE_RUNNING(player_vehicle)
+            if NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(player_vehicle) then
+                VEHICLE.SET_VEHICLE_ENGINE_HEALTH(player_vehicle, -10.0)
+                util.toast(players.get_name(player_id) .. " Motor jodido")
+            else
+                util.toast("No se pudo obtener el control del vehiculo.")
+            end
+        end
+    end)
+
+
 
 end)
 
@@ -2338,7 +2375,18 @@ rapid_khanjali = menu.toggle_loop(vehicles, "Fuego Rapido Khanjali", {}, "", fun
         VEHICLE.SET_VEHICLE_MOD(player_veh, 10, math.random(-1, 0), false)
     else
         util.toast("Entra a un khanjali.")
-        menu.trigger_command(rapid_khanjali, "apagao")
+        menu.trigger_command(rapid_khanjali, "off")
+    end
+end)
+
+local bullet_proof
+bullet_proof = menu.toggle_loop(vehicles, "A prueba de balas", {}, "", function()
+    local player_veh = PED.GET_VEHICLE_PED_IS_USING(players.user_ped())
+    if ENTITY.GET_ENTITY_MODEL(player_veh) == true then
+        ENTITY.SET_ENTITY_PROOFS(player_cur_car, true, true, true, true, true, true, true, true)
+    else
+        util.toast("No estas en un vehiculo.")
+        menu.trigger_command(bullet_proof, "off")
     end
 end)
 
@@ -2656,15 +2704,27 @@ end)
 
 --array = {"1","1","2"}
 
---menu.divider(fun, "Thx Holy <3")
---menu.action(fun, "Jalar El Gatillo", {}, "Juega la ruleta rusa con tu juego", function()
---    if randomizer(array) == "1" then
---        util.toast("Sobreviviste :D")
---    else
---        util.log("Tu juego murio D:")
---        ENTITY.APPLY_FORCE_TO_ENTITY(0, 0, 0, 0, 0, 0, 0, 0, 0, false, false, false, false, false)
---    end
---end)
+menu.action(fun, "Jalar el gatillo", {}, "Juega la ruleta rusa con tu juego", function()
+    if randomizer(array) == "1" then
+        util.toast("Sobreviviste :D")
+    else
+        util.log("Tu juego murio D:")
+        ENTITY.APPLY_FORCE_TO_ENTITY(0, 0, 0, 0, 0, 0, 0, 0, 0, false, false, false, false, false)
+    end
+end)
+
+menu.action(fun, "Guerra De Nieve", {}, "Les da una bola de nieve a todos los jugadores en la sesion.", function ()
+    local plist = players.list()
+    local snowballs = util.joaat('WEAPON_SNOWBALL')
+    for i = 1, #plist do
+        local plyr = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(plist[i])
+        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(plyr, snowballs, 20, true)
+        WEAPON.SET_PED_AMMO(plyr, snowballs, 20)
+        util.toast("Ahora todos tienen bolas de nieve!")
+        util.yield()
+    end
+   
+end)
 
 menu.toggle_loop(fun, "Gato Mascota", {}, "", function()
     if not jinx_pet or not ENTITY.DOES_ENTITY_EXIST(jinx_pet) then
