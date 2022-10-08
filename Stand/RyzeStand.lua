@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.7
+local localVer = 2.8
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -2109,6 +2109,19 @@ if bailOnAdminJoin then
         return
     end
 end
+
+menu.toggle_loop(protects, "Bloquear Error De Transaccion", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
+    local TransactionError1 = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Block")
+    local TransactionError2 = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Notification")
+    --local TransactionError = menu.ref_by_path("Online>Enhacements>Remove 'Transaction Pending'")
+    if on_toggle then
+        menu.trigger_command(TransactionError1, "on")
+        menu.trigger_command(TransactionError2, "on")
+        menu.trigger_commands("removeloader")
+    else
+        menu.trigger_commands("removeloader")
+    end
+end)
 
 local values = {
     [0] = 0,
