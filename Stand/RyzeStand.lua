@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.9
+local localVer = 3.0
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -267,17 +267,13 @@ local function get_blip_coords(blipId)
     return v3(0, 0, 0)
 end
 
-
-menu.divider(menu.my_root(), "Este script esta centrado en") 
-menu.divider(menu.my_root(), "online y troll, no para uno mismo")
-
-local online = menu.list(menu.my_root(), "Online", {}, "")
-local world = menu.list(menu.my_root(), "Mundo", {}, "")
-local detections = menu.list(menu.my_root(), "Deteccion De Modders", {}, "")
-local protects = menu.list(menu.my_root(), "Protecciones", {}, "")
-local vehicles = menu.list(menu.my_root(), "Vehiculos", {}, "")
-local fun = menu.list(menu.my_root(), "Diversion", {}, "")
-
+local online = menu.list(menu.my_root(), "Online", {}, "Opciones modo online")
+local world = menu.list(menu.my_root(), "Mundo", {}, "Opciones al rededor tuyo")
+local detections = menu.list(menu.my_root(), "Deteccion De Modders", {}, "Lo dice el nombre ;w;")
+local protects = menu.list(menu.my_root(), "Protecciones", {}, "Protejete contra modders")
+local vehicles = menu.list(menu.my_root(), "Vehiculos", {}, "Opciones de vehiculos")
+local fun = menu.list(menu.my_root(), "Diversion", {}, "Diviertete un rato si estas aburrido :3")
+local misc = menu.list(menu.my_root(), "Misc", {}, "Unos atajos utiles y rapidos")
 
 players.on_join(function(player_id)
     menu.divider(menu.player_root(player_id), "RyzeScript")
@@ -386,7 +382,9 @@ players.on_join(function(player_id)
 
     menu.divider(malicious, "Otros")
 
-    menu.toggle_loop(malicious, "Lagear Jugador", {"lag"}, "Frezea al jugador para que funcione.", function()
+    local lagplay = menu.list(malicious, "Lagear Jugador", {}, "")
+
+    menu.toggle_loop(lagplay, "Metodo V1", {"lag"}, "Frezea al jugador para que funcione.", function()
         if players.exists(player_id) then
             local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
             local player_pos = players.get_position(player_id)
@@ -399,6 +397,39 @@ players.on_join(function(player_id)
             menu.set_value(freeze_toggle, false)
         end
     end)
+
+    -- Latest update adding a couple of new methods
+
+    --menu.toggle_loop(lagplay, "Metodo V2", {"lag"}, "Frezea al jugador para que funcione.", function()
+    --    if players.exists(player_id) then
+    --        local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
+    --        local player_pos = players.get_position(player_id)
+    --        menu.set_value(freeze_toggle, true)
+    --        request_ptfx_asset("core")
+    --        GRAPHICS.USE_PARTICLE_FX_ASSET("core")
+    --        GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+    --            "weap_hvy_turbulance_dirt", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
+    --        )
+    --        menu.set_value(freeze_toggle, false)
+    --    end
+    --end)
+
+    --menu.toggle_loop(lagplay, "Metodo V3", {"lag"}, "Necesitas una buena pc, no te acerques mucho.", function()
+    --    if players.exists(player_id) then
+    --        local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
+    --        local player_pos = players.get_position(player_id)
+    --        menu.set_value(freeze_toggle, true)
+    --        request_ptfx_asset("core")
+    --        GRAPHICS.USE_PARTICLE_FX_ASSET("core")
+    --        GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+    --            "veh_respray_smoke", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
+    --        )
+    --        GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+    --            "veh_respray_smoke", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
+    --        )
+    --        menu.set_value(freeze_toggle, false)
+    --    end
+    --end)
 
     local cageveh = menu.list(trolling, "Enjaular Coches", {}, "")
 
@@ -529,31 +560,31 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {0x7EFC3716, player_id, 0, 1, id})
     end)
         
-    menu.action_slider(inf_loading, "Telefono corrupto", {}, "Click to select a style", invites, function(index, name)
+    menu.action_slider(inf_loading, "Telefono corrupto", {}, "Click para seleccionar un estilo", invites, function(index, name)
         pluto_switch name do
             case 1:
                 util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x1})
-                util.toast("Yacht Invite Sent")
+                util.toast("Invitacion a yate")
             break
             case 2:
                 util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x2})
-                util.toast("Office Invite Sent")
+                util.toast("Invitacion a oficina")
             break
             case 3:
                 util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x3})
-                util.toast("Clubhouse Invite Sent")
+                util.toast("Invitacion al club")
             break
             case 4:
                 util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x4})
-                util.toast("Office Garage Invite Sent")
+                util.toast("Invitacion al garage de oficina")
             break
             case 5:
                 util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x5})
-                util.toast("Custom Auto Shop Invite Sent")
+                util.toast("Invitacion a los santos cs")
             break
             case 6:
                 util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x6})
-                util.toast("Apartment Invite Sent")
+                util.toast("Invitacion a apartamento")
             break
         end
     end)
@@ -1904,8 +1935,57 @@ end, function ()
 	ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), maxHealth)
 end)
 
-menu.action(online, "Dar M16", {""}, "", function()
+local recovery = menu.list(online, "Recovery", {}, "")
+
+
+menu.action(recovery, "Dar M16", {""}, "", function()
     memory.write_int(memory.script_global(262145 + 32775), 1)
+end)
+
+local coleccionables = menu.list(recovery, "Coleccionables", {}, "")
+
+menu.click_slider(coleccionables, "Cintas", {""}, "", 0, 9, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x0, i, 1, 1, 1})
+end)
+
+menu.click_slider(coleccionables, "Hidden Caches", {""}, "", 0, 9, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x1, i, 1, 1, 1})
+end)
+
+menu.click_slider(coleccionables, "Cofres/Tesoro", {""}, "", 0, 1, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x2, i, 1, 1, 1})
+end)
+
+menu.click_slider(coleccionables, "Antenas Radio", {""}, "", 0, 9, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x3, i, 1, 1, 1})
+end)
+
+menu.click_slider(coleccionables, "USBs", {""}, "", 0, 19, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x4, i, 1, 1, 1})
+end)
+
+menu.action(coleccionables, "Naufragios", {""}, "", function()
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x5, 0, 1, 1, 1})
+end)
+
+menu.click_slider(coleccionables, "Enterrados", {""}, "", 0, 1, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x6, i, 1, 1, 1})
+end)
+
+menu.action(coleccionables, "Camisetas Halloween", {""}, "", function()
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x7, 1, 1, 1, 1})
+end)
+
+menu.click_slider(coleccionables, "Linternas", {""}, "", 0, 9, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x8, i, 1, 1, 1})
+end)
+
+menu.click_slider(coleccionables, "Productos organicos lamar", {""}, "", 0, 99, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x9, i, 1, 1, 1})
+end)
+
+menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0xA, i, 1, 1, 1})
 end)
 
 menu.toggle_loop(online, "Aceptar La Union", {}, "Aceptara automaticamente pantallas de unirse", function() -- credits to jinx for letting me steal this
@@ -2121,14 +2201,11 @@ if bailOnAdminJoin then
 end
 
 menu.toggle_loop(protects, "Bloquear Error De Transaccion", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
-    local TransactionError1 = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Block")
-    local TransactionError2 = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Notification")
-    --local TransactionError = menu.ref_by_path("Online>Enhacements>Remove 'Transaction Pending'")
-    if on_toggle then
-        menu.trigger_command(TransactionError1, "on")
-        menu.trigger_command(TransactionError2, "on")
-        menu.trigger_commands("removeloader")
-    else
+    local TransactionError1 = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Block>Enabled")
+    local TransactionError2 = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Notification>Enabled")
+    while on_toggle do
+        menu.trigger_command(TransactionError1)
+        menu.trigger_command(TransactionError2)
         menu.trigger_commands("removeloader")
     end
 end)
@@ -2423,24 +2500,24 @@ if player_cur_car ~= 0 then
     if everythingproof then
         ENTITY.SET_ENTITY_PROOFS(player_cur_car, true, true, true, true, true, true, true, true)
     end
-    if racemode then
-        VEHICLE.SET_VEHICLE_IS_RACING(player_cur_car, true)
-    end
+    --if racemode then
+    --    VEHICLE.SET_VEHICLE_IS_RACING(player_cur_car, true)
+    --end
 
     if infcms then
-        if VEHICLE._GET_VEHICLE_COUNTERMEASURE_COUNT(player_cur_car) < 100 then
-            VEHICLE._SET_VEHICLE_COUNTERMEASURE_COUNT(player_cur_car, 100)
+        if VEHICLE.GET_VEHICLE_COUNTERMEASURE_AMMO(player_cur_car) < 100 then
+            VEHICLE.SET_VEHICLE_COUNTERMEASURE_AMMO(player_cur_car, 100)
         end
     end
 
-    if shift_drift then
-        if PAD.IS_CONTROL_PRESSED(21, 21) then
-            VEHICLE.SET_VEHICLE_REDUCE_GRIP(player_cur_car, true)
-            VEHICLE._SET_VEHICLE_REDUCE_TRACTION(player_cur_car, 0.0)
-        else
-            VEHICLE.SET_VEHICLE_REDUCE_GRIP(player_cur_car, false)
-        end
-    end
+    --if shift_drift then
+    --    if PAD.IS_CONTROL_PRESSED(21, 21) then
+    --        VEHICLE.SET_VEHICLE_REDUCE_GRIP(player_cur_car, true)
+    --        VEHICLE._SET_VEHICLE_REDUCE_TRACTION(player_cur_car, 0.0)
+    --    else
+    --        VEHICLE.SET_VEHICLE_REDUCE_GRIP(player_cur_car, false)
+    --    end
+    --end
 end
 
 --force_cm = false
@@ -2452,8 +2529,8 @@ end
 --if player_cur_car ~= 0 and force_cm then
 --    if PAD.IS_CONTROL_PRESSED(46, 46) then
 --        local target = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER.PLAYER_PED_ID(player_id), math.random(-5, 5), -30.0, math.random(-5, 5))
---        --MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target['x'], target['y'], target['z'], target['x'], target['y'], target['z'], 300.0, true, -1355376991, PLAYER.PLAYER_PED_ID(player_id), true, false, 100.0)
---        MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target['x'], target['y'], target['z'], target['x'], target['y'], target['z'], 100.0, true, 1198879012, PLAYER.PLAYER_PED_ID(player_id), true, false, 100.0)
+--        --MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target.x, target.y, target.z, target.x, target.y, target.z, 300.0, true, -1355376991, PLAYER.PLAYER_PED_ID(player_id), true, false, 100.0)
+--        MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target.x, target.y, target.z, target.x, target.y, target.z, 100.0, true, 1198879012, PLAYER.PLAYER_PED_ID(player_id), true, false, 100.0)
 --    end
 --end
 
@@ -2677,47 +2754,49 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- Diversion
---menu.toggle(fun, "Piloto Tesla", {}, "", function(toggled)
---    local ped = players.user_ped()
---    local playerpos = ENTITY.GET_ENTITY_COORDS(ped, false)
---    local tesla_ai = util.joaat("u_m_y_baygor")
---    local tesla = util.joaat("raiden")
---    request_model(tesla_ai)
---    request_model(tesla)
---    if toggled then     
---       if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
---            menu.trigger_commands("deletevehicle")
---        end
---
---        tesla_ai_ped = entities.create_ped(26, tesla_ai, playerpos, 0)
---        tesla_vehicle = entities.create_vehicle(tesla, playerpos, 0)
---        ENTITY.SET_ENTITY_INVINCIBLE(tesla_ai_ped, true) 
---        ENTITY.SET_ENTITY_VISIBLE(tesla_ai_ped, false)
---        PED.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(tesla_ai_ped, true)
---        PED.SET_PED_INTO_VEHICLE(ped, tesla_vehicle, -2)
---        PED.SET_PED_INTO_VEHICLE(tesla_ai_ped, tesla_vehicle, -1)
---        PED.SET_PED_KEEP_TASK(tesla_ai_ped, true)
---        VEHICLE.SET_VEHICLE_COLOURS(tesla_vehicle, 111, 111)
---        VEHICLE.SET_VEHICLE_MOD(tesla_vehicle, 23, 8, false)
---        VEHICLE.SET_VEHICLE_MOD(tesla_vehicle, 15, 1, false)
---        VEHICLE.SET_VEHICLE_EXTRA_COLOURS(tesla_vehicle, 111, 147)
---        menu.trigger_commands("performance")
---
---        if HUD.IS_WAYPOINT_ACTIVE() then
---            local pos = HUD.GET_BLIP_COORDS(HUD.GET_FIRST_BLIP_INFO_ID(8))
---            TASK.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(tesla_ai_ped, tesla_vehicle, pos, 20.0, 786603, 0)
---        else
---            TASK.TASK_VEHICLE_DRIVE_WANDER(tesla_ai_ped, tesla_vehicle, 20.0, 786603)
---        end
---    else
---        if tesla_ai_ped ~= nil then 
---            entities.delete_by_handle(tesla_ai_ped)
---        end
---        if tesla_vehicle ~= nil then 
---            entities.delete_by_handle(tesla_vehicle)
---        end
---    end
---end)
+
+menu.toggle(fun, "Piloto Tesla", {}, "", function(toggled)
+    local ped = players.user_ped()
+    local playerpos = ENTITY.GET_ENTITY_COORDS(ped, false)
+    local pos = ENTITY.GET_ENTITY_COORDS(ped)
+    local tesla_ai = util.joaat("u_m_y_baygor")
+    local tesla = util.joaat("raiden")
+    request_model(tesla_ai)
+    request_model(tesla)
+    if toggled then     
+       if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
+            menu.trigger_commands("deletevehicle")
+        end
+
+        tesla_ai_ped = entities.create_ped(26, tesla_ai, playerpos, 0)
+        tesla_vehicle = entities.create_vehicle(tesla, playerpos, 0)
+        ENTITY.SET_ENTITY_INVINCIBLE(tesla_ai_ped, true) 
+        ENTITY.SET_ENTITY_VISIBLE(tesla_ai_ped, false)
+        PED.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(tesla_ai_ped, true)
+        PED.SET_PED_INTO_VEHICLE(ped, tesla_vehicle, -2)
+        PED.SET_PED_INTO_VEHICLE(tesla_ai_ped, tesla_vehicle, -1)
+        PED.SET_PED_KEEP_TASK(tesla_ai_ped, true)
+        VEHICLE.SET_VEHICLE_COLOURS(tesla_vehicle, 111, 111)
+        VEHICLE.SET_VEHICLE_MOD(tesla_vehicle, 23, 8, false)
+        VEHICLE.SET_VEHICLE_MOD(tesla_vehicle, 15, 1, false)
+        VEHICLE.SET_VEHICLE_EXTRA_COLOURS(tesla_vehicle, 111, 147)
+        menu.trigger_commands("performance")
+
+        if HUD.IS_WAYPOINT_ACTIVE() then
+            local pos = HUD.GET_BLIP_COORDS(HUD.GET_FIRST_BLIP_INFO_ID(8))
+            TASK.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(tesla_ai_ped, tesla_vehicle, pos.x, pos.y, pos.z, 20.0, 786603, 0)
+        else
+            TASK.TASK_VEHICLE_DRIVE_WANDER(tesla_ai_ped, tesla_vehicle, 20.0, 786603)
+        end
+    else
+        if tesla_ai_ped ~= nil then 
+            entities.delete_by_handle(tesla_ai_ped)
+        end
+        if tesla_vehicle ~= nil then 
+            entities.delete_by_handle(tesla_vehicle)
+        end
+    end
+end)
 
 
 local randomizer = function(x)
@@ -2919,8 +2998,6 @@ end
 --    end)
 --end 
 
-local misc = menu.list(menu.my_root(), "Misc", {}, "")
-
 menu.toggle(misc, "Modo Screenshot", {}, "Para que puedas tomar fotitos <3", function(on)
 	if on then
 		menu.trigger_commands("screenshot on")
@@ -2937,6 +3014,8 @@ menu.toggle(misc, "Identificador de stand", {}, "Te hace invisible para otros us
         menu.trigger_command(standid, "off")
     end
 end)
+
+menu.hyperlink(misc, "Mi Github", "https://github.com/xxpichoclesxx")
 
 menu.hyperlink(menu.my_root(), "Entra al discord!", "https://discord.gg/BNbSHhunPv")
 local credits = menu.list(misc, "Creditos", {}, "")
