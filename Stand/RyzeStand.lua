@@ -3033,7 +3033,7 @@ menu.action(credits, "Cxbr", {}, "Thx for friendly features <3", function()
 end)
 menu.action(credits, "Sapphire", {}, "Who helped me with almost every single feature and being patient because of my dumb brain <3", function()
 end)
-menu.action(credits, "Ustedes", {}, "Who download the script and give ideas for improvement <3", function()
+menu.action(credits, "You <3", {}, "Who download the script and give ideas for improvement <3", function()
 end)
 
 util.on_stop(function ()
