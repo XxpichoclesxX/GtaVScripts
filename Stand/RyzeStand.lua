@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.1
+local localVer = 3.2
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -1001,12 +1001,16 @@ players.on_join(function(player_id)
         util.toast("Iniciando...")
         util.yield(2000)
         menu.trigger_commands("crashv1"..players.get_name(player_id))
+        util.yield(400)
         menu.trigger_commands("crashv2"..players.get_name(player_id))
+        util.yield(400)
         menu.trigger_commands("crashv3"..players.get_name(player_id))
+        util.yield(400)
         menu.trigger_commands("crashv4"..players.get_name(player_id))
         util.yield(2000)
         menu.trigger_commands("crash"..players.get_name(player_id))
         menu.trigger_commands("ngcrash"..players.get_name(player_id))
+        util.yield(400)
         menu.trigger_commands("footlettuce"..players.get_name(player_id))
         util.yield(1500)
         util.toast("Espera en lo que se limpia todo...")
@@ -3112,6 +3116,9 @@ menu.action(credits, "You <3", {}, "Who download the script and give ideas for i
 end)
 
 util.on_stop(function ()
+    VEHICLE.SET_VEHICLE_GRAVITY(veh, true)
+    ENTITY.SET_ENTITY_COLLISION(veh, true, true);
+    sleep(100)
     util.toast("Adious\nEspero te haya gustado :3")
     util.toast("Limpiando...")
 end)
