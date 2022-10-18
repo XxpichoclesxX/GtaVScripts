@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.5
+local localVer = 3.51
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -948,7 +948,7 @@ players.on_join(function(player_id)
 
     menu.divider(crashes, "(Ryze Exclusivo)")
 
-    menu.action(crashes, "Inbloqueable", {"crashv2"}, "Funcando (Menus populares - Stand)", function()
+    menu.action(crashes, "Inbloqueable", {"crashv1"}, "Funcando (Menus populares - Stand)", function()
         for i = 1, 150 do
             util.trigger_script_event(1 << player_id, {0xA4D43510, player_id, 0xDF607FCD, math.random(int_min, int_max), math.random(int_min, int_max), 
             math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
@@ -956,7 +956,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(crashes, "Inbloqueable V2", {"crashv3"}, "Funcando (Menus populares - Stand)", function()
+    menu.action(crashes, "Inbloqueable V2", {"crashv2"}, "Funcando (Menus populares - Stand)", function()
         local int_min = -2147483647
         local int_max = 2147483647
         for i = 1, 150 do
@@ -975,7 +975,7 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
     end)
 
-    menu.action(crashes, "Inbloqueable V3 '2T1'", {"crashv4"}, "", function()
+    menu.action(crashes, "Inbloqueable V3 '2T1'", {"crashv3"}, "", function()
         BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
