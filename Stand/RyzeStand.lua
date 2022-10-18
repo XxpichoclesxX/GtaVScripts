@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.3
+local localVer = 3.5
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -398,38 +398,47 @@ players.on_join(function(player_id)
         end
     end)
 
-    -- Latest update adding a couple of new methods
+    menu.toggle_loop(lagplay, "Metodo V2", {}, "Frezea al jugador para que funcione.", function()
+        if players.exists(player_id) then
+            local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
+            local player_pos = players.get_position(player_id)
+            menu.set_value(freeze_toggle, true)
+            request_ptfx_asset("core")
+            GRAPHICS.USE_PARTICLE_FX_ASSET("core")
+            GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+                "ent_sht_electrical_box", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
+            )
+            menu.set_value(freeze_toggle, false)
+        end
+    end)
 
-    --menu.toggle_loop(lagplay, "Metodo V2", {"lag"}, "Frezea al jugador para que funcione.", function()
-    --    if players.exists(player_id) then
-    --        local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
-    --        local player_pos = players.get_position(player_id)
-    --        menu.set_value(freeze_toggle, true)
-    --        request_ptfx_asset("core")
-    --        GRAPHICS.USE_PARTICLE_FX_ASSET("core")
-    --        GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-    --            "weap_hvy_turbulance_dirt", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
-    --        )
-    --        menu.set_value(freeze_toggle, false)
-    --    end
-    --end)
+    menu.toggle_loop(lagplay, "Metodo V3", {}, "Frezea al jugador para que funcione.", function()
+        if players.exists(player_id) then
+            local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
+            local player_pos = players.get_position(player_id)
+            menu.set_value(freeze_toggle, true)
+            request_ptfx_asset("core")
+            GRAPHICS.USE_PARTICLE_FX_ASSET("core")
+            GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+                "exp_extinguisher", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
+            )
+            menu.set_value(freeze_toggle, false)
+        end
+    end)
 
-    --menu.toggle_loop(lagplay, "Metodo V3", {"lag"}, "Necesitas una buena pc, no te acerques mucho.", function()
-    --    if players.exists(player_id) then
-    --        local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
-    --        local player_pos = players.get_position(player_id)
-    --        menu.set_value(freeze_toggle, true)
-    --        request_ptfx_asset("core")
-    --        GRAPHICS.USE_PARTICLE_FX_ASSET("core")
-    --        GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-    --            "veh_respray_smoke", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
-    --        )
-    --        GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-    --            "veh_respray_smoke", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
-    --        )
-    --        menu.set_value(freeze_toggle, false)
-    --    end
-    --end)
+    menu.toggle_loop(lagplay, "Metodo V4", {}, "Frezea al jugador para que funcione.", function()
+        if players.exists(player_id) then
+            local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
+            local player_pos = players.get_position(player_id)
+            menu.set_value(freeze_toggle, true)
+            request_ptfx_asset("core")
+            GRAPHICS.USE_PARTICLE_FX_ASSET("core")
+            GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+                "ent_anim_bm_water_mist", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
+            )
+            menu.set_value(freeze_toggle, false)
+        end
+    end)
 
     local cageveh = menu.list(trolling, "Enjaular Coches", {}, "")
 
@@ -863,18 +872,31 @@ players.on_join(function(player_id)
 
     crashes = menu.list(malicious, "Crasheos", {}, "Crasheos Op", function(); end)
 
-    --local begcrash = {
-	--	"Hey bro, it would be pretty poggers to close your game for me",
-	--	"pwease cwash yowour game fowor me",
-	--	"Close your game. I'm not asking.",
-	--	"Please close your game, please please please please please",
-	--}
+    local begcrash = {
+		"Hey bro, it would be pretty poggers to close your game for me",
+		"pwease cwash yowour game fowor me",
+		"Close your game. I'm not asking.",
+		"Please close your game, please please please please please",
+    	"Hey bro, it would be pretty poggers to close your game for me",
+		"pwease cwash yowour game fowor me",
+		"Close your game. I'm not asking.",
+		"Please close your game, please please please please please",
+    	"Hey bro, it would be pretty poggers to close your game for me",
+		"pwease cwash yowour game fowor me",
+		"Close your game. I'm not asking.",
+		"Please close your game, please please please please please",
+    	"Hey bro, it would be pretty poggers to close your game for me",
+		"pwease cwash yowour game fowor me",
+		"Close your game. I'm not asking.",
+		"Please close your game, please please please please please",
+    	"Please close your game, please please please please please",
+	}
 
-    --menu.action(crashes, "Crasheo V1", {}, "Bloqueado por menus populares", function()
-	--	menu.trigger_commands("smstext" .. PLAYER.GET_PLAYER_NAME(pid).. " " .. begcrash[math.random(1, #begcrash)])
-	--	util.yield()
-	--	menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(pid))
-	--end)
+    menu.action(crashes, "Crasheo de Frames", {}, "Bloqueado por menus populares", function()
+		menu.trigger_commands("smstext" .. PLAYER.GET_PLAYER_NAME(player_id).. " " .. begcrash[math.random(1, #begcrash)])
+		util.yield()
+		menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(player_id))
+	end)
 
     menu.action(crashes, "Modelo V1", {"crashv1"}, "Funcando (Menus populares - Stand)", function()
         local mdl = util.joaat('a_c_poodle')
@@ -953,43 +975,42 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
     end)
 
-    --menu.action(crashes, "Inbloqueable V3 'Test'", {}, "Pasado de mi menu, no se si funcione", function()
-    --    local mdl = util.joaat("apa_mp_apa_yacht")
-    --    local user = players.user_ped()
-    --    BlockSyncs(player_id, function()
-    --        util.yield(250)
-    --        local old_pos = ENTITY.GET_ENTITY_COORDS(user, false)
-    --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user, 0xFBAB5776, 100, false)
-    --        PLAYER.SET_PLAYER_HAS_RESERVE_PARACHUTE(players.user())
-    --        PLAYER.SET_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user(), mdl)
-    --        util.yield(50)
-    --        local pos = players.get_position(player_id)
-    --        pos.z += 300
-    --        TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
-    --        ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos, false, false, false)
-    --        repeat
-    --            util.yield()
-    --        until PED.GET_PED_PARACHUTE_STATE(user) == 0
-    --        PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
-    --        util.yield(50)
-    --        TASK.CLEAR_PED_TASKS(user)
-    --        util.yield(50)
-    --        PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
-    --        repeat
-    --            util.yield()
-    --        until PED.GET_PED_PARACHUTE_STATE(user) ~= 1
-    --        pcall(TASK.CLEAR_PED_TASKS_IMMEDIATELY, user)
-    --        PLAYER.CLEAR_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user())
-    --        pcall(ENTITY.SET_ENTITY_COORDS, user, old_pos, false, false)
-    --    end)
-    --end)
-
     menu.action(crashes, "Inbloqueable V3 '2T1'", {"crashv4"}, "", function()
         BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
             util.yield(1000)
             entities.delete_by_handle(object)
+        end)
+    end)
+
+    menu.action(crashes, "Inbloqueable V4 'Test'", {"crashv4"}, "Deberia estar arreglado, por ahora", function()
+        local mdl = util.joaat("apa_mp_apa_yacht")
+        local user = players.user_ped()
+        BlockSyncs(player_id, function()
+            local old_pos = ENTITY.GET_ENTITY_COORDS(user, false)
+            WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user, 0xFBAB5776, 100, false)
+            PLAYER.SET_PLAYER_HAS_RESERVE_PARACHUTE(players.user())
+            PLAYER.SET_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user(), mdl)
+            util.yield(50)
+            local pos = players.get_position(player_id)
+            pos.z += 300
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
+            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
+            repeat
+                util.yield()
+            until PED.GET_PED_PARACHUTE_STATE(user) == 0
+            PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
+            util.yield(50)
+            TASK.CLEAR_PED_TASKS(user)
+            util.yield(50)
+            PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
+            repeat
+                util.yield()
+            until PED.GET_PED_PARACHUTE_STATE(user) ~= 1
+            pcall(TASK.CLEAR_PED_TASKS_IMMEDIATELY, user)
+            PLAYER.CLEAR_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user())
+            pcall(ENTITY.SET_ENTITY_COORDS, user, old_pos, false, false)
         end)
     end)
 
@@ -1001,15 +1022,16 @@ players.on_join(function(player_id)
         menu.trigger_commands("potatomode on")
         menu.trigger_commands("trafficpotato on")
         util.toast("Iniciando...")
+        util.toast("Pobre man")
         util.yield(2000)
         menu.trigger_commands("crashv1"..players.get_name(player_id))
         util.yield(400)
         menu.trigger_commands("crashv2"..players.get_name(player_id))
         util.yield(400)
         menu.trigger_commands("crashv3"..players.get_name(player_id))
-        util.yield(400)
+        util.yield(600)
         menu.trigger_commands("crashv4"..players.get_name(player_id))
-        util.yield(2000)
+        util.yield(2200)
         menu.trigger_commands("crash"..players.get_name(player_id))
         util.yield(400)
         menu.trigger_commands("ngcrash"..players.get_name(player_id))
@@ -1763,12 +1785,12 @@ menu.toggle_loop(world, "Campo De Fuerza", {"sforcefield"}, "", function()
     end
 end)
 
-menu.action(world, "Limpiar Area", {"cleararea"}, "Limpia todo en el area", function(on_click)
+menu.action(world, "Limpiar Area", {"rcleararea"}, "Limpia todo en el area", function(on_click)
     clear_area(clear_radius)
     util.toast('Area limpia:3')
 end)
 
-menu.action(world, "Limpiar Mundo", {"clearworld"}, "Limpia literalmente todo lo del area incluyendo peds, coches, objetos, bools etc.", function(on_click)
+menu.action(world, "Limpiar Mundo", {"rclearworld"}, "Limpia literalmente todo lo del area incluyendo peds, coches, objetos, bools etc.", function(on_click)
     clear_area(1000000)
     util.toast('Mundo limpio :3')
 end)
@@ -1990,10 +2012,11 @@ menu.toggle(online, "Armas Termicas 'Test'", {}, "Hace todas tus armas con mira 
 end)
 
 menu.toggle(online, "Sangre Fria 'Test'", {}, "Remueve tu señal termica.\nAlgunos jugadores pueden seguir viendote.", function(toggle)
+    local player = PLAYER.PLAYER_PED_ID()
     if toggle then
-        PED.SET_PED_HEATSCALE_OVERRIDE(PLAYER.PLAYER_PED_ID(), 0)
+        PED.SET_PED_HEATSCALE_OVERRIDE(player, 0)
     else
-        PED.SET_PED_HEATSCALE_OVERRIDE(PLAYER.PLAYER_PED_ID(), 1)
+        PED.SET_PED_HEATSCALE_OVERRIDE(player, 1)
     end
 end)
 
@@ -2255,6 +2278,33 @@ menu.action(protects, "Parar Todos Los Sonidos", {"stopsounds"}, "", function()
     end
 end)
 
+menu.action(protects, "Quitar ring", {}, "Quita el ringtone del celular parando que deje de sonar.", function()
+    if AUDIO.IS_PED_RINGTONE_PLAYING then
+        for i=-1, 50 do
+            AUDIO.STOP_PED_RINGTONE(i)
+        end
+    end
+end)
+
+local quitarf = menu.list(protects, "Metodos De Anti Freeze")
+
+menu.action(quitarf, "Quitar Freeze V1", {}, "Intenta reiniciar algunos nativos para quitarte el estado de freeze.", function()
+    --local playerpos = ENTITY.GET_ENTITY_COORDS(ped, false)
+    local player = PLAYER.PLAYER_PED_ID()
+    ENTITY.FREEZE_ENTITY_POSITION(player, false)
+    MISC.OVERRIDE_FREEZE_FLAGS()
+    menu.trigger_commands("rcleararea")
+end)
+
+menu.action(quitarf, "Quitar Freeze V2 'Test'", {}, "Intenta reiniciar algunos nativos para quitarte el estado de freeze \nCon este metodo moriras.", function()
+    --local playerpos = ENTITY.GET_ENTITY_COORDS(ped, false)
+    local player = PLAYER.PLAYER_PED_ID()
+    ENTITY.FREEZE_ENTITY_POSITION(player, false)
+    ENTITY.SET_ENTITY_COORDS(player, 1, 0, 0, 1, false)
+    MISC.OVERRIDE_FREEZE_FLAGS()
+    menu.trigger_commands("rcleararea")
+end)
+
 menu.toggle(protects, "Modo Panico", {"panic"}, "Esto renderiza un modo de anti-crash quitando todo tipo de evento del juego a toda costa.", function(on_toggle)
     local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
     local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
@@ -2278,14 +2328,13 @@ menu.toggle(protects, "Modo Panico", {"panic"}, "Esto renderiza un modo de anti-
 end)
 
 
-
 menu.toggle_loop(protects, "Salir si admin de R*", {}, "Si detecta un admin de R* te cambia de sesion.", function(on)
     bailOnAdminJoin = on
 end)
 
 if bailOnAdminJoin then
     if players.is_marked_as_admin(player_id) then
-        util.toast(players.get_name(player_id) .. " Si hay un admin, pa otra sesion.")
+        util.toast(players.get_name(player_id) .. " Hay un admin, pa otra sesion")
         menu.trigger_commands("quickbail")
         return
     end
