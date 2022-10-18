@@ -948,7 +948,7 @@ players.on_join(function(player_id)
 
     menu.divider(crashes, "(Ryze Exclusivo)")
 
-    menu.action(crashes, "Inbloqueable", {"crashv1"}, "Funcando (Menus populares - Stand)", function()
+    menu.action(crashes, "Inbloqueable", {"crashv2"}, "Funcando (Menus populares - Stand)", function()
         for i = 1, 150 do
             util.trigger_script_event(1 << player_id, {0xA4D43510, player_id, 0xDF607FCD, math.random(int_min, int_max), math.random(int_min, int_max), 
             math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
@@ -956,7 +956,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(crashes, "Inbloqueable V2", {"crashv2"}, "Funcando (Menus populares - Stand)", function()
+    menu.action(crashes, "Inbloqueable V2", {"crashv3"}, "Funcando (Menus populares - Stand)", function()
         local int_min = -2147483647
         local int_max = 2147483647
         for i = 1, 150 do
@@ -975,7 +975,7 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
     end)
 
-    menu.action(crashes, "Inbloqueable V3 '2T1'", {"crashv3"}, "", function()
+    menu.action(crashes, "Inbloqueable V3 '2T1'", {"crashv4"}, "", function()
         BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
@@ -984,7 +984,7 @@ players.on_join(function(player_id)
         end)
     end)
 
-    menu.action(crashes, "Inbloqueable V4 'Test'", {"crashv4"}, "Deberia estar arreglado, por ahora", function()
+    menu.action(crashes, "Inbloqueable V4 'Test'", {"crashv5"}, "Deberia estar arreglado, por ahora", function()
         local mdl = util.joaat("apa_mp_apa_yacht")
         local user = players.user_ped()
         BlockSyncs(player_id, function()
@@ -1029,8 +1029,10 @@ players.on_join(function(player_id)
         menu.trigger_commands("crashv2"..players.get_name(player_id))
         util.yield(400)
         menu.trigger_commands("crashv3"..players.get_name(player_id))
-        util.yield(600)
+        util.yield(400)
         menu.trigger_commands("crashv4"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv5"..players.get_name(player_id))
         util.yield(2200)
         menu.trigger_commands("crash"..players.get_name(player_id))
         util.yield(400)
