@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.52
+local localVer = 3.53
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -595,13 +595,12 @@ players.on_join(function(player_id)
             request_ptfx_asset("core")
             GRAPHICS.USE_PARTICLE_FX_ASSET("core")
             GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-                "veh_respray_smoke", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
-            )
+                "veh_respray_smoke", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
             menu.set_value(freeze_toggle, false)
         end
     end)
 
-    menu.toggle_loop(lagplay, "Metodo V2", {}, "Frezea al jugador para que funcione.", function()
+    menu.toggle_loop(lagplay, "Metodo V2", {"rlag2"}, "Frezea al jugador para que funcione.", function()
         if players.exists(player_id) then
             local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
             local player_pos = players.get_position(player_id)
@@ -609,13 +608,12 @@ players.on_join(function(player_id)
             request_ptfx_asset("core")
             GRAPHICS.USE_PARTICLE_FX_ASSET("core")
             GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-                "ent_sht_electrical_box", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
-            )
+                "ent_sht_electrical_box", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
             menu.set_value(freeze_toggle, false)
         end
     end)
 
-    menu.toggle_loop(lagplay, "Metodo V3", {}, "Frezea al jugador para que funcione.", function()
+    menu.toggle_loop(lagplay, "Metodo V3", {"rlag3"}, "Frezea al jugador para que funcione.", function()
         if players.exists(player_id) then
             local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
             local player_pos = players.get_position(player_id)
@@ -623,13 +621,12 @@ players.on_join(function(player_id)
             request_ptfx_asset("core")
             GRAPHICS.USE_PARTICLE_FX_ASSET("core")
             GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-                "exp_extinguisher", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
-            )
+                "exp_extinguisher", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
             menu.set_value(freeze_toggle, false)
         end
     end)
 
-    menu.toggle_loop(lagplay, "Metodo V4", {}, "Frezea al jugador para que funcione.", function()
+    menu.toggle_loop(lagplay, "Metodo V4", {"rlag4"}, "Frezea al jugador para que funcione.", function()
         if players.exists(player_id) then
             local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
             local player_pos = players.get_position(player_id)
@@ -637,8 +634,7 @@ players.on_join(function(player_id)
             request_ptfx_asset("core")
             GRAPHICS.USE_PARTICLE_FX_ASSET("core")
             GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-                "ent_anim_bm_water_mist", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false
-            )
+                "ent_anim_bm_water_mist", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
             menu.set_value(freeze_toggle, false)
         end
     end)
@@ -1245,6 +1241,7 @@ players.on_join(function(player_id)
 
     menu.action(crashes, "Bomba del tsar", {"tsarbomba"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu)", function()
         local objective = player_id
+        --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
         menu.trigger_commands("anticrashcamera on")
         menu.trigger_commands("potatomode on")
         menu.trigger_commands("trafficpotato on")
@@ -1270,6 +1267,7 @@ players.on_join(function(player_id)
         menu.trigger_commands("steamroll"..players.get_name(player_id))
         util.yield(1800)
         util.toast("Espera en lo que se limpia todo...")
+        --menu.trigger_command(outSync, "off")
         menu.trigger_commands("rcleararea")
         menu.trigger_commands("potatomode off")
         menu.trigger_commands("trafficpotato off")
