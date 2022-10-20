@@ -1933,6 +1933,7 @@ players.on_join(function(player_id)
     menu.action(vehicle, "Desabilitar Vehiculo V2", {}, "Inbloqueable por stand '10/02'", function(toggle)
         local player_ped = PLAYER.GET_PLAYER_PED(pid)
         local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(player_ped, include_last_vehicle_for_player_functions)
+        local is_running = VEHICLE.GET_IS_VEHICLE_ENGINE_RUNNING(player_vehicle)
         if NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(player_vehicle) then
             VEHICLE.SET_VEHICLE_ENGINE_HEALTH(player_vehicle, -10.0)
             util.toast(players.get_name(player_id) .. " Motor jodido")
