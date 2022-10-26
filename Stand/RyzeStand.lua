@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.6
+local localVer = 3.61
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -1097,6 +1097,7 @@ players.on_join(function(player_id)
 		menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(player_id))
 	end)
 
+    -- Prisuhm crash
     menu.action(crashes, "Modelo V1", {"crashv1"}, "Funcando (Menus populares - Stand)", function()
         local mdl = util.joaat('a_c_poodle')
         BlockSyncs(player_id, function()
@@ -1289,6 +1290,27 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 
     end)
+
+    menu.action(twotake, "Script Crash V3", {"crashv8"}, "No funciona muy bien", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {-555356783,1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            end
+            util.yield(200)
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, -8734739, -1567138998, 1391800514, -635253496, 1657081814, -1735690996, -932389107, 1, -1861870899, 754494713, 957011786})
+                util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, 1183186299, 2022567013, 1324141071, -987311985, 124933669, -438970959, 379529199, 1, 760891200, -243349514, -876017787})
+                util.trigger_script_event(1 << player_id, {-555356783, 1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            end
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, -8734739, -1567138998, 1391800514, -635253496, 1657081814, -1735690996, -932389107, 1, -1861870899, 754494713, 957011786})
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, 1183186299, 2022567013, 1324141071, -987311985, 124933669, -438970959, 379529199, 1, 760891200, -243349514, -876017787})
+            util.trigger_script_event(1 << player_id, {-555356783, 1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+    end)
+
+    -- This is a Prisuhm crash fixed by me <3
 
     local krustykrab = menu.list(twotake, "Don Crangrejo", {}, "Es riesgoso spectear, cuidado: funciona en usuarios de 2T1")
 
@@ -2156,7 +2178,18 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.toggle_loop(vehicle, "Desabilitar Vehiculo", {}, "Es mejor que el de stand", function(toggle)
+    menu.action(vehicle, "Desabilitar Vehiculo", {}, "Es mejor que el de stand", function(toggle)
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
+        if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
+        else
+            local veh2 = PED.GET_VEHICLE_PED_IS_TRYING_TO_ENTER(p)
+            entities.delete_by_handle(veh2)
+        end
+    end)
+
+    menu.action(vehicle, "Desabilitar Vehiculo Loop", {}, "Es mejor que el de stand", function(toggle)
         local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
         if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
@@ -2531,65 +2564,65 @@ menu.action(servicios, "Quitar Recompenza", {}, "", function()
     end
 end)
 
-recovery = menu.list(online, "Recovery", {}, "")
+--recovery = menu.list(online, "Recovery", {}, "")
 
 
-menu.action(recovery, "Dar M16", {""}, "", function()
-    memory.write_int(memory.script_global(262145 + 32775), 1)
-end)
+--menu.action(recovery, "Dar M16", {""}, "", function()
+--    memory.write_int(memory.script_global(262145 + 32775), 1)
+--end)
 
-local coleccionables = menu.list(recovery, "Coleccionables", {}, "")
+--local coleccionables = menu.list(recovery, "Coleccionables", {}, "")
 
-menu.click_slider(coleccionables, "Cintas", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x0, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Cintas", {""}, "", 0, 9, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x0, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Hidden Caches", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x1, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Hidden Caches", {""}, "", 0, 9, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x1, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Cofres/Tesoro", {""}, "", 0, 1, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x2, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Cofres/Tesoro", {""}, "", 0, 1, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x2, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Antenas Radio", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x3, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Antenas Radio", {""}, "", 0, 9, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x3, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "USBs", {""}, "", 0, 19, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x4, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "USBs", {""}, "", 0, 19, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x4, i, 1, 1, 1})
+--end)
 
-menu.action(coleccionables, "Naufragios", {""}, "", function()
-    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x5, 0, 1, 1, 1})
-end)
+--menu.action(coleccionables, "Naufragios", {""}, "", function()
+--    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x5, 0, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Enterrados", {""}, "", 0, 1, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x6, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Enterrados", {""}, "", 0, 1, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x6, i, 1, 1, 1})
+--end)
 
-menu.action(coleccionables, "Camisetas Halloween", {""}, "", function()
-    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x7, 1, 1, 1, 1})
-end)
+--menu.action(coleccionables, "Camisetas Halloween", {""}, "", function()
+--    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x7, 1, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Linternas", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x8, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Linternas", {""}, "", 0, 9, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x8, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Productos organicos lamar", {""}, "", 0, 99, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x9, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Productos organicos lamar", {""}, "", 0, 99, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x9, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0xA, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0xA, i, 1, 1, 1})
+--end)
 
-local pump_list = menu.list(coleccionables, "Pumkpins", {}, "Funciona")
-for idx, coords in pumps_from_gtaweb_eu do
-    pump_list:action("Pumpkin " .. idx, {}, "Teletransportate a las calabazas", function()
-        util.teleport_2d(coords[1], coords[2])
-    end)
-end
+--local pump_list = menu.list(coleccionables, "Pumkpins", {}, "Funciona")
+--for idx, coords in pumps_from_gtaweb_eu do
+--    pump_list:action("Pumpkin " .. idx, {}, "Teletransportate a las calabazas", function()
+--        util.teleport_2d(coords[1], coords[2])
+-    end)
+--end
 
 local bypasskick = menu.list(online, "Bypass Kick", {}, "Opciones que te permiten usar metodos para \n entrar a la sesion si te estan bloqueando.")
 
@@ -3645,23 +3678,27 @@ menu.hyperlink(misc, "Mi Github", "https://github.com/xxpichoclesxx")
 
 menu.hyperlink(menu.my_root(), "Entra al discord!", "https://discord.gg/BNbSHhunPv")
 local credits = menu.list(misc, "Creditos", {}, "")
-menu.action(credits, "Emir, Joju, Pepe, Ady, Vicente, Sammy", {}, "This will never be posible without them <3", function()
+local devcred = menu.list(credits, "Creditos Dev", {}, "")
+local othercred = menu.list(credits, "Otros Creditos", {}, "")
+menu.action(devcred, "JinxScript", {}, "Thx for many of the player detection :3.", function()
 end)
-menu.action(credits, "JinxScript", {}, "Thx for many of the player detection :3.", function()
+menu.action(devcred, "gLance", {}, "He gave me a lot of help with Gta V natives.", function()
 end)
-menu.action(credits, "gLance", {}, "He gave me a lot of help with Gta V natives.", function()
+menu.action(devcred, "LanceScriptTEOF", {}, "He helped me learn and understand Gta V natives", function()
 end)
-menu.action(credits, "LanceScriptTEOF", {}, "He helped me learn and understand Gta V natives", function()
+menu.action(devcred, "Aaron", {}, "Thanks for helping me with my first steps in the stand lua api", function()
 end)
-menu.action(credits, "Aaron", {}, "Thanks for helping me with my first steps in the stand lua api", function()
+menu.action(devcred, "Cxbr", {}, "Thx for friendly features <3", function()
 end)
-menu.action(credits, "Cxbr", {}, "Thx for friendly features <3", function()
+menu.action(devcred, "Sapphire", {}, "Who helped me with almost every single feature and being patient because of my dumb brain <3", function()
 end)
-menu.action(credits, "Sapphire", {}, "Who helped me with almost every single feature and being patient because of my dumb brain <3", function()
+menu.action(othercred, "Emir, Joju, Pepe, Ady, Vicente, Sammy", {}, "This will never be posible without them <3", function()
 end)
-menu.action(credits, "Wigger", {}, "He bringed some ideas to the script and some functions, thx", function()
+menu.action(othercred, "Wigger", {}, "He bringed some ideas to the script and some functions, thx", function()
 end)
-menu.action(credits, "You <3", {}, "Who download the script and give ideas for improvement <3", function()
+menu.action(othercred, "Ducklett", {}, "He fully translated the script to english", function()
+end)
+menu.action(othercred, "You <3", {}, "Who download the script and give ideas for improvement <3", function()
 end)
 
 util.on_stop(function ()
