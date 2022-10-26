@@ -2621,7 +2621,7 @@ end)
 --for idx, coords in pumps_from_gtaweb_eu do
 --    pump_list:action("Pumpkin " .. idx, {}, "Teletransportate a las calabazas", function()
 --        util.teleport_2d(coords[1], coords[2])
--    end)
+--    end)
 --end
 
 local bypasskick = menu.list(online, "Bypass Kick", {}, "Opciones que te permiten usar metodos para \n entrar a la sesion si te estan bloqueando.")
