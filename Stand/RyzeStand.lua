@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.61
+local localVer = 3.62
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -3680,7 +3680,7 @@ menu.hyperlink(menu.my_root(), "Entra al discord!", "https://discord.gg/BNbSHhun
 local credits = menu.list(misc, "Creditos", {}, "")
 local devcred = menu.list(credits, "Creditos Dev", {}, "")
 local othercred = menu.list(credits, "Otros Creditos", {}, "")
-menu.action(devcred, "JinxScript", {}, "Thx for many of the player detection :3.", function()
+menu.action(devcred, "JinxScript/Prisuhm", {}, "Skidded code from prisuhm, this is what i added before a little discussion with him, we do love him in this community because he is awesome and he codded almost every single feature. \nThx for being so Prisuhm and unique.", function()
 end)
 menu.action(devcred, "gLance", {}, "He gave me a lot of help with Gta V natives.", function()
 end)
