@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.62
+local localVer = 3.63
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -639,6 +639,33 @@ players.on_join(function(player_id)
         end
     end)
 
+    menu.toggle_loop(lagplay, "Metodo V5", {rlag5}, "Lageo por entidades", function()
+		local player_pos = players.get_position(player_id)
+		request_ptfx_asset("scr_rcbarry2")
+		GRAPHICS.USE_PARTICLE_FX_ASSET("scr_rcbarry2")
+		GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+            "scr_clown_death", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
+		request_ptfx_asset("scr_rcbarry2")
+		GRAPHICS.USE_PARTICLE_FX_ASSET("scr_rcbarry2")
+		GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+            "scr_exp_clown", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
+		request_ptfx_asset("scr_ch_finale")
+       GRAPHICS.USE_PARTICLE_FX_ASSET("scr_ch_finale")
+		GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+			"scr_ch_finale_drill_sparks", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
+        request_ptfx_asset("scr_ch_finale")
+        while not STREAMING.HAS_MODEL_LOADED(447548909) do
+			STREAMING.REQUEST_MODEL(447548909)
+			end
+		local player_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+		local PlayerPedCoords = ENTITY.GET_ENTITY_COORDS(player_ped, true)
+		spam_amount = 1000
+		while spam_amount >= 2 do
+			entities.create_vehicle(447548909, PlayerPedCoords, 0)
+			spam_amount = spam_amount - 2
+		end
+	end)
+
     local cageveh = menu.list(trolling, "Enjaular Coches", {}, "")
 
     menu.action(cageveh, "Enjaular Vehiculo", {"cage"}, "", function()
@@ -816,18 +843,18 @@ players.on_join(function(player_id)
     --end)
 
 
-    local options <const> = {"Lazer", "Mammatus",  "Cuban800"}
-	menu.action_slider(malicious, ("Kamikaze"), {}, "", options, function (index, plane)
-		local hash <const> = util.joaat(plane)
-		request_model(hash)
-		local targetPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-		local pos = players.get_position(targetPed, 20.0, 20.0)
-		pos.z = pos.z + 30.0
-		local plane = entities.create_vehicle(hash, pos, 0.0)
-		players.get_position(plane, targetPed, true)
-		VEHICLE.SET_VEHICLE_FORWARD_SPEED(plane, 150.0)
-		VEHICLE.CONTROL_LANDING_GEAR(plane, 3)
-	end)
+    --local options <const> = {"Lazer", "Mammatus",  "Cuban800"}
+	--menu.action_slider(malicious, ("Kamikaze"), {}, "", options, function (index, plane)
+	--	local hash <const> = util.joaat(plane)
+	--	request_model(hash)
+	--	local targetPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+	--	local pos = players.get_position(targetPed, 20.0, 20.0)
+	--	pos.z = pos.z + 30.0
+	--	local plane = entities.create_vehicle(hash, pos, 0.0)
+	--	players.get_position(plane, targetPed, true)
+	--	VEHICLE.SET_VEHICLE_FORWARD_SPEED(plane, 150.0)
+	--	VEHICLE.CONTROL_LANDING_GEAR(plane, 3)
+	--end)
 
 
     local msg = ("Ya lo siguen los mercenarios")
@@ -1634,37 +1661,37 @@ players.on_join(function(player_id)
         end
     end)
 
-    player_toggle_loop(antimodder, player_id, "Remover godmode de carro", {}, "", function()
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) and not PED.IS_PED_DEAD_OR_DYING(ped) then
-            local veh = PED.GET_VEHICLE_PED_IS_IN(ped, false)
-            ENTITY.SET_ENTITY_CAN_BE_DAMAGED(veh, true)
-            ENTITY.SET_ENTITY_INVINCIBLE(veh, false)
-            ENTITY.SET_ENTITY_PROOFS(veh, false, false, false, false, false, 0, 0, false)
-        end
-    end)
+    --player_toggle_loop(antimodder, player_id, "Remover godmode de carro", {}, "", function()
+    --    local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+    --    if PED.IS_PED_IN_ANY_VEHICLE(ped, false) and not PED.IS_PED_DEAD_OR_DYING(ped) then
+    --        local veh = PED.GET_VEHICLE_PED_IS_IN(ped, false)
+    --        ENTITY.SET_ENTITY_CAN_BE_DAMAGED(veh, true)
+    --        ENTITY.SET_ENTITY_INVINCIBLE(veh, false)
+    --        ENTITY.SET_ENTITY_PROOFS(veh, false, false, false, false, false, 0, 0, false)
+    --    end
+    --end)
 
-    menu.action(antimodder, "Remover godmode de carro V2", {}, "", function()
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-        local veh = PED.GET_VEHICLE_PED_IS_IN(p)
-        if PED.IS_PED_IN_ANY_VEHICLE(p) then
-            RequestControl(veh)
-            ENTITY.SET_ENTITY_INVINCIBLE(veh, false)
-        else
-            util.toast(players.get_name(player_id).. " No esta en un coche")
-        end
-    end)
+    --menu.action(antimodder, "Remover godmode de carro V2", {}, "", function()
+    --    local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+    --    local veh = PED.GET_VEHICLE_PED_IS_IN(p)
+    --    if PED.IS_PED_IN_ANY_VEHICLE(p) then
+    --        RequestControl(veh)
+    --        ENTITY.SET_ENTITY_INVINCIBLE(veh, false)
+    --    else
+    --        util.toast(players.get_name(player_id).. " No esta en un coche")
+    --    end
+    --end)
 
-    menu.toggle_loop(antimodder, "Remover godmode de carro V3", {}, "", function()
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-        local veh = PED.GET_VEHICLE_PED_IS_IN(p)
-        if PED.IS_PED_IN_ANY_VEHICLE(p) then
-            RequestControl(veh)
-            ENTITY.SET_ENTITY_INVINCIBLE(veh, false)
-        else
-            util.toast(players.get_name(player_id).. " No esta en un coche")
-        end
-    end)
+    --menu.toggle_loop(antimodder, "Remover godmode de carro V3", {}, "", function()
+    --    local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+    --    local veh = PED.GET_VEHICLE_PED_IS_IN(p)
+    --    if PED.IS_PED_IN_ANY_VEHICLE(p) then
+    --        RequestControl(veh)
+    --        ENTITY.SET_ENTITY_INVINCIBLE(veh, false)
+    --    else
+    --        util.toast(players.get_name(player_id).. " No esta en un coche")
+    --    end
+    --end)
 
     menu.action(trolling, "Enviar Al Bote", {}, "", function()
         local my_pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid))
