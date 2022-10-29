@@ -3,7 +3,7 @@
 -- Enjoy this and if you find any bug just write me on discord (XxpichoclesxX#0427)
 -- With love Picho <3
 
-require_game_build(2699) -- v1.61
+require_game_build(2699) -- v1.61 (v2699.16)
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local GTr = 2671447+59
