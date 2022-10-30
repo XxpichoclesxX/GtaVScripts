@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.63
+local localVer = 3.64
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -2591,65 +2591,65 @@ menu.action(servicios, "Quitar Recompenza", {}, "", function()
     end
 end)
 
---recovery = menu.list(online, "Recovery", {}, "")
+recovery = menu.list(online, "Recovery 'Test'", {}, "")
 
 
 --menu.action(recovery, "Dar M16", {""}, "", function()
 --    memory.write_int(memory.script_global(262145 + 32775), 1)
 --end)
 
---local coleccionables = menu.list(recovery, "Coleccionables", {}, "")
+local coleccionables = menu.list(recovery, "Coleccionables", {}, "")
 
---menu.click_slider(coleccionables, "Cintas", {""}, "", 0, 9, 0, 1, function(i)
---    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x0, i, 1, 1, 1})
---end)
+menu.click_slider(coleccionables, "Cintas", {""}, "", 0, 9, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x0, i, 1, 1, 1})
+end)
 
---menu.click_slider(coleccionables, "Hidden Caches", {""}, "", 0, 9, 0, 1, function(i)
---    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x1, i, 1, 1, 1})
---end)
+menu.click_slider(coleccionables, "Hidden Caches", {""}, "", 0, 9, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x1, i, 1, 1, 1})
+end)
 
---menu.click_slider(coleccionables, "Cofres/Tesoro", {""}, "", 0, 1, 0, 1, function(i)
---    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x2, i, 1, 1, 1})
---end)
+menu.click_slider(coleccionables, "Cofres/Tesoro", {""}, "", 0, 1, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x2, i, 1, 1, 1})
+end)
 
---menu.click_slider(coleccionables, "Antenas Radio", {""}, "", 0, 9, 0, 1, function(i)
---    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x3, i, 1, 1, 1})
---end)
+menu.click_slider(coleccionables, "Antenas Radio", {""}, "", 0, 9, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x3, i, 1, 1, 1})
+end)
 
---menu.click_slider(coleccionables, "USBs", {""}, "", 0, 19, 0, 1, function(i)
---    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x4, i, 1, 1, 1})
---end)
+menu.click_slider(coleccionables, "USBs", {""}, "", 0, 19, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x4, i, 1, 1, 1})
+end)
 
---menu.action(coleccionables, "Naufragios", {""}, "", function()
---    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x5, 0, 1, 1, 1})
---end)
+menu.action(coleccionables, "Naufragios", {""}, "", function()
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x5, 0, 1, 1, 1})
+end)
 
---menu.click_slider(coleccionables, "Enterrados", {""}, "", 0, 1, 0, 1, function(i)
---    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x6, i, 1, 1, 1})
---end)
+menu.click_slider(coleccionables, "Enterrados", {""}, "", 0, 1, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x6, i, 1, 1, 1})
+end)
 
---menu.action(coleccionables, "Camisetas Halloween", {""}, "", function()
---    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x7, 1, 1, 1, 1})
---end)
+menu.action(coleccionables, "Camisetas Halloween", {""}, "", function()
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x7, 1, 1, 1, 1})
+end)
 
---menu.click_slider(coleccionables, "Linternas", {""}, "", 0, 9, 0, 1, function(i)
---    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x8, i, 1, 1, 1})
---end)
+menu.click_slider(coleccionables, "Linternas", {""}, "", 0, 9, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x8, i, 1, 1, 1})
+end)
 
---menu.click_slider(coleccionables, "Productos organicos lamar", {""}, "", 0, 99, 0, 1, function(i)
---    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x9, i, 1, 1, 1})
---end)
+menu.click_slider(coleccionables, "Productos organicos lamar", {""}, "", 0, 99, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0x9, i, 1, 1, 1})
+end)
 
---menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 1, function(i)
---    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0xA, i, 1, 1, 1})
---end)
+menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 1, function(i)
+    util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0xA, i, 1, 1, 1})
+end)
 
---local pump_list = menu.list(coleccionables, "Pumkpins", {}, "Funciona")
---for idx, coords in pumps_from_gtaweb_eu do
---    pump_list:action("Pumpkin " .. idx, {}, "Teletransportate a las calabazas", function()
---        util.teleport_2d(coords[1], coords[2])
---    end)
---end
+local pump_list = menu.list(coleccionables, "Pumkpins", {}, "Funciona")
+for idx, coords in pumps_from_gtaweb_eu do
+    pump_list:action("Pumpkin " .. idx, {}, "Teletransportate a las calabazas", function()
+        util.teleport_2d(coords[1], coords[2])
+    end)
+end
 
 local bypasskick = menu.list(online, "Bypass Kick", {}, "Opciones que te permiten usar metodos para \n entrar a la sesion si te estan bloqueando.")
 
@@ -2849,16 +2849,16 @@ if bailOnAdminJoin then
     end
 end
 
-menu.toggle_loop(protects, "Bloquear Error De Transaccion", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
+menu.toggle_loop(protects, "Bloquear Error De Transaccion 'Test'", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
     local TransactionError = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Block")
     local TransactionErrorV = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Notification")
     local ScriptEvent = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Script Event>Block")
     local ScriptEventV = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Script Event>Notification")
     if on_toggle then
         menu.trigger_command(TransactionError, "on")
-        --if STATS.SET_SAVE_MIGRATION_TRANSACTION_ID_WARNING, NETSHOPPING.NET_GAMESERVER_IS_SESSION_REFRESH_PENDING then
-        --    SCRIPT.TERMINATE_THIS_THREAD
-        --end
+        if STATS.SET_SAVE_MIGRATION_TRANSACTION_ID_WARNING, NETSHOPPING.NET_GAMESERVER_IS_SESSION_REFRESH_PENDING then
+            SCRIPT.TERMINATE_THIS_THREAD
+        end
         menu.trigger_command(TransactionErrorV, "on")
         menu.trigger_commands("removeloader")
         --menu.trigger_command(ScriptEvent, "on")
@@ -2883,8 +2883,14 @@ menu.toggle_loop(protects, "Bloquear PFTX/Particulas Lag", {}, "", function()
 end)
 
 menu.toggle_loop(protects, "Anti Bestia", {}, "Previene que te vuelvan la bestia con stand etc.", function()
-    if util.spoof_script("am_hunt_the_beast", SCRIPT.TERMINATE_THIS_THREAD) then
-        util.toast("Detectado script de bestia, parando script...")
+    if SCRIPT.GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH(util.joaat("am_hunt_the_beast")) > 0 then
+        local host
+        repeat
+            host = NETWORK.NETWORK_GET_HOST_OF_SCRIPT("am_hunt_the_beast", -1, 0)
+            util.yield()
+        until host ~= -1
+        util.toast(players.get_name(host).." started Hunt The Beast. Killing script...")
+        menu.trigger_command(menu.ref_by_path("Online>Session>Session Scripts>Hunt the Beast>Stop Script"))
     end
 end)
 
