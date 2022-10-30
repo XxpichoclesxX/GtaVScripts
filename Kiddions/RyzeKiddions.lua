@@ -1103,6 +1103,8 @@ OnlMenu:add_action("Bypasear Error De Transaxion", function() if globals.get_int
 OnlMenu:add_action("Remover tiempo de espera de VIP O MC", function() stats.set_int("MPPLY_VIPGAMEPLAYDISABLEDTIMER", 0) end)
 OnlMenu:add_action("Saltar misiones de Lamar", function() stats.set_bool(mpx .. "LOW_FLOW_CS_DRV_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_TRA_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_FUN_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_PHO_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_FIN_SEEN", true) stats.set_bool(mpx .. "LOW_BEN_INTRO_CS_SEEN", true) stats.set_int(mpx .. "LOWRIDER_FLOW_COMPLETE", 4) stats.set_int(mpx .. "LOW_FLOW_CURRENT_PROG", 9) stats.set_int(mpx .. "LOW_FLOW_CURRENT_CALL", 9) stats.set_int(mpx .. "LOW_FLOW_CS_HELPTEXT", 66) end) OnlMenu:add_action("Skipear Misiones Yate", function() stats.set_int(mpx .. "YACHT_MISSION_PROG", 0) stats.set_int(mpx .. "YACHT_MISSION_FLOW", 21845) stats.set_int(mpx .. "CASINO_DECORATION_GIFT_1", -1) end)
 OnlMenu:add_action("Saltar misiones de ULP", function() stats.set_int(mpx .. "ULP_MISSION_PROGRESS", 127) stats.set_int(mpx .. "ULP_MISSION_CURRENT", 0) end)
+local function Fceomc(e) if not localplayer then return end if e then globals.set_int(262145 + 12972, 0) globals.set_int(262145 + 16576, 0) else globals.set_int(262145 + 12972, 50000) globals.set_int(262145 + 16576, 250000) end end OnlMenu:add_toggle("Cambiar nombre de mc/ceo, gratiz", function() return e37 end, function() e37 = not e37 Fceomc(e37) end)
+OnlMenu:add_toggle("Cambiar nombre ceo, gratiz", function() return e37 end, function() e37 = not e37 Fceomc(e37) end)
 OnlMenu:add_toggle("TPRapido(NumDel)", function()
 	return enable2
 end, function()
