@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.64
+local localVer = 3.65
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -2852,21 +2852,13 @@ end
 menu.toggle_loop(protects, "Bloquear Error De Transaccion 'Test'", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
     local TransactionError = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Block")
     local TransactionErrorV = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Notification")
-    local ScriptEvent = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Script Event>Block")
-    local ScriptEventV = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Script Event>Notification")
     if on_toggle then
         menu.trigger_command(TransactionError, "on")
-        if STATS.SET_SAVE_MIGRATION_TRANSACTION_ID_WARNING, NETSHOPPING.NET_GAMESERVER_IS_SESSION_REFRESH_PENDING then
-            SCRIPT.TERMINATE_THIS_THREAD
-        end
         menu.trigger_command(TransactionErrorV, "on")
-        menu.trigger_commands("removeloader")
-        --menu.trigger_command(ScriptEvent, "on")
-        --menu.trigger_command(ScriptEvent1, "on")
-        util.toast("No es mi culpa el error del log, esperen a que Stand lo arregle")
-    else
-        --menu.trigger_command(ScriptEvent, "off")
-        --menu.trigger_command(ScriptEventV, "off")
+        for i = 1, 100 do
+            menu.trigger_commands("removeloader")
+        end
+        --util.toast("No es mi culpa el error del log, esperen a que Stand lo arregle")
     end
 end)
 
