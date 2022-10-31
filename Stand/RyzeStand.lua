@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.65
+local localVer = 3.66
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -1495,7 +1495,7 @@ players.on_join(function(player_id)
         menu.trigger_commands("anticrashcamera off")
     end)
     
-    menu.action(crashes, "Bomba del tsar V2", {"tsarbomba2"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu)", function()
+    menu.action(crashes, "Bomba del tsar V2", {"tsarbomba2"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu) \n(Necesita Regular Para Funcionar Bien)", function()
         local objective = player_id
         --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
         menu.trigger_commands("anticrashcamera on")
@@ -1529,6 +1529,8 @@ players.on_join(function(player_id)
         menu.trigger_commands("footlettuce"..players.get_name(player_id))
         util.yield(400)
         menu.trigger_commands("steamroll"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("choke"..players.get_name(player_id))
         util.yield(1800)
         util.toast("Espera en lo que se limpia todo...")
         --menu.trigger_command(outSync, "off")
