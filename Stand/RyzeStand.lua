@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.7
+local localVer = 3.71
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -643,32 +643,32 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.toggle_loop(lagplay, "Metodo V5", {rlag5}, "Lageo por entidades", function()
-		local player_pos = players.get_position(player_id)
-		request_ptfx_asset("scr_rcbarry2")
-		GRAPHICS.USE_PARTICLE_FX_ASSET("scr_rcbarry2")
-		GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-            "scr_clown_death", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
-		request_ptfx_asset("scr_rcbarry2")
-		GRAPHICS.USE_PARTICLE_FX_ASSET("scr_rcbarry2")
-		GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-            "scr_exp_clown", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
-		request_ptfx_asset("scr_ch_finale")
-       GRAPHICS.USE_PARTICLE_FX_ASSET("scr_ch_finale")
-		GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-			"scr_ch_finale_drill_sparks", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
-        request_ptfx_asset("scr_ch_finale")
-        while not STREAMING.HAS_MODEL_LOADED(447548909) do
-			STREAMING.REQUEST_MODEL(447548909)
-			end
-		local player_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-		local PlayerPedCoords = ENTITY.GET_ENTITY_COORDS(player_ped, true)
-		spam_amount = 1000
-		while spam_amount >= 2 do
-			entities.create_vehicle(447548909, PlayerPedCoords, 0)
-			spam_amount = spam_amount - 2
-		end
-	end)
+    --menu.toggle_loop(lagplay, "Metodo V5", {rlag5}, "Lageo por entidades", function()
+	--	local player_pos = players.get_position(player_id)
+	--	request_ptfx_asset("scr_rcbarry2")
+	--	GRAPHICS.USE_PARTICLE_FX_ASSET("scr_rcbarry2")
+	--	GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+    --        "scr_clown_death", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
+	--	request_ptfx_asset("scr_rcbarry2")
+	--	GRAPHICS.USE_PARTICLE_FX_ASSET("scr_rcbarry2")
+	--	GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+    --        "scr_exp_clown", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
+	--	request_ptfx_asset("scr_ch_finale")
+    --   GRAPHICS.USE_PARTICLE_FX_ASSET("scr_ch_finale")
+	--	GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+	--		"scr_ch_finale_drill_sparks", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
+    --    request_ptfx_asset("scr_ch_finale")
+    --    while not STREAMING.HAS_MODEL_LOADED(447548909) do
+	--		STREAMING.REQUEST_MODEL(447548909)
+	--		end
+	--	local player_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+	--	local PlayerPedCoords = ENTITY.GET_ENTITY_COORDS(player_ped, true)
+	--	spam_amount = 1000
+	--	while spam_amount >= 2 do
+	--		entities.create_vehicle(447548909, PlayerPedCoords, 0)
+	--		spam_amount = spam_amount - 2
+	--	end
+	--end)
 
     local cageveh = menu.list(trolling, "Enjaular Coches", {}, "")
 
@@ -954,7 +954,7 @@ players.on_join(function(player_id)
         glitchPlayer = toggled
 
         while glitchPlayer do
-            local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+            local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
             local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
             if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 1000.0 
             and v3.distance(pos, players.get_cam_pos(players.user())) > 1000.0 then
@@ -3013,6 +3013,10 @@ menu.toggle(bypasskick, "Metodo V4", {}, "Probablemente rompa el juego, usa en t
     local DontAsk = menu.ref_by_path("Online>Transitions>Speed Up>Don't Ask For Permission To Spawn")
     if on_toggle then
         menu.trigger_commands("nobgscript on")
+        menu.trigger_commands("skipbroadcast on")
+        menu.trigger_commands("speedupspawn on")
+        menu.trigger_commands("speedupfmmc on")
+        menu.trigger_commands("skipswoopdown on")
         menu.trigger_command(BlockIncSyncs)
         menu.trigger_command(BlockNetEvents)
         menu.trigger_command(BlockBailing, "on")
@@ -3021,23 +3025,23 @@ menu.toggle(bypasskick, "Metodo V4", {}, "Probablemente rompa el juego, usa en t
         menu.trigger_command(BlockBailing4, "on")
         menu.trigger_command(ShowNotis)
         menu.trigger_command(BlockRaw)
-        menu.trigger_commands("skipbroadcast on")
         menu.trigger_command(DontAsk, "on")
-        menu.trigger_commands("skipswoopdown on")
         util.toast("Activado, ahora entra a su sesion y prepara el kick")
     else
         menu.trigger_commands("nobgscript off")
+        menu.trigger_commands("skipbroadcast off")
+        menu.trigger_commands("speedupspawn off")
+        menu.trigger_commands("speedupfmmc off")
+        menu.trigger_commands("skipswoopdown off")
         menu.trigger_command(UnblockIncSyncs)
         menu.trigger_command(UnblockNetEvents)
         menu.trigger_command(BlockBailing3, "off")
         menu.trigger_command(UnShowNotis)
         menu.trigger_command(UnBlockRaw)
-        menu.trigger_commands("skipbroadcast off")
         menu.trigger_command(DontAsk, "off")
-        menu.trigger_commands("skipswoopdown off")
         util.toast("Listo, todo desactivado")
     end
-    end)
+end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 --Protecciones
@@ -3111,18 +3115,18 @@ if bailOnAdminJoin then
     end
 end
 
---menu.toggle_loop(protects, "Bloquear Error De Transaccion 'Test'", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
+menu.toggle_loop(protects, "Bloquear Error De Transaccion 'Test'", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
 --    local TransactionError = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Block")
 --    local TransactionErrorV = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Notification")
---    if on_toggle then
---        menu.trigger_command(TransactionError, "on")
---        menu.trigger_command(TransactionErrorV, "on")
---        for i = 1, 100 do
---            menu.trigger_commands("removeloader")
---        end
+    if on_toggle then
+        menu.trigger_command(TransactionError, "on")
+        menu.trigger_command(TransactionErrorV, "on")
+        for i = 1, 100 do
+            menu.trigger_commands("removeloader")
+        end
 --        --util.toast("No es mi culpa el error del log, esperen a que Stand lo arregle")
---    end
---end)
+    end
+end)
 
 --menu.toggle_loop(protects, "Bloquear Fuego/Lag", {}, "", function()
 --    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
@@ -3423,17 +3427,16 @@ rapid_khanjali = menu.toggle_loop(modificaciones, "Fuego Rapido Khanjali", {}, "
     end
 end)
 
-local bullet_proof
-bullet_proof = menu.toggle_loop(modificaciones, "A prueba de balas", {}, "", function()
-    local player_veh = PED.GET_VEHICLE_PED_IS_USING(players.user_ped())
-    if ENTITY.GET_ENTITY_MODEL(player_veh) == true then
-        ENTITY.SET_ENTITY_PROOFS(player_cur_car, true, true, true, true, true, true, true, true)
+player_cur_car = 0
+
+menu.toggle_loop(modificaciones, "A prueba de balas", {}, "", function(on)
+    local play = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+    if on then
+        ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(play), true, true, true, true, true, false, false, true)
     else
-        util.toast("No estas en un vehiculo.")
-        menu.trigger_command(bullet_proof, "off")
+        ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(play), false, false, false, false, false, false, false, false)
     end
 end)
-
 
 infcms = false
 menu.toggle(modificaciones, "Contramedidas Infinitas", {"infinitecms"}, "Dara contramedidas infinitas.", function(on)
@@ -3441,9 +3444,6 @@ menu.toggle(modificaciones, "Contramedidas Infinitas", {"infinitecms"}, "Dara co
 end)
 
 if player_cur_car ~= 0 then
-    if everythingproof then
-        ENTITY.SET_ENTITY_PROOFS(player_cur_car, true, true, true, true, true, true, true, true)
-    end
     --if racemode then
     --    VEHICLE.SET_VEHICLE_IS_RACING(player_cur_car, true)
     --end
