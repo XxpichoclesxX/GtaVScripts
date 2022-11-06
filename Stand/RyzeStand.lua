@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.71
+local localVer = 3.711
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -1599,7 +1599,8 @@ players.on_join(function(player_id)
 
     --menu.action(crashes, "Inbloqueable V4 'Test'", {"crashv4"}, "Deberia estar arreglado por ahora", function()
     --    local mdl = util.joaat("apa_mp_apa_yacht")
-    --    local user = players.user_ped()
+    --    local user = PLAYER.PLAYER_PED_ID()
+    --    local ped_pos = players.get_position(player_id)
     --   BlockSyncs(player_id, function()
     --        local old_pos = ENTITY.GET_ENTITY_COORDS(user, false)
     --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user, 0xFBAB5776, 100, false)
@@ -1609,7 +1610,7 @@ players.on_join(function(player_id)
     --        local pos = players.get_position(player_id)
     --        pos.z += 300
     --        TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
-    --        ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
+    --        ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, ped_pos, false, false, false)
     --        repeat
     --            util.yield()
     --        until PED.GET_PED_PARACHUTE_STATE(user) == 0
@@ -1621,9 +1622,9 @@ players.on_join(function(player_id)
     --        repeat
     --            util.yield()
     --        until PED.GET_PED_PARACHUTE_STATE(user) ~= 1
-    --        pcall(TASK.CLEAR_PED_TASKS_IMMEDIATELY, user)
+    --        TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
     --        PLAYER.CLEAR_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user())
-    --        pcall(ENTITY.SET_ENTITY_COORDS, user, old_pos, false, false)
+    --        ENTITY.SET_ENTITY_COORDS(user, ped_pos, false, false)
     --    end)
     --end)
 
@@ -1681,12 +1682,12 @@ players.on_join(function(player_id)
         --menu.trigger_commands("crashv4"..players.get_name(player_id))
         util.yield(2000)
         menu.trigger_commands("crash"..players.get_name(player_id))
-        util.yield(400)
-        menu.trigger_commands("ngcrash"..players.get_name(player_id))
-        util.yield(400)
-        menu.trigger_commands("footlettuce"..players.get_name(player_id))
-        util.yield(400)
-        menu.trigger_commands("steamroll"..players.get_name(player_id))
+        --util.yield(400)
+        --menu.trigger_commands("ngcrash"..players.get_name(player_id))
+        --util.yield(400)
+        --menu.trigger_commands("footlettuce"..players.get_name(player_id))
+        --util.yield(400)
+        --menu.trigger_commands("steamroll"..players.get_name(player_id))
         util.yield(1800)
         util.toast("Espera en lo que se limpia todo...")
         --menu.trigger_command(outSync, "off")
@@ -2727,7 +2728,7 @@ menu.toggle_loop(detections, "Teleport", {}, "Detecta si el jugador se teletrans
     end
 end)
 
-menu.toggle_loop(detections, "Voto De Kickeo 'Test'", {}, "Detecta si votan por expulsar a alguien de la sesion muy rapidamente y avisa.  Mas conocido como 'smart kick' en stand.", function()
+menu.toggle_loop(detections, "Voto De Kickeo", {}, "Detecta si votan por expulsar a alguien de la sesion muy rapidamente y avisa.  Mas conocido como 'smart kick' en stand.", function()
     for _, player_id in ipairs(players.list(false, true, true)) do
         local kickowner = NETWORK.NETWORK_SESSION_GET_KICK_VOTE(player_id)
         local kicked = NETWORK.NETWORK_SESSION_KICK_PLAYER(player_id)
@@ -3358,53 +3359,53 @@ end)
 
 modificaciones = menu.list(vehicles, "Modificaciones a Vehiculos", {}, "")
 
-menu.click_slider_float(modificaciones, "Suspension", {"suspensionheight"}, "", -100, 100, 0, 1, function(value)
-    value/=100
-    local player = players.user_ped()
-    local pos = ENTITY.GET_ENTITY_COORDS(player, false)
-    local VehicleHandle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), false)
-    if VehicleHandle == 0 then return end
-    local CAutomobile = entities.handle_to_pointer(VehicleHandle)
-    local CHandlingData = memory.read_long(CAutomobile + 0x0938)
-    memory.write_float(CHandlingData + 0x00D0, value)
-    ENTITY.SET_ENTITY_COORDS_NO_OFFSET(VehicleHandle, pos.x, pos.y, pos.z + 2.8, false, false, false) -- Dropping vehicle so the suspension updates
-end)
+--menu.click_slider_float(modificaciones, "Suspension", {"suspensionheight"}, "", -100, 100, 0, 1, function(value)
+--    value/=100
+--    local player = players.user_ped()
+--    local pos = ENTITY.GET_ENTITY_COORDS(player, false)
+--    local VehicleHandle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), false)
+--    if VehicleHandle == 0 then return end
+--    local CAutomobile = entities.handle_to_pointer(VehicleHandle)
+--    local CHandlingData = memory.read_long(CAutomobile + 0x0938)
+--    memory.write_float(CHandlingData + 0x00D0, value)
+--    ENTITY.SET_ENTITY_COORDS_NO_OFFSET(VehicleHandle, pos.x, pos.y, pos.z + 2.8, false, false, false) -- Dropping vehicle so the suspension updates
+--end)
 
-menu.click_slider_float(modificaciones, "Torque", {"torque"}, "", 0, 1000, 100, 10, function(value)
-    value/=100
-    local VehicleHandle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), false)
-    if VehicleHandle == 0 then return end
-    local CAutomobile = entities.handle_to_pointer(VehicleHandle)
-    local CHandlingData = memory.read_long(CAutomobile + 0x0938)
-    memory.write_float(CHandlingData + 0x004C, value)
-end)
+--menu.click_slider_float(modificaciones, "Torque", {"torque"}, "", 0, 1000, 100, 10, function(value)
+--    value/=100
+--    local VehicleHandle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), false)
+--    if VehicleHandle == 0 then return end
+--    local CAutomobile = entities.handle_to_pointer(VehicleHandle)
+--    local CHandlingData = memory.read_long(CAutomobile + 0x0938)
+--    memory.write_float(CHandlingData + 0x004C, value)
+--end)
 
-menu.click_slider_float(modificaciones, "Upshift", {"upshift"}, "", 0, 500, 100, 10, function(value)
-    value/=100
-    local VehicleHandle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), false)
-    if VehicleHandle == 0 then return end
-    local CAutomobile = entities.handle_to_pointer(VehicleHandle)
-    local CHandlingData = memory.read_long(CAutomobile + 0x0938)
-    memory.write_float(CHandlingData + 0x0058, value)
-end)
+--menu.click_slider_float(modificaciones, "Upshift", {"upshift"}, "", 0, 500, 100, 10, function(value)
+--    value/=100
+--    local VehicleHandle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), false)
+--    if VehicleHandle == 0 then return end
+--    local CAutomobile = entities.handle_to_pointer(VehicleHandle)
+--    local CHandlingData = memory.read_long(CAutomobile + 0x0938)
+--    memory.write_float(CHandlingData + 0x0058, value)
+--end)
 
-menu.click_slider_float(modificaciones, "DownShift", {"downshift"}, "", 0, 500, 100, 10, function(value)
-    value/=100
-    local VehicleHandle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), false)
-    if VehicleHandle == 0 then return end
-    local CAutomobile = entities.handle_to_pointer(VehicleHandle)
-    local CHandlingData = memory.read_long(CAutomobile + 0x0938)
-    memory.write_float(CHandlingData + 0x005C, value)
-end)
+--menu.click_slider_float(modificaciones, "DownShift", {"downshift"}, "", 0, 500, 100, 10, function(value)
+--    value/=100
+--    local VehicleHandle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), false)
+--    if VehicleHandle == 0 then return end
+--    local CAutomobile = entities.handle_to_pointer(VehicleHandle)
+--    local CHandlingData = memory.read_long(CAutomobile + 0x0938)
+--    memory.write_float(CHandlingData + 0x005C, value)
+--end)
 
-menu.click_slider_float(modificaciones, "Multiplicador De Curva", {"curve"}, "", 0, 500, 100, 10, function(value)
-    value/=100
-    local VehicleHandle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), false)
-    if VehicleHandle == 0 then return end
-    local CAutomobile = entities.handle_to_pointer(VehicleHandle)
-    local CHandlingData = memory.read_long(CAutomobile + 0x0938)
-    memory.write_float(CHandlingData + 0x0094, value)
-end)
+--menu.click_slider_float(modificaciones, "Multiplicador De Curva", {"curve"}, "", 0, 500, 100, 10, function(value)
+--    value/=100
+--    local VehicleHandle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), false)
+--    if VehicleHandle == 0 then return end
+--    local CAutomobile = entities.handle_to_pointer(VehicleHandle)
+--    local CHandlingData = memory.read_long(CAutomobile + 0x0938)
+--    memory.write_float(CHandlingData + 0x0094, value)
+--end)
 
 menu.toggle_loop(modificaciones, "Mejoras Random", {}, "Only works on vehicles you spawned in for some reason", function()
     local mod_types = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15, 16, 23, 24, 25, 27, 28, 30, 33, 35, 38, 48}
@@ -3429,7 +3430,7 @@ end)
 
 player_cur_car = 0
 
-menu.toggle_loop(modificaciones, "A prueba de balas", {}, "", function(on)
+menu.toggle_loop(modificaciones, "A prueba de balas", {}, "Genera un estado del vehiculo aprueba de todo", function(on)
     local play = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
     if on then
         ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(play), true, true, true, true, true, false, false, true)
@@ -3510,27 +3511,28 @@ local better_heli_handling_offsets = {
     ["fPitchStabilise"] = 0x3C --idk what it does but it seems to help
 }
 
-realheli = menu.list(vehicles, "Helicopteros", {}, "Opciones de control real en helicoptero")
+--realheli = menu.list(vehicles, "Helicopteros", {}, "Opciones de control real en helicoptero")
 
-menu.slider_float(realheli, "Potencia Helicoptero Real", {"heliThrust"}, "Potencia de los helis", 0, 1000, 50, 1, function (value)
-    local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
-    if CflyingHandling then
-        memory.write_float(CflyingHandling + thrust_offset, value * 0.01)
-    else
-        util.toast("Error\nentra en un heli")
-    end
-end)
-menu.action(realheli, "Modo helicoptero real", {"betterheli"}, "Deshabilita la estabilizacion vertical de los vtol para modo de funcionamiento real", function ()
-    local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
-    if CflyingHandling then
-        for _, offset in pairs(better_heli_handling_offsets) do
-            memory.write_float(CflyingHandling + offset, 0)
-        end
-        util.toast("Echo\nIntenta no chocar")
-    else
-        util.toast("Error\nentra en un heli")
-    end
-end)
+--menu.slider_float(realheli, "Potencia Helicoptero Real", {"heliThrust"}, "Potencia de los helis", 0, 1000, 50, 1, function (value)
+--    local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
+--    if CflyingHandling then
+--        memory.write_float(CflyingHandling + thrust_offset, value * 0.01)
+--    else
+--        util.toast("Error\nentra en un heli")
+--    end
+--end)
+
+--menu.action(realheli, "Modo helicoptero real", {"betterheli"}, "Deshabilita la estabilizacion vertical de los vtol para modo de funcionamiento real", function ()
+--    local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
+--    if CflyingHandling then
+--        for _, offset in pairs(better_heli_handling_offsets) do
+--            memory.write_float(CflyingHandling + offset, 0)
+--        end
+--        util.toast("Echo\nIntenta no chocar")
+--    else
+--        util.toast("Error\nentra en un heli")
+--    end
+--end)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --Impulse SportMode start
