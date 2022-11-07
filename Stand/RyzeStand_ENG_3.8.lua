@@ -10,22 +10,22 @@ util.require_natives(1663599433)
 util.toast("Welcome to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 3.71
-async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
+local localVer = 3.8
+async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeStand_ENG_3.71.lua", function(output)
     currentVer = tonumber(output)
     response = true
     if localVer ~= currentVer then
-        util.toast("Hay una actualizacion disponible, reinicia para actualizarlo.")
-        menu.action(menu.my_root(), "Actualizar Lua", {}, "", function()
+        util.toast("An update is available, click on update to update the script.")
+        menu.action(menu.my_root(), "Update Lua", {}, "", function()
             async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeStand.lua',function(a)
                 local err = select(2,load(a))
                 if err then
-                    util.toast("Hubo un fallo porfavor procede a la actualizacion manual con github.")
+                    util.toast("There was an error, download it manually from github.")
                 return end
                 local f = io.open(filesystem.scripts_dir()..SCRIPT_RELPATH, "wb")
                 f:write(a)
                 f:close()
-                util.toast("Script actualizado, reiniciando el script :3")
+                util.toast("Updated script, restarting :3")
                 util.restart_script()
             end)
             async_http.dispatch()
@@ -4477,6 +4477,8 @@ end)
 menu.action(othercred, "Wigger", {}, "He bringed some ideas to the script and some functions, thx", function()
 end)
 menu.action(othercred, "Ducklett", {}, "He fully translated the script to english", function()
+end)
+menu.action(othercred, "HADES", {}, "He fully translated the script to korean", function()
 end)
 menu.action(othercred, "You <3", {}, "Who download the script and give ideas for improvement <3", function()
 end)
