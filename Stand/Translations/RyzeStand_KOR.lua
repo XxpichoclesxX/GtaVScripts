@@ -17,7 +17,7 @@ async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Sc
     if localVer ~= currentVer then
         util.toast("업데이트를 받을 수 있습니다. 업데이트를 다시 시작합니다.")
         menu.action(menu.my_root(), "최신 버전 업데이트(설명 확인 후 실행)", {}, "버전 업데이트시 다시 번역해야 됩니다 신중히 업데이트 하시기 바랍니다.", function()
-            async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeStand.lua',function(a)
+            async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/Translations/RyzeStand_KOR.lua',function(a)
                 local err = select(2,load(a))
                 if err then
                     util.toast("Github로 수동 업데이트 진행에 오류가 발생했습니다.")
