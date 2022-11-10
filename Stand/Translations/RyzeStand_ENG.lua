@@ -1,3 +1,4 @@
+
 -- This was created by XxpichoclesxX#0427 with some help already mentioned in credits.
 -- The original download site should be github.com/xxpichoclesxx, if you got this script from anyone selling it, you got sadly scammed.
 -- Also this is only for some new stand people because is a trolling and online feature script, not recovery.
@@ -10,7 +11,7 @@ util.require_natives(1663599433)
 util.toast("Welcome to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 3.8
+local localVer = 3.81
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeStand_ENG.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -256,62 +257,6 @@ local pumps_from_gtaweb_eu = {
     { 3692.4502, 4564.0312, 25.147186 },
     { -1523.871, 852.2529 }
 }
-
--------------------------------------------------------------------------------------------------------------------------------------------------------
-
-local menuroot = menu.my_root()
-local menuAction = menu.action
-local menuToggle = menu.toggle
-local menuToggleLoop = menu.toggle_loop
-local joaat = util.joaat
-local wait = util.yield
-
-local createPed = PED.CREATE_PED
-local getEntityCoords = ENTITY.GET_ENTITY_COORDS
-local getPlayerPed = PLAYER.GET_PLAYER_PED
-local requestModel = STREAMING.REQUEST_MODEL
-local hasModelLoaded = STREAMING.HAS_MODEL_LOADED
-local noNeedModel = STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED
-local setPedCombatAttr = PED.SET_PED_COMBAT_ATTRIBUTES
-local giveWeaponToPed = WEAPON.GIVE_WEAPON_TO_PED
-
-function RqModel (hash)
-    STREAMING.REQUEST_MODEL(hash)
-    local count = 0
-    util.toast("Requesting model...")
-    while not STREAMING.HAS_MODEL_LOADED(hash) and count < 100 do
-        STREAMING.REQUEST_MODEL(hash)
-        count = count + 1
-        wait(10)
-    end
-    if not STREAMING.HAS_MODEL_LOADED(hash) then
-        util.toast("Tried for 1 second, couldn't load this specified model!")
-    end
-end
-
-function SpawnPedOnPlayer(hash, pid)
-    RqModel(hash)
-    local lc = getEntityCoords(getPlayerPed(pid))
-    local pe = entities.create_ped(26, hash, lc, 0)
-    STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(hash)
-    return pe
-end
-
-function SpawnObjectOnPlayer(hash, pid)
-    RqModel(hash)
-    local lc = getEntityCoords(getPlayerPed(pid))
-    local ob = entities.create_object(hash, lc)
-    STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(hash)
-    return ob
-end
-
-function SpawnPickupOnPlayer(pickuphash, modelhash, value, pid)
-    RqModel(modelhash)
-    local pc = getEntityCoords(getPlayerPed(pid))
-    OBJECT.CREATE_PICKUP(pickuphash, pc.x, pc.y, pc.z, 99999, value, true, modelhash)
-end
-
--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 local modded_vehicles = {
     "dune2",
@@ -1220,8 +1165,6 @@ end)
 --end)
     end)
    
-   menu.divider(crashes, "(Ryze Exclusive)")
-   
     --menu.action(crashes, "Test", {""}, "", function()
     --    local user = players.user()
     --    local user_ped = players.user_ped()
@@ -1244,6 +1187,44 @@ end)
     --        NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(pos, 0, false, false, 0)
     --    end)
     --end)
+	
+	menu.divider(crashes, "(Sesion)")
+	   
+    menu.action(crashes, "Crashear Sesion V1 'Test'", {}, "", function(on_loop)
+        PHYSICS.ROPE_LOAD_TEXTURES()
+        local hashes = {2132890591, 2727244247}
+        local pc = players.get_position(player_id)
+        local veh = VEHICLE.CREATE_VEHICLE(hashes[i], pc.x + 5, pc.y, pc.z, 0, true, true, false)
+        local ped = PED.CREATE_PED(26, hashes[2], pc.x, pc.y, pc.z + 1, 0, true, false)
+        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh); NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ped)
+        ENTITY.SET_ENTITY_INVINCIBLE(ped, true)
+        ENTITY.SET_ENTITY_VISIBLE(ped, false, 0)
+        ENTITY.SET_ENTITY_VISIBLE(veh, false, 0)
+        local rope = PHYSICS.ADD_ROPE(pc.x + 5, pc.y, pc.z, 0, 0, 0, 1, 1, 0.0000000000000000000000000000000000001, 1, 1, true, true, true, 1, true, 0)
+        local vehc = ENTITY.GET_ENTITY_COORDS(veh); local pedc = ENTITY.GET_ENTITY_COORDS(ped)
+        PHYSICS.ATTACH_ENTITIES_TO_ROPE(rope, veh, ped, vehc.x, vehc.y, vehc.z, pedc.x, pedc.y, pedc.z, 2, 0, 0, "Center", "Center")
+        util.yield(1000)
+        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh); NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ped)
+        entities.delete_by_handle(veh); entities.delete_by_handle(ped)
+        PHYSICS.DELETE_CHILD_ROPE(rope)
+        PHYSICS.ROPE_UNLOAD_TEXTURES()
+    end)
+    menu.action(crashes, "Crashear Sesion V2 'Test'", {}, "", function(on_loop)
+        PHYSICS.ROPE_LOAD_TEXTURES()
+        local pos = ENTITY.GET_ENTITY_COORDS(players.user_ped())
+        local ppos = ENTITY.GET_ENTITY_COORDS(players.user_ped())
+        pos.x = pos.x+5
+        ppos.z = ppos.z+1
+        cargobob = entities.create_vehicle(2132890591, pos, 0)
+        cargobob_pos = ENTITY.GET_ENTITY_COORDS(cargobob)
+        kur = entities.create_ped(26, 2727244247, ppos, 0)
+        kur_pos = ENTITY.GET_ENTITY_COORDS(kur)
+        ENTITY.SET_ENTITY_INVINCIBLE(kur, true)
+        newRope = PHYSICS.ADD_ROPE(pos.x, pos.y, pos.z, 0, 0, 0, 1, 1, 0.0000000000000000000000000000000000001, 1, 1, true, true, true, 1.0, true, "Center")
+        PHYSICS.ATTACH_ENTITIES_TO_ROPE(newRope, cargobob, kur, cargobob_pos.x, cargobob_pos.y, cargobob_pos.z, kur_pos.x, kur_pos.y, kur_pos.z, 2, 0, 0, "Center", "Center")
+    end)
+	
+    menu.divider(crashes, "(Ryze Exclusivo)")
 	
 
     menu.action(crashes, "Unblockable", {"crashv2"}, "(Popular menus - Stand)", function()
@@ -1272,102 +1253,10 @@ end)
         util.trigger_script_event(1 << player_id, {495813132, player_id, -4640169, 0, 0, 0, -36565476, -53105203})
         util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
     end)
-
-    --menu.action(crashes, "Inbloqueable V3 'Test'", {}, "Pasado de mi menu, no se si funcione", function()
-    --    local mdl = util.joaat("apa_mp_apa_yacht")
-    --    local user = players.user_ped()
-    --    BlockSyncs(player_id, function()
-    --        util.yield(250)
-    --        local old_pos = ENTITY.GET_ENTITY_COORDS(user, false)
-    --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user, 0xFBAB5776, 100, false)
-    --        PLAYER.SET_PLAYER_HAS_RESERVE_PARACHUTE(players.user())
-    --        PLAYER.SET_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user(), mdl)
-    --        util.yield(50)
-    --        local pos = players.get_position(player_id)
-    --        pos.z += 300
-    --        TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
-    --        ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos, false, false, false)
-    --        repeat
-    --            util.yield()
-    --        until PED.GET_PED_PARACHUTE_STATE(user) == 0
-    --        PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
-    --        util.yield(50)
-    --        TASK.CLEAR_PED_TASKS(user)
-    --        util.yield(50)
-    --        PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
-    --        repeat
-    --            util.yield()
-    --        until PED.GET_PED_PARACHUTE_STATE(user) ~= 1
-    --        pcall(TASK.CLEAR_PED_TASKS_IMMEDIATELY, user)
-    --        PLAYER.CLEAR_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user())
-    --        pcall(ENTITY.SET_ENTITY_COORDS, user, old_pos, false, false)
-    --    end)
-    --end)
-
-    menu.action(crashes, "Unblockable V3 '2T1'", {"crashv4"}, "", function()
-        BlockSyncs(player_id, function()
-            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
-            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
-            util.yield(1000)
-            entities.delete_by_handle(object)
-        end)
-    end)
-
-    menu.action(crashes, "Unblockable V4 'Test'", {"crashv4"}, "It should be fixed, for now", function()
-        local mdl = util.joaat("apa_mp_apa_yacht")
-        local user = players.user_ped()
-        BlockSyncs(player_id, function()
-            local old_pos = ENTITY.GET_ENTITY_COORDS(user, false)
-            WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user, 0xFBAB5776, 100, false)
-            PLAYER.SET_PLAYER_HAS_RESERVE_PARACHUTE(players.user())
-            PLAYER.SET_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user(), mdl)
-            util.yield(50)
-            local pos = players.get_position(player_id)
-            pos.z += 300
-            TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
-            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
-            repeat
-                util.yield()
-            until PED.GET_PED_PARACHUTE_STATE(user) == 0
-            PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
-            util.yield(50)
-            TASK.CLEAR_PED_TASKS(user)
-            util.yield(50)
-            PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
-            repeat
-                util.yield()
-            until PED.GET_PED_PARACHUTE_STATE(user) ~= 1
-            pcall(TASK.CLEAR_PED_TASKS_IMMEDIATELY, user)
-            PLAYER.CLEAR_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user())
-            pcall(ENTITY.SET_ENTITY_COORDS, user, old_pos, false, false)
-        end)
-    end)
 	
-		    menu.divider(crashes, "(Session)")
-		
-    menu.action(crashes, "Crash Session V1 'Test'", {}, "", function(on_loop)
-        PHYSICS.ROPE_LOAD_TEXTURES()
-        local hashes = {2132890591, 2727244247}
-        local pc = players.get_position(player_id)
-        local veh = VEHICLE.CREATE_VEHICLE(hashes[i], pc.x + 5, pc.y, pc.z, 0, true, true, false)
-        local ped = PED.CREATE_PED(26, hashes[2], pc.x, pc.y, pc.z + 1, 0, true, false)
-        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh); NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ped)
-        ENTITY.SET_ENTITY_INVINCIBLE(ped, true)
-        ENTITY.SET_ENTITY_VISIBLE(ped, false, 0)
-        ENTITY.SET_ENTITY_VISIBLE(veh, false, 0)
-        local rope = PHYSICS.ADD_ROPE(pc.x + 5, pc.y, pc.z, 0, 0, 0, 1, 1, 0.0000000000000000000000000000000000001, 1, 1, true, true, true, 1, true, 0)
-        local vehc = ENTITY.GET_ENTITY_COORDS(veh); local pedc = ENTITY.GET_ENTITY_COORDS(ped)
-        PHYSICS.ATTACH_ENTITIES_TO_ROPE(rope, veh, ped, vehc.x, vehc.y, vehc.z, pedc.x, pedc.y, pedc.z, 2, 0, 0, "Center", "Center")
-        util.yield(1000)
-        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh); NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ped)
-        entities.delete_by_handle(veh); entities.delete_by_handle(ped)
-        PHYSICS.DELETE_CHILD_ROPE(rope)
-        PHYSICS.ROPE_UNLOAD_TEXTURES()
-    end)
-	
-   local twotake = menu.list(crashes, "2T1 Crashes", {}, "")
+	local twotake = menu.list(crashes, "2T1 Crashes", {}, "")
 
-   local modelc = menu.list(twotake, "Model Crashes", {}, "")
+    local modelc = menu.list(twotake, "Model Crashes", {}, "")
 
 
     menu.action(modelc, "Invaild Model V1", {"crashv4"}, "", function()
@@ -1470,29 +1359,6 @@ end)
         end
     end)
 	
-	--menu.action(crashes, "Test", {""}, "", function()
-    --    local user = players.user()
-    --    local user_ped = players.user_ped()
-    --    local pos = players.get_position(user)
-    --    BlockSyncs(player_id, function()
-    --        util.yield(100)
-    --        PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user(), 0xFBF7D21F)
-    --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user_ped, 0xFBAB5776, 100, false)
-    --        TASK.TASK_PARACHUTE_TO_TARGET(user_ped, pos.x, pos.y, pos.z)
-    --        util.yield()
-    --        TASK.CLEAR_PED_TASKS_IMMEDIATELY(user_ped)
-    --        util.yield(250)
-    --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user_ped, 0xFBAB5776, 100, false)
-    --        PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user)
-    --        util.yield(1000)
-    --        for i = 1, 5 do
-    --            util.spoof_script("freemode", SYSTEM.WAIT)
-    --        end
-    --        ENTITY.SET_ENTITY_HEALTH(user_ped, 0)
-    --        NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(pos, 0, false, false, 0)
-    --    end)
-    --end)
-	
     local netc = menu.list(twotake, "Network crashes", {}, "")
 	
     -- Skidded from keramist.
@@ -1562,7 +1428,7 @@ end)
 	
 	    local scrcrash = menu.list(twotake, "Script Crashes", {}, "")
 
-    menu.action(twotake, "Script Crash V1", {"crashv6"}, "", function()
+    menu.action(scrcrash, "Script Crash V1", {"crashv6"}, "", function()
         local int_min = -2147483647
         local int_max = 2147483647
             for i = 1, 15 do
@@ -1594,7 +1460,7 @@ end)
     
     end)
 
-    menu.action(twotake, "Script Crash V2", {"crashv7"}, "", function()
+    menu.action(scrcrash, "Script Crash V2", {"crashv7"}, "", function()
         local int_min = -2147483647
         local int_max = 2147483647
             for i = 1, 15 do
@@ -1613,10 +1479,22 @@ end)
         util.trigger_script_event(1 << player_id, {495813132, player_id, -4640169, 0, 0, 0, -36565476, -53105203})
         util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
         util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
-
+        util.trigger_script_event(1 << player_id, {-555356783, 18, -72614, 63007, 59027, -12012, -26996, 33398, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+        util.trigger_script_event(1 << player_id, {962740265, 2000000, 2000000, 2000000, 2000000})
+        util.trigger_script_event(1 << player_id, {1228916411, 1, 1245317585})
+        util.trigger_script_event(1 << player_id, {962740265, 1, 0, 144997919, -1907798317, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1})
+        util.trigger_script_event(1 << player_id, {-1386010354, 1, 0, 92623021, -1907798317, 0, 0, 0, 0, 1})
+        util.trigger_script_event(1 << player_id, {-555356783, player_id, 85952,99999,52682274855,526822745})
+        util.trigger_script_event(1 << player_id, {526822748, player_id, 78552,99999 ,7949161,789454312})
+        util.trigger_script_event(1 << player_id, {-8965204809, player_id, 795221,59486,48512151,-9545440})
+        util.trigger_script_event(1 << player_id, {495813132, player_id, 0, 0, -12988, -99097, 0})
+        util.trigger_script_event(1 << player_id, {495813132, player_id, -4640169, 0, 0, 0, -36565476, -53105203})
+        util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
+        util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
     end)
+
 	
-	    menu.action(twotake, "Script Crash V3", {"crashv8"}, "It doesn't work very well", function()
+	menu.action(scrcrash, "Script Crash V3", {"crashv8"}, "It doesn't work very well", function()
         local int_min = -2147483647
         local int_max = 2147483647
             for i = 1, 15 do
@@ -1634,6 +1512,7 @@ end)
             util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, 1183186299, 2022567013, 1324141071, -987311985, 124933669, -438970959, 379529199, 1, 760891200, -243349514, -876017787})
             util.trigger_script_event(1 << player_id, {-555356783, 1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
     end)
+	
     -- This is a Prisuhm crash fixed by me <3
 	
 	    menu.action(scrcrash, "Script Crash V5", {"crashv11"}, "No funciona muy bien", function()
@@ -1804,7 +1683,81 @@ end)
             util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647})
     end)
 
-    local krustykrab = menu.list(twotake, "Crusty Crab Crash", {}, "It's risky to spectate, beware: it works on 2T1 users")
+ menu.action(scrcrash, "Script Crash V6", {"crashv15"}, "Ni yo se, solo intentalo. \nBloqueado por menus populares", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-555356783,1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-555356783, 1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            end
+            util.yield()
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, -8734739, -1567138998, 1391800514, -635253496, 1657081814, -1735690996, -932389107, 1, -1861870899, 754494713, 957011786})
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, 1183186299, 2022567013, 1324141071, -987311985, 124933669, -438970959, 379529199, 1, 760891200, -243349514, -876017787})
+            util.trigger_script_event(1 << player_id, {-555356783, 1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            end
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, -8734739, -1567138998, 1391800514, -635253496, 1657081814, -1735690996, -932389107, 1, -1861870899, 754494713, 957011786})
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, 1183186299, 2022567013, 1324141071, -987311985, 124933669, -438970959, 379529199, 1, 760891200, -243349514, -876017787})
+            util.trigger_script_event(1 << player_id, {-555356783, 1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+    end)
+    menu.action(scrcrash, "Script Crash V7", {"crashv16"}, "De 2take1", function()
+        for i = 1, 50 do
+            util.trigger_script_event(1 << player_id, {math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647)})
+            util.trigger_script_event(1 << player_id, {math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647)})
+            util.trigger_script_event(1 << player_id, {math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647)})
+        end
+    end)
+	
+    menu.action(scrcrash, "Script Crash V8", {"crashv17"}, "I don't even know, just try. nBlocked by popular menus", function()
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 17302, 9822, 1999, 6777888, 111222})
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 2327, 0, 0, 0, -307, 27777})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, 2327, 0, 0, 0, -307, 27777})
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 27983, 7601, 1020, 3209051, 111222})
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 1010, 0, 0, 0, -2653, 50555})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, 1111, 0, 0, 0, -5621, 57766})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, -3, -90, -123, -9856, -97652})
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, -3, -90, -123, -9856, -97652})
+        util.trigger_script_event(1 << player_id, {-1881357102, 0, 0, -3, -90, -123, -9856, -97652})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, 20547, 1058, 1245, 2721936, 666333})
+        util.yield(25)
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 20547, 1058, 1245, 2721936, 666333})
+        util.trigger_script_event(1 << player_id, {-1881357102, 0, 0, 20547, 1058, 1245, 2721936, 666333})
+        util.trigger_script_event(1 << player_id, {153488394, 0, 868904806, 0, 0, -152, -123, -978, 0, 0, 1, 0, -167, -144})
+        util.trigger_script_event(1 << player_id, {153488394, 0, 868904806, 0, 0, 152, 123, 978, 0, 0, 1, 0, 167, 144})
+        util.trigger_script_event(1 << player_id, {1249026189, 0, 0, 97587, 5697, 3211, 8237539, 967853})
+        util.trigger_script_event(1 << player_id, {1033875141, 0, 0, 0, 1967})
+        util.trigger_script_event(1 << player_id, {1033875141, 0, 0, -123, -957, -14, -1908, -123})
+        util.trigger_script_event(1 << player_id, {1033875141, 0, 0, 12121, 9756, 7609, 1111111, 789666})
+        util.trigger_script_event(1 << player_id, {315658550, 0, 0, 87111, 5782, 9999, 3333333, 888888})
+        util.trigger_script_event(1 << player_id, {-877212109, 0, 0, 87111, 5782, 9999, 3333333, 888888})
+        util.trigger_script_event(1 << player_id, {1926582096, 0, -1, -1, -1, 18899, 1011, 3070})
+        util.trigger_script_event(1 << player_id, {1926582096, 0, -4640169, 0, 0, 0, -36565476, -53105203})
+        util.trigger_script_event(1 << player_id, {1033875141, -17645264, -26800537, -66094971, -45281983, -24450684, -13000488, 59643555, 34295654, 91870118, -3283691})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, 93})
+        util.yield(25)
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 37, 0, -7})
+        util.trigger_script_event(1 << player_id, {-1881357102, 0, 0, -13, 0, 0, 0, 23})
+        util.trigger_script_event(1 << player_id, {153488394, 0, 868904806, 0, 0, 7, 7, 19, 0, 0, 1, 0, -23, -27})
+        util.trigger_script_event(1 << player_id, {1249026189})
+        util.trigger_script_event(1 << player_id, {315658550})
+        util.trigger_script_event(1 << player_id, {-877212109})
+        util.trigger_script_event(1 << player_id, {1033875141, 0, 0, 0, 82})
+        util.trigger_script_event(1 << player_id, {1926582096})
+        util.trigger_script_event(1 << player_id, {-977515445, 26770, 95398, 98426, -24591, 47901, -64814})
+        util.trigger_script_event(1 << player_id, {-1949011582, -1139568479, math.random(0, 4), math.random(0, 1)})
+        util.yield(25)
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 3333, 0, 0, 0, -987, 21369})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, 2222, 0, 0, 0, -109, 73322})
+        util.trigger_script_event(1 << player_id, {-977515445, 26770, 95398, 98426, -24591, 47901, -64814})
+        util.trigger_script_event(1 << player_id, {-1949011582, -1139568479, math.random(0, 4), math.random(0, 1)})
+        util.trigger_script_event(1 << player_id, {-1730227041, -494, 1526, 60541, -12988, -99097, -32105})
+    end)
+	
+    -- This is a Prisuhm crash fixed by me <3
+	
+	    local krustykrab = menu.list(twotake, "Crusty Crab Crash", {}, "It's risky to spectate, beware: it works on 2T1 users")
 
     local peds = 5
     menu.slider(krustykrab, "Number of spatulas", {}, "Send spatulas ah~", 1, 100, 1, 1, function(amount)
@@ -1859,6 +1812,102 @@ end)
             end
         end)
     end)
+	
+		    --menu.action(crashes, "Inbloqueable V3 'Test'", {}, "Pasado de mi menu, no se si funcione", function()
+    --    local mdl = util.joaat("apa_mp_apa_yacht")
+    --    local user = players.user_ped()
+    --    BlockSyncs(player_id, function()
+    --        util.yield(250)
+    --        local old_pos = ENTITY.GET_ENTITY_COORDS(user, false)
+    --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user, 0xFBAB5776, 100, false)
+    --        PLAYER.SET_PLAYER_HAS_RESERVE_PARACHUTE(players.user())
+    --        PLAYER.SET_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user(), mdl)
+    --        util.yield(50)
+    --        local pos = players.get_position(player_id)
+    --        pos.z += 300
+    --        TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
+    --        ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos, false, false, false)
+    --        repeat
+    --            util.yield()
+    --        until PED.GET_PED_PARACHUTE_STATE(user) == 0
+    --        PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
+    --        util.yield(50)
+    --        TASK.CLEAR_PED_TASKS(user)
+    --        util.yield(50)
+    --        PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
+    --        repeat
+    --            util.yield()
+    --        until PED.GET_PED_PARACHUTE_STATE(user) ~= 1
+    --        pcall(TASK.CLEAR_PED_TASKS_IMMEDIATELY, user)
+    --        PLAYER.CLEAR_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user())
+    --        pcall(ENTITY.SET_ENTITY_COORDS, user, old_pos, false, false)
+    --    end)
+    --end)
+--[[
+    menu.action(crashes, "Unblockable V3 '2T1'", {"crashv4"}, "", function()
+        BlockSyncs(player_id, function()
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            util.yield(1000)
+            entities.delete_by_handle(object)
+        end)
+    end)
+
+    --menu.action(crashes, "Crash V5 'Test'", {""}, "Un crash antiguo de prisuhm, intente arreglarlo y mejorarlo.", function()
+    --    local user = players.user()
+    --    local user_ped = players.user_ped()
+    --    local pos = players.get_position(user)
+    --    BlockSyncs(player_id, function() 
+    --        util.yield(100)
+    --        PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user(), 0xFBF7D21F)
+    --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user_ped, 0xFBAB5776, 100, false)
+    --        TASK.TASK_PARACHUTE_TO_TARGET(user_ped, pos.x, pos.y, pos.z)
+    --        util.yield()
+    --        TASK.CLEAR_PED_TASKS_IMMEDIATELY(user_ped)
+    --        util.yield(250)
+    --        WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user_ped, 0xFBAB5776, 100, false)
+    --        PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(user)
+    --        util.yield(1000)
+    --        for i = 1, 5 do
+    --            util.spoof_script("freemode", SYSTEM.WAIT)
+    --        end
+    --        ENTITY.SET_ENTITY_HEALTH(user_ped, 0)
+    --        NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(pos.x, pos.y, pos.z, 0, false, false, 0)
+    --    end)
+    --end)
+
+   menu.action(crashes, "Unblockable V4 'Test'", {"crashv4"}, "It should be fixed, for now", function()
+        local mdl = util.joaat("apa_mp_apa_yacht")
+        local user = players.user_ped()
+        BlockSyncs(player_id, function()
+            local old_pos = ENTITY.GET_ENTITY_COORDS(user, false)
+            WEAPON.GIVE_DELAYED_WEAPON_TO_PED(user, 0xFBAB5776, 100, false)
+            PLAYER.SET_PLAYER_HAS_RESERVE_PARACHUTE(players.user())
+            PLAYER.SET_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user(), mdl)
+            util.yield(50)
+            local pos = players.get_position(player_id)
+            pos.z += 300
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
+            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
+            repeat
+                util.yield()
+            until PED.GET_PED_PARACHUTE_STATE(user) == 0
+            PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
+            util.yield(50)
+            TASK.CLEAR_PED_TASKS(user)
+            util.yield(50)
+            PED.FORCE_PED_TO_OPEN_PARACHUTE(user)
+            repeat
+                util.yield()
+            until PED.GET_PED_PARACHUTE_STATE(user) ~= 1
+            pcall(TASK.CLEAR_PED_TASKS_IMMEDIATELY, user)
+            PLAYER.CLEAR_PLAYER_RESERVE_PARACHUTE_MODEL_OVERRIDE(players.user())
+            pcall(ENTITY.SET_ENTITY_COORDS, user, old_pos, false, false)
+        end)
+    end) --]]
+	
+
+
 	
 	    --menu.action(crashes, "Unblockable V4 'Test'", {"crashv4"}, "It should be fixed for now", function()
  --    local mdl = util.joaat("apa_mp_apa_yacht")
@@ -1944,12 +1993,12 @@ end)
         --menu.trigger_commands("crashv4"..players.get_name(player_id))
         util.yield(2000)
         menu.trigger_commands("crash"..players.get_name(player_id))
-        util.yield(400)
-        menu.trigger_commands("ngcrash"..players.get_name(player_id))
-        util.yield(400)
-        menu.trigger_commands("footlettuce"..players.get_name(player_id))
-        util.yield(400)
-        menu.trigger_commands("steamroll"..players.get_name(player_id))
+      --  util.yield(400)
+      --  menu.trigger_commands("ngcrash"..players.get_name(player_id))
+      --  util.yield(400)
+      --  menu.trigger_commands("footlettuce"..players.get_name(player_id))
+      --  util.yield(400)
+      --  menu.trigger_commands("steamroll"..players.get_name(player_id))
         util.yield(1800)
         util.toast("Espera en lo que se limpia todo...")
         --menu.trigger_command(outSync, "off")
@@ -2103,6 +2152,12 @@ end)
         menu.trigger_commands("crashv13"..players.get_name(player_id))
         util.yield(800)
         menu.trigger_commands("crashv14"..players.get_name(player_id))
+		util.yield(800)
+        menu.trigger_commands("crashv15"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv16"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv17"..players.get_name(player_id))
         -- Turned off because of a self-crash error
         --util.yield(600)
         --menu.trigger_commands("crashv4"..players.get_name(player_id))
@@ -2317,6 +2372,51 @@ end
             util.trigger_script_event(1 << player_id, {0x63D4BFB1, players.user(), memory.read_int(memory.script_global(0x1CE15F + 1 + (player_id * 0x257) + 0x1FE))})
         end)
     end
+	
+	   menu.action(kicks, "Desync Kick 'Test'", {}, "", function()
+        util.request_model(0x705E61F2)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped)
+        local ped_ = entities.create_ped(1, 0x705E61F2, pos, 0, true, false)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 0, 0, 0, 39, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 1, 104, 25, -1, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 2, 49, 0, -1, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 3, 33, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 4, 84, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 5, 82, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 6, 33, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 7, 0, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 8, 97, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 9, 0, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 10, 0, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 11, 186, 0, 0)
+        util.trigger_script_event(-227800145 << player_id, {player_id, math.random(32, 23647483647), math.random(-23647, 212347), 1, 115, math.random(-2321647, 21182412647), math.random(-2147483647, 2147483647), 26249, math.random(-1257483647, 23683647), 2623, 25136})
+    end)
+	
+    menu.action(kicks, "Stand Non Host Kick 'Test'", {}, "", function()
+                util.trigger_script_event(-371781708 << player_id, {player_id, player_id, player_id, 1403904671})
+                util.trigger_script_event(-317318371 << player_id, {player_id, player_id, player_id, 1993236673})
+                util.trigger_script_event(911179316 << player_id, {player_id, player_id, player_id, player_id, 1234567990, player_id, player_id})
+                util.trigger_script_event(846342319 << player_id, {player_id, 578162304, 1})
+                util.trigger_script_event(-2085853000 << player_id, {player_id, player_id, 1610781286, player_id, player_id})
+                util.trigger_script_event(-1991317864 << player_id, {player_id, 3, 935764694, player_id, player_id})
+                util.trigger_script_event(-1970125962 << player_id, {player_id, player_id, 1171952288})
+                util.trigger_script_event(-1013679841 << player_id, {player_id, player_id, 2135167326, player_id})
+                util.trigger_script_event(-1767058336 << player_id, {player_id, 1459620687})
+                util.trigger_script_event(-1892343528 << player_id, {player_id, player_id, math.random(-2147483647, 2147483647)})
+                util.trigger_script_event(1494472464 << player_id, {player_id, player_id, math.random(-2147483647, 2147483647)})
+                util.trigger_script_event(69874647 << player_id, {player_id, player_id, math.random(-2147483647, 2147483647)})
+                util.trigger_script_event(998716537 << player_id, {player_id, player_id, math.random(-2147483647, 2147483647)})
+                util.trigger_script_event(522189882 << player_id, {player_id, player_id, math.random(-2147483647, 2147483647)})
+                util.trigger_script_event(1514515570 << player_id, {player_id, player_id, 2147483647})
+                util.trigger_script_event(296518236 << player_id, {player_id, player_id, player_id, player_id, 1})
+                util.trigger_script_event(-1782442696 << player_id, {player_id, 420, 69})
+                for i = 1, 5 do
+                        util.trigger_script_event(-1782442696 << player_id, {player_id, math.random(-2147483647, 2147483647), 0})
+        
+                end
+                util.trigger_script_event(924535804 << player_id, {player_id, math.random(-2147483647, 2147483647), 0})
+                util.trigger_script_event(436475575 << player_id, {player_id, math.random(-2147483647, 2147483647), 0})
+    end)
 	
 	local sekicks = menu.list(kicks, "Script Kicks", {}, "")
 
@@ -2976,7 +3076,6 @@ end
             util.toast("Could not gain control of the vehicle or the player is not in a vehicle")
         end
     end)
-
 
 
 end)
@@ -3887,6 +3986,7 @@ menu.click_slider_float(modificaciones, "Curve multiplier", {"curve"}, "", 0, 50
     local CHandlingData = memory.read_long(CAutomobile + 0x0938)
     memory.write_float(CHandlingData + 0x0094, value)
 end)
+--]]
 
 menu.toggle_loop(modificaciones, "Random Enhancements", {}, "Only works on vehicles you spawned in for some reason", function()
     local mod_types = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15, 16, 23, 24, 25, 27, 28, 30, 33, 35, 38, 48}
@@ -3897,7 +3997,7 @@ menu.toggle_loop(modificaciones, "Random Enhancements", {}, "Only works on vehic
     end
     util.yield(100)
 end)
---]]
+
 
 local rapid_khanjali
 rapid_khanjali = menu.toggle_loop(modificaciones, "Khanjali Rapid Fire", {}, "", function()
