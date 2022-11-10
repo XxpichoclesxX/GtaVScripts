@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.81
+local localVer = 3.811
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -2686,10 +2686,10 @@ players.on_join(function(player_id)
 
 
     menu.toggle_loop(friendly, "Dar godmode silensioso", {}, "No lo detectaran mod menus gratuitos", function()
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
         ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(ped), true, true, true, true, true, false, false, true)
         end, function() 
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
         ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(ped), false, false, false, false, false, false, false, false)
     end)
 
@@ -4327,9 +4327,7 @@ menu.action(othercred, "Wigger", {}, "He bringed some ideas to the script and so
 end)
 menu.action(othercred, "Ducklett", {}, "He fully translated the script to english", function()
 end)
-menu.action(othercred, "HADES", {}, "He fully translated the script to Korean", function()
-end)
-menu.action(othercred, "Brubowski", {}, "He helped me testing some RyzeScript Features.", function()
+menu.action(othercred, "HADES", {}, "He fully translated the script to korean", function()
 end)
 menu.action(othercred, "You <3", {}, "Who download the script and give ideas for improvement <3", function()
 end)
