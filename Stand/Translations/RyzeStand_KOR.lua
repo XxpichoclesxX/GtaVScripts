@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Ryze 스크립트에 오신 걸 환영합니다!")
 util.toast("스크립트 로딩중. (1-2s)")
 local response = false
-local localVer = 3.81
+local localVer = 3.811
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
