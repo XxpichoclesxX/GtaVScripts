@@ -3523,8 +3523,8 @@ menu.toggle(protects, "팬코 모드", {"panic"}, "이것은 어떤 대가를 �
     end
 end)
 
-menu.toggle_loop(protects, "블루콰이어 크래시호스/킥", {}, "메뉴 보호를 활성화하여 크라슈나 킥을 차단하도록 하십시오.", function(on)
-end)
+--menu.toggle_loop(protects, "블루콰이어 크래시호스/킥", {}, "메뉴 보호를 활성화하여 크라슈나 킥을 차단하도록 하십시오.", function(on)
+--end)
 
 
 menu.toggle_loop(protects, "R*의 지배하에 있다.", {}, "R*의 어드바이저가 감지되면 세션이 바뀝니다.", function(on)
