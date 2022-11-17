@@ -3523,8 +3523,8 @@ menu.toggle(protects, "Modo Panico", {"panic"}, "Esto renderiza un modo de anti-
     end
 end)
 
-menu.toggle_loop(protects, "Bloquear Crasheos/Kicks", {}, "Intenta bloquear los crasheos o kicks \nactivando protecciones del menu.", function(on)
-end)
+--menu.toggle_loop(protects, "Bloquear Crasheos/Kicks", {}, "Intenta bloquear los crasheos o kicks \nactivando protecciones del menu.", function(on)
+--end)
 
 
 menu.toggle_loop(protects, "Salir si admin de R*", {}, "Si detecta un admin de R* te cambia de sesion.", function(on)
@@ -3558,7 +3558,7 @@ end)
 --    GRAPHICS.REMOVE_PARTICLE_FX_FROM_ENTITY(players.user_ped())
 --end)
 
-menu.toggle_loop(protects, "Bloquear PFTX/Particulas Lag", {}, "", function()
+menu.toggle_loop(protects, "Bloquear PFTX/Particulas Lag", {"bptfx"}, "", function()
     local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
     GRAPHICS.REMOVE_PARTICLE_FX_IN_RANGE(coords.x, coords.y, coords.z, 400)
     GRAPHICS.REMOVE_PARTICLE_FX_FROM_ENTITY(players.user_ped())
