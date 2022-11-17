@@ -3760,8 +3760,8 @@ menu.toggle(protects, "Panic Mode", {"panic"}, "This renders an anti-crash mode 
     end
 end)
 
-menu.toggle_loop(protects, "Block Crashes/Kicks", {}, "Try blocking crashes or kicks nactivating menu protections.", function(on)
-end)
+--menu.toggle_loop(protects, "Block Crashes/Kicks", {}, "Try blocking crashes or kicks nactivating menu protections.", function(on)
+--end)
 
 menu.toggle_loop(protects, "Admin Bail", {}, "If it detects an R* admin it changes your session.", function(on)
     bailOnAdminJoin = on
