@@ -3524,7 +3524,6 @@ menu.toggle(protects, "Modo Panico", {"panic"}, "Esto renderiza un modo de anti-
 end)
 
 menu.toggle_loop(protects, "Bloquear Crasheos/Kicks", {}, "Intenta bloquear los crasheos o kicks \nactivando protecciones del menu.", function(on)
-    bailOnAdminJoin = on
 end)
 
 
