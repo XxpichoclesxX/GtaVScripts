@@ -3653,13 +3653,6 @@ menu.click_slider(Collectibles, "Junk Energy Free Flight", {""}, "", 0, 9, 0, 1,
     util.trigger_script_event(1 << players.user(), {0xB9BA4D30, 0, 0xA, i, 1, 1, 1})
 end)
 
-local pump_list = menu.list(Collectibles, "Pumkpins", {}, "Funciona")
-for idx, coords in pumps_from_gtaweb_eu do
-    pump_list:action("Pumpkin " .. idx, {}, "Teletransportate a las calabazas", function()
-        util.teleport_2d(coords[1], coords[2])
-    end)
-end
-
 local bypasskick = menu.list(online, "Bypass Kick", {}, "Options that allow you to use methods to n enter the session if you are being blocked.")
 
 menu.divider(bypasskick, "Normal Methods")
