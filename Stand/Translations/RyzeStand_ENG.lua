@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Welcome to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 3.852
+local localVer = 3.853
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -3212,17 +3212,6 @@ end --]]
         end
     end)
 
-   menu.toggle_loop(vehicle, "Disable Vehicle Loop", {}, "It's better than stand", function(toggle)
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
-        if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
-            TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
-        else
-            local veh2 = PED.GET_VEHICLE_PED_IS_TRYING_TO_ENTER(p)
-            entities.delete_by_handle(veh2)
-        end
-    end)
-
     menu.action(vehicle, "Disable Vehicle V2", {}, "Unblockable by stand '10/02'", function(toggle)
         local player_ped = PLAYER.GET_PLAYER_PED(pid)
         local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(player_ped, include_last_vehicle_for_player_functions)
@@ -3232,6 +3221,17 @@ end --]]
             util.toast(players.get_name(player_id) .. "Enigne Fucked")
         else
             util.toast("Could not gain control of the vehicle or the player is not in a vehicle")
+        end
+    end)
+		
+    menu.toggle_loop(vehicle, "Disable Vehicle Loop", {}, "It's better than stand", function(toggle)
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
+        if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
+        else
+            local veh2 = PED.GET_VEHICLE_PED_IS_TRYING_TO_ENTER(p)
+            entities.delete_by_handle(veh2)
         end
     end)
 	
@@ -3798,11 +3798,15 @@ menu.action(protects, "Stop all sounds", {"stopsounds"}, "", function()
 end)
 
 menu.action(protects, "Remove ring", {}, "Remove the ringtone from the phone stopping it from ringing.", function()
-    if AUDIO.IS_PED_RINGTONE_PLAYING then
-        for i=-1, 50 do
-            AUDIO.STOP_PED_RINGTONE(i)
+    local player = PLAYER.PLAYER_PED_ID()
+    menu.trigger_commands("nophonespam on")
+    if AUDIO.IS_PED_RINGTONE_PLAYING(player) then
+        for i = -1, 50 do
+            AUDIO.STOP_PED_RINGTONE(player)
         end
     end
+    util.yield(1000)
+    menu.trigger_commands("nophonespam off")
 end)
 
 local quitarf = menu.list(protects, "Anti Freeze Methods")
@@ -3843,6 +3847,30 @@ menu.toggle(protects, "Panic Mode", {"panic"}, "This renders an anti-crash mode 
         menu.trigger_command(UnblockIncSyncs)
         menu.trigger_command(UnblockNetEvents)
         menu.trigger_commands("anticrashcamera off")
+    end
+end)
+
+menu.toggle(protects, "Prevent Crashes", {}, "충돌 차단 시도 \n누군가 충돌을 시도할 때 활성화.", function(on_toggle)
+    if on_toggle then
+        local player = PLAYER.PLAYER_PED_ID()
+        ENTITY.SET_ENTITY_COORDS(player, 25.030561, 7640.8735, 17.831139, 1, false)
+        util.yield(800)
+        menu.trigger_commands("potatomode on")
+        menu.trigger_commands("anticrashcamera on")
+        menu.trigger_commands("trafficpotato on")
+        util.yield(2000)
+        menu.trigger_commands("rclearworld")
+    else        
+        menu.trigger_commands("potatomode off")
+        menu.trigger_commands("anticrashcamera off")
+        menu.trigger_commands("trafficpotato off")
+        util.yield(800)
+        menu.trigger_commands("tpmaze")
+        util.yield(500)
+        menu.trigger_commands("rclearworld")
+        util.yield(1000)
+        menu.trigger_commands("rcleararea")
+        util.toast("Crasheo Prevenido :b")
     end
 end)
 
