@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Ryze 스크립트에 오신 걸 환영합니다!")
 util.toast("스크립트 로딩중. (1-2s)")
 local response = false
-local localVer = 3.852
+local localVer = 3.853
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -3566,11 +3566,15 @@ menu.action(protects, "모든 소리를 멈춰라", {"stopsounds"}, "", function
 end)
 
 menu.action(protects, "링을 떼다.", {}, "벨이 울리지 않게 휴대폰의 링턴을 떼어내라.", function()
-    if AUDIO.IS_PED_RINGTONE_PLAYING then
-        for i=-1, 50 do
-            AUDIO.STOP_PED_RINGTONE(i)
+    local player = PLAYER.PLAYER_PED_ID()
+    menu.trigger_commands("nophonespam on")
+    if AUDIO.IS_PED_RINGTONE_PLAYING(player) then
+        for i = -1, 50 do
+            AUDIO.STOP_PED_RINGTONE(player)
         end
     end
+    util.yield(1000)
+    menu.trigger_commands("nophonespam off")
 end)
 
 local quitarf = menu.list(protects, "부동액 방법")
@@ -3611,6 +3615,30 @@ menu.toggle(protects, "팬코 모드", {"panic"}, "이것은 어떤 대가를 �
         menu.trigger_command(UnblockIncSyncs)
         menu.trigger_command(UnblockNetEvents)
         menu.trigger_commands("anticrashcamera off")
+    end
+end)
+
+menu.toggle(protects, "충돌 방지", {}, "Tries to block crashes \nActivate when someone is trying to crash you.", function(on_toggle)
+    if on_toggle then
+        local player = PLAYER.PLAYER_PED_ID()
+        ENTITY.SET_ENTITY_COORDS(player, 25.030561, 7640.8735, 17.831139, 1, false)
+        util.yield(800)
+        menu.trigger_commands("potatomode on")
+        menu.trigger_commands("anticrashcamera on")
+        menu.trigger_commands("trafficpotato on")
+        util.yield(2000)
+        menu.trigger_commands("rclearworld")
+    else        
+        menu.trigger_commands("potatomode off")
+        menu.trigger_commands("anticrashcamera off")
+        menu.trigger_commands("trafficpotato off")
+        util.yield(800)
+        menu.trigger_commands("tpmaze")
+        util.yield(500)
+        menu.trigger_commands("rclearworld")
+        util.yield(1000)
+        menu.trigger_commands("rcleararea")
+        util.toast("Crasheo Prevenido :b")
     end
 end)
 
