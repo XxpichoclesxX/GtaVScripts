@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenide Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.852
+local localVer = 3.853
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -674,7 +674,7 @@ players.on_join(function(player_id)
 		end
 	end) 
 
-    menu.action(trolling, "Matar en interior", {}, "No funciona en apartamentos (Love u jinx x2)", function()
+    menu.action(trolling, "Matar en interior", {}, "Working fine", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
 
@@ -1217,7 +1217,7 @@ players.on_join(function(player_id)
 
     menu.action(modelc, "Modelo Invalido V8 'Test (1 use)'", {"crashv27"}, "Skid from x-force (Big CHUNGUS)", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local pos = players.get_position(player_id)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped, true)
         local mdl = util.joaat("A_C_Cat_01")
         local mdl2 = util.joaat("U_M_Y_Zombie_01")
         local mdl3 = util.joaat("A_F_M_ProlHost_01")
@@ -2970,7 +2970,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(vehicle, "Desabilitar Vehiculo", {}, "Es mejor que el de stand", function(toggle)
+    menu.action(vehicle, "Deshabilitar Vehiculo", {}, "Es mejor que el de stand", function(toggle)
         local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
         if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
@@ -2981,18 +2981,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(vehicle, "Desabilitar Vehiculo Loop", {}, "Es mejor que el de stand", function(toggle)
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
-        if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
-            TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
-        else
-            local veh2 = PED.GET_VEHICLE_PED_IS_TRYING_TO_ENTER(p)
-            entities.delete_by_handle(veh2)
-        end
-    end)
-
-    menu.action(vehicle, "Desabilitar Vehiculo V2", {}, "Inbloqueable por stand '10/02'", function(toggle)
+    menu.action(vehicle, "Deshabilitar Vehiculo V2", {}, "Inbloqueable por stand '10/02'", function(toggle)
         local player_ped = PLAYER.GET_PLAYER_PED(player_id)
         local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(player_ped, include_last_vehicle_for_player_functions)
         local is_running = VEHICLE.GET_IS_VEHICLE_ENGINE_RUNNING(player_vehicle)
@@ -3001,6 +2990,17 @@ players.on_join(function(player_id)
             util.toast(players.get_name(player_id) .. " Motor jodido")
         else
             util.toast(" No se pudo obtener el control del vehiculo o el jugador no esta en un vehiculo")
+        end
+    end)
+
+    menu.toggle_loop(vehicle, "Deshabilitar Vehiculo Loop", {}, "Es mejor que el de stand", function(toggle)
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
+        if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
+        else
+            local veh2 = PED.GET_VEHICLE_PED_IS_TRYING_TO_ENTER(p)
+            entities.delete_by_handle(veh2)
         end
     end)
 
@@ -3291,20 +3291,19 @@ menu.toggle_loop(online, "Aceptar La Union", {}, "Aceptara automaticamente panta
 end)
 
 menu.toggle(online, "Armas Termicas 'Test'", {}, "Hace todas tus armas con mira termica con la tecla. E", function()
-    local thermal_command = menu.ref_by_path("Game>Rendering>Thermal Vision", 33)
     if PLAYER.IS_PLAYER_FREE_AIMING(PLAYER.PLAYER_PED_ID()) then
         if PAD.IS_CONTROL_JUST_PRESSED(38, 38) then
             if not GRAPHICS.GET_USINGSEETHROUGH() then
-                menu.trigger_command(thermal_command, "on")
+                menu.trigger_commands("thermalvision on")
                 GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(50)
             else
-                menu.trigger_command(thermal_command, "off")
+                menu.trigger_commands("thermalvision off")
                 GRAPHICS.SET_SEETHROUGH(false)
                 GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(1) --default value is 1
             end
         end
     elseif GRAPHICS.GET_USINGSEETHROUGH() then
-        menu.trigger_command(thermal_command, "off")
+        menu.trigger_commands("thermalvision off")
         GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(1)
     end
 end)
@@ -3566,11 +3565,15 @@ menu.action(protects, "Parar Todos Los Sonidos", {"stopsounds"}, "", function()
 end)
 
 menu.action(protects, "Quitar ring", {}, "Quita el ringtone del celular parando que deje de sonar.", function()
-    if AUDIO.IS_PED_RINGTONE_PLAYING then
-        for i=-1, 50 do
-            AUDIO.STOP_PED_RINGTONE(i)
+    local player = PLAYER.PLAYER_PED_ID()
+    menu.trigger_commands("nophonespam on")
+    if AUDIO.IS_PED_RINGTONE_PLAYING(player) then
+        for i = -1, 50 do
+            AUDIO.STOP_PED_RINGTONE(player)
         end
     end
+    util.yield(1000)
+    menu.trigger_commands("nophonespam off")
 end)
 
 local quitarf = menu.list(protects, "Metodos De Anti Freeze")
@@ -3614,7 +3617,28 @@ menu.toggle(protects, "Modo Panico", {"panic"}, "Esto renderiza un modo de anti-
     end
 end)
 
-menu.toggle_loop(protects, "Bloquear Crasheos/Kicks", {}, "Intenta bloquear los crasheos o kicks \nactivando protecciones del menu.", function(on)
+menu.toggle(protects, "Prevenir Crasheos", {}, "Intenta bloquear los crasheos \nActiva si te estan por crashear.", function(on_toggle)
+    if on_toggle then
+        local player = PLAYER.PLAYER_PED_ID()
+        ENTITY.SET_ENTITY_COORDS(player, 25.030561, 7640.8735, 17.831139, 1, false)
+        util.yield(800)
+        menu.trigger_commands("potatomode on")
+        menu.trigger_commands("anticrashcamera on")
+        menu.trigger_commands("trafficpotato on")
+        util.yield(2000)
+        menu.trigger_commands("rclearworld")
+    else        
+        menu.trigger_commands("potatomode off")
+        menu.trigger_commands("anticrashcamera off")
+        menu.trigger_commands("trafficpotato off")
+        util.yield(800)
+        menu.trigger_commands("tpmaze")
+        util.yield(500)
+        menu.trigger_commands("rclearworld")
+        util.yield(1000)
+        menu.trigger_commands("rcleararea")
+        util.toast("Crasheo Prevenido :b")
+    end
 end)
 
 
@@ -3630,7 +3654,7 @@ if bailOnAdminJoin then
     end
 end
 
-menu.toggle_loop(protects, "Bloquear Error De Transaccion 'Test'", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
+menu.toggle_loop(protects, "Bloquear Error De Transaccion", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
 --    local TransactionError = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Block")
 --    local TransactionErrorV = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Notification")
     if on_toggle then
@@ -3649,7 +3673,7 @@ end)
 --    GRAPHICS.REMOVE_PARTICLE_FX_FROM_ENTITY(players.user_ped())
 --end)
 
-menu.toggle_loop(protects, "Bloquear PFTX/Particulas Lag", {}, "", function()
+menu.toggle_loop(protects, "Bloquear PTFX", {}, "", function()
     local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped() , false);
     GRAPHICS.REMOVE_PARTICLE_FX_IN_RANGE(coords.x, coords.y, coords.z, 400)
     GRAPHICS.REMOVE_PARTICLE_FX_FROM_ENTITY(players.user_ped())
@@ -4513,7 +4537,6 @@ end)
 util.on_stop(function ()
     VEHICLE.SET_VEHICLE_GRAVITY(veh, true)
     ENTITY.SET_ENTITY_COLLISION(veh, true, true);
-    menu.collect_garbage()
     sleep(100)
     util.toast("Adious\nEspero te haya gustado :3")
     util.toast("Limpiando...")
