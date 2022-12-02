@@ -3715,7 +3715,7 @@ menu.toggle_loop(anticage, "Anti Jaula", {"anticage"}, "", function()
             continue
         end
         local obj_handle = entities.pointer_to_handle(obj_ptr)
-        CAM._DISABLE_CAM_COLLISION_FOR_ENTITY(obj_handle)
+        CAM.SET_GAMEPLAY_CAM_IGNORE_ENTITY_COLLISION_THIS_UPDATE(obj_handle)
         for i, data in ipairs(my_ents) do
             if data ~= 0 and ENTITY.IS_ENTITY_TOUCHING_ENTITY(data, obj_handle) and alpha > 0 then
                 ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(obj_handle, data, false)
