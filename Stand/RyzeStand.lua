@@ -1359,7 +1359,7 @@ players.on_join(function(player_id)
     menu.action(modelc, "Modelo Invalido V9", {"crashv28"}, "Clona al jugador repetidas veces causando (XC)", function()
         local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local c = ENTITY.GET_ENTITY_COORDS(p)
-        for i = 1, 70 do
+        for i = 1, 25 do
             local pclone = entities.create_ped(26, ENTITY.GET_ENTITY_MODEL(p), c, 0)
             pclpid [#pclpid + 1] = pclone 
             PED.CLONE_PED_TO_TARGET(p, pclone)
