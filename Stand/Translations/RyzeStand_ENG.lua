@@ -7,10 +7,10 @@
 util.keep_running()
 util.require_natives(1663599433)
 
-util.toast("Welcome to the script!!")
+util.toast("Welcome " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 3.854
+local localVer = 3.86
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -92,6 +92,22 @@ end
 
 function yieldModelLoad(hash)
     while not STREAMING.HAS_MODEL_LOADED(hash) do util.yield() end
+end
+
+function get_control_request(ent)
+	if not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent) then
+		NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ent)
+		local tick = 0
+		while not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent) and tick <= 100 do
+			tick = tick + 1
+			util.yield()
+			NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ent)
+		end
+	end
+	if not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent) then
+		util.toast("Sin control de "..ent)
+	end
+	return NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent)
 end
 
 function rotation_to_direction(rotation) 
@@ -445,25 +461,6 @@ players.on_join(function(player_id)
         end
     end)
 	
-	menu.toggle_loop(lagplay, "Method V5", {rlag5}, "Dont specate or go within particle", function()
-		local player_pos = players.get_position(player_id)
-		request_ptfx_asset("scr_rcbarry2")
-		GRAPHICS.USE_PARTICLE_FX_ASSET("scr_rcbarry2")
-		GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-            "scr_clown_death", player_pos.x, player_pos.y, player_pos.z, 0, 0, 10, 255, false, false, false
-         )
-		request_ptfx_asset("scr_rcbarry2")
-		GRAPHICS.USE_PARTICLE_FX_ASSET("scr_rcbarry2")
-		GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-            "scr_exp_clown", player_pos.x, player_pos.y, player_pos.z, 0, 0, 10, 255, false, false, false
-         )
-		request_ptfx_asset("scr_ch_finale")
-       GRAPHICS.USE_PARTICLE_FX_ASSET("scr_ch_finale")
-		GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
-			"scr_ch_finale_drill_sparks", player_pos.x, player_pos.y, player_pos.z, 0, 0, 10, 255, false, false, false
-		 )
-end)
-	
     local cageveh = menu.list(trolling, "Cage Car", {}, "")
 
     menu.action(cageveh, "Caging Vehicle", {"cage"}, "", function()
@@ -640,18 +637,18 @@ end)
     --end)
 
 
-    local options <const> = {"Lazer", "Mammatus",  "Cuban800"}
-	menu.action_slider(malicious, ("Kamikaze"), {}, "", options, function (index, plane)
-		local hash <const> = util.joaat(plane)
-		request_model(hash)
-		local targetPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-		local pos = players.get_position(targetPed, 20.0, 20.0)
-		pos.z = pos.z + 30.0
-		local plane = entities.create_vehicle(hash, pos, 0.0)
-		players.get_position(plane, targetPed, true)
-		VEHICLE.SET_VEHICLE_FORWARD_SPEED(plane, 150.0)
-		VEHICLE.CONTROL_LANDING_GEAR(plane, 3)
-	end)
+    --local options <const> = {"Lazer", "Mammatus",  "Cuban800"}
+	--menu.action_slider(malicious, ("Kamikaze"), {}, "", options, function (index, plane)
+	--	local hash <const> = util.joaat(plane)
+	--	request_model(hash)
+	--	local targetPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+	--	local pos = players.get_position(targetPed, 20.0, 20.0)
+	--	pos.z = pos.z + 30.0
+	--	local plane = entities.create_vehicle(hash, pos, 0.0)
+	--	players.get_position(plane, targetPed, true)
+	--	VEHICLE.SET_VEHICLE_FORWARD_SPEED(plane, 150.0)
+	--	VEHICLE.CONTROL_LANDING_GEAR(plane, 3)
+	--end)
 
 
     local msg = ("The mercenaries are already following him")
@@ -1208,7 +1205,7 @@ end)
             util.trigger_script_event(1 << player_id, {-555356783, 3, 420, 69, 1337, 88, 360, 666, 6969, 696969})
     end)
 		
-        menu.action(modelc, "Modelo Invalido V8 'Test (1 use)'", {"crashv27"}, "Skid from x-force (Big CHUNGUS)", function()
+        menu.action(modelc, "Invalid model V8 'Test (1 use)'", {"crashv27"}, "Skid from x-force (Big CHUNGUS)", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = players.get_position(player_id)
         local mdl = util.joaat("A_C_Cat_01")
@@ -1330,6 +1327,39 @@ end)
         entities.delete_by_handle(veh_mdl)
         entities.delete_by_handle(veh_mdl2)
     end)
+
+    local pclpid = {}
+
+    menu.action(modelc, "Invalid Model V9", {"crashv28"}, "Clones the player causing (XC)", function()
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local c = ENTITY.GET_ENTITY_COORDS(p)
+        for i = 1, 25 do
+            local pclone = entities.create_ped(26, ENTITY.GET_ENTITY_MODEL(p), c, 0)
+            pclpid [#pclpid + 1] = pclone 
+            PED.CLONE_PED_TO_TARGET(p, pclone)
+        end
+        local c = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
+        all_peds = entities.get_all_peds_as_handles()
+        local last_ped = 0
+        local last_ped_ht = 0
+        for k,ped in pairs(all_peds) do
+            if not PED.IS_PED_A_PLAYER(ped) and not PED.IS_PED_FATALLY_INJURED(ped) then
+                get_control_request(ped)
+                if PED.IS_PED_IN_ANY_VEHICLE(ped, true) then
+                    TASK.CLEAR_PED_TASKS_IMMEDIATELY(ped)
+                    TASK.TASK_LEAVE_ANY_VEHICLE(ped, 0, 16)
+                end
+    
+                ENTITY.DETACH_ENTITY(ped, false, false)
+                if last_ped ~= 0 then
+                    ENTITY.ATTACH_ENTITY_TO_ENTITY(ped, last_ped, 0, 0.0, 0.0, last_ped_ht-0.5, 0.0, 0.0, 0.0, false, false, false, false, 0, false)
+                else
+                    ENTITY.SET_ENTITY_COORDS(ped, c.x, c.y, c.z)
+                end
+                last_ped = ped
+            end
+        end
+    end, nil, nil, COMMANDPERM_AGGRESSIVE)
 	
     local netc = menu.list(twotake, "Network crashes", {}, "")
 	
@@ -1888,8 +1918,131 @@ end)
             end
         util.trigger_script_event(1 << player_id, {-1529596656, 26, -547323955, -1612886483, -275646172, -879183487, 1221401895, -1674954067, 198848784, 495735107, 0, -1998972833, -129810361, 1888307736})
     end)
+
+
+    local nmcrashes = menu.list(crashes, "Normal Model Crashes", {}, "")
+
+    menu.action(nmcrashes, "Yatchy V1", {"bigyachtyv1"}, "Crash event (A1:EA0FF6AD) sending prop yacht.", function()
+        local user = PLAYER.GET_PLAYER_PED(players.user())
+        local model = util.joaat("h4_yacht_refproxy")
+        local pos = players.get_position(player_id)
+        local oldPos = players.get_position(players.user())
+        BlockSyncs(player_id, function()
+            util.yield(100)
+            ENTITY.SET_ENTITY_VISIBLE(user, false)
+            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
+            PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user(), model)
+            PED.SET_PED_COMPONENT_VARIATION(user, 5, 8, 0, 0)
+            util.yield(500)
+            PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user())
+            util.yield(2500)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
+            for i = 1, 5 do
+                util.spoof_script("freemode", SYSTEM.WAIT)
+            end
+            ENTITY.SET_ENTITY_HEALTH(user, 0)
+            NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(oldPos.x, oldPos.y, oldPos.z, 0, false, false, 0)
+            ENTITY.SET_ENTITY_VISIBLE(user, true)
+        end)
+    end)
+    
+    menu.action(nmcrashes, "Yatchy V2", {"bigyachtyv2"}, "Crash event (A1:E8958704) sending prop yacht001.", function()
+        local user = PLAYER.GET_PLAYER_PED(players.user())
+        local model = util.joaat("h4_yacht_refproxy001")
+        local pos = players.get_position(player_id)
+        local oldPos = players.get_position(players.user())
+        BlockSyncs(player_id, function()
+            util.yield(100)
+            ENTITY.SET_ENTITY_VISIBLE(user, false)
+            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
+            PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user(), model)
+            PED.SET_PED_COMPONENT_VARIATION(user, 5, 8, 0, 0)
+            util.yield(500)
+            PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user())
+            util.yield(2500)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
+            for i = 1, 5 do
+                util.spoof_script("freemode", SYSTEM.WAIT)
+            end
+            ENTITY.SET_ENTITY_HEALTH(user, 0)
+            NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(oldPos.x, oldPos.y, oldPos.z, 0, false, false, 0)
+            ENTITY.SET_ENTITY_VISIBLE(user, true)
+        end)
+    end)
+    
+    menu.action(nmcrashes, "Yatchy V3", {"bigyachtyv3"}, "Crash event (A1:1A7AEACE) sending prop yacht002.", function()
+        local user = PLAYER.GET_PLAYER_PED(players.user())
+        local model = util.joaat("h4_yacht_refproxy002")
+        local pos = players.get_position(player_id)
+        local oldPos = players.get_position(players.user())
+        BlockSyncs(player_id, function()
+            util.yield(100)
+            ENTITY.SET_ENTITY_VISIBLE(user, false)
+            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
+            PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user(), model)
+            PED.SET_PED_COMPONENT_VARIATION(user, 5, 8, 0, 0)
+            util.yield(500)
+            PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user())
+            util.yield(2500)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
+            for i = 1, 5 do
+                util.spoof_script("freemode", SYSTEM.WAIT)
+            end
+            ENTITY.SET_ENTITY_HEALTH(user, 0)
+            NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(oldPos.x, oldPos.y, oldPos.z, 0, false, false, 0)
+            ENTITY.SET_ENTITY_VISIBLE(user, true)
+        end)
+    end)
+    
+    menu.action(nmcrashes, "Yatchy V4", {"bigyachtyv4"}, "Crash event (A1:408D3AA0) sending prop apayacht.", function()
+        local user = PLAYER.GET_PLAYER_PED(players.user())
+        local model = util.joaat("h4_mp_apa_yacht")
+        local pos = players.get_position(player_id)
+        local oldPos = players.get_position(players.user())
+        BlockSyncs(player_id, function()
+            util.yield(100)
+            ENTITY.SET_ENTITY_VISIBLE(user, false)
+            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
+            PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user(), model)
+            PED.SET_PED_COMPONENT_VARIATION(user, 5, 8, 0, 0)
+            util.yield(500)
+            PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user())
+            util.yield(2500)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
+            for i = 1, 5 do
+                util.spoof_script("freemode", SYSTEM.WAIT)
+            end
+            ENTITY.SET_ENTITY_HEALTH(user, 0)
+            NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(oldPos.x, oldPos.y, oldPos.z, 0, false, false, 0)
+            ENTITY.SET_ENTITY_VISIBLE(user, true)
+        end)
+    end)
+    
+    menu.action(nmcrashes, "Yatchy V5", {"bigyachtyv5"}, "Crash event (A1:B36122B5) sending prop yachtwin.", function()
+        local user = PLAYER.GET_PLAYER_PED(players.user())
+        local model = util.joaat("h4_mp_apa_yacht_win")
+        local pos = players.get_position(player_id)
+        local oldPos = players.get_position(players.user())
+        BlockSyncs(player_id, function()
+            util.yield(100)
+            ENTITY.SET_ENTITY_VISIBLE(user, false)
+            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
+            PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user(), model)
+            PED.SET_PED_COMPONENT_VARIATION(user, 5, 8, 0, 0)
+            util.yield(500)
+            PLAYER.CLEAR_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(players.user())
+            util.yield(2500)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
+            for i = 1, 5 do
+                util.spoof_script("freemode", SYSTEM.WAIT)
+            end
+            ENTITY.SET_ENTITY_HEALTH(user, 0)
+            NETWORK.NETWORK_RESURRECT_LOCAL_PLAYER(oldPos.x, oldPos.y, oldPos.z, 0, false, false, 0)
+            ENTITY.SET_ENTITY_VISIBLE(user, true)
+        end)
+    end)
 	
-		    --menu.action(crashes, "Inbloqueable V3 'Test'", {}, "Pasado de mi menu, no se si funcione", function()
+	--menu.action(crashes, "Inbloqueable V3 'Test'", {}, "Pasado de mi menu, no se si funcione", function()
     --    local mdl = util.joaat("apa_mp_apa_yacht")
     --    local user = players.user_ped()
     --    BlockSyncs(player_id, function()
@@ -2596,6 +2749,19 @@ end --]]
     
     menu.action(sekicks, "Script kick v5", {}, "", function()
         util.trigger_script_event(1 << player_id, {603406648, 0, 1279476345, 655005918, 1, 115, 1997628673, 6299376, -302416007})
+    end)
+
+    local scriptev = menu.list(malicious, "Events", {}, "Script Events. \nSome good menus will detect you.")
+
+    menu.action(scriptev, "Errape 1", {}, "Executes some sound natives. \nPersons with good menus will detect you.", function()
+        local time = (util.current_time_millis() + 2000)
+        while time > util.current_time_millis() do
+            local pc = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id))
+            for i = 1, 10 do
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "LOSER", pc.x, pc.y, pc.z, "HUD_AWARDS", true, 9999, false)
+            end
+            util.yield_once()
+        end
     end)
 
     local antimodder = menu.list(malicious, "Anti-Modder", {}, "")
@@ -3518,31 +3684,30 @@ menu.toggle_loop(online, "Accept Joins", {}, "Automatically accept join screens"
     end
 end)
 
-menu.toggle(online, "Thermal Weapons", {}, "Make all your weapons with thermal sight with the key. E", function()
-    local thermal_command = menu.ref_by_path("Game>Rendering>Thermal Vision", 33)
-    if PLAYER.IS_PLAYER_FREE_AIMING(PLAYER.PLAYER_PED_ID()) then
-        if PAD.IS_CONTROL_JUST_PRESSED(38, 38) then
-            if not GRAPHICS.GET_USINGSEETHROUGH() then
-                menu.trigger_command(thermal_command, "on")
-                GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(50)
-            else
-                menu.trigger_command(thermal_command, "off")
-                GRAPHICS.SET_SEETHROUGH(false)
-                GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(1) --default value is 1
-            end
-        end
-    elseif GRAPHICS.GET_USINGSEETHROUGH() then
-        menu.trigger_command(thermal_command, "off")
-        GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(1)
-    end
-end)
+--menu.toggle(online, "Thermal Weapons", {}, "Make all your weapons with thermal sight with the key. E", function()
+--    local thermal_command = menu.ref_by_path("Game>Rendering>Thermal Vision", 33)
+--    if PLAYER.IS_PLAYER_FREE_AIMING(PLAYER.PLAYER_PED_ID()) then
+--        if PAD.IS_CONTROL_JUST_PRESSED(38, 38) then
+--            if not GRAPHICS.GET_USINGSEETHROUGH() then
+--               menu.trigger_command(thermal_command, "on")
+--                GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(50)
+--            else
+--                menu.trigger_command(thermal_command, "off")
+--                GRAPHICS.SET_SEETHROUGH(false)
+--                GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(1) --default value is 1
+--            end
+--        end
+--    elseif GRAPHICS.GET_USINGSEETHROUGH() then
+--        menu.trigger_command(thermal_command, "off")
+--        GRAPHICS.SEETHROUGH_SET_MAX_THICKNESS(1)
+--    end
+--end)
 
 menu.toggle(online, "Cold Blooded", {}, "Remove Thermal Signature.", function(toggle)
-    local player = PLAYER.PLAYER_PED_ID()
     if toggle then
-        PED.SET_PED_HEATSCALE_OVERRIDE(player, 0)
+        PED.SET_PED_HEATSCALE_OVERRIDE(players.user_ped(), 0)
     else
-        PED.SET_PED_HEATSCALE_OVERRIDE(player, 1)
+        PED.SET_PED_HEATSCALE_OVERRIDE(players.user_ped(), 1)
     end
 end)
 
@@ -3553,6 +3718,12 @@ menu.toggle(online, "Player Notification", {}, "Warns when a player enters the s
 	else
 		joining = false
 	end
+end)
+
+menu.toggle_loop(online, "Without Animation", {}, "You change your weapons faster.", function()
+    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 56) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    end
 end)
 
 local maxps = menu.list(online, "Host Tools", {}, "")
@@ -3603,9 +3774,9 @@ end)
 recovery = menu.list(online, "Recovery", {}, "")
 
 
-menu.action(recovery, "M16", {""}, "", function()
-   memory.write_int(memory.script_global(262145 + 32775), 1)
-end)
+--menu.action(recovery, "M16", {""}, "", function()
+--   memory.write_int(memory.script_global(262145 + 32775), 1)
+--end)
 
 local Collectibles = menu.list(recovery, "Collectibles", {}, "")
 
@@ -3850,7 +4021,7 @@ menu.toggle(protects, "Panic Mode", {"panic"}, "This renders an anti-crash mode 
     end
 end)
 
-menu.toggle(protects, "Prevent Crashes", {}, "충돌 차단 시도 \n누군가 충돌을 시도할 때 활성화.", function(on_toggle)
+menu.toggle(protects, "Prevent Crashes", {}, "Tries to block crashes \nUsing some game natives and menu functions.", function(on_toggle)
     if on_toggle then
         local player = PLAYER.PLAYER_PED_ID()
         ENTITY.SET_ENTITY_COORDS(player, 25.030561, 7640.8735, 17.831139, 1, false)
@@ -4480,6 +4651,261 @@ util.on_stop(function()
     ENTITYY.SET_ENTITY_COLLISION(veh, true, true);
 end)
 
+--------------------------------------------------------------------------------------------------------------------------------
+-- Drift Mode Start
+
+local function getCurrentVehicle() 
+	local player_id = PLAYER.PLAYER_ID()
+	local player_ped = PLAYER.GET_PLAYER_PED(player_id)
+    local player_vehicle = 0
+    if (PED.IS_PED_IN_ANY_VEHICLE(player_ped)) then
+        veh = PED.GET_VEHICLE_PED_IS_USING(player_ped)
+        if (NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(veh)) then
+            player_vehicle = veh
+        end 
+    end
+    return player_vehicle
+end
+
+local function getHeadingOfTravel(veh) 
+    local velocity = ENTITY.GET_ENTITY_VELOCITY(veh)
+    local x = velocity.x
+    local y = velocity.y
+    local at2 = math.atan(y, x)
+    return math.fmod(270.0 + math.deg(at2), 360.0)
+end
+
+local function slamDatBitch(veh, height) 
+    if (VEHICLE.IS_VEHICLE_ON_ALL_WHEELS(veh) and not ENTITY.IS_ENTITY_IN_AIR(veh)) then
+     
+        ENTITY.APPLY_FORCE_TO_ENTITY(veh, 1,    0, 0, height,    0, 0, 0,   true, true)
+    end
+end
+
+local function getCurGear()
+    return memory.read_byte(entities.get_user_vehicle_as_pointer() +memory.read_int(CurrentGearOffset))
+end
+
+local function getNextGear()
+    return memory.read_byte(entities.get_user_vehicle_as_pointer() +memory.read_int(NextGearOffset))
+end
+
+local function setCurGear(gear)
+    memory.write_byte(entities.get_user_vehicle_as_pointer() +memory.read_int(CurrentGearOffset), gear)
+end
+
+local function setNextGear(gear)
+    memory.write_byte(entities.get_user_vehicle_as_pointer() +memory.read_int(NextGearOffset), gear)
+end
+
+local function asDegrees(angle)
+    return angle * (180.0 / 3.14159265357); 
+end
+
+local function wrap360(val) 
+    --    this may be the same as:
+    --      return math.fmod(val + 360, 360)
+    --    but wierd things happen
+    while (val < 0.0) do
+        val = val + 360.0
+    end
+    while (val > 360.0) do
+        val = val - 360.0
+    end
+    return val
+end
+
+driftmodee = menu.list(vehicles, "DriftMode", {}, "Driftmode based on natives :'3")
+
+local gs_driftMinSpeed = 8.0
+local gs_driftMaxAngle = 50.0
+local ControlVehicleAccelerate = 71
+local ControlVehicleBrake = 72
+local ControlVehicleDuck = 73
+local ControlVehicleSelectNextWeapon = 99
+local ControlVehicleMoveUpOnly = 61
+local INPUT_FRONTEND_LS = 209
+local DriftActivateKeyboard = INPUT_FRONTEND_LS
+
+CurrentGearOffset = memory.scan("A8 02 0F 84 ? ? ? ? 0F B7 86")+11
+NextGearOffset = memory.scan("A8 02 0F 84 ? ? ? ? 0F B7 86")+18
+
+local isDrifting      = 0
+local wasDrifting     = 0
+local isDriftFinished = 1
+local prevGripState   = 0
+local lastDriftAngle  = 0.0
+local oldGripState    = 0
+local debug_notification = 0
+
+textDrawCol = {
+    r = 255,
+    g = 255,
+    b = 255,
+    a = 255
+}
+
+
+
+local function driftmod_ontick() 
+    local player = players.user()
+    local veh = getCurrentVehicle()
+   
+
+    local inVehicle   = veh ~= 0
+    local isDriving   = true
+
+    local mps = ENTITY.GET_ENTITY_SPEED(veh)
+    local mph       = mps * 2.23694
+    local kmh       = mps * 3.6
+
+    if inVehicle and isDriving and not isDrifting and not isDriftFinished then
+        isDriftFinished = true
+    end
+
+    if not inVehicle or not isDriving then
+        return
+    end
+
+    local driftKeyPressed = PAD.IS_CONTROL_PRESSED(2, ControlVehicleDuck) or PAD.IS_DISABLED_CONTROL_PRESSED(2, ControlVehicleDuck) or PAD.IS_CONTROL_PRESSED(0, DriftActivateKeyboard) or PAD.IS_DISABLED_CONTROL_PRESSED(0, DriftActivateKeyboard)
+
+    if (driftKeyPressed and getCurGear(veh) > 2) then
+        setCurGear(2)
+        setNextGear(2)
+    end
+    if driftKeyPressed then
+         
+        if (PAD.GET_CONTROL_NORMAL(2, ControlVehicleBrake) > 0.1) then
+            PAD.SET_CONTROL_VALUE_NEXT_FRAME(0, ControlVehicleBrake, 0)
+            local neg = -0.3
+
+            if (PAD.IS_CONTROL_PRESSED(2, ControlVehicleSelectNextWeapon)) then
+                neg = 10
+            end
+
+            slamDatBitch(veh, neg * 1 * PAD.GET_CONTROL_NORMAL(2, ControlVehicleBrake))
+        end 
+
+        local angleOfTravel  = getHeadingOfTravel(veh)
+        local angleOfHeading = ENTITY.GET_ENTITY_HEADING_FROM_EULERS(veh)
+        
+        local driftAngle = angleOfHeading - angleOfTravel
+
+        if driftAngle and lastDriftAngle then
+            local diff = driftAngle - lastDriftAngle
+
+            if diff > 180.0 then
+                driftAngle = driftAngle - 360.0
+            end
+            if diff < 180.0 then
+                driftAngle = driftAngle - 360.0
+            end
+        end
+
+        driftAngle     = wrap360(driftAngle)
+        lastDriftAngle = driftAngle
+
+        local zeroBasedDriftAngle = 360 - driftAngle
+        if zeroBasedDriftAngle > 180 then
+            zeroBasedDriftAngle = 0 - (360 - zeroBasedDriftAngle)
+        end
+
+        directx.draw_text(0,0,"Drift Angle: " .. math.floor(zeroBasedDriftAngle) .. "°", ALIGN_TOP_CENTRE,1,textDrawCol)
+        local done = false
+        if ((isDrifting or kmh > gs_driftMinSpeed) and (math.abs(driftAngle - 360.0) < gs_driftMaxAngle) or (driftAngle < gs_driftMaxAngle)) then
+            isDrifting      = 1
+            isDriftFinished = 1;  -- Doesn't get set to 0 until isDrifting is 0.
+
+            if driftKeyPressed then
+                 
+                if driftKeyPressed ~= oldGripState then
+                    VEHICLE.SET_VEHICLE_REDUCE_GRIP(veh, driftKeyPressed)
+                    oldGripState = driftKeyPressed
+                end
+            end
+            done = true
+        end
+
+        if not done and kmh < gs_driftMinSpeed then
+            if driftKeyPressed then
+                if driftKeyPressed ~= oldGripState then
+                    VEHICLE.SET_VEHICLE_REDUCE_GRIP(veh, driftKeyPressed)
+                    oldGripState = driftKeyPressed
+                end
+            end
+            done = true
+        end
+
+        if not done then
+            if driftKeyPressed == oldGripState then
+                VEHICLE.SET_VEHICLE_REDUCE_GRIP(veh, false)
+                oldGripState = 0
+            end
+
+            if math.abs(zeroBasedDriftAngle) > gs_driftMaxAngle then
+                if zeroBasedDriftAngle > 0 then
+                    VEHICLE.SET_VEHICLE_INDICATOR_LIGHTS(veh, 0, true)
+                    VEHICLE.SET_VEHICLE_INDICATOR_LIGHTS(veh, 1, false)
+
+                 
+                    util.toast("Counter-steering left ")
+                    
+                    VEHICLE.SET_VEHICLE_STEER_BIAS(veh, math.rad(zeroBasedDriftAngle * 0.69))
+              
+                else
+                    VEHICLE.SET_VEHICLE_INDICATOR_LIGHTS(veh, 1, true)
+                    VEHICLE.SET_VEHICLE_INDICATOR_LIGHTS(veh, 0, false)
+              
+
+                    util.toast("Counter-steering right")
+
+                    VEHICLE.SET_VEHICLE_STEER_BIAS(veh, math.rad(zeroBasedDriftAngle * 0.69))
+      
+                end
+            end
+		else 
+			VEHICLE.SET_VEHICLE_INDICATOR_LIGHTS(veh, 0, false)
+			VEHICLE.SET_VEHICLE_INDICATOR_LIGHTS(veh, 1, false)
+        end
+    end
+
+    if not driftKeyPressed and prevGripState then
+        isDrifting      = 0
+        isDriftFinished = 0
+        lastDriftAngle = 0
+
+        if driftKeyPressed ~= oldGripState then
+            VEHICLE.SET_VEHICLE_REDUCE_GRIP(veh, driftKeyPressed)
+            oldGripState = driftKeyPressed
+        end
+    end
+
+    prevGripState = driftKeyPressed
+    if isDrifting ~= wasDrifting then
+        wasDrifting     = isDrifting
+        changedDrifting = true
+    end
+end
+
+
+menu.toggle_loop(driftmodee,"Driftmode", {},"Press LSHIFT to start drifting",function(on)
+	driftmod_ontick()
+end)
+driftSetings = menu.list(driftmodee, "Settings", {}, "")
+
+menu.slider(driftSetings,"Minimum Speed /100", {}, "/100", 0, 10000, gs_driftMinSpeed*100, 1, function(on)
+    gs_driftMinSpeed = on/100
+end)
+
+menu.slider(driftSetings,"Max angle /100", {}, "/100", 0, 10000,gs_driftMaxAngle*100, 1, function(on)
+    gs_driftMaxAngle = on/100
+end)
+
+menu.colour(driftSetings,"Text color", {}, "", textDrawCol,true , function(newCol)
+    textDrawCol = newCol
+end)
+
+
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- Diversion
@@ -4754,8 +5180,6 @@ menu.hyperlink(menu.my_root(), "Entra al discord!", "https://discord.gg/BNbSHhun
 local credits = menu.list(misc, "Creditos", {}, "")
 local devcred = menu.list(credits, "Creditos Dev", {}, "")
 local othercred = menu.list(credits, "Otros Creditos", {}, "")
-menu.action(devcred, "JinxScript/Prisuhm", {}, "Skidded code from prisuhm, this is what i added before a little discussion with him, we do love him in this community because he is awesome and he codded almost every single feature. \nThx for being so Prisuhm and unique.", function()
-end)
 menu.action(devcred, "gLance", {}, "He gave me a lot of help with Gta V natives.", function()
 end)
 menu.action(devcred, "LanceScriptTEOF", {}, "He helped me learn and understand Gta V natives", function()
@@ -4765,6 +5189,8 @@ end)
 menu.action(devcred, "Cxbr", {}, "Thx for friendly features <3", function()
 end)
 menu.action(devcred, "Sapphire", {}, "Who helped me with almost every single feature and being patient because of my dumb brain <3", function()
+end)
+menu.action(devcred, "JinxScript/Prisuhm", {}, "Thx to him for shitting talking about me and saying 'Skidding is not the way you learn' \nCredits to jinxscript community for making jinxscript possible and also some of this functions.", function()
 end)
 menu.action(othercred, "Emir, Joju, Pepe, Ady, Vicente, Sammy", {}, "This will never be posible without them <3", function()
 end)
@@ -4780,8 +5206,6 @@ end)
 util.on_stop(function ()
     VEHICLE.SET_VEHICLE_GRAVITY(veh, true)
     ENTITY.SET_ENTITY_COLLISION(veh, true, true);
-	menu.collect_garbage()
-    sleep(100)
     util.toast("Adious I hope you liked it :3")
     util.toast("Cleaning...")
 end)
