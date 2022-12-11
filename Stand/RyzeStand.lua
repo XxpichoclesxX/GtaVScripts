@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.86
+local localVer = 3.865
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -47,10 +47,6 @@ until response
 --end
 
 --spmode = require "ryzescript.sportmode"
-
-if not SCRIPT_MANUAL_START then
-    util.stop_script()
-end
 
 sleep(1200)
 
@@ -337,7 +333,7 @@ players.on_join(function(player_id)
 
         local index = menu.get_value(explode_slider)
 
-        pluto_switch index do
+        switch index do
             case 1:
                 explosion = 0
                 break
@@ -385,7 +381,7 @@ players.on_join(function(player_id)
         if players.exists(player_id) then
             local player_pos = players.get_position(player_id)
             FIRE.ADD_EXPLOSION(player_pos.x, player_pos.y, player_pos.z - 1, 12, 1, true, false, 1, false)
-            util.yield()
+            util.yield(5)
         end
     end)
 
@@ -393,7 +389,7 @@ players.on_join(function(player_id)
         if players.exists(player_id) then
             local player_pos = players.get_position(player_id)
             FIRE.ADD_EXPLOSION(player_pos.x, player_pos.y, player_pos.z - 1, 13, 1, true, false, 1, false)
-            util.yield()
+            util.yield(5)
         end
     end)
 
@@ -613,7 +609,7 @@ players.on_join(function(player_id)
     end)
         
     menu.action_slider(inf_loading, "Telefono corrupto", {}, "Click para seleccionar un estilo", invites, function(index, name)
-        pluto_switch name do
+        switch name do
             case 1:
                 util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x1})
                 util.toast("Invitacion a yate")
@@ -889,7 +885,7 @@ players.on_join(function(player_id)
             return
         end
 
-        pluto_switch value do
+        switch value do
             case "Lanzar Arriba":
                 ENTITY.APPLY_FORCE_TO_ENTITY(veh, 1, 0.0, 0.0, 100000.0, 0.0, 0.0, 0.0, 0, 1, 1, 1, 0, 1)
                 break
@@ -1044,7 +1040,9 @@ players.on_join(function(player_id)
 
     menu.divider(crashes, "(Ryze Exclusivo)")
 
-    menu.action(crashes, "Inbloqueable", {"crashv2"}, "Funcando (Menus populares - Stand)", function()
+    local twotake = menu.list(crashes, "2T1 Crashes", {}, "")
+
+    menu.action(twotake, "Primer Crash", {"crashv2"}, "", function()
         for i = 1, 150 do
             util.trigger_script_event(1 << player_id, {0xA4D43510, player_id, 0xDF607FCD, math.random(int_min, int_max), math.random(int_min, int_max), 
             math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
@@ -1052,7 +1050,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(crashes, "Inbloqueable V2", {"crashv3"}, "Funcando (Menus populares - Stand)", function()
+    menu.action(twotake, "Primer Crash V2", {"crashv3"}, "", function()
         local int_min = -2147483647
         local int_max = 2147483647
         for i = 1, 150 do
@@ -1071,9 +1069,7 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {495813132, player_id,  0, 1, 23135423, 3, 3, 4, 827870001, 5, 2022580431, 6, -918761645, 7, 1754244778, 8, 827870001, 9, 17})
     end)
 
-    local twotake = menu.list(crashes, "2T1 Crashes", {}, "")
-
-    local modelc = menu.list(twotake, "Model Crashes", {}, "")
+    local modelc = menu.list(twotake, "Crasheos Por Modelo", {}, "")
 
 
     menu.action(modelc, "Modelo Invalido V1", {"crashv4"}, "", function()
@@ -1250,6 +1246,7 @@ players.on_join(function(player_id)
             local ped1 = entities.create_ped(1, mdl, pos + 20, 0)
             local ped_ = entities.create_ped(1, mdl2, pos + 20, 0)
             local ped3 = entities.create_ped(1, mdl3, pos + 20, 0)
+            util.yield(300)
             local ped3 = entities.create_ped(1, mdl4, pos + 20, 0)
             local veh = entities.create_vehicle(veh_mdl, pos + 20, 0)
             local veh2 = entities.create_vehicle(veh_mdl2, pos + 20, 0)
@@ -1286,7 +1283,7 @@ players.on_join(function(player_id)
             TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh, ped, 10.0, 0, 10, 0, 0)
             TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh2, ped, 10.0, 0, 10, 0, 0)
             TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh2, ped, 10.0, 0, 10, 0, 0)
-            util.yield(100)
+            util.yield(300)
             PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 2, 0)
             PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 1, 0)
             PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 0, 0)
@@ -1309,6 +1306,7 @@ players.on_join(function(player_id)
             TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
             TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
             TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
+            util.yield(300)
             TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
             TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
             TASK.TASK_START_SCENARIO_IN_PLACE(mdl3, "CTaskDoNothing", 0, false)
@@ -1331,6 +1329,7 @@ players.on_join(function(player_id)
             TASK.TASK_START_SCENARIO_IN_PLACE(mdl3, "CTaskAmbientClips", 0, false)
             PED.SET_PED_INTO_VEHICLE(mdl, veh, -1)
             PED.SET_PED_INTO_VEHICLE(mdl2, veh, -1)
+            util.yield(300)
             ENTITY.SET_ENTITY_PROOFS(veh_mdl, true, true, true, true, true, false, false, true)
             ENTITY.SET_ENTITY_PROOFS(veh_mdl2, true, true, true, true, true, false, false, true)
             TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskExitVehicle", 0, false)
@@ -1356,10 +1355,10 @@ players.on_join(function(player_id)
 
     local pclpid = {}
 
-    menu.action(modelc, "Modelo Invalido V9", {"crashv28"}, "Clona al jugador repetidas veces causando (XC)", function()
+    menu.action(modelc, "Modelo Invalido V9 'Test'", {"crashv28"}, "Clona al jugador repetidas veces causando (XC)", function()
         local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local c = ENTITY.GET_ENTITY_COORDS(p)
-        for i = 1, 25 do
+        for i = 1, 23 do
             local pclone = entities.create_ped(26, ENTITY.GET_ENTITY_MODEL(p), c, 0)
             pclpid [#pclpid + 1] = pclone 
             PED.CLONE_PED_TO_TARGET(p, pclone)
@@ -1842,7 +1841,7 @@ players.on_join(function(player_id)
         end)
     end)
 
-    local secrashes = menu.list(crashes, "SE Crashes", {}, "")
+    local secrashes = menu.list(twotake, "SE Crashes", {}, "")
 
     menu.action(secrashes, "SE Crash (S0)", {"crashv20"}, "Un crasheo de scripts", function()
         local int_min = -2147483647
@@ -1946,7 +1945,7 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {-1529596656, 26, -547323955, -1612886483, -275646172, -879183487, 1221401895, -1674954067, 198848784, 495735107, 0, -1998972833, -129810361, 1888307736})
     end)
 
-    local nmcrashes = menu.list(crashes, "Normal Model Crashes", {}, "")
+    local nmcrashes = menu.list(twotake, "Crasheos De Modelo Parecidos", {}, "")
 
     menu.action(nmcrashes, "Yate V1", {"bigyachtyv1"}, "Evento de crash (A1:EA0FF6AD) enviando el prop yacht.", function()
         local user = PLAYER.GET_PLAYER_PED(players.user())
@@ -2350,11 +2349,11 @@ players.on_join(function(player_id)
         util.yield(100)
         menu.trigger_commands("crashv25"..players.get_name(player_id))
         util.yield(100)
-        menu.trigger_commands("crashv27"..players.get_name(player_id))
-        util.yield(100)
         menu.trigger_commands("crashv26"..players.get_name(player_id))
         util.yield(100)
         menu.trigger_commands("crashv27"..players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("bigyachtyv4"..players.get_name(player_id))
         util.yield(2000)
         menu.trigger_commands("crash"..players.get_name(player_id))
         util.yield(400)
@@ -2569,7 +2568,7 @@ players.on_join(function(player_id)
         local vehicle = util.joaat(veh)
         request_model(vehicle)
 
-        pluto_switch veh do
+        switch veh do
             case "Khanjali":
             height = 2.8
             offset = 0
@@ -3069,17 +3068,14 @@ players.on_join(function(player_id)
     end)
 
     menu.toggle_loop(friendly, "Dar fichas del casino", {"dropchips"}, "Se testeo por 3 semanas y parece seguro, sin embargo puede ser detectado en cualquier momento", function(toggle)
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local pos = ENTITY.GET_ENTITY_COORDS(p)
+        local coords = players.get_position(player_id)
+        coords.z = coords.z + 1.5
+        local card = MISC.GET_HASH_KEY("vw_prop_vw_lux_card_01a")
         STREAMING.REQUEST_MODEL(card)
-        while not STREAMING.HAS_MODEL_LOADED(card) do
+        if STREAMING.HAS_MODEL_LOADED(card) == false then  
             STREAMING.REQUEST_MODEL(card)
-            util.yield()
         end
-        OBJECT.CREATE_AMBIENT_PICKUP(pickup, pos.x, pos.y, pos.z, 0, false, card, true, false) --spawn casino chips
-        if not STREAMING.HAS_MODEL_LOADED(card) then
-            util.toast("No se pudo cargar el modelo")
-        end
+        OBJECT.CREATE_AMBIENT_PICKUP(-1009939663, coords.x, coords.y, coords.z, 0, 1, card, false, true)
     end)
 
     menu.action(friendly, "Dar vida y armadura", {}, "", function()
@@ -3169,7 +3165,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(vehicle, "Deshabilitar Vehiculo V2", {}, "Inbloqueable por stand '10/02'", function(toggle)
+    menu.action(vehicle, "Deshabilitar Vehiculo V2", {}, "Inbloqueable por stand", function(toggle)
         local player_ped = PLAYER.GET_PLAYER_PED(player_id)
         local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(player_ped, include_last_vehicle_for_player_functions)
         local is_running = VEHICLE.GET_IS_VEHICLE_ENGINE_RUNNING(player_vehicle)
@@ -3205,13 +3201,24 @@ players.on_join(function(player_id)
         util.toast("La marca del jugador ya deberia estar en el mapa.")
         util.yield(500)
         util.toast("Tal vez no tenga marca si no sale.")
-
     end)
 
     menu.action(otherc, "Cayo Op", {}, "Intentara varios metodos a enviar a cayo. \nSi no tiene menu muy bueno funcionara. \nHay posibilidad que funcione con Stand.", function()
         for i = 1, 200 do
             util.trigger_script_event(1 << player_id, {1361475530, player_id, -547323955  , math.random(0, 4), math.random(0, 1), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647),
             math.random(-2147483647, 2147483647), player_id, math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647)})
+        end
+    end)
+
+    menu.toggle(otherc, "Vigilarles", {}, "Sabras cuando estan escribiendo.", function(on)
+        local player = players.user_ped()
+        local state = chat.get_state(player)
+        if on then
+            if state == 1 then
+                util.toast("El jugador " .. players.get_name(player_id) .. "Esta escribiendo en el chat de equipo.")
+            elseif state == 2 then
+                util.toast("El jugador " .. players.get_name(player_id) .. "Esta escribiendo en el chat general.")
+            end
         end
     end)
 
@@ -3395,7 +3402,7 @@ menu.toggle_loop(detections, "Noclip", {}, "Detecta si el jugador esta levitando
         and get_interior_player_is_in(player_id) == 0 and get_transition_state(player_id) ~= 0
         and not PED.IS_PED_IN_ANY_VEHICLE(ped, false) -- too many false positives occured when players where driving. so fuck them. lol.
         and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped)
-        and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped) and not PED.IS_PED_USING_SCENARIO(ped)
+        and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped) and not PED.IS_PED_USING_SCENARIO(ped, false)
         and not TASK.GET_IS_TASK_ACTIVE(ped, 160) and not TASK.GET_IS_TASK_ACTIVE(ped, 2)
         and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) <= 395.0 -- 400 was causing false positives
         and ENTITY.GET_ENTITY_HEIGHT_ABOVE_GROUND(ped) > 5.0 and not ENTITY.IS_ENTITY_IN_AIR(ped) and entities.player_info_get_game_state(ped_ptr) == 0
@@ -3622,27 +3629,9 @@ end)
 
 local bypasskick = menu.list(online, "Bypass Kick", {}, "Opciones que te permiten usar metodos para \n entrar a la sesion si te estan bloqueando.")
 
-menu.divider(bypasskick, "Metodos Normales")
+local normalmeth = menu.list(bypasskick, "Metodos Normales")
 
-menu.toggle(bypasskick, "Metodo V1", {}, "Te da un tiempo limitado para que expulses al que te bloquea", function(on_toggle)
-    local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
-    local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
-    local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
-    local UnblockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Disabled")
-    if on_toggle then
-        menu.trigger_commands("nobgscript on")
-        menu.trigger_command(BlockIncSyncs)
-        menu.trigger_command(BlockNetEvents)
-        util.toast("Activado, ahora entra a su sesion y prepara el kick")
-    else
-        menu.trigger_commands("nobgscript off")
-        menu.trigger_command(UnblockIncSyncs)
-        menu.trigger_command(UnblockNetEvents)
-        util.toast("Listo, todo desactivado")
-    end
-end)
-
-menu.toggle(bypasskick, "Metodo V2", {}, "Un poco mas funcional pero tambien con mas errores de red", function(on_toggle)
+menu.toggle(normalmeth, "Metodo V1", {"bkick1"}, "Un poco mas funcional pero tambien con mas errores de red", function(on_toggle)
     local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
     local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
     local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
@@ -3651,17 +3640,31 @@ menu.toggle(bypasskick, "Metodo V2", {}, "Un poco mas funcional pero tambien con
     local BlockBailing2 = menu.ref_by_path("Online>Protections>Block Bailing>Switching Primary Crew")
     local BlockBailing3 = menu.ref_by_path("Online>Protections>Block Bailing>Spectating Related")
     local BlockBailing4 = menu.ref_by_path("Online>Protections>Block Bailing>Other Reasons")
+    local BlockJoin = menu.ref_by_path("Online>Protections>Block Join Karma")
     if on_toggle then
         menu.trigger_commands("nobgscript on")
+        menu.trigger_commands("skipbroadcast on")
+        menu.trigger_commands("speedupspawn on")
+        menu.trigger_commands("speedupfmmc on")
+        menu.trigger_commands("skipswoopdown on")
+        menu.trigger_commands("nospawnactivities on")
+        menu.trigger_commands("showtransitionstate on")
         menu.trigger_command(BlockIncSyncs)
         menu.trigger_command(BlockNetEvents)
         menu.trigger_command(BlockBailing, "on")
         menu.trigger_command(BlockBailing2, "on")
         menu.trigger_command(BlockBailing3, "on")
         menu.trigger_command(BlockBailing4, "on")
+        menu.trigger_command(BlockJoin, "on")
         util.toast("Activado, ahora entra a su sesion y prepara el kick")
     else
         menu.trigger_commands("nobgscript off")
+        menu.trigger_commands("skipbroadcast off")
+        menu.trigger_commands("speedupspawn off")
+        menu.trigger_commands("speedupfmmc off")
+        menu.trigger_commands("skipswoopdown off")
+        menu.trigger_commands("nospawnactivities off")
+        menu.trigger_commands("showtransitionstate off")
         menu.trigger_command(UnblockIncSyncs)
         menu.trigger_command(UnblockNetEvents)
         menu.trigger_command(BlockBailing3, "off")
@@ -3669,7 +3672,7 @@ menu.toggle(bypasskick, "Metodo V2", {}, "Un poco mas funcional pero tambien con
     end
 end)
 
-menu.toggle(bypasskick, "Metodo V3", {}, "Metodo mas funcional, pero para desarrolladores, recibiras notificacion de todo evento de red", function(on_toggle)
+menu.toggle(normalmeth, "Metodo V2", {"bkick2"}, "Metodo mas funcional, pero para desarrolladores, recibiras notificacion de todo evento de red", function(on_toggle)
 local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
 local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
 local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
@@ -3684,6 +3687,12 @@ local UnShowNotis = menu.ref_by_path("Online>Protections>Events>Raw Network Even
 local UnBlockRaw = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
 if on_toggle then
     menu.trigger_commands("nobgscript on")
+    menu.trigger_commands("skipbroadcast on")
+    menu.trigger_commands("speedupspawn on")
+    menu.trigger_commands("speedupfmmc on")
+    menu.trigger_commands("skipswoopdown on")
+    menu.trigger_commands("nospawnactivities on")
+    menu.trigger_commands("showtransitionstate on")
     menu.trigger_command(BlockIncSyncs)
     menu.trigger_command(BlockNetEvents)
     menu.trigger_command(BlockBailing, "on")
@@ -3695,6 +3704,12 @@ if on_toggle then
     util.toast("Activado, ahora entra a su sesion y prepara el kick")
 else
     menu.trigger_commands("nobgscript off")
+    menu.trigger_commands("skipbroadcast off")
+    menu.trigger_commands("speedupspawn off")
+    menu.trigger_commands("speedupfmmc off")
+    menu.trigger_commands("skipswoopdown off")
+    menu.trigger_commands("nospawnactivities off")
+    menu.trigger_commands("showtransitionstate off")
     menu.trigger_command(UnblockIncSyncs)
     menu.trigger_command(UnblockNetEvents)
     menu.trigger_command(BlockBailing3, "off")
@@ -3704,7 +3719,7 @@ else
 end
 end)
 
-menu.toggle(bypasskick, "Metodo V4", {}, "Probablemente rompa el juego, usa en tu propio riesgo", function(on_toggle)
+menu.toggle(normalmeth, "Metodo V3", {"bkick3"}, "Probablemente rompa el juego, usa en tu propio riesgo", function(on_toggle)
     local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
     local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
     local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
@@ -3724,6 +3739,8 @@ menu.toggle(bypasskick, "Metodo V4", {}, "Probablemente rompa el juego, usa en t
         menu.trigger_commands("speedupspawn on")
         menu.trigger_commands("speedupfmmc on")
         menu.trigger_commands("skipswoopdown on")
+        menu.trigger_commands("nospawnactivities on")
+        menu.trigger_commands("showtransitionstate on")
         menu.trigger_command(BlockIncSyncs)
         menu.trigger_command(BlockNetEvents)
         menu.trigger_command(BlockBailing, "on")
@@ -3740,6 +3757,8 @@ menu.toggle(bypasskick, "Metodo V4", {}, "Probablemente rompa el juego, usa en t
         menu.trigger_commands("speedupspawn off")
         menu.trigger_commands("speedupfmmc off")
         menu.trigger_commands("skipswoopdown off")
+        menu.trigger_commands("nospawnactivities off")
+        menu.trigger_commands("showtransitionstate off")
         menu.trigger_command(UnblockIncSyncs)
         menu.trigger_command(UnblockNetEvents)
         menu.trigger_command(BlockBailing3, "off")
@@ -3749,6 +3768,39 @@ menu.toggle(bypasskick, "Metodo V4", {}, "Probablemente rompa el juego, usa en t
         util.toast("Listo, todo desactivado")
     end
 end)
+
+local testmeth = menu.list(bypasskick, "Metodo en Testeo", {}, "Lee con cautela las instrucciones en las opciones.")
+
+menu.divider(testmeth, "Fase 1", {}, "")
+
+menu.toggle(testmeth, "Activa Esto", {}, "Activa esto antes de seleccionar el nombre. \nDesactiva en el paso 3", function(on)
+    if on then
+        menu.trigger_commands("bkick1 on")
+    else
+        menu.trigger_commands("bkick1 off")
+    end
+end)
+
+menu.divider(testmeth, "Fase 2", {}, "")
+
+menu.text_input(testmeth, "Nombre (Join)", {"name"}, "Escribe el nombre del jugador. \nPara entrar a su sesion.", function(playername)
+    menu.trigger_commands("historyspectate".. playername)
+end)
+
+menu.divider(testmeth, "Fase 3", {}, "")
+
+menu.text_input(testmeth, "Nombre (Kick)", {"name2"}, "Escribe el nombre del jugador. \nPara kickearle antes que se de cuenta.", function(playername)
+    menu.trigger_commands("kick".. playername)
+end)
+
+menu.divider(testmeth, "Fase 3", {}, "")
+menu.action(testmeth, "Dame Click", {}, "Dale click aqui cuando estes en la sesion y lo hayas kickeado.", function()
+    menu.trigger_commands("rejoin")
+end)
+
+--menu.action(testmeth, "Metodo en testeo", {}, "Este metodo no se ha probado previamente \nVa por pasos, estate atento", function()
+--menu.trigger_commands("historyspectate" .. name)
+--end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 --Protecciones
@@ -3817,7 +3869,7 @@ menu.toggle(protects, "Prevenir Crasheos", {}, "Intenta bloquear los crasheos \n
     if on_toggle then
         local player = PLAYER.PLAYER_PED_ID()
         ENTITY.SET_ENTITY_COORDS(player, 25.030561, 7640.8735, 17.831139, 1, false)
-        util.yield(800)
+        util.yield(600)
         menu.trigger_commands("potatomode on")
         menu.trigger_commands("anticrashcamera on")
         menu.trigger_commands("trafficpotato on")
@@ -4939,6 +4991,14 @@ end
 --    end)
 --end 
 
+menu.toggle(misc, "Cerrar Automaticamente", {}, "Cerrara el script automaticamente al entrar a gta. \nSi lo activas puede conllevar a mas tiempo de carga.", function(on)
+    if on then
+        if not SCRIPT_MANUAL_START then
+            util.stop_script()
+        end
+    end
+end)
+
 menu.toggle(misc, "Modo Screenshot", {}, "Para que puedas tomar fotitos <3", function(on)
 	if on then
 		menu.trigger_commands("screenshot on")
@@ -4954,6 +5014,12 @@ menu.toggle(misc, "Identificador de stand", {}, "Te hace invisible para otros us
     else
         menu.trigger_command(standid, "off")
     end
+end)
+
+menu.action(misc, "Obtener host", {}, "Te dara el host de la sesion expulsando a los demas.", function()
+    util.toast("Se que soy tonto por no encontrar el apartado en stand :/.")
+    util.yield(500)
+    players.get_host()
 end)
 
 menu.hyperlink(misc, "Mi Github", "https://github.com/xxpichoclesxx")
