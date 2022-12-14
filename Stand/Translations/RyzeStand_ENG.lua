@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Welcome " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 3.87
+local localVer = 3.871
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -2179,6 +2179,21 @@ end --]]
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 	
     local kicks = menu.list(malicious, "Kicks", {}, "")
+		
+
+    local sekicks = menu.list(kicks, "Script Kicks", {}, "")
+
+    menu.action(sekicks, "Script kick v1", {}, "Unblockable by stand.", function()
+        util.trigger_script_event(1 << player_id, {243072129, 1, 0, 2, math.random(13, 257), 3, 1})
+    end)
+
+    menu.action(sekicks, "Script kick v2", {}, "", function()
+        util.trigger_script_event(1 << player_id, {1268038438, player_id, -1018058175, player_id, -1125813865, player_id, -1113136291, player_id, -2123789977})
+    end)
+
+    menu.action(sekicks, "Script kick v3", {}, "", function()
+        util.trigger_script_event(1 << player_id, {915462795, 1, 0, 2, player_id, 2700359414448})
+    end)
 	
 	   menu.action(kicks, "Desync Kick 'Test'", {}, "", function()
         util.request_model(0x705E61F2)
@@ -2851,6 +2866,17 @@ end --]]
 	
     ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     -- Other
+		
+		
+    menu.action(otherc, "Cayo Op 'Test'", {}, "Will send various type of invites. \nCan cause network overflow.", function()
+        for i = 1, 200 do
+            util.trigger_script_event(1 << player_id, {-910497748, math.random(0, 4), math.random(0, 1), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647),
+            math.random(-2147483647, 2147483647), player_id, math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647)})
+            util.trigger_script_event(1 << player_id, {1594928808, 0, 0, 9225})
+            util.trigger_script_event(1 << player_id, {1311159119, 0, player_id, 2005749727488, 4, -1, player_id, 2010044694527, -1})
+        end
+    end)
+		
     menu.action(otherc, "See Players Waypoint", {}, "It should show the mark that the player has on the map.", function()    
         local playerw = players.get_waypoint(player_id)
         for i = 1, 5 do
@@ -2861,6 +2887,18 @@ end --]]
         util.toast("The player's mark should already be on the map.")
         util.yield(500)
         util.toast("Maybe it doesn't have a mark if it doesn't come out.")
+    end)
+		
+    menu.toggle(otherc, "Spy Them", {}, "Will know when they are writing.", function(on)
+        local player = players.user_ped()
+        local state = chat.get_state(player)
+        if on then
+            if state == 1 then
+                util.toast("El jugador " .. players.get_name(player_id) .. "Esta escribiendo en el chat de equipo.")
+            elseif state == 2 then
+                util.toast("El jugador " .. players.get_name(player_id) .. "Esta escribiendo en el chat general.")
+            end
+        end
     end)
 	
 	
