@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.87
+local localVer = 3.871
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -448,6 +448,19 @@ players.on_join(function(player_id)
             GRAPHICS.USE_PARTICLE_FX_ASSET("core")
             GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
                 "ent_anim_bm_water_mist", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
+            menu.set_value(freeze_toggle, false)
+        end
+    end)
+
+    menu.toggle_loop(lagplay, "Metodo V5", {"rlag4"}, "Frezea al jugador para que funcione.", function()
+        if players.exists(player_id) then
+            local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
+            local player_pos = players.get_position(player_id)
+            menu.set_value(freeze_toggle, true)
+            request_ptfx_asset("core")
+            GRAPHICS.USE_PARTICLE_FX_ASSET("core")
+            GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+                "veh_rotor_break", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
             menu.set_value(freeze_toggle, false)
         end
     end)
@@ -1676,6 +1689,20 @@ players.on_join(function(player_id)
 
     local kicks = menu.list(malicious, "Kicks", {}, "")
 
+    local sekicks = menu.list(kicks, "Kickeos Por Scripts", {}, "")
+
+    menu.action(sekicks, "Script kick v1", {}, "Inbloqueable por stand.", function()
+        util.trigger_script_event(1 << player_id, {243072129, 1, 0, 2, math.random(13, 257), 3, 1})
+    end)
+
+    menu.action(sekicks, "Script kick v2", {}, "", function()
+        util.trigger_script_event(1 << player_id, {1268038438, player_id, -1018058175, player_id, -1125813865, player_id, -1113136291, player_id, -2123789977})
+    end)
+
+    menu.action(sekicks, "Script kick v3", {}, "", function()
+        util.trigger_script_event(1 << player_id, {915462795, 1, 0, 2, player_id, 2700359414448})
+    end)
+
     menu.action(kicks, "Desync Kick", {}, "", function()
         util.request_model(0x705E61F2)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
@@ -2312,6 +2339,19 @@ players.on_join(function(player_id)
 
     ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     -- Other
+
+    menu.action(otherc, "Cayo Op 'Test'", {}, "Intentara varios metodos a enviar a cayo. \nSi no tiene menu muy bueno funcionara. \nHay posibilidad que funcione con Stand.", function()
+        for i = 1, 200 do
+            util.trigger_script_event(1 << player_id, {-910497748, math.random(0, 4), math.random(0, 1), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647),
+            math.random(-2147483647, 2147483647), player_id, math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647)})
+            util.trigger_script_event(1 << player_id, {1594928808, 0, 0, 9225})
+            util.trigger_script_event(1 << player_id, {1311159119, 0, player_id, 2005749727488, 4, -1, player_id, 2010044694527, -1})
+        end
+    end)
+
+    --menu.action(otherc, "Trapo Al Jugador", {}, "", function()
+    --    util.trigger_script_event(1 << player_id, {2009283752247, player_id, 2005749727232, 1, 258, 1, 1, player_id, 2701534429183, 18, 0})
+    --end)
 
     menu.action(otherc, "Marca Del Jugador", {}, "Deberia mostrar la marca que el jugador tenga en el mapa.", function()    
         local playerw = players.get_waypoint(player_id)
