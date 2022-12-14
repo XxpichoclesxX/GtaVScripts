@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.870
+local localVer = 3.87
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
