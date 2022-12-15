@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.871
+local localVer = 3.872
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -997,6 +997,36 @@ players.on_join(function(player_id)
 
     menu.divider(crashes, "(Ryze Exclusivo)")
 
+    menu.action(crashes, "Crasheo V1", {}, "Crasheo chino.", function()
+        local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local mdl = util.joaat("cs_taostranslator2")
+        while not STREAMING.HAS_MODEL_LOADED(mdl) do
+            STREAMING.REQUEST_MODEL(mdl)
+            util.yield(5)
+        end
+
+        local ped = {}
+        for i = 1, 10 do 
+            local coord = ENTITY.GET_ENTITY_COORDS(player, true)
+            local pedcoord = ENTITY.GET_ENTITY_COORDS(ped[i], false)
+            ped[i] = entities.create_ped(0, mdl, coord, 0)
+
+            WEAPON.GIVE_DELAYED_WEAPON_TO_PED(ped[i], 0xB1CA77B1, 0, true)
+            WEAPON.SET_PED_GADGET(ped[i], 0xB1CA77B1, true)
+
+            menu.trigger_commands("as ".. PLAYER.GET_PLAYER_NAME(player_id) .. " explode " .. PLAYER.GET_PLAYER_NAME(player_id) .. " ")
+
+            ENTITY.SET_ENTITY_VISIBLE(ped[i], true)
+            util.yield(25)
+        end
+        util.yield(2500)
+        for i = 1, 10 do
+            entities.delete_by_handle(ped[i])
+            util.yield(25)
+        end
+
+    end)
+
     local twotake = menu.list(crashes, "2T1 Crashes", {}, "")
 
     local modelc = menu.list(twotake, "Crasheos Por Modelo", {}, "")
@@ -1689,6 +1719,21 @@ players.on_join(function(player_id)
 
     local kicks = menu.list(malicious, "Kicks", {}, "")
 
+    if menu.get_edition() >= 2 then 
+        menu.action(kicks, "Kickeo Adaptivo", {}, "", function()
+            util.trigger_script_event(1 << player_id, {915462795, 1, 0, 2, player_id, 2700359414448})
+            util.trigger_script_event(1 << player_id, {1268038438, player_id, -1018058175, player_id, -1125813865, player_id, -1113136291, player_id, -2123789977})
+            util.trigger_script_event(1 << player_id, {243072129, 1, 0, 2, math.random(13, 257), 3, 1})
+            menu.trigger_commands("breakup" .. players.get_name(player_id))
+        end)
+    else
+        menu.action(kicks, "Kickeo adaptivo V2", {}, "", function()
+            util.trigger_script_event(1 << player_id, {915462795, 1, 0, 2, player_id, 2700359414448})
+            util.trigger_script_event(1 << player_id, {1268038438, player_id, -1018058175, player_id, -1125813865, player_id, -1113136291, player_id, -2123789977})
+            util.trigger_script_event(1 << player_id, {243072129, 1, 0, 2, math.random(13, 257), 3, 1})
+        end)
+    end
+
     local sekicks = menu.list(kicks, "Kickeos Por Scripts", {}, "")
 
     menu.action(sekicks, "Script kick v1", {}, "Inbloqueable por stand.", function()
@@ -2340,12 +2385,23 @@ players.on_join(function(player_id)
     ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     -- Other
 
-    menu.action(otherc, "Cayo Op 'Test'", {}, "Intentara varios metodos a enviar a cayo. \nSi no tiene menu muy bueno funcionara. \nHay posibilidad que funcione con Stand.", function()
+    local sevents = menu.list(otherc, "Eventos", {}, "Eventos creados por scripts.")
+
+    menu.action(sevents, "Cayo Op 'Test'", {}, "Intentara varios metodos a enviar a cayo. \nSi no tiene menu muy bueno funcionara. \nHay posibilidad que funcione con Stand.", function()
         for i = 1, 200 do
-            util.trigger_script_event(1 << player_id, {-910497748, math.random(0, 4), math.random(0, 1), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647),
-            math.random(-2147483647, 2147483647), player_id, math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647), math.random(-2147483647, 2147483647)})
-            util.trigger_script_event(1 << player_id, {1594928808, 0, 0, 9225})
-            util.trigger_script_event(1 << player_id, {1311159119, 0, player_id, 2005749727488, 4, -1, player_id, 2010044694527, -1})
+            util.trigger_script_event(1 << player_id, {-910497748, 1, 0})
+        end
+    end)
+
+    menu.action(sevents, "CEO Kick 'Test'", {}, "Intentara varios metodos para kickearlo de CEO.", function()
+        for i = 1, 200 do
+            util.trigger_script_event(1 << player_id, {-1831959078, 1, 0, 2, 0, 3, 5})
+        end
+    end)
+
+    menu.action(sevents, "CEO Ban 'Test'", {}, "Intentara varios metodos para banearlo de CEO.", function()
+        for i = 1, 200 do
+            util.trigger_script_event(1 << player_id, {316066012, 1, 0, 2, 1})
         end
     end)
 
@@ -3020,6 +3076,14 @@ menu.toggle_loop(protects, "Anti Bestia", {}, "Previene que te vuelvan la bestia
         util.toast(players.get_name(host).." started Hunt The Beast. Killing script...")
         menu.trigger_command(menu.ref_by_path("Online>Session>Session Scripts>Hunt the Beast>Stop Script"))
     end
+end)
+
+menu.toggle(protects, "Mantenme seguro", {"safeass"}, "Utiliza cierta parte de los nativos para mantenerte en estado seguro.", function()
+    local pos = ENTITY.GET_ENTITY_COORDS(PLAYER.PLAYER_PED_ID())
+    ENTITY.CREATE_MODEL_HIDE(pos.x, pos.y, pos.z, 10000.0, 1269906701, true)
+    util.yield(75)
+    ENTITY.CREATE_MODEL_HIDE(pos.x, pos.y, pos.z, 10000.0, -950858008, true)
+    util.yield(75)
 end)
 
 local values = {
