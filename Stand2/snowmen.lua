@@ -1,4 +1,4 @@
-local snowmens = {
+local snowmen = {
     { -955.5352, -782.4186, 15.925326 },
     { -819.9067, 165.35524, 71.26295 },
     { -247.92003, -1561.2175, 32.22973 },
@@ -26,8 +26,8 @@ local snowmens = {
     { 178.00232, -895.9712, 30.69326 }
 }
 
-local snow_loca = menu.list(menu.my_root(), "Snowmens", {}, "")
-for idx, coords in snowmens do
+local snow_loca = menu.list(menu.my_root(), "Snowmen", {}, "")
+for idx, coords in snowmen do
     snow_loca:action("Snowmen " .. idx, {}, "Teleport to XMass", function()
         util.teleport_2d(coords[1], coords[2])
     end)
