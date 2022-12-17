@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.873
+local localVer = 3.874
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -2725,6 +2725,17 @@ menu.toggle_loop(online, "Adicto SH", {}, "Te buelbez adicto al script houst", f
     if players.get_script_host() ~= players.user() and get_transition_state(players.user()) ~= 0 then
         menu.trigger_command(menu.ref_by_path("Players>"..players.get_name_with_tags(players.user())..">Friendly>Give Script Host"))
     end
+end)
+
+menu.action(online, "Desbloquear Garage", {}, "Desbloqueara el nuevo garage temporalmente. \nSe borrara al cambiar la sesion.", function()
+    util.toast("Iniciando proceso.")
+    util.toast("Tarda 2s aprox.")
+    local player = PLAYER.PLAYER_PED_ID()
+    ENTITY.SET_ENTITY_COORDS(player, -285.96716, 273.57812, 89.13905, 1, false)
+    util.yield(1000)
+    memory.write_byte(memory.script_global(262145 + 32702), 1)
+    memory.write_byte(memory.script_global(262145 + 32688), 0)
+    util.toast("Terminado, deberias poder entrar o comprarlo.")
 end)
 
 menu.toggle(online, "Anti-Chat", {}, "Hace que no salga cuando estas escribiendo el 'icono' encima de ti", function()
