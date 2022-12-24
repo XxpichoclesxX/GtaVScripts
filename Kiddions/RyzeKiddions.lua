@@ -13,14 +13,14 @@ local LpC = 0
 local function set_model_hash(h)
 	globals.set_int(GTr, 1)
 	while (globals.get_int(GTr) ~= 0) do
-		if localplayer:get_model_hash() == h then return end
+		if player.get_player_ped() == h then return end
 		if LpC == 10 then return end
 		globals.set_int(GTr, 1)
 		globals.set_int(GHs, h)
 		sleep(delay)
 		globals.set_int(GTr, 0)
 		globals.set_int(GHs, 0)
-		if localplayer:get_model_hash() ~= h then
+		if player.get_player_ped() ~= h then
 			delay = delay+0.05
 			LpC = LpC + 1
 		end
@@ -1951,6 +1951,36 @@ ccMenu:add_action("Pon un precio(5M)", function()
     globals.set_int(262145+base_address+19, sale_price//110)
     globals.set_int(262145+base_address+20, sale_price//111)
 end)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+local g = globals.set_int
+local m = 1963962
+local x = 1
+local y = 2
+local z = 3
+local k = 0
+local s = sleep
+local p = 30
+local q = 60
+local r = 120
+local enable1 = false
+local enable2 = false
+local enable3 = false
+local enable4 = false
+local enable5 = false
+
+local MMmenu = menu.add_submenu("Money Loop") local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end
+
+MMmenu:add_toggle("$ 500k/ 30s", function() return enable1 end, function() enable1 = not enable1 while enable1 == true do Loop1(enable1) end end) local function Loop2(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(p) end end
+MMmenu:add_toggle("$ 750k/ 30s", function() return enable2 end, function() enable2 = not enable2 while enable2 == true do Loop2(enable2) end end) local function Loop3(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(z) g(m, x) s(z) g(m, k) s(q) end end
+MMmenu:add_toggle("$ 1M/ 60s", function() return enable3 end, function() enable3 = not enable3 while enable3 == true do Loop3(enable3) end end) local function Loop4(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(q) end end
+MMmenu:add_toggle("$ 1.5M/ 60s", function() return enable4 end, function() enable4 = not enable4 while enable4 == true do Loop4(enable4) end end) local function Loop5(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(r) end end
+MMmenu:add_toggle("$ 3M/ 120s", function() return enable5 end, function() enable5 = not enable5 while enable5 == true do Loop5(enable5) end end)
+
+MMmenu:add_action("---------------> IMPORTANTE <-----------------", function() end)
+MMmenu:add_action("Elija solo 1 opcion a la vez. Para detener", function() end)
+MMmenu:add_action("Salga desde la configuración. Si quiere", function() end)
+MMmenu:add_action("cambiar la opcion,salga primero Y espere", function() end)
+MMmenu:add_action("2 minutos antes de seleccionar una nueva.", function() end)
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local ncMenu = dinMenu:add_submenu("Club Nocturno$$$")
 
