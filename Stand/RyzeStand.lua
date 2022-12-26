@@ -1,7 +1,9 @@
--- This was created by XxpichoclesxX#0427 with some help already mentioned in credits.
--- The original download site should be github.com/xxpichoclesxx, if you got this script from anyone selling it, you got sadly scammed.
--- Also this is only for some new stand people because is a trolling and online feature script, not recovery.
--- So enjoy and pls join my discord, to know when the script is updated or be able to participate in polls.
+--[[
+    This was created by XxpichoclesxX#0427 with some help already mentioned in credits.
+    The original download site should be github.com/xxpichoclesxx, if you got this script from anyone selling it, you got sadly scammed.
+    Also this is only for some new stand people because is a trolling and online feature script, not recovery.
+    So enjoy and pls join my discord, to know when the script is updated or be able to participate in polls.
+]]
 
 
 util.keep_running()
@@ -10,7 +12,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.875
+local localVer = 3.876
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -37,47 +39,28 @@ repeat
     util.yield()
 until response
 
--- resources_dir = filesystem.resources_dir() .. 'ryzescript/'
+--[[ 
+    Adding In a Future Update
+    resources_dir = filesystem.resources_dir() .. 'ryzescript/'
+]]
 
-local modded_vehicles = {
-    "dune2",
-    "tractor",
-    "dilettante2",
-    "asea2",
-    "cutter",
-    "mesa2",
-    "jet",
-    "skylift",
-    "policeold1",
-    "policeold2",
-    "armytrailer2",
-    "towtruck",
-    "towtruck2",
-    "cargoplane",
-}
-
-local modded_weapons = {
-    "weapon_railgun",
-    "weapon_stungun",
-    "weapon_digiscanner",
-}
+-- Local general tables
 
 local spawned_objects = {}
 local ladder_objects = {}
-
 local remove_projectiles = false
-function disableProjectileLoop(projectile)
-    util.create_thread(function()
-        util.create_tick_handler(function()
-            WEAPON.REMOVE_ALL_PROJECTILES_OF_TYPE(projectile, false)
-            return remove_projectiles
-        end)
-    end)
-end
+local PapuCrash = false
 
-function yieldModelLoad(hash)
-    while not STREAMING.HAS_MODEL_LOADED(hash) do util.yield() end
-end
+local launch_vehicle = {"Lanzar Arriba", "Lanzar Adelante", "Lanzar Atras", "Lanzar Abajo", "Catapulta"}
+local invites = {"Yacht", "Office", "Clubhouse", "Office Garage", "Custom Auto Shop", "Apartment"}
+local style_names = {"Normal", "Semi-Rushed", "Reverse", "Ignore Lights", "Avoid Traffic", "Avoid Traffic Extremely", "Sometimes Overtake Traffic"}
+local drivingStyles = {786603, 1074528293, 8388614, 1076, 2883621, 786468, 262144, 786469, 512, 5, 6}
+local interior_stuff = {0, 233985, 169473, 169729, 169985, 170241, 177665, 177409, 185089, 184833, 184577, 163585, 167425, 167169}
+
+local int_min = -2147483647
+local int_max = 2147483647
+
+-- Ryze Functions
 
 ryze = {
     int = function(global, value)
@@ -129,8 +112,57 @@ ryze = {
                 util.yield(5)
             end
         end)
-    end
+    end,
+
+    modded_vehicles = {
+        "dune2",
+        "tractor",
+        "dilettante2",
+        "asea2",
+        "cutter",
+        "mesa2",
+        "jet",
+        "policeold1",
+        "policeold2",
+        "armytrailer2",
+        "towtruck",
+        "towtruck2",
+        "cargoplane",
+    },
+
+    modded_weapons = {
+        "weapon_railgun",
+        "weapon_stungun",
+        "weapon_digiscanner",
+    }
+
+    --PapuCrash = function()
+    --    local addr = memory.scan("48 81 EC ? ? ? ? 48 8B E9 48 8B CA 0F 29 74 24 ? 48 8B DA") - 0x15
+    --    local originalBytes = memory.read_uint(addr)
+    --    if PapuCrash = true then
+    --        memory.write_uint(addr, 2428703408)
+    --        memory.write_uint(addr, 2428703920)
+    --    else
+    --        memory.write_uint(addr, originalBytes)
+    --        memory.write_uint(addr, originalBytes)
+    --    end
+    --end
 }
+
+-- Local general script functions
+
+function disableProjectileLoop(projectile)
+    util.create_thread(function()
+        util.create_tick_handler(function()
+            WEAPON.REMOVE_ALL_PROJECTILES_OF_TYPE(projectile, false)
+            return remove_projectiles
+        end)
+    end)
+end
+
+function yieldModelLoad(hash)
+    while not STREAMING.HAS_MODEL_LOADED(hash) do util.yield() end
+end
 
 function get_control_request(ent)
 	if not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent) then
@@ -174,12 +206,6 @@ local function request_model(hash, timeout)
     return STREAMING.HAS_MODEL_LOADED(hash)
 end
 
-local launch_vehicle = {"Lanzar Arriba", "Lanzar Adelante", "Lanzar Atras", "Lanzar Abajo", "Catapulta"}
-local invites = {"Yacht", "Office", "Clubhouse", "Office Garage", "Custom Auto Shop", "Apartment"}
-local style_names = {"Normal", "Semi-Rushed", "Reverse", "Ignore Lights", "Avoid Traffic", "Avoid Traffic Extremely", "Sometimes Overtake Traffic"}
-local drivingStyles = {786603, 1074528293, 8388614, 1076, 2883621, 786468, 262144, 786469, 512, 5, 6}
-local interior_stuff = {0, 233985, 169473, 169729, 169985, 170241, 177665, 177409, 185089, 184833, 184577, 163585, 167425, 167169}
-
 local function BlockSyncs(player_id, callback)
     for _, i in ipairs(players.list(false, true, true)) do
         if i ~= pid then
@@ -196,9 +222,6 @@ local function BlockSyncs(player_id, callback)
         end
     end
 end
-
-local int_min = -2147483647
-local int_max = 2147483647
 
 function raycast_gameplay_cam(flag, distance)
     local ptr1, ptr2, ptr3, ptr4 = memory.alloc(), memory.alloc(), memory.alloc(), memory.alloc()
@@ -293,16 +316,16 @@ local function kick_player_out_of_veh(player_id)
     end
 end
 
-local function get_transition_state(pid)
-    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 230))
+local function get_spawn_state(pid)
+    return memory.read_int(memory.script_global(((2657589 + 1) + (pid * 466)) + 232)) -- Global_2657589[PLAYER::PLAYER_ID() /*466*/].f_232
 end
 
 local function get_interior_player_is_in(pid)
-    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 243)) 
+    return memory.read_int(memory.script_global(((2657589 + 1) + (pid * 466)) + 245))
 end
 
 local function is_player_in_interior(pid)
-    return (memory.read_int(memory.script_global(0x2908D3 + 1 + (pid * 0x1C5) + 243)) ~= 0)
+    return (memory.read_int(memory.script_global(2657589 + 1 + (pid * 466) + 245)) ~= 0)
 end
 
 local function get_random_pos_on_radius(pos, radius)
@@ -324,6 +347,13 @@ local function get_blip_coords(blipId)
     if blip ~= 0 then return HUD.GET_BLIP_COORDS(blip) end
     return v3(0, 0, 0)
 end
+
+
+--local function get_transition_state(pid)
+--    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 230))
+--end
+
+-- Menu dividers (Sections)
 
 local online = menu.list(menu.my_root(), "Online", {}, "Opciones modo online")
 local world = menu.list(menu.my_root(), "Mundo", {}, "Opciones al rededor tuyo")
@@ -1086,6 +1116,44 @@ players.on_join(function(player_id)
 
     end)
 
+    --[[
+            menu.toggle(crashes, "Crasheo V2 'Test'", {}, "Crasheo alberca >.<", function(on)
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        if on then
+        trigger_command("godmode on")
+        util.yield(10)
+        trigger_command("otr on")
+        util.yield(10)
+        trigger_command("invisibility on")
+        util.yield(50)
+
+        ryze.PapuCrash = true
+
+        ENTITY.ATTACH_ENTITY_TO_ENTITY(PLAYER.PLAYER_PED_ID(), p, 0, 0, 0, 0, 0, 0, 0, false, true, false, false, 0, true)
+        trigger_command("mpfemale")
+        util.yield(25)
+        trigger_command("mpmale")
+        util.yield(25)
+        if not players.exists(pid) then
+            PackPoolCrash = false
+        end
+
+        else
+            ryze.PapuCrash = false
+            util.yield(25)
+            ENTITY.DETACH_ENTITY(PLAYER.PLAYER_PED_ID(), true, false)
+            trigger_command("godmode off")
+            util.yield(10)
+            trigger_command("otr off")
+            util.yield(10)
+            trigger_command("invisibility off")
+            util.yield(10)
+            trigger_command("outfitdefault")
+        end
+    end)
+
+    ]]
+
     local twotake = menu.list(crashes, "2T1 Crashes", {}, "")
 
     local modelc = menu.list(twotake, "Crasheos Por Modelo", {}, "")
@@ -1445,6 +1513,38 @@ players.on_join(function(player_id)
                 util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
             end
             util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+    end)
+
+    menu.action(scrcrash, "Script Crash V4", {"crashv9"}, "", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+        for i = 1, 20 do
+            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+        end
+        for i = 1, 20 do
+            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+        end
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+        end
+        util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+        end
+        menu.trigger_commands("givesh" .. players.get_name(player_id))
+        util.yield(200)
+        for i = 1, 200 do
+            util.trigger_script_event(1 << player_id, {548471420, 16, 804923209, -303901118, 577104152, 653299499, -1218005427, -1010050857, 1831797592, 1508078618, 9, -700037855, -1565442250, 932677838})
+        end
     end)
 
     -- Skidded from keramist.
@@ -1852,8 +1952,10 @@ players.on_join(function(player_id)
         menu.trigger_commands("crashv6"..players.get_name(player_id))
         util.yield(500)
         menu.trigger_commands("crashv7"..players.get_name(player_id))
-        util.yield(700)
+        util.yield(500)
         menu.trigger_commands("crashv8"..players.get_name(player_id))
+        util.yield(700)
+        menu.trigger_commands("crashv9"..players.get_name(player_id))
         --util.yield(400)
         --menu.trigger_commands("crashv5"..players.get_name(player_id))
         --util.yield(400)
@@ -1892,21 +1994,21 @@ players.on_join(function(player_id)
         menu.trigger_commands("rlag3"..players.get_name(player_id))
         util.yield(2500)
         menu.trigger_commands("crashv27"..players.get_name(player_id))
-        util.yield(600)
+        util.yield(620)
         menu.trigger_commands("crashv18"..players.get_name(player_id))
-        util.yield(600)
+        util.yield(620)
         menu.trigger_commands("crashv12"..players.get_name(player_id))
-        util.yield(800)
+        util.yield(820)
         menu.trigger_commands("crashv10"..players.get_name(player_id))
-        util.yield(600)
+        util.yield(620)
         menu.trigger_commands("crashv5"..players.get_name(player_id))
-        util.yield(600)
+        util.yield(620)
         menu.trigger_commands("crashv4"..players.get_name(player_id))
-        util.yield(600)
+        util.yield(620)
         menu.trigger_commands("crashv1"..players.get_name(player_id))
-        util.yield(700)
+        util.yield(720)
         menu.trigger_commands("crashv13"..players.get_name(player_id))
-        util.yield(700)
+        util.yield(720)
         menu.trigger_commands("crashv14"..players.get_name(player_id))
         -- Turned off because of a self-crash error
         --util.yield(600)
@@ -2009,6 +2111,10 @@ players.on_join(function(player_id)
             end
             util.yield_once()
         end
+    end)
+
+    menu.action(scriptev, "Teletransportar a LS", {}, "Los teletransportaras al final de una mision.", function()
+        util.trigger_script_event(1 << player_id, {-168599209, players.user(), player_id, -1, 1, 1, 0, 1, 0}) 
     end)
 
     local antimodder = menu.list(malicious, "Anti-Modder", {}, "")
@@ -2554,6 +2660,15 @@ players.on_join(function(player_id)
         OBJECT.CREATE_AMBIENT_PICKUP(-1009939663, coords.x, coords.y, coords.z, 0, 1, card, false, true)
     end)
 
+    menu.toggle_loop(friendly, "Money Drop", {}, "Es literalmente money drop, el que todos conocimos. \nNo se testeo, no me hare responsable de baneos.", function()
+        local coords = players.get_position(player_id)
+        coords.z = coords.z + 1.5  
+        util.yield(50)
+        menu.trigger_commands("ceopay".. players.get_name(player_id))
+        util.yield(50)
+        menu.trigger_commands("cash".. players.get_name(player_id) .. " 1")
+    end)
+
     menu.action(friendly, "Dar vida y armadura", {}, "", function()
         menu.trigger_commands("autoheal"..players.get_name(player_id))
     end)
@@ -2666,7 +2781,9 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(vehicle, "Upgrades Random", {}, "Les pondra mejoras random.", function()
+    local modv = menu.list(vehicle, "Modificar vehiculo.", {}, "")
+
+    menu.action(modv, "Upgrades Random", {}, "Les pondra mejoras random.", function()
         local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(p, false) 
         local pos = players.get_position(players.user())
@@ -2691,32 +2808,73 @@ players.on_join(function(player_id)
         menu.trigger_commands("godmode on")
         ENTITY.SET_ENTITY_COORDS(player, pos.x, pos.y, pos.z, 1, false)
     end)
+
+    menu.toggle(modv, "Upgrades Random (Loop)", {}, "Les pondra mejoras random.", function(on)
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local veh = PED.GET_VEHICLE_PED_IS_IN(p, false) 
+        local pos = players.get_position(players.user())
+        if on then
+            menu.trigger_commands("invisibility on")
+            menu.trigger_commands("godmode on")
+            util.yield(200)
+            menu.trigger_commands("tp"..players.get_name(player_id))
+            util.yield(6000)
+            if ENTITY.DOES_ENTITY_EXIST(veh) then
+                NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh)
+                VEHICLE.SET_VEHICLE_MOD_KIT(veh, 0)
+                local getm = VEHICLE.GET_NUM_VEHICLE_MODS(veh)
+                for i = 0, 70 do
+                    VEHICLE.SET_VEHICLE_MOD(veh, i, getm, -1, false)
+    
+                end
+            else
+                util.toast("Error al obtener control sobre el vehiculo.")
+            end
+        else
+            menu.trigger_commands("tp"..players.get_name(player_id))
+            menu.trigger_commands("invisibility off")
+            menu.trigger_commands("godmode on")
+            ENTITY.SET_ENTITY_COORDS(player, pos.x, pos.y, pos.z, 1, false)
+        end
+    end)
+
+    menu.toggle(modv, "Empuje Por Sonido", {}, "Les dara un empuje cuando usen el claxon del vehiculo.", function()
+        local player = PLAYER.GET_PLAYER_PED(player_id)
+        local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
+        if AUDIO.IS_HORN_ACTIVE(player_vehicle) then
+            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(player_vehicle)
+            ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(player_vehicle, 1, 0.0, 50, 0.0, true, true, true, true)
+        end
+    end)
+
+    menu.toggle(modv, "Salto Por Sonido", {}, "Les hara hacer un salto cuando usen el claxon del vehiculo.", function()
+        local player = PLAYER.GET_PLAYER_PED(player_id)
+        local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
+        if AUDIO.IS_HORN_ACTIVE(player_vehicle) then
+            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(player_vehicle)
+            ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(player_vehicle, 1, 0.0, 0.0, 50, true, true, true, true)
+        end
+    end)
     ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     -- Other
 
     local sevents = menu.list(otherc, "Eventos", {}, "Eventos creados por scripts.")
 
-    menu.action(sevents, "Cayo Op 'Test'", {}, "Intentara varios metodos a enviar a cayo. \nSi no tiene menu muy bueno funcionara. \nHay posibilidad que funcione con Stand.", function()
+    menu.action(sevents, "Cayo Perico", {}, "Intentara varios metodos a enviar a cayo. \nSi no tiene menu muy bueno funcionara. \nHay posibilidad que funcione con Stand.", function()
         for i = 1, 200 do
             util.trigger_script_event(1 << player_id, {-910497748, player_id, 1, 0})
         end
     end)
 
-    menu.action(sevents, "CEO Kick 'Test'", {}, "Intentara varios metodos para kickearlo de CEO.", function()
+    menu.action(sevents, "Cayo Perico SC", {}, "Intentara varios metodos de enviar a cayo. \nSin cinematica.", function()
         for i = 1, 200 do
-            util.trigger_script_event(1 << player_id, {-1831959078, player_id, 1, 0, 2, 0, 3, 5})
+            util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 4, 1})
         end
     end)
 
-    menu.action(sevents, "CEO Ban 'Test'", {}, "Intentara varios metodos para banearlo de CEO.", function()
-        for i = 1, 200 do
-            util.trigger_script_event(1 << player_id, {316066012, player_id, 1, 0, 2, 1})
-        end
+    menu.action(sevents, "Trapo Al Jugador", {}, "", function()
+        util.trigger_script_event(1 << player_id, {2009283752247, player_id, 2005749727232, 1, 258, 1, 1, player_id, 2701534429183, 18, 0})
     end)
-
-    --menu.action(otherc, "Trapo Al Jugador", {}, "", function()
-    --    util.trigger_script_event(1 << player_id, {2009283752247, player_id, 2005749727232, 1, 258, 1, 1, player_id, 2701534429183, 18, 0})
-    --end)
 
     menu.action(otherc, "Marca Del Jugador", {}, "Deberia mostrar la marca que el jugador tenga en el mapa.", function()    
         local playerw = players.get_waypoint(player_id)
@@ -2825,7 +2983,7 @@ menu.toggle_loop(detections, "GodMode", {}, "Saldra si se detecta godmode.", fun
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
         for i, interior in ipairs(interior_stuff) do
-            if (players.is_godmode(player_id) or not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(ped)) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior then
+            if players.is_godmode(player_id) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_spawn_state(player_id) == 99 and get_interior_player_is_in(player_id) == interior then
                 util.draw_debug_text(players.get_name(player_id) .. " Tiene Godmode")
                 break
             end
@@ -2840,7 +2998,7 @@ menu.toggle_loop(detections, "Godmode De Coche", {}, "Saldra si se detecta godmo
         local player_veh = PED.GET_VEHICLE_PED_IS_USING(ped)
         if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
             for i, interior in ipairs(interior_stuff) do
-                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_transition_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior then
+                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_spawn_state(player_id) == 99 and get_interior_player_is_in(player_id) == interior then
                     util.draw_debug_text(players.get_name(player_id) .. " Esta en carro con godmode")
                     break
                 end
@@ -2852,7 +3010,7 @@ end)
 menu.toggle_loop(detections, "Arma Modeada", {}, "Dira si tiene algun arma giveada", function()
     for _, player_id in ipairs(players.list(false, true, true)) do
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        for i, hash in ipairs(modded_weapons) do
+        for i, hash in ipairs(ryze.modded_weapons) do
             local weapon_hash = util.joaat(hash)
             if WEAPON.HAS_PED_GOT_WEAPON(ped, weapon_hash, false) and (WEAPON.IS_PED_ARMED(ped, 7) or TASK.GET_IS_TASK_ACTIVE(ped, 8) or TASK.GET_IS_TASK_ACTIVE(ped, 9)) then
                 util.toast(players.get_name(player_id) .. " Esta usando arma mod")
@@ -2862,10 +3020,10 @@ menu.toggle_loop(detections, "Arma Modeada", {}, "Dira si tiene algun arma givea
     end
 end)
 
-menu.toggle_loop(detections, "Coche Modeada", {}, "Saldra si tiene un coche mod", function()
+menu.toggle_loop(detections, "Coche Sin Salir", {}, "Saldra si tiene un que no a salido en el juego oficialmente.", function()
     for _, player_id in ipairs(players.list(false, true, true)) do
         local modelHash = players.get_vehicle_model(player_id)
-        for i, name in ipairs(modded_vehicles) do
+        for i, name in ipairs(ryze.modded_vehicles) do
             if modelHash == util.joaat(name) then
                 util.draw_debug_text(players.get_name(player_id) .. " Tiene coche modeado")
                 break
@@ -2919,10 +3077,10 @@ menu.toggle_loop(detections, "Noclip", {}, "Detecta si el jugador esta levitando
         local currentpos = players.get_position(player_id)
         local vel = ENTITY.GET_ENTITY_VELOCITY(ped)
         if not util.is_session_transition_active() and players.exists(player_id)
-        and get_interior_player_is_in(player_id) == 0 and get_transition_state(player_id) ~= 0
+        and get_interior_player_is_in(player_id) == 0 and get_spawn_state(player_id) ~= 0
         and not PED.IS_PED_IN_ANY_VEHICLE(ped, false) -- too many false positives occured when players where driving. so fuck them. lol.
         and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped)
-        and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped) and not PED.IS_PED_USING_SCENARIO(ped, false)
+        and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped) and not PED.IS_PED_USING_SCENARIO(ped)
         and not TASK.GET_IS_TASK_ACTIVE(ped, 160) and not TASK.GET_IS_TASK_ACTIVE(ped, 2)
         and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) <= 395.0 -- 400 was causing false positives
         and ENTITY.GET_ENTITY_HEIGHT_ABOVE_GROUND(ped) > 5.0 and not ENTITY.IS_ENTITY_IN_AIR(ped) and entities.player_info_get_game_state(ped_ptr) == 0
@@ -2938,7 +3096,7 @@ menu.toggle_loop(detections, "Spectateando", {}, "Detecta si te espectea o a alg
     for _, player_id in ipairs(players.list(false, true, true)) do
         for i, interior in ipairs(interior_stuff) do
             local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-            if not util.is_session_transition_active() and get_transition_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior
+            if not util.is_session_transition_active() and get_spawn_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior
             and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
                 if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(player_id)) < 15.0 and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 20.0 then
                     util.toast(players.get_name(player_id) .. " Te esta viendo")
@@ -2991,8 +3149,8 @@ menu.action(online, "Desbloquear Garage", {}, "Desbloqueara el nuevo garage temp
     util.toast("Terminado, deberias poder entrar o comprarlo.")
 end)
 
-menu.toggle_loop(online, "Adicto SH", {}, "Te buelbez adicto al script houst", function()
-    if players.get_script_host() ~= players.user() and get_transition_state(players.user()) ~= 0 then
+menu.toggle_loop(online, "Adicto SH", {}, "Te vuelves adicto al script host.", function()
+    if players.get_script_host() ~= players.user() and get_spawn_state(players.user()) ~= 0 then
         menu.trigger_command(menu.ref_by_path("Players>"..players.get_name_with_tags(players.user())..">Friendly>Give Script Host"))
     end
 end)
@@ -3039,10 +3197,11 @@ end)
 --end)
 
 menu.toggle(online, "Sangre Fria 'Test'", {}, "Remueve tu señal termica.\nAlgunos jugadores pueden seguir viendote.", function(toggle)
+    local player = players.user_ped()
     if toggle then
-        PED.SET_PED_HEATSCALE_OVERRIDE(players.user_ped(), 0)
+        PED.SET_PED_HEATSCALE_OVERRIDE(player, 0)
     else
-        PED.SET_PED_HEATSCALE_OVERRIDE(players.user_ped(), 1)
+        PED.SET_PED_HEATSCALE_OVERRIDE(player, 1)
     end
 end)
 
@@ -3150,6 +3309,17 @@ end)
 
 menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 1, function(i)
     util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0xA, i, 1, 1, 1})
+end)
+
+menu.action(recovery, "Desbloquear Cont/Navidad", {}, "Despues de cambiar de sesion se te desbloqueara el contenido de navidad.", function()
+    memory.write_byte(memory.script_global(262145 + 33915), 1)  
+    memory.write_byte(memory.script_global(262145 + 33916), 1)  
+end)
+
+menu.action(recovery, "Desbloquear Cont/DLC", {}, "Te desbloqueara el contenido del nuevo DLC \nProbablemente sea solo por la sesion.", function()
+    for i = 33974, 34112, 1 do
+        memory.write_byte(memory.script_global(262145 + i), 1)  
+    end
 end)
 
 local bypasskick = menu.list(online, "Bypass Kick", {}, "Opciones que te permiten usar metodos para \n entrar a la sesion si te estan bloqueando.")
@@ -3331,7 +3501,7 @@ end)
 --Protecciones
 
 menu.action(protects, "Parar Todos Los Sonidos", {"stopsounds"}, "", function()
-    for i=-1,100 do
+    for i = -1,100 do
         AUDIO.STOP_SOUND(i)
         AUDIO.RELEASE_SOUND_ID(i)
     end
@@ -3341,9 +3511,11 @@ menu.action(protects, "Quitar ring", {}, "Quita el ringtone del celular parando 
     local player = PLAYER.PLAYER_PED_ID()
     menu.trigger_commands("nophonespam on")
     if AUDIO.IS_PED_RINGTONE_PLAYING(player) then
-        for i = -1, 50 do
-            AUDIO.STOP_PED_RINGTONE(player)
+        for i = -1, 100 do
+            AUDIO.STOP_PED_RINGTONE(i)
+            AUDIO.RELEASE_SOUND_ID(i)
         end
+
     end
     util.yield(1000)
     menu.trigger_commands("nophonespam off")
@@ -3352,19 +3524,19 @@ end)
 local quitarf = menu.list(protects, "Metodos De Anti Freeze")
 
 menu.action(quitarf, "Quitar Freeze V1", {}, "Intenta reiniciar algunos nativos para quitarte el estado de freeze.", function()
-    --local playerpos = ENTITY.GET_ENTITY_COORDS(ped, false)
     local player = PLAYER.PLAYER_PED_ID()
     ENTITY.FREEZE_ENTITY_POSITION(player, false)
-    MISC.OVERRIDE_FREEZE_FLAGS()
+    MISC.OVERRIDE_FREEZE_FLAGS(p0)
     menu.trigger_commands("rcleararea")
 end)
 
 menu.action(quitarf, "Quitar Freeze V2 'Test'", {}, "Intenta reiniciar algunos nativos para quitarte el estado de freeze \nCon este metodo moriras.", function()
-    --local playerpos = ENTITY.GET_ENTITY_COORDS(ped, false)
     local player = PLAYER.PLAYER_PED_ID()
+    local playerpos = ENTITY.GET_ENTITY_COORDS(player, false)
     ENTITY.FREEZE_ENTITY_POSITION(player, false)
-    ENTITY.SET_ENTITY_COORDS(player, 1, 0, 0, 1, false)
-    MISC.OVERRIDE_FREEZE_FLAGS()
+    ENTITY.SET_ENTITY_SHOULD_FREEZE_WAITING_ON_COLLISION(player, false)
+    ENTITY.SET_ENTITY_COORDS(player, playerpos.x, playerpos.y, playerpos.z, 1, false)
+    MISC.OVERRIDE_FREEZE_FLAGS(p0)
     menu.trigger_commands("rcleararea")
 end)
 
@@ -3738,14 +3910,44 @@ modificaciones = menu.list(vehicles, "Modificaciones a Vehiculos", {}, "")
 --    memory.write_float(CHandlingData + 0x0094, value)
 --end)
 
-menu.toggle_loop(modificaciones, "Mejoras Random", {}, "Only works on vehicles you spawned in for some reason", function()
-    local mod_types = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15, 16, 23, 24, 25, 27, 28, 30, 33, 35, 38, 48}
-    if PED.IS_PED_IN_ANY_VEHICLE(players.user_ped()) then
-        for i, upgrades in ipairs(mod_types) do
-            VEHICLE.SET_VEHICLE_MOD(entities.get_user_vehicle_as_handle(), upgrades, math.random(0, 20), false)
+menu.action(modificaciones, "Mejoras Random", {}, "Solo funciona en los vehiculos que sacas manualmente.", function()
+    local vehicle = get_vehicle_ped_is_in(players.user_ped(), include_last_vehicle_for_vehicle_functions)
+    if vehicle == 0 then util.toast("No estas en un vehiculo >.<") else
+        for mod_type = 0, 48 do
+            local num_of_mods = VEHICLE.GET_NUM_VEHICLE_MODS(vehicle, mod_type)
+            local random_tune = math.random(-1, num_of_mods - 1)
+            VEHICLE.TOGGLE_VEHICLE_MOD(vehicle, mod_type, math.random(0,1) == 1)
+            VEHICLE.SET_VEHICLE_MOD(vehicle, mod_type, random_tune, false)
         end
+        VEHICLE.SET_VEHICLE_COLOURS(vehicle, math.random(0,160), math.random(0,160))
+        VEHICLE.SET_VEHICLE_TYRE_SMOKE_COLOR(vehicle, math.random(0,255), math.random(0,255), math.random(0,255))
+        VEHICLE.SET_VEHICLE_WINDOW_TINT(vehicle, math.random(0,6))
+        for index = 0, 3 do
+            VEHICLE.SET_VEHICLE_NEON_ENABLED(vehicle, index, math.random(0,1) == 1)
+        end
+        VEHICLE.SET_VEHICLE_NEON_COLOUR(vehicle, math.random(0,255), math.random(0,255), math.random(0,255))
+        menu.trigger_command(menu.ref_by_path("Vehicle>Los Santos Customs>Appearance>Wheels>Wheels Colour", 42), math.random(0,160))
     end
-    util.yield(100)
+end)
+
+menu.toggle_loop(modificaciones, "Mejoras Random (Loop)", {}, "Solo funciona en los vehiculos que sacas manualmente.", function()
+    local vehicle = get_vehicle_ped_is_in(players.user_ped(), include_last_vehicle_for_vehicle_functions)
+    if vehicle == 0 then util.toast("No estas en un vehiculo >.<") else
+        for mod_type = 0, 48 do
+            local num_of_mods = VEHICLE.GET_NUM_VEHICLE_MODS(vehicle, mod_type)
+            local random_tune = math.random(-1, num_of_mods - 1)
+            VEHICLE.TOGGLE_VEHICLE_MOD(vehicle, mod_type, math.random(0,1) == 1)
+            VEHICLE.SET_VEHICLE_MOD(vehicle, mod_type, random_tune, false)
+        end
+        VEHICLE.SET_VEHICLE_COLOURS(vehicle, math.random(0,160), math.random(0,160))
+        VEHICLE.SET_VEHICLE_TYRE_SMOKE_COLOR(vehicle, math.random(0,255), math.random(0,255), math.random(0,255))
+        VEHICLE.SET_VEHICLE_WINDOW_TINT(vehicle, math.random(0,6))
+        for index = 0, 3 do
+            VEHICLE.SET_VEHICLE_NEON_ENABLED(vehicle, index, math.random(0,1) == 1)
+        end
+        VEHICLE.SET_VEHICLE_NEON_COLOUR(vehicle, math.random(0,255), math.random(0,255), math.random(0,255))
+        menu.trigger_command(menu.ref_by_path("Vehicle>Los Santos Customs>Appearance>Wheels>Wheels Colour", 42), math.random(0,160))
+    end
 end)
 
 local rapid_khanjali
@@ -4563,9 +4765,10 @@ menu.toggle(misc, "Identificador de stand", {}, "Te hace invisible para otros us
 end)
 
 menu.action(misc, "Obtener host", {}, "Te dara el host de la sesion expulsando a los demas.", function()
+    local player = players.user()
     util.toast("Se que soy tonto por no encontrar el apartado en stand :/.")
     util.yield(500)
-    players.get_host()
+    players.get_host(player)
 end)
 
 menu.hyperlink(misc, "Mi Github", "https://github.com/xxpichoclesxx")
