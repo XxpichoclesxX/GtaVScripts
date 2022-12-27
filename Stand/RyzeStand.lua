@@ -12,7 +12,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.876
+local localVer = 3.877
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -43,6 +43,17 @@ until response
     Adding In a Future Update
     resources_dir = filesystem.resources_dir() .. 'ryzescript/'
 ]]
+
+--Because i love consuming resources >.<
+
+util.log("                                           ")
+util.log(".--.                .-.                 .  ")
+util.log("|   )              (   )        o      _|_ ")
+util.log("|--' .  .---..-.    `-.  .-..--..  .,-. |  ")
+util.log("|  | |  | .'(.-'   (   )(   |   |  |   )|  ")
+util.log("'   ``--|'---`--'   `-'  `-'' -' `-|`-' `-'")
+util.log("        ;                          |       ")
+util.log("     `-'                           '       ")
 
 -- Local general tables
 
@@ -136,17 +147,19 @@ ryze = {
         "weapon_digiscanner",
     }
 
-    --PapuCrash = function()
-    --    local addr = memory.scan("48 81 EC ? ? ? ? 48 8B E9 48 8B CA 0F 29 74 24 ? 48 8B DA") - 0x15
-    --    local originalBytes = memory.read_uint(addr)
-    --    if PapuCrash = true then
-    --        memory.write_uint(addr, 2428703408)
-    --        memory.write_uint(addr, 2428703920)
-    --    else
-    --        memory.write_uint(addr, originalBytes)
-    --        memory.write_uint(addr, originalBytes)
-    --    end
-    --end
+    --[[
+            PapuCrash = function()
+        local addr = memory.scan("48 81 EC ? ? ? ? 48 8B E9 48 8B CA 0F 29 74 24 ? 48 8B DA") - 0x15
+        local originalBytes = memory.read_uint(addr)
+        if PapuCrash = true then
+            memory.write_uint(addr, 2428703408)
+            memory.write_uint(addr, 2428703920)
+        else
+            memory.write_uint(addr, originalBytes)
+            memory.write_uint(addr, originalBytes)
+        end
+    end
+    ]]
 }
 
 -- Local general script functions
@@ -1115,28 +1128,28 @@ players.on_join(function(player_id)
         end
 
     end)
-
+    
     --[[
             menu.toggle(crashes, "Crasheo V2 'Test'", {}, "Crasheo alberca >.<", function(on)
         local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         if on then
-        trigger_command("godmode on")
-        util.yield(10)
-        trigger_command("otr on")
-        util.yield(10)
-        trigger_command("invisibility on")
-        util.yield(50)
-
-        ryze.PapuCrash = true
-
-        ENTITY.ATTACH_ENTITY_TO_ENTITY(PLAYER.PLAYER_PED_ID(), p, 0, 0, 0, 0, 0, 0, 0, false, true, false, false, 0, true)
-        trigger_command("mpfemale")
-        util.yield(25)
-        trigger_command("mpmale")
-        util.yield(25)
-        if not players.exists(pid) then
-            PackPoolCrash = false
-        end
+            trigger_command("godmode on")
+            util.yield(10)
+            trigger_command("otr on")
+            util.yield(10)
+            trigger_command("invisibility on")
+            util.yield(50)
+    
+            
+    
+            ENTITY.ATTACH_ENTITY_TO_ENTITY(PLAYER.PLAYER_PED_ID(), p, 0, 0, 0, 0, 0, 0, 0, false, true, false, false, 0, true)
+            trigger_command("mpfemale")
+            util.yield(25)
+            trigger_command("mpmale")
+            util.yield(25)
+            if not players.exists(pid) then
+                PackPoolCrash = false
+            end
 
         else
             ryze.PapuCrash = false
@@ -3137,18 +3150,6 @@ end)
 --------------------------------------------------------------------------------------------------------------------------------
 --Online
 
-
-menu.action(online, "Desbloquear Garage", {}, "Desbloqueara el nuevo garage temporalmente. \nSe borrara al cambiar la sesion.", function()
-    util.toast("Iniciando proceso.")
-    util.toast("Tarda 2s aprox.")
-    local player = PLAYER.PLAYER_PED_ID()
-    ENTITY.SET_ENTITY_COORDS(player, -285.96716, 273.57812, 89.13905, 1, false)
-    util.yield(1000)
-    memory.write_byte(memory.script_global(262145 + 32702), 1)
-    memory.write_byte(memory.script_global(262145 + 32688), 0)
-    util.toast("Terminado, deberias poder entrar o comprarlo.")
-end)
-
 menu.toggle_loop(online, "Adicto SH", {}, "Te vuelves adicto al script host.", function()
     if players.get_script_host() ~= players.user() and get_spawn_state(players.user()) ~= 0 then
         menu.trigger_command(menu.ref_by_path("Players>"..players.get_name_with_tags(players.user())..">Friendly>Give Script Host"))
@@ -3196,7 +3197,7 @@ end)
 --    end
 --end)
 
-menu.toggle(online, "Sangre Fria 'Test'", {}, "Remueve tu señal termica.\nAlgunos jugadores pueden seguir viendote.", function(toggle)
+menu.toggle(online, "Sangre Fria", {}, "Remueve tu señal termica.\nAlgunos jugadores pueden seguir viendote.", function(toggle)
     local player = players.user_ped()
     if toggle then
         PED.SET_PED_HEATSCALE_OVERRIDE(player, 0)
@@ -3311,6 +3312,17 @@ menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 
     util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0xA, i, 1, 1, 1})
 end)
 
+menu.action(recovery, "Desbloquear Garage", {}, "Desbloqueara el nuevo garage temporalmente. \nSe borrara al cambiar la sesion.", function()
+    util.toast("Iniciando proceso.")
+    util.toast("Tarda 2s aprox.")
+    local player = PLAYER.PLAYER_PED_ID()
+    ENTITY.SET_ENTITY_COORDS(player, -285.96716, 273.57812, 89.13905, 1, false)
+    util.yield(1000)
+    memory.write_byte(memory.script_global(262145 + 32702), 1)
+    memory.write_byte(memory.script_global(262145 + 32688), 0)
+    util.toast("Terminado, deberias poder entrar o comprarlo.")
+end)
+
 menu.action(recovery, "Desbloquear Cont/Navidad", {}, "Despues de cambiar de sesion se te desbloqueara el contenido de navidad.", function()
     memory.write_byte(memory.script_global(262145 + 33915), 1)  
     memory.write_byte(memory.script_global(262145 + 33916), 1)  
@@ -3320,6 +3332,25 @@ menu.action(recovery, "Desbloquear Cont/DLC", {}, "Te desbloqueara el contenido 
     for i = 33974, 34112, 1 do
         memory.write_byte(memory.script_global(262145 + i), 1)  
     end
+end)
+
+menu.action(recovery, "Desbloquear Misiones", {}, "Te desbloqueara todo. \nIncluyendo una de las nuevas misiones.", function()
+    menu.trigger_commands("scripthost")
+    util.toast("Tendras las camisetas btw.")
+    util.yield(50)
+    util.toast("Tendras las nuevas misiones, los vendedores, y quien sabe, mas?.")
+    for i = 33910, 34794, 1 do
+        memory.write_byte(memory.script_global(262145 + i), 1)  
+    end
+end)
+
+menu.action(recovery, "Desbloquear van.", {}, "Te desbloqueara la van de armas.", function()
+    menu.trigger_commands("scripthost")
+    ENTITY.SET_ENTITY_COORDS(player, 277.01547, 77.267845, 94.364044, 1, false)
+    for i = 0, 29 do
+        memory.write_byte(memory.script_global(262145 + 33800 + 1 + i), 1)
+    end
+    memory.write_byte(memory.script_global(262145 + 33799), 1)
 end)
 
 local bypasskick = menu.list(online, "Bypass Kick", {}, "Opciones que te permiten usar metodos para \n entrar a la sesion si te estan bloqueando.")
