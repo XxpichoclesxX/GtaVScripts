@@ -3664,17 +3664,22 @@ menu.action(recovery, "Unlock DLC Content", {}, "Probably will be deleted if you
     end
 end)
 
-menu.action(recovery, "Unlock DLC Mision and Content", {}, "Will unlock everything including one mision \nThe mision is localy visible only.", function()
+--[[
+    menu.action(recovery, "Desbloquear Misiones", {}, "Te desbloqueara todo. \nIncluyendo una de las nuevas misiones.", function()
     menu.trigger_commands("scripthost")
-    util.toast("Also drug sellers")
+    util.toast("Tendras las camisetas btw.")
+    util.yield(50)
+    util.toast("Tendras las nuevas misiones, los vendedores, y quien sabe, mas?.")
     for i = 33910, 34794, 1 do
         memory.write_byte(memory.script_global(262145 + i), 1)  
     end
 end)
+]]
 
 menu.action(recovery, "Unlock Van.", {}, "Will unlock gun van.", function()
+    local player = PLAYER.PLAYER_PED_ID()
     menu.trigger_commands("scripthost")
-    ENTITY.SET_ENTITY_COORDS(player, 277.01547, 77.267845, 94.364044, 1, false)
+    ENTITY.SET_ENTITY_COORDS(player, 2345.4219, 3051.9492, 48.152084, 1, false)
     for i = 0, 29 do
         memory.write_byte(memory.script_global(262145 + 33800 + 1 + i), 1)
     end
