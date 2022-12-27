@@ -12,7 +12,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.877
+local localVer = 3.878
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -1490,7 +1490,99 @@ players.on_join(function(player_id)
 
     local scrcrash = menu.list(twotake, "Script Crashes", {}, "")
 
-    menu.action(scrcrash, "Script Crash V1", {"crashv6"}, "", function()
+    local secrcrash = menu.list(twotake, "SE Crashes", {}, "")
+
+    menu.action(secrcrash, "SE Crash (S0)", {"crashv54"}, "Crash SE.", function(on_toggle)
+        local int_min = -2147483647
+        local int_max = 2147483647
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+        end
+        menu.trigger_commands("givesh" .. players.get_name(player_id))
+        util.yield()
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+        end
+    end)
+
+    menu.action(secrcrash, "SE Crash (S1)", {"crashv97"}, "Crash SE.", function(on_toggle)
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, math.random(int_min, int_max), math.random(int_min, int_max), 
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+            end
+            menu.trigger_commands("givesh" .. players.get_name(player_id))
+            util.yield()
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, player_id, math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+            end
+    end)
+
+    menu.action(secrcrash, "SE Crash (S3)", {"crashv84"}, "Crash SE.", function(on_toggle)
+        local int_min = -2147483647
+        local int_max = 2147483647
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0})
+            end
+            menu.trigger_commands("givesh" .. players.get_name(player_id))
+            util.yield()
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0})
+            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0})
+            end
+    end)
+
+    menu.action(secrcrash, "SE Crash (S4)", {"crashv51"}, "Crash SE.", function(on_toggle)
+        local int_min = -2147483647
+        local int_max = 2147483647
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1})
+            end
+            menu.trigger_commands("givesh" .. players.get_name(player_id))
+            util.yield()
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1})
+            end
+        end)
+
+    menu.action(secrcrash, "SE Crash (S7)", {"crashv91"}, "Crash SE.", function(on_toggle)
+        local int_min = -2147483647
+        local int_max = 2147483647
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
+            end
+            menu.trigger_commands("givesh" .. players.get_name(player_id))
+            util.yield()
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
+            end
+    end)
+
+    menu.action(scrcrash, "Script Crash V1", {"crashv61"}, "", function()
         for i = 1, 15 do
             util.trigger_script_event(1 << player_id, {697566862, player_id, 0, i, 1, 1, 1})
             util.trigger_script_event(1 << player_id, {697566862, player_id, 1, i, 1, 1, 1})
@@ -1558,6 +1650,31 @@ players.on_join(function(player_id)
         for i = 1, 200 do
             util.trigger_script_event(1 << player_id, {548471420, 16, 804923209, -303901118, 577104152, 653299499, -1218005427, -1010050857, 1831797592, 1508078618, 9, -700037855, -1565442250, 932677838})
         end
+    end)
+
+    menu.action(scrcrash, "Script Crash V5", {"crashv29"}, "Duele.", function(on_toggle)
+        local int_min = -2147483647
+        local int_max = 2147483647
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max), math.random(int_min, int_max), 
+                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
+                end
+                util.yield()
+            for i = 1, 15 do
+                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
+                util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+                end
+                menu.trigger_commands("givesh" .. players.get_name(player_id))
+                util.yield(100)
+                util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+                util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+                util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+                util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
     end)
 
     -- Skidded from keramist.
@@ -1995,6 +2112,70 @@ players.on_join(function(player_id)
         util.yield(8000)
         menu.trigger_commands("anticrashcamera off")
     end)
+
+    if menu.get_edition() >= 2 then 
+        menu.action(crashes, "Bomba del tsar V2", {"tsarbomba"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu) \n(Necesita Regular Para Funcionar Bien/ Muy Posible Overload)", function()
+            local objective = player_id
+            --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
+            menu.trigger_commands("anticrashcamera on")
+            menu.trigger_commands("potatomode on")
+            menu.trigger_commands("trafficpotato on")
+            util.toast("Iniciando...")
+            util.toast("Pobre man")
+            menu.trigger_commands("rlag3"..players.get_name(player_id))
+            util.yield(2500)
+            menu.trigger_commands("crashv1"..players.get_name(player_id))
+            util.yield(400)
+            menu.trigger_commands("crashv2"..players.get_name(player_id))
+            util.yield(400)
+            menu.trigger_commands("crashv4"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv5"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv6"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv7"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv8"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv9"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv29"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv91"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv97"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv84"..players.get_name(player_id))
+            util.yield(700)
+            menu.trigger_commands("crashv51"..players.get_name(player_id))
+            --util.yield(400)
+            --menu.trigger_commands("crashv5"..players.get_name(player_id))
+            --util.yield(400)
+            --menu.trigger_commands("crashv6"..players.get_name(player_id))
+            --util.yield(400)
+            --menu.trigger_commands("crashv7"..players.get_name(player_id))
+            -- Turned off because of a self-crash error
+            --util.yield(600)
+            --menu.trigger_commands("crashv4"..players.get_name(player_id))
+            util.yield(2000)
+            menu.trigger_commands("crash"..players.get_name(player_id))
+            util.yield(400)
+            menu.trigger_commands("ngcrash"..players.get_name(player_id))
+            util.yield(400)
+            menu.trigger_commands("footlettuce"..players.get_name(player_id))
+            util.yield(400)
+            menu.trigger_commands("steamroll"..players.get_name(player_id))
+            util.yield(1800)
+            util.toast("Espera en lo que se limpia todo...")
+            --menu.trigger_command(outSync, "off")
+            menu.trigger_commands("rcleararea")
+            menu.trigger_commands("potatomode off")
+            menu.trigger_commands("trafficpotato off")
+            util.yield(8000)
+            menu.trigger_commands("anticrashcamera off")
+        end)
+    end
 
     menu.action(crashes, "Bomba Del Tsar Especial (Modelo)", {"tsarbomba5"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu) \n(Necesita Regular Para Funcionar Bien/ Muy Posible Overload)", function()
         local objective = player_id
