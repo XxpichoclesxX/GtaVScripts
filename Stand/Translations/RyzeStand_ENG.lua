@@ -43,6 +43,15 @@ until response
     resources_dir = filesystem.resources_dir() .. 'ryzescript/'
 ]]
 
+util.log("                                           ")
+util.log(".--.                .-.                 .  ")
+util.log("|   )              (   )        o      _|_ ")
+util.log("|--' .  .---..-.    `-.  .-..--..  .,-. |  ")
+util.log("|  | |  | .'(.-'   (   )(   |   |  |   )|  ")
+util.log("'   ``--|'---`--'   `-'  `-'' -' `-|`-' `-'")
+util.log("        ;                          |       ")
+util.log("     `-'                           '       ")
+
 local spawned_objects = {}
 local ladder_objects = {}
 local remove_projectiles = false
@@ -3272,17 +3281,6 @@ end)
 --------------------------------------------------------------------------------------------------------------------------------
 --Online
 
-menu.action(online, "Unlock 50 Garage", {}, "Will unlock the new DLC garage. \nIt will be deleted once you change from sesion.", function()
-    util.toast("Starting Process.")
-    util.toast("Takes 2s aprox.")
-    local player = PLAYER.PLAYER_PED_ID()
-    ENTITY.SET_ENTITY_COORDS(player, -285.96716, 273.57812, 89.13905, 1, false)
-    util.yield(1000)
-    memory.write_byte(memory.script_global(262145 + 32702), 1)
-    memory.write_byte(memory.script_global(262145 + 32688), 0)
-    util.toast("Finished, enjoy.")
-end)
-
 menu.toggle_loop(online, "Addict SH", {}, "You become addicted to the host script", function()
     if players.get_script_host() ~= players.user() and get_spawn_state(players.user()) ~= 0 then
         menu.trigger_command(menu.ref_by_path("Players>"..players.get_name_with_tags(players.user())..">Friendly>Give Script Host"))
@@ -3448,6 +3446,17 @@ menu.click_slider(coleccionables, "Junk Energy Free Flight", {""}, "", 0, 9, 0, 
     util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0xA, i, 1, 1, 1})
 end)
 
+menu.action(recovery, "Unlock 50 Garage", {}, "Will unlock the new DLC garage. \nIt will be deleted once you change from sesion.", function()
+    util.toast("Starting Process.")
+    util.toast("Takes 2s aprox.")
+    local player = PLAYER.PLAYER_PED_ID()
+    ENTITY.SET_ENTITY_COORDS(player, -285.96716, 273.57812, 89.13905, 1, false)
+    util.yield(1000)
+    memory.write_byte(memory.script_global(262145 + 32702), 1)
+    memory.write_byte(memory.script_global(262145 + 32688), 0)
+    util.toast("Finished, enjoy.")
+end)
+
 menu.action(recovery, "Unlock XMass Content", {}, "You must change sesion.", function()
     memory.write_byte(memory.script_global(262145 + 33915), 1)  
     memory.write_byte(memory.script_global(262145 + 33916), 1)  
@@ -3457,6 +3466,23 @@ menu.action(recovery, "Unlock DLC Content", {}, "Probably will be deleted if you
     for i = 33974, 34112, 1 do
         memory.write_byte(memory.script_global(262145 + i), 1)  
     end
+end)
+
+menu.action(recovery, "Unlock DLC Mision and Content", {}, "Will unlock everything including one mision \nThe mision is localy visible only.", function()
+    menu.trigger_commands("scripthost")
+    util.toast("Also drug sellers")
+    for i = 33910, 34794, 1 do
+        memory.write_byte(memory.script_global(262145 + i), 1)  
+    end
+end)
+
+menu.action(recovery, "Unlock Van.", {}, "Will unlock gun van.", function()
+    menu.trigger_commands("scripthost")
+    ENTITY.SET_ENTITY_COORDS(player, 277.01547, 77.267845, 94.364044, 1, false)
+    for i = 0, 29 do
+        memory.write_byte(memory.script_global(262145 + 33800 + 1 + i), 1)
+    end
+    memory.write_byte(memory.script_global(262145 + 33799), 1)
 end)
 
 local bypasskick = menu.list(online, "Bypass Kick", {}, "Options that allow you to use methods to n enter the session if you are being blocked.")
