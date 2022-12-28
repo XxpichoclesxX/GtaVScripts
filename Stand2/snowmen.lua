@@ -28,16 +28,40 @@ local snowmen = {
     { 180.52608, -903.90607, 30.693544 }
 }
 
--- Credits to blackn't to add explode snowmen
+-- Credits to blackn't
 
-local snow_loca = menu.my_root()
+local main_root = menu.my_root()
 local explode_snowmen = true
 local god_path = menu.ref_by_path("Self>Immortality")
+local levit_path = menu.ref_by_path("Self>Movement>Levitation>Levitation")
+local otr_path = menu.ref_by_path("Online>Off The Radar")
 
-snow_loca:divider("Snowmen Teleports")
+main_root:divider("Snowmen Teleports")
+
+main_root:action("Automatically Explode All Snowmen", {"autoexpsnowmen"}, "Automatically teleport to all locations and explode snowmen. This will take a few seconds. (~90)", function()
+    local pos = ENTITY.GET_ENTITY_COORDS(players.user_ped(), true)
+    menu.trigger_command(god_path, "on")
+    menu.trigger_command(levit_path, "on")
+    menu.trigger_command(otr_path, "on")
+    explode_snowmen = true
+    for idx, coords in snowmen do
+        util.toast("Teleporting to... Snowmen #"..idx)
+        ENTITY.SET_ENTITY_COORDS(players.user_ped(), coords[1], coords[2], coords[3])
+        util.yield(2000)
+        for i = 1, 15 do
+            FIRE.ADD_OWNED_EXPLOSION(PLAYER.PLAYER_PED_ID(),coords[1], coords[2], coords[3] + 1, EXP_TAG_STICKYBOMB, 100.0, true, true, 0.1)
+            util.yield(100)
+        end
+    end
+    ENTITY.SET_ENTITY_COORDS(players.user_ped(), pos.x, pos.y, pos.z + 5)
+    menu.trigger_command(levit_path, "off")
+    menu.trigger_command(otr_path, "off")
+end)
+
+local manually_teleport = main_root:list("Teleport to Snowmen")
 
 auto_exp_toggle= true
-auto_exp_toggle = snow_loca:toggle("Auto Explode Snowmen on Tp", {}, "", function(toggle)
+auto_exp_toggle = manually_teleport:toggle("Auto Explode Snowmen on Tp", {"autoexplode"}, "Explode Snowmen after teleporting to them.", function(toggle)
     if toggle then
         explode_snowmen = true
         util.toast("Enabled Auto Explode Snowmen")
@@ -48,15 +72,14 @@ auto_exp_toggle = snow_loca:toggle("Auto Explode Snowmen on Tp", {}, "", functio
 end, true)
 
 for idx, coords in snowmen do
-    snow_loca:action("Snowman #" .. idx, {}, "Teleport to Snowman #".. idx, function()
-        util.teleport_2d(coords[1], coords[2])
-        util.yield(100)
+    manually_teleport:action("Snowman #" .. idx, {}, "Teleport to Snowman #".. idx, function()       
+        menu.trigger_command(god_path, "on")
+        ENTITY.SET_ENTITY_COORDS(players.user_ped(), coords[1], coords[2], coords[3])
+        util.yield(1590)
         if explode_snowmen == true then
-            menu.trigger_command(god_path, "on")
-            util.yield(750)
-            for i = 1, 10 do
-            FIRE.ADD_OWNED_EXPLOSION(PLAYER.PLAYER_PED_ID(),coords[1], coords[2], coords[3] + 1, EXP_TAG_STICKYBOMB, 100.0, true, true, 0.0)
-            util.yield(100)
+            for i = 1, 15 do
+                FIRE.ADD_OWNED_EXPLOSION(PLAYER.PLAYER_PED_ID(),coords[1], coords[2], coords[3] + 1, EXP_TAG_STICKYBOMB, 100.0, true, true, 0.1)
+                util.yield(100)
             end
         end
     end)
