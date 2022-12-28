@@ -3515,8 +3515,7 @@ menu.action(recovery, "Desbloquear Cont/DLC", {}, "Te desbloqueara el contenido 
     end
 end)
 
---[[
-    menu.action(recovery, "Desbloquear Misiones", {}, "Te desbloqueara todo. \nIncluyendo una de las nuevas misiones.", function()
+menu.action(recovery, "Desbloquear Misiones", {}, "Te desbloqueara todo. \nIncluyendo una de las nuevas misiones.", function()
     menu.trigger_commands("scripthost")
     util.toast("Tendras las camisetas btw.")
     util.yield(50)
@@ -3525,12 +3524,10 @@ end)
         memory.write_byte(memory.script_global(262145 + i), 1)  
     end
 end)
-]]
 
 menu.action(recovery, "Desbloquear van.", {}, "Te desbloqueara la van de armas.", function()
     local player = PLAYER.PLAYER_PED_ID()
     menu.trigger_commands("scripthost")
-    ENTITY.SET_ENTITY_COORDS(player, 2345.4219, 3051.9492, 48.152084, 1, false)
     for i = 0, 29 do
         memory.write_byte(memory.script_global(262145 + 33800 + 1 + i), 1)
     end
