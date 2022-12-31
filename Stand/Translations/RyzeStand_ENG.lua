@@ -5,6 +5,8 @@
     So enjoy and pls join my discord, to know when the script is updated or be able to participate in polls.
 ]]
 
+util.require_natives(1663599433)
+
 util.toast("Welcome " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
@@ -34,8 +36,6 @@ async_http.dispatch()
 repeat 
     util.yield()
 until response
-
-util.require_natives(1663599433)
 
 --[[ 
     Adding In a Future Update
