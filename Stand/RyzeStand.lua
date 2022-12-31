@@ -5,10 +5,12 @@
     So enjoy and pls join my discord, to know when the script is updated or be able to participate in polls.
 ]]
 
+util.require_natives(1663599433)
+
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.879
+local localVer = 3.88
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -34,8 +36,6 @@ async_http.dispatch()
 repeat 
     util.yield()
 until response
-
-util.require_natives(1663599433)
 
 --[[ 
     Adding In a Future Update
