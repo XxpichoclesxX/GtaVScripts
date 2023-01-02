@@ -5,14 +5,12 @@
     So enjoy and pls join my discord, to know when the script is updated or be able to participate in polls.
 ]]
 
-
-util.keep_running()
 util.require_natives(1663599433)
 
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 3.878
+local localVer = 3.88
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -1095,6 +1093,132 @@ players.on_join(function(player_id)
         end
     end)
 
+    menu.action(crashes, "Crashear Sesion V4'", {"crashv27"}, "Skid from x-force (Big CHUNGUS)", function()
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped, true)
+        local mdl = util.joaat("A_C_Cat_01")
+        local mdl2 = util.joaat("U_M_Y_Zombie_01")
+        local mdl3 = util.joaat("A_F_M_ProlHost_01")
+        local mdl4 = util.joaat("A_M_M_SouCent_01")
+        local veh_mdl = util.joaat("insurgent2")
+        local veh_mdl2 = util.joaat("brawler")
+        util.request_model(veh_mdl)
+        util.request_model(veh_mdl2)
+        util.request_model(mdl)
+        util.request_model(mdl2)
+        util.request_model(mdl3)
+        util.request_model(mdl4)
+        for i = 1, 250 do
+            local ped1 = entities.create_ped(1, mdl, pos + 20, 0)
+            local ped_ = entities.create_ped(1, mdl2, pos + 20, 0)
+            local ped3 = entities.create_ped(1, mdl3, pos + 20, 0)
+            util.yield(300)
+            local ped3 = entities.create_ped(1, mdl4, pos + 20, 0)
+            local veh = entities.create_vehicle(veh_mdl, pos + 20, 0)
+            local veh2 = entities.create_vehicle(veh_mdl2, pos + 20, 0)
+            PED.SET_PED_INTO_VEHICLE(ped1, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh, -1)
+
+            PED.SET_PED_INTO_VEHICLE(ped1, veh2, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh2, -1)
+
+            PED.SET_PED_INTO_VEHICLE(ped1, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh, -1)
+
+            PED.SET_PED_INTO_VEHICLE(ped1, veh2, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh2, -1)
+
+            PED.SET_PED_INTO_VEHICLE(mdl3, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(mdl3, veh2, -1)
+
+            PED.SET_PED_INTO_VEHICLE(mdl4, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(mdl4, veh2, -1)
+
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh2, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh2, ped, 10.0, 0, 10, 0, 0)
+
+            TASK.TASK_VEHICLE_HELI_PROTECT(mdl3, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(mdl3, veh2, ped, 10.0, 0, 10, 0, 0)
+
+            TASK.TASK_VEHICLE_HELI_PROTECT(mdl4, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(mdl4, veh2, ped, 10.0, 0, 10, 0, 0)
+
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh2, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh2, ped, 10.0, 0, 10, 0, 0)
+            util.yield(300)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 0, 0)
+
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 0, 0)
+
+            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 0, 0)
+            
+            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 0, 0)
+
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl2)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
+            util.yield(300)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl3, "CTaskDoNothing", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl4, "CTaskDoNothing", 0, false)
+
+            ENTITY.SET_ENTITY_HEALTH(mdl, false, 200)
+            ENTITY.SET_ENTITY_HEALTH(mdl2, false, 200)
+            ENTITY.SET_ENTITY_HEALTH(mdl3, false, 200)
+            ENTITY.SET_ENTITY_HEALTH(mdl4, false, 200)
+
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 0, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 0, 0)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl2)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskInVehicleBasic", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskAmbientClips", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl3, "CTaskAmbientClips", 0, false)
+            PED.SET_PED_INTO_VEHICLE(mdl, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(mdl2, veh, -1)
+            util.yield(300)
+            ENTITY.SET_ENTITY_PROOFS(veh_mdl, true, true, true, true, true, false, false, true)
+            ENTITY.SET_ENTITY_PROOFS(veh_mdl2, true, true, true, true, true, false, false, true)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskExitVehicle", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskWaitForSteppingOut", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskInVehicleSeatShuffle", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskExitVehicleSeat", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskExitVehicle", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskWaitForSteppingOut", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskInVehicleSeatShuffle", 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskExitVehicleSeat", 0, false)
+        end
+        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(mdl)
+        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(mdl2)
+		STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(veh_mdl)
+        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(veh_mdl2)
+        entities.delete_by_handle(mdl)
+        entities.delete_by_handle(mdl2)
+        entities.delete_by_handle(mdl3)
+        entities.delete_by_handle(mdl4)
+        entities.delete_by_handle(veh_mdl)
+        entities.delete_by_handle(veh_mdl2)
+    end)
+
 
 
     menu.divider(crashes, "(Ryze Exclusivo)")
@@ -1327,135 +1451,9 @@ players.on_join(function(player_id)
             util.trigger_script_event(1 << player_id, {-555356783, 3, 420, 69, 1337, 88, 360, 666, 6969, 696969})
     end)
 
-    menu.action(modelc, "Modelo Invalido V8 'Test (1 use)'", {"crashv27"}, "Skid from x-force (Big CHUNGUS)", function()
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local pos = ENTITY.GET_ENTITY_COORDS(ped, true)
-        local mdl = util.joaat("A_C_Cat_01")
-        local mdl2 = util.joaat("U_M_Y_Zombie_01")
-        local mdl3 = util.joaat("A_F_M_ProlHost_01")
-        local mdl4 = util.joaat("A_M_M_SouCent_01")
-        local veh_mdl = util.joaat("insurgent2")
-        local veh_mdl2 = util.joaat("brawler")
-        util.request_model(veh_mdl)
-        util.request_model(veh_mdl2)
-        util.request_model(mdl)
-        util.request_model(mdl2)
-        util.request_model(mdl3)
-        util.request_model(mdl4)
-        for i = 1, 250 do
-            local ped1 = entities.create_ped(1, mdl, pos + 20, 0)
-            local ped_ = entities.create_ped(1, mdl2, pos + 20, 0)
-            local ped3 = entities.create_ped(1, mdl3, pos + 20, 0)
-            util.yield(300)
-            local ped3 = entities.create_ped(1, mdl4, pos + 20, 0)
-            local veh = entities.create_vehicle(veh_mdl, pos + 20, 0)
-            local veh2 = entities.create_vehicle(veh_mdl2, pos + 20, 0)
-            PED.SET_PED_INTO_VEHICLE(ped1, veh, -1)
-            PED.SET_PED_INTO_VEHICLE(ped_, veh, -1)
-
-            PED.SET_PED_INTO_VEHICLE(ped1, veh2, -1)
-            PED.SET_PED_INTO_VEHICLE(ped_, veh2, -1)
-
-            PED.SET_PED_INTO_VEHICLE(ped1, veh, -1)
-            PED.SET_PED_INTO_VEHICLE(ped_, veh, -1)
-
-            PED.SET_PED_INTO_VEHICLE(ped1, veh2, -1)
-            PED.SET_PED_INTO_VEHICLE(ped_, veh2, -1)
-
-            PED.SET_PED_INTO_VEHICLE(mdl3, veh, -1)
-            PED.SET_PED_INTO_VEHICLE(mdl3, veh2, -1)
-
-            PED.SET_PED_INTO_VEHICLE(mdl4, veh, -1)
-            PED.SET_PED_INTO_VEHICLE(mdl4, veh2, -1)
-
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh2, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh2, ped, 10.0, 0, 10, 0, 0)
-
-            TASK.TASK_VEHICLE_HELI_PROTECT(mdl3, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(mdl3, veh2, ped, 10.0, 0, 10, 0, 0)
-
-            TASK.TASK_VEHICLE_HELI_PROTECT(mdl4, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(mdl4, veh2, ped, 10.0, 0, 10, 0, 0)
-
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh2, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh2, ped, 10.0, 0, 10, 0, 0)
-            util.yield(300)
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 0, 0)
-
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 0, 0)
-
-            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 0, 0)
-            
-            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 0, 0)
-
-            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl)
-            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl2)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
-            util.yield(300)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl3, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl4, "CTaskDoNothing", 0, false)
-
-            ENTITY.SET_ENTITY_HEALTH(mdl, false, 200)
-            ENTITY.SET_ENTITY_HEALTH(mdl2, false, 200)
-            ENTITY.SET_ENTITY_HEALTH(mdl3, false, 200)
-            ENTITY.SET_ENTITY_HEALTH(mdl4, false, 200)
-
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 0, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 0, 0)
-            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl2)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskInVehicleBasic", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskAmbientClips", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl3, "CTaskAmbientClips", 0, false)
-            PED.SET_PED_INTO_VEHICLE(mdl, veh, -1)
-            PED.SET_PED_INTO_VEHICLE(mdl2, veh, -1)
-            util.yield(300)
-            ENTITY.SET_ENTITY_PROOFS(veh_mdl, true, true, true, true, true, false, false, true)
-            ENTITY.SET_ENTITY_PROOFS(veh_mdl2, true, true, true, true, true, false, false, true)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskExitVehicle", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskWaitForSteppingOut", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskInVehicleSeatShuffle", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskExitVehicleSeat", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskExitVehicle", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskWaitForSteppingOut", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskInVehicleSeatShuffle", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskExitVehicleSeat", 0, false)
-        end
-        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(mdl)
-        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(mdl2)
-		STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(veh_mdl)
-        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(veh_mdl2)
-        entities.delete_by_handle(mdl)
-        entities.delete_by_handle(mdl2)
-        entities.delete_by_handle(mdl3)
-        entities.delete_by_handle(mdl4)
-        entities.delete_by_handle(veh_mdl)
-        entities.delete_by_handle(veh_mdl2)
-    end)
-
     local pclpid = {}
 
-    menu.action(modelc, "Modelo Invalido V9 'Test'", {"crashv28"}, "Clona al jugador repetidas veces causando (XC)", function()
+    menu.action(modelc, "Modelo Invalido V8 'Test'", {"crashv28"}, "Clona al jugador repetidas veces causando (XC)", function()
         local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local c = ENTITY.GET_ENTITY_COORDS(p)
         for i = 1, 23 do
@@ -2299,9 +2297,34 @@ players.on_join(function(player_id)
     menu.action(scriptev, "Errape 1", {}, "Ejecutara unos eventos que haran que muchas personas escuchen el sonido. \nLas personas con un mod menu de paga te detectaran.", function()
         local time = (util.current_time_millis() + 2000)
         while time > util.current_time_millis() do
+            menu.trigger_commands("scripthost")
             local pc = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id))
             for i = 1, 10 do
                 AUDIO.PLAY_SOUND_FROM_COORD(-1, "LOSER", pc.x, pc.y, pc.z, "HUD_AWARDS", true, 9999, false)
+            end
+            util.yield_once()
+        end
+    end)
+    
+    menu.action(scriptev, "Errape 2", {}, "Ejecutara unos eventos que haran que muchas personas escuchen el sonido. \nLas personas con un mod menu de paga te detectaran.", function()
+        local time = (util.current_time_millis() + 2000)
+        while time > util.current_time_millis() do
+            menu.trigger_commands("scripthost")
+            local pc = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id))
+            for i = 1, 10 do
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "ERROR", pc.x, pc.y, pc.z, "DLC_HEIST_HACKING_SNAKE_SOUNDS", true, 9999, false)
+            end
+            util.yield_once()
+        end
+    end)
+
+    menu.action(scriptev, "Errape 3", {}, "Ejecutara unos eventos que haran que muchas personas escuchen el sonido. \nLas personas con un mod menu de paga te detectaran.", function()
+        local time = (util.current_time_millis() + 2000)
+        while time > util.current_time_millis() do
+            menu.trigger_commands("scripthost")
+            local pc = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id))
+            for i = 1, 10 do
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "Hit", pc.x, pc.y, pc.z, "RESPAWN_ONLINE_SOUNDSET", true, 9999, false)
             end
             util.yield_once()
         end
@@ -3037,7 +3060,7 @@ players.on_join(function(player_id)
         local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
         if AUDIO.IS_HORN_ACTIVE(player_vehicle) then
             NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(player_vehicle)
-            ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(player_vehicle, 1, 0.0, 50, 0.0, true, true, true, true)
+            ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(player_vehicle, 1, 0.0, 1000, 0.0, true, true, true, true)
         end
     end)
 
@@ -3046,7 +3069,7 @@ players.on_join(function(player_id)
         local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
         if AUDIO.IS_HORN_ACTIVE(player_vehicle) then
             NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(player_vehicle)
-            ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(player_vehicle, 1, 0.0, 0.0, 50, true, true, true, true)
+            ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(player_vehicle, 1, 0.0, 0.0, 1000, true, true, true, true)
         end
     end)
     ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3055,18 +3078,21 @@ players.on_join(function(player_id)
     local sevents = menu.list(otherc, "Eventos", {}, "Eventos creados por scripts.")
 
     menu.action(sevents, "Cayo Perico", {}, "Intentara varios metodos a enviar a cayo. \nSi no tiene menu muy bueno funcionara. \nHay posibilidad que funcione con Stand.", function()
+        menu.trigger_commands("scripthost")
         for i = 1, 200 do
             util.trigger_script_event(1 << player_id, {-910497748, player_id, 1, 0})
         end
     end)
 
     menu.action(sevents, "Cayo Perico SC", {}, "Intentara varios metodos de enviar a cayo. \nSin cinematica.", function()
+        menu.trigger_commands("scripthost")
         for i = 1, 200 do
             util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 4, 1})
         end
     end)
 
     menu.action(sevents, "Trapo Al Jugador", {}, "", function()
+        menu.trigger_commands("scripthost")
         util.trigger_script_event(1 << player_id, {2009283752247, player_id, 2005749727232, 1, 258, 1, 1, player_id, 2701534429183, 18, 0})
     end)
 
@@ -3510,6 +3536,8 @@ menu.action(recovery, "Desbloquear Cont/Navidad", {}, "Despues de cambiar de ses
 end)
 
 menu.action(recovery, "Desbloquear Cont/DLC", {}, "Te desbloqueara el contenido del nuevo DLC \nProbablemente sea solo por la sesion.", function()
+    menu.trigger_commands("scripthost")
+    util.yield(50)
     for i = 33974, 34112, 1 do
         memory.write_byte(memory.script_global(262145 + i), 1)  
     end
@@ -3528,6 +3556,7 @@ end)
 menu.action(recovery, "Desbloquear van.", {}, "Te desbloqueara la van de armas.", function()
     local player = PLAYER.PLAYER_PED_ID()
     menu.trigger_commands("scripthost")
+    util.yield(50)
     for i = 0, 29 do
         memory.write_byte(memory.script_global(262145 + 33800 + 1 + i), 1)
     end
@@ -4123,7 +4152,7 @@ modificaciones = menu.list(vehicles, "Modificaciones a Vehiculos", {}, "")
 --end)
 
 menu.action(modificaciones, "Mejoras Random", {}, "Solo funciona en los vehiculos que sacas manualmente.", function()
-    local vehicle = get_vehicle_ped_is_in(players.user_ped(), include_last_vehicle_for_vehicle_functions)
+    local vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), include_last_vehicle_for_vehicle_functions)
     if vehicle == 0 then util.toast("No estas en un vehiculo >.<") else
         for mod_type = 0, 48 do
             local num_of_mods = VEHICLE.GET_NUM_VEHICLE_MODS(vehicle, mod_type)
@@ -4143,7 +4172,7 @@ menu.action(modificaciones, "Mejoras Random", {}, "Solo funciona en los vehiculo
 end)
 
 menu.toggle_loop(modificaciones, "Mejoras Random (Loop)", {}, "Solo funciona en los vehiculos que sacas manualmente.", function()
-    local vehicle = get_vehicle_ped_is_in(players.user_ped(), include_last_vehicle_for_vehicle_functions)
+    local vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), include_last_vehicle_for_vehicle_functions)
     if vehicle == 0 then util.toast("No estas en un vehiculo >.<") else
         for mod_type = 0, 48 do
             local num_of_mods = VEHICLE.GET_NUM_VEHICLE_MODS(vehicle, mod_type)
@@ -5020,3 +5049,4 @@ util.on_stop(function ()
 end)
 
 players.dispatch_on_join()
+util.keep_running()
