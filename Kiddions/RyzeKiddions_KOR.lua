@@ -131,12 +131,7 @@ local PedSelf = {}
 PedSelf[joaat("mp_m_freemode_01")] = "남성"
 PedSelf[joaat("mp_f_freemode_01")] = "여성"
 
-appMenu:add_array_item("성별 변화", {"OFF", "ON"}, function() 
-	return xox_15 end, function(aph) 
-		if aph == 1 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 0)
-	elseif aph == 2 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 52)
-	end xox15 = aph 
-end)
+appMenu:add_action("변경자", function() stats.set_int(mpx.."ALLOW_GENDER_CHANGE", 52) globals.set_int(281050, 0) end)
 
 OnlMenu = mainMenu:add_submenu("온라인")
 
@@ -161,25 +156,24 @@ repMenu:add_bare_item("", function() return "도움이 된다.:".. (string.forma
 
 OnlMenu:add_action("----------------- 미션/온라인 ----------------", function() end)
 
-OnlMenu:add_array_item("요청 서비스", {"M.O.C", "어벤저", "테러 바이트", "코사트카", "딩기", "방탄조끼"}, function() return xox_01 end, function(v) if v == 1 then globals.set_int(2815059 + 913, 1) elseif v == 2 then globals.set_int(2815059 + 921, 1) elseif v == 3 then globals.set_int(2815059 + 925, 1) elseif v == 4 then globals.set_int(2815059 + 933, 1) elseif v == 5 then globals.set_int(2815059 + 945, 1) else globals.set_int(2815059 + 884, 1) end xox_01 = v end)
-OnlMenu:add_action("런처 지연 제거", function()
-	mpIndex = globals.get_int(1574907)
-	if mpIndex == 0 then
-		stats.set_int("MP0_ORBITAL_CANNON_COOLDOWN", 0)
-	else
-		stats.set_int("MP1_ORBITAL_CANNON_COOLDOWN", 0)
-	end
-end)
+OnlMenu:add_array_item("서비스를 요청하다", {"M.O.C", "Avenger", "TerrorByte", "Kosatka", "Bote", "Armadura Balistica"}, function() return xox_01 end, function(v) if v == 1 then globals.set_int(2815059 + 913, 1) elseif v == 2 then globals.set_int(2815059 + 921, 1) elseif v == 3 then globals.set_int(2815059 + 925, 1) elseif v == 4 then globals.set_int(2815059 + 933, 1) elseif v == 5 then globals.set_int(2815059 + 945, 1) else globals.set_int(2815059 + 884, 1) end xox_01 = v end)
 
-OnlMenu:add_action("트랜잭션 오류 제거", function() if globals.get_int(4535612) == 20 or globals.get_int(4535612) == 4 then globals.set_int(4535606, 0) end end)
-OnlMenu:add_action("재사용 시간 제거 VIP/MC", function() stats.set_int("MPPLY_VIPGAMEPLAYDISABLEDTIMER", 0) end)
+local function orb(e) if not localplayer then return end if e then stats.set_int(mpx.."ORBITAL_CANNON_COOLDOWN", 0) else stats.get_int(mpx.."ORBITAL_CANNON_COOLDOWN") end end
+
+OnlMenu:add_action("오비탈 캐논 재사용시간 제거", function() return e2 end, function() e2 = not e2 orb(e2) end)
+
+OnlMenu:add_action("트랜잭션 에러를 제거합니다.", function() if globals.get_int(4536679) == 20 or globals.get_int(4536679) == 4 then globals.set_int(4536673, 0) end end)
+OnlMenu:add_action("VIP/MC 대기 시간 제거", function() stats.set_int("MPPLY_VIPGAMEPLAYDISABLEDTIMER", 0) end)
 OnlMenu:add_action("라마 미션 건너뛰기", function() stats.set_bool(mpx .. "LOW_FLOW_CS_DRV_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_TRA_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_FUN_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_PHO_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_FIN_SEEN", true) stats.set_bool(mpx .. "LOW_BEN_INTRO_CS_SEEN", true) stats.set_int(mpx .. "LOWRIDER_FLOW_COMPLETE", 4) stats.set_int(mpx .. "LOW_FLOW_CURRENT_PROG", 9) stats.set_int(mpx .. "LOW_FLOW_CURRENT_CALL", 9) stats.set_int(mpx .. "LOW_FLOW_CS_HELPTEXT", 66) end) 
 OnlMenu:add_action("요트 미션 건너뛰기", function() stats.set_int(mpx .. "YACHT_MISSION_PROG", 0) stats.set_int(mpx .. "YACHT_MISSION_FLOW", 21845) stats.set_int(mpx .. "CASINO_DECORATION_GIFT_1", -1) end)
+OnlMenu:add_toggle("페요트 효과 얻기", function() return globals.get_boolean(289278) end, function(v) globals.set_boolean(289278, v) globals.set_boolean(290039, v) end)
 
-OnlMenu:add_toggle("CEO/MC 이름 변경, 무료", function() return e37 end, function() e37 = not e37 Fceomc(e37) end)
-OnlMenu:add_toggle("테러 바이트 임무 쿨타임 제거", function() return e26 end, function() e26 = not e26 Terrcd(e26) end)
+local function Fceomc(e) if not localplayer then return end if e then globals.set_int(262145 + 15891, 0) globals.set_int(262145 + 18025, 0) else globals.set_int(262145 + 15891, 50000) globals.set_int(262145 + 18025, 50000) end end 
+OnlMenu:add_toggle("무료 CEO의 이름을 변경합니다.", function() return e37 end, function() e37 = not e37 Fceomc(e37) end)
+local function Terrcd(e) if not localplayer then return end if e then for i = 286781, 286785 do globals.set_int(i, 0) end else for i = 286782, 286785 do globals.set_int(286781, 300000) globals.set_int(i, 1800000) end end end 
+OnlMenu:add_toggle("시간 삭제/공포 미션", function() return e26 end, function() e26 = not e26 Terrcd(e26) end)
 
-OnlMenu:add_toggle("레이더 끄기", GetUndeadOffradar, SetUndeadOffradar)
+OnlMenu:add_toggle("아웃 델 레이더", GetUndeadOffradar, SetUndeadOffradar)
 
 local function ToggleUndeadOffradar()
 	value = GetUndeadOffradar()
@@ -190,7 +184,7 @@ end
 
 
 
-OnlMenu:add_action("----------------- Recovery ----------------", function() end)
+OnlMenu:add_action("----------------- 러커버리 ----------------", function() end)
 
 OnlMenu:add_action("100% 통계", function()
 	stats.set_int(mpx .. "SCRIPT_INCREASE_DRIV", 100)
@@ -341,6 +335,8 @@ timestat:add_int_range("자전거 운전", 1, 0, 24, function() return math.floo
 
 OnlMenu:add_action("----------------- Golpes ----------------", function() end)
 
+local function Cctv(e) if not localplayer then return end
+
 cayoPericoMenu = OnlMenu:add_submenu("카요 페리코") cayoPericoMenu:add_array_item("Configs", {"H.Panther Only", "H.PinkD Only", "H.B.Bonds Only", "H.R.Necklace Only", "H.Tequila Only", "N.Panther Only", "N.PinkD Only", "N.B.Bonds Only", "N.R.Necklace Only", "N.Tequila Only"}, function() return xox_15 end, function(v) if v == 1 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 5) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT_V", 403500) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 2 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 3) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 3 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 2) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 4 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 1) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 5 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 0) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 6 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 5) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 7 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 3) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 8 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 2) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 9 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 1) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT_V", 403500) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 10 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 0) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) end xox_15 = v end)
 cayoPericoMenu:add_array_item("주요 목표물", {"데킬라", "루비 목걸이", "무기명 채권", "핑크 다이아몬드", "펜서 조각상"}, function() return xox_0 end, function(value) xox_0 = value if value == 1 then stats.set_int(mpx .. "H4CNF_TARGET", 0) elseif value == 2 then stats.set_int(mpx .. "H4CNF_TARGET", 1) elseif value == 3 then stats.set_int(mpx .. "H4CNF_TARGET", 2) elseif value == 4 then stats.set_int(mpx .. "H4CNF_TARGET", 3) elseif value == 5 then stats.set_int(mpx .. "H4CNF_TARGET", 5) end end)
 StMenu = cayoPericoMenu:add_submenu("보조 목표물") 
@@ -349,8 +345,8 @@ cayoPericoMenu:add_action("모든 준비", function() stats.set_int(mpx .. "H4CN
 cayoPericoMenu:add_action("---", function() end)
 cayoPericoMenu:add_toggle("카메라 제거", function() return e6 end, function() e6 = not e6 Cctv(e6) end) 
 cayoPericoMenu:add_action("배수 터널 컷씬 건너뛰기", function() if fmC2020:is_active() then if fmC2020:get_int(27500) >= 3 or fmC2020:get_int(27500) <= 6 then fmC2020:set_int(27500, 6) end end end) 
-cayoPericoMenu:add_action("컷신 인쇄 건너뛰기", function() if fmC2020 and fmC2020:is_active() then if fmC2020:get_int(23385) == 4 then fmC2020:set_int(23385, 5) end end end)
-
+cayoPericoMenu:add_action("컷신 인쇄 건너뛰기", function() if fmC and fmC:is_active() then if fmC:get_int(52962) == 4 then fmC:set_int(52962, 5) end end end)
+cayoPericoMenu:add_action("해킹 건너뛰기", function() if fmC and fmC:is_active() then if fmC:get_int(54024) ~= 4 then fmC:set_int(54024, 5) end end end)
 
 
 protMenu = mainMenu:add_submenu("보호 'Test'")
@@ -919,7 +915,7 @@ local money = 1
 local kd = 1
 local kills = 1
 local deaths = 1
-local ply = localplayer:get_player_id() * 862
+local ply = spoof:get_player_id() * 862
 local skidy_1 = 1
 local skidy_2 = 1
 local skidy_3 = 1
@@ -1422,51 +1418,55 @@ end)
 ccMenu = dinMenu:add_submenu("나이트 클럽")
 
 local isRunning = false
-
 ccMenu:add_toggle("안전한 머니 루프 $250k/10s (AFK)", function() return isRunning end, function() isRunning = not isRunning safeLoop(isRunning) end)
 
 mmHmenu = dinMenu:add_submenu("격납고 카고 'Test'$$$")
 function Cooldown(e) if not localplayer then return end if e then for i = 284924, 284928 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(284924, 120000) globals.set_int(284925, 180000) globals.set_int(284926, 240000) globals.set_int(284927, 60000) globals.set_int(284928, 2000) end end mmHmenu:add_toggle("Remove Cooldowns", function() return e15 end, function() e15 = not e15 Cooldown(e15) end)
-mmHmenu:add_int_range("믹스트 카고", 50000, 10000, 3100000, function() return globals.get_int(284984) end, function(value) globals.set_int(284984, value) end)
-mmHmenu:add_int_range("애니멀 카고", 50000, 10000, 3100000, function() return globals.get_int(284985) end, function(value) globals.set_int(284985, value) end)
-mmHmenu:add_int_range("미술품 카고", 50000, 10000, 3100000, function() return globals.get_int(284986) end, function(value) globals.set_int(284986, value) end)
-mmHmenu:add_int_range("케미컬 카고", 50000, 10000, 3100000, function() return globals.get_int(284987) end, function(value) globals.set_int(284987, value) end)
-mmHmenu:add_int_range("위조 지폐 카고", 50000, 10000, 3100000, function() return globals.get_int(284988) end, function(value) globals.set_int(284988, value) end)
-mmHmenu:add_int_range("쥬얼리 카고", 50000, 10000, 3100000, function() return globals.get_int(284989) end, function(value) globals.set_int(284989, value) end)
-mmHmenu:add_int_range("메디 카고", 50000, 10000, 3100000, function() return globals.get_int(284990) end, function(value) globals.set_int(284990, value) end)
-mmHmenu:add_int_range("나르코틱 카고", 50000, 10000, 3100000, function() return globals.get_int(284991) end, function(value) globals.set_int(284991, value) end)
-mmHmenu:add_int_range("대마초 ", 50000, 10000, 3100000, function() return globals.get_int(284992) end, function(value) globals.set_int(284992, value) end)
-function ronC(e) if not localplayer then return end if e then globals.set_float(284966, 0) else globals.set_float(284966, 0.025) end end mmHmenu:add_toggle("Remove Rons's cut", function() return e30 end, function() e30 = not e30 ronC(e30) end)
+mmHmenu:add_int_range("믹스트 카고", 50000, 10000, 3100000, function() return globals.get_int(284956) end, function(value) globals.set_int(284956, value) end)
+mmHmenu:add_int_range("애니멀 카고", 50000, 10000, 3100000, function() return globals.get_int(284957) end, function(value) globals.set_int(284957, value) end)
+mmHmenu:add_int_range("미술품 카고", 50000, 10000, 3100000, function() return globals.get_int(284958) end, function(value) globals.set_int(284958, value) end)
+mmHmenu:add_int_range("케미컬 카고", 50000, 10000, 3100000, function() return globals.get_int(284959) end, function(value) globals.set_int(284959, value) end)
+mmHmenu:add_int_range("위조 지폐 카고", 50000, 10000, 3100000, function() return globals.get_int(284960) end, function(value) globals.set_int(284960, value) end)
+mmHmenu:add_int_range("쥬얼리 카고", 50000, 10000, 3100000, function() return globals.get_int(284961) end, function(value) globals.set_int(284961, value) end)
+mmHmenu:add_int_range("메디 카고", 50000, 10000, 3100000, function() return globals.get_int(284962) end, function(value) globals.set_int(284962, value) end)
+mmHmenu:add_int_range("나르코틱 카고", 50000, 10000, 3100000, function() return globals.get_int(284963) end, function(value) globals.set_int(284963, value) end)
+mmHmenu:add_int_range("대마초 ", 50000, 10000, 3100000, function() return globals.get_int(284964) end, function(value) globals.set_int(284964, value) end)
+function ronC(e) if not localplayer then return end if e then globals.set_float(284966, 0) else globals.set_float(284966, 0.025) end end 
+mmHmenu:add_toggle("론스 컷 제거", function() return e30 end, function() e30 = not e30 ronC(e30) end)
 mmHmenu:add_int_range("판매 통계 재설정", 1, 0, 500, function() return stats.get_int(mpx .. "LFETIME_HANGAR_SEL_COMPLET") end, function(value) stats.set_int(mpx .. "LFETIME_HANGAR_BUY_UNDETAK", value) stats.set_int(mpx .. "LFETIME_HANGAR_BUY_COMPLET", value) stats.set_int(mpx .. "LFETIME_HANGAR_SEL_UNDETAK", value) stats.set_int(mpx .. "LFETIME_HANGAR_SEL_COMPLET", value) stats.set_int(mpx .. "LFETIME_HANGAR_EARNINGS", value * 40000) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
 
-mmVmenu = dinMenu:add_submenu("차량 화물 'Test'$$$") local function Max(e) if not localplayer then return end if e then globals.set_int(281602, 155000) globals.set_int(281603, 155000) globals.set_int(281604, 155000) globals.set_float(281606, 0) globals.set_float(281607, 0) else globals.set_int(281602, 40000) globals.set_int(281603, 25000) globals.set_int(281604, 15000) globals.set_float(281606, 0.25) globals.set_float(281607, 0.5) end end mmVmenu:add_toggle("Maxear los rangos", function() return e17 end, function() e17 = not e17 Max(e17) end)
-local function VCD(e) if not localplayer then return end if e then for i = 281622, 281625 do globals.set_int(i, 0) sleep(1) globals.set_int(i, 1) end else globals.set_int(281622, 1200000) globals.set_int(281623, 1680000) globals.set_int(281624, 2340000) globals.set_int(281625, 2880000) end end mmVmenu:add_toggle("Remover culdown", function() return e18 end, function() e18 = not e18 VCD(e18) end)
-local function VRC(e) if not localplayer then return end if e then for i = 281601, 281603 do globals.set_int(i, 0) end else globals.set_int(281601, 34000) globals.set_int(281602, 21250) globals.set_int(281603, 12750) end end mmVmenu:add_toggle("Remover costo de jimmy", function() return e21 end, function() e21 = not e21 VRC(e21) end) mmVmenu:add_action("---", function() end)
-mmVmenu:add_int_range("맨 위 끝", 1000, 40000, 4000000, function() return globals.get_int(281602) end, function(value) globals.set_int(281602, value) end)
-mmVmenu:add_int_range("중간 끝", 1000, 25000, 4000000, function() return globals.get_int(281603) end, function(value) globals.set_int(281603, value) end)
-mmVmenu:add_int_range("마지막 끝", 1000, 15000, 4000000, function() return globals.get_int(281604) end, function(value) globals.set_int(281604, value) end)
-mmVmenu:add_float_range("세일 쇼룸", 0.5, 1.5, 1000, function() return globals.get_float(281608) end, function(value) globals.set_float(281608, value) end)
-mmVmenu:add_float_range("판매 전문 딜러", 0.5, 2, 1000, function() return globals.get_float(281609) end, function(value) globals.set_float(281609, value) end)
-mmVmenu:add_float_range("업그레이드 비용 전시장", 0.25, 0, 1000, function() return globals.get_float(281606) end, function(value) globals.set_float(281606, value) end)
-mmVmenu:add_float_range("업그레이드 비용 전문 딜러", 0.25, 0, 1000, function() return globals.get_float(281607) end, function(value) globals.set_float(281607, value) end)
-mmVmenu:add_action("-----테스테도:솔로 퍼블릭; ~Max=310k------------", function() end)
+mmVmenu = dinMenu:add_submenu("적재차량 'Test'$$$") local function Max(e) if not localplayer then return end if e then globals.set_int(281602, 155000) globals.set_int(281603, 155000) globals.set_int(281604, 155000) globals.set_float(281606, 0) globals.set_float(281607, 0) else globals.set_int(281602, 40000) globals.set_int(281603, 25000) globals.set_int(281604, 15000) globals.set_float(281606, 0.25) globals.set_float(281607, 0.5) end end mmVmenu:add_toggle("범위를 좁히다", function() return e17 end, function() e17 = not e17 Max(e17) end)
+mmVmenu:add_int_range("자동 무적", 1000, 40000, 4000000, function() return globals.get_int(293281) end, function(value) globals.set_int(293281, value) end)
+mmVmenu:add_int_range("자동 메", 1000, 25000, 4000000, function() return globals.get_int(293282) end, function(value) globals.set_int(293282, value) end)
+mmVmenu:add_int_range("오토미에다", 1000, 15000, 4000000, function() return globals.get_int(293283) end, function(value) globals.set_int(293283, value) end)
+mmVmenu:add_float_range("쇼룸 판매", 0.5, 1.5, 1000, function() return globals.get_float(281563) end, function(value) globals.set_float(281563, value) end)
+mmVmenu:add_float_range("전문가에게 판매", 0.5, 2, 1000, function() return globals.get_float(281564) end, function(value) globals.set_float(281564, value) end)
+mmVmenu:add_float_range("쇼룸의 비용 개선", 0.25, 0, 1000, function() return globals.get_float(281561) end, function(value) globals.set_float(281561, value) end)
+mmVmenu:add_float_range("전문가 비용 개선", 0.25, 0, 1000, function() return globals.get_float(281562) end, function(value) globals.set_float(281562, value) end)
+mmVmenu:add_action("-----테스트: 게시물만 게시합니다; ~Max=310k------------", function() end)
 
-mcMenu = dinMenu:add_submenu("클럽 드 모테로스 'Test'$$$") local function Speed(e) if not localplayer then return end if e then for i = 279591, 279595 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(279594, 300000) globals.set_int(279595, 720000) globals.set_int(279593, 3000000) globals.set_int(279592, 1800000) globals.set_int(279591, 360000) end end 
-mcMenu:add_toggle("오멘타 프로듀케이션", function() return e16 end, function() e16 = not e16 Speed(e16) end)
-local function VRC(e) if not localplayer then return end if e then globals.set_int(281143, 1000) else globals.set_int(281143, 1000) end end 
-mcMenu:add_toggle("소모품 비용 제거", function() return e22 end, function() e22 = not e22 VRC(e22) end)
+mcMenu = dinMenu:add_submenu("디모테로스 클럽 'Test'$$$") local function Speed(e) if not localplayer then return end if e then for i = 279591, 279595 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(279594, 300000) globals.set_int(279595, 720000) globals.set_int(279593, 3000000) globals.set_int(279592, 1800000) globals.set_int(279591, 360000) end end 
+local function Speed(e) if not localplayer then return end if e then for i = 279536, 279540 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(279539, 300000) globals.set_int(279540, 720000) globals.set_int(279538, 3000000) globals.set_int(279537, 1800000) globals.set_int(279536, 360000) end end 
+local function MCgs(e) if not localplayer then return end if e then globals.set_int(280392, 0) else globals.set_int(280392, 40000) end end mmMCmenu:add_toggle("레모브 글로벌 시그널", function() return e24 end, function() e24 = not e24 MCgs(e24) end)
+local function VCD(e) if not localplayer then return end if e then for i = 281622, 281625 do globals.set_int(i, 0) sleep(1) globals.set_int(i, 1) end else globals.set_int(281622, 1200000) globals.set_int(281623, 1680000) globals.set_int(281624, 2340000) globals.set_int(281625, 2880000) end end 
+local function VRC(e) if not localplayer then return end if e then globals.set_int(281098, 1000) else globals.set_int(281098, 1000) end end 
+local function VRD(e) if not localplayer then return end if e then globals.set_int(281099, 10) else globals.set_int(281099, 600) end end 
 local function MCrr(e) if not localplayer then return end if e then for i = 0, 4 do stats.set_int(mpx.."PAYRESUPPLYTIMER"..i, 1) sleep(0.1) end else for i = 0, 4 do stats.set_int(mpx.."PAYRESUPPLYTIMER"..i, 0) end end end 
-mcMenu:add_toggle("리필 용품(beta)", function() return e25 end, function() e25 = not e25 MCrr(e25) end)
-local function MCgs(e) if not localplayer then return end if e then globals.set_int(280439, 0) else globals.set_int(280439, 40000) end end 
-mcMenu:add_toggle("전역 신호 제거", function() return e24 end, function() e24 = not e24 MCgs(e24) end)
-mcMenu:add_float_range("살레 멀티플라이어", 0.5, 1, 1000, function() return globals.get_float(281256) end, function(value) globals.set_float(281256, value) globals.set_float(281257, value) end) 
-mcMenu:add_action(" ~이를 통해 다음을 얻을 수 있습니다.~ ", function() end)
+
+mcMenu:add_toggle("생산 증대", function() return e16 end, function() e16 = not e16 Speed(e16) end)
+mcMenu:add_toggle("쿨다운 제거", function() return e18 end, function() e18 = not e18 VCD(e18) end)
+mcMenu:add_action("---", function() end)
+mcMenu:add_toggle("공급 비용을 절감하다", function() return e22 end, function() e22 = not e22 VRC(e22) end)
+mcMenu:add_toggle("소모품을 채웁니다.(beta)", function() return e25 end, function() e25 = not e25 MCrr(e25) end)
+mcMenu:add_toggle("글로벌 신호 제거", function() return e24 end, function() e24 = not e24 MCgs(e24) end)
+mcMenu:add_float_range("판매 승수", 0.5, 1, 1000, function() return globals.get_float(281256) end, function(value) globals.set_float(281256, value) globals.set_float(281257, value) end) 
+mcMenu:add_action(" ~얻기 위해 사용하다~ ", function() end)
 mcMenu:add_action(" ~Max 2.5M~ ", function() end)
 
 MMmenu = dinMenu:add_submenu("현금 반복") local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
 
-local g = globals.set_int
-local m = 1963962
+local g = globals.set_int()
+local m = 1968313
 local x = 1
 local y = 2
 local z = 3
@@ -1495,4 +1495,4 @@ MMmenu:add_action("구성은 그대로 두십시오. 네가 원한다면", funct
 MMmenu:add_action("옵션을 변경하고 다시 종료한 후 기다립니다.", function() end) 
 MMmenu:add_action("새 항목을 선택하기 2분 전입니다.", function() end) 
 
-local CREDMenu = mainMenu:add_submenu("Creditos") CREDMenu:add_action("Kiddions ", function() end) CREDMenu:add_action("Pichocles", function() end) CREDMenu:add_action("Pepe ", function() end) CREDMenu:add_action("Sammy ", function() end) CREDMenu:add_action("Vicente ", function() end) CREDMenu:add_action("Ady", function() end) CREDMenu:add_action("En Especial ", function() end) CREDMenu:add_action("Emir <3 ", function() end)
+local CREDMenu = mainMenu:add_submenu("크래딧") CREDMenu:add_action("Kiddions ", function() end) CREDMenu:add_action("Pichocles", function() end) CREDMenu:add_action("Pepe ", function() end) CREDMenu:add_action("Sammy ", function() end) CREDMenu:add_action("Vicente ", function() end) CREDMenu:add_action("Ady", function() end) CREDMenu:add_action("En Especial ", function() end) CREDMenu:add_action("Emir <3 ", function() end)
