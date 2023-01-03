@@ -130,16 +130,12 @@ local PedSelf = {}
 PedSelf[joaat("mp_m_freemode_01")] = "Man"
 PedSelf[joaat("mp_f_freemode_01")] = "Woman"
 
-appMenu:add_array_item("Gender Change", {"OFF", "ON"}, function() 
-	return xox_15 end, function(aph) 
-		if aph == 1 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 0)
-	elseif aph == 2 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 52)
-	end xox15 = aph 
-end)
+appMenu:add_action("Change gender", function() stats.set_int(mpx.."ALLOW_GENDER_CHANGE", 52) globals.set_int(281050, 0) end)
+
 
 OnlMenu = mainMenu:add_submenu("Online")
 
-OnlMenu:add_array_item("Sesion Online", {"Go Public Sesion", "Start Public Sesion", "Only Invite Sesion", "Closed Crew Sesion", "Only Crew Sesion", "Closed Friend Sesion", "Find Sesion By Players", "Solo Sesion"}, function() return xox_00 end, function(value) xox_00 = value if value == 1 then globals.set_int(1575015, 0) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 2 then globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 3 then globals.set_int(1575015, 11) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 4 then globals.set_int(1575015, 2) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 5 then globals.set_int(1575015, 3) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 6 then globals.set_int(1575015, 6) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 7 then globals.set_int(1575015, 9) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 8 then globals.set_int(1575015, 8) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end end)
+OnlMenu:add_array_item("Online Session", {"Join Public", "Start New Public", "Invite Only", "Closed Crew Session", "Crew Session", "Closed Friend Session", "Find Friend Session", "Solo Session", "Leave Online"}, function() return xox_00 end, function(value) xox_00 = value if value == 1 then globals.set_int(1575017, 0) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 2 then globals.set_int(1575017, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 3 then globals.set_int(1575017, 11) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 4 then globals.set_int(1575017, 2) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 5 then globals.set_int(1575017, 3) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 6 then globals.set_int(1575017, 6) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 7 then globals.set_int(1575017, 9) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 8 then globals.set_int(1575017, 8) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 9 then globals.set_int(1575017, -1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end end)
 
 repMenu = OnlMenu:add_submenu("Ver Reportes")
 repMenu:add_bare_item("", function() return "Grifier:".. (string.format("%03d", stats.get_int("MPPLY_GRIEFING"))) end, function() end, function()end, function() return end)
@@ -161,21 +157,20 @@ repMenu:add_bare_item("", function() return "Helpful:".. (string.format("%03d", 
 OnlMenu:add_action("----------------- Misions/Online ----------------", function() end)
 
 OnlMenu:add_array_item("Request Services", {"M.O.C", "Avenger", "TerrorByte", "Kosatka", "Dinghy", "Ballistic Armor"}, function() return xox_01 end, function(v) if v == 1 then globals.set_int(2815059 + 913, 1) elseif v == 2 then globals.set_int(2815059 + 921, 1) elseif v == 3 then globals.set_int(2815059 + 925, 1) elseif v == 4 then globals.set_int(2815059 + 933, 1) elseif v == 5 then globals.set_int(2815059 + 945, 1) else globals.set_int(2815059 + 884, 1) end xox_01 = v end)
-OnlMenu:add_action("Remove Orbital Canon Delay", function()
-	mpIndex = globals.get_int(1574907)
-	if mpIndex == 0 then
-		stats.set_int("MP0_ORBITAL_CANNON_COOLDOWN", 0)
-	else
-		stats.set_int("MP1_ORBITAL_CANNON_COOLDOWN", 0)
-	end
-end)
 
-OnlMenu:add_action("Remove Transaction Error", function() if globals.get_int(4535612) == 20 or globals.get_int(4535612) == 4 then globals.set_int(4535606, 0) end end)
+local function orb(e) if not localplayer then return end if e then stats.set_int(mpx.."ORBITAL_CANNON_COOLDOWN", 0) else stats.get_int(mpx.."ORBITAL_CANNON_COOLDOWN") end end
+
+OnlMenu:add_action("Remove delay of orbital canon", function() return e2 end, function() e2 = not e2 orb(e2) end)
+
+OnlMenu:add_action("Remove Transaction Error", function() if globals.get_int(4536679) == 20 or globals.get_int(4536679) == 4 then globals.set_int(4536673, 0) end end)
 OnlMenu:add_action("Remove cooldown for VIP/MC", function() stats.set_int("MPPLY_VIPGAMEPLAYDISABLEDTIMER", 0) end)
 OnlMenu:add_action("Skip Lamar Mision", function() stats.set_bool(mpx .. "LOW_FLOW_CS_DRV_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_TRA_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_FUN_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_PHO_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_FIN_SEEN", true) stats.set_bool(mpx .. "LOW_BEN_INTRO_CS_SEEN", true) stats.set_int(mpx .. "LOWRIDER_FLOW_COMPLETE", 4) stats.set_int(mpx .. "LOW_FLOW_CURRENT_PROG", 9) stats.set_int(mpx .. "LOW_FLOW_CURRENT_CALL", 9) stats.set_int(mpx .. "LOW_FLOW_CS_HELPTEXT", 66) end) 
 OnlMenu:add_action("Skip Yatch Misions", function() stats.set_int(mpx .. "YACHT_MISSION_PROG", 0) stats.set_int(mpx .. "YACHT_MISSION_FLOW", 21845) stats.set_int(mpx .. "CASINO_DECORATION_GIFT_1", -1) end)
+OnlMenu:add_toggle("Enable Peyote", function() return globals.get_boolean(289278) end, function(v) globals.set_boolean(289278, v) globals.set_boolean(290039, v) end)
 
-OnlMenu:add_toggle("Change CEO/MC name, free", function() return e37 end, function() e37 = not e37 Fceomc(e37) end)
+local function Fceomc(e) if not localplayer then return end if e then globals.set_int(262145 + 15891, 0) globals.set_int(262145 + 18025, 0) else globals.set_int(262145 + 15891, 50000) globals.set_int(262145 + 18025, 50000) end end 
+OnlMenu:add_toggle("Change CEO/MC Name Free", function() return e37 end, function() e37 = not e37 Fceomc(e37) end)
+local function Terrcd(e) if not localplayer then return end if e then for i = 286781, 286785 do globals.set_int(i, 0) end else for i = 286782, 286785 do globals.set_int(286781, 300000) globals.set_int(i, 1800000) end end end 
 OnlMenu:add_toggle("Remove TerrorByte Missions Cooldown", function() return e26 end, function() e26 = not e26 Terrcd(e26) end)
 OnlMenu:add_toggle("Off Radar", GetUndeadOffradar, SetUndeadOffradar)
 local function ToggleUndeadOffradar()
@@ -345,7 +340,8 @@ cayoPericoMenu:add_action("All Preparations", function() stats.set_int(mpx .. "H
 cayoPericoMenu:add_action("---", function() end)
 cayoPericoMenu:add_toggle("Remove Cameras", function() return e6 end, function() e6 = not e6 Cctv(e6) end) 
 cayoPericoMenu:add_action("Skip Drainage tunnel CutScene", function() if fmC2020:is_active() then if fmC2020:get_int(27500) >= 3 or fmC2020:get_int(27500) <= 6 then fmC2020:set_int(27500, 6) end end end) 
-cayoPericoMenu:add_action("Skip printing cutscene", function() if fmC2020 and fmC2020:is_active() then if fmC2020:get_int(23385) == 4 then fmC2020:set_int(23385, 5) end end end)
+cayoPericoMenu:add_action("Skip printing cutscene", function() if fmC and fmC:is_active() then if fmC:get_int(52962) == 4 then fmC:set_int(52962, 5) end end end)
+cayoPericoMenu:add_action("Skip Door Hack ", function() if fmC and fmC:is_active() then if fmC:get_int(54024) ~= 4 then fmC:set_int(54024, 5) end end end)
 
 
 
@@ -1435,40 +1431,32 @@ mmHmenu:add_int_range("Tabacco Value", 50000, 10000, 3100000, function() return 
 function ronC(e) if not localplayer then return end if e then globals.set_float(284966, 0) else globals.set_float(284966, 0.025) end end mmHmenu:add_toggle("Remove Rons's cut", function() return e30 end, function() e30 = not e30 ronC(e30) end)
 mmHmenu:add_int_range("Reset Sell stats", 1, 0, 500, function() return stats.get_int(mpx .. "LFETIME_HANGAR_SEL_COMPLET") end, function(value) stats.set_int(mpx .. "LFETIME_HANGAR_BUY_UNDETAK", value) stats.set_int(mpx .. "LFETIME_HANGAR_BUY_COMPLET", value) stats.set_int(mpx .. "LFETIME_HANGAR_SEL_UNDETAK", value) stats.set_int(mpx .. "LFETIME_HANGAR_SEL_COMPLET", value) stats.set_int(mpx .. "LFETIME_HANGAR_EARNINGS", value * 40000) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
 
-mmVmenu = dinMenu:add_submenu("Vehicle Cargo 'Test'$$$") local function Max(e) if not localplayer then return end if e then globals.set_int(281602, 155000) globals.set_int(281603, 155000) globals.set_int(281604, 155000) globals.set_float(281606, 0) globals.set_float(281607, 0) else globals.set_int(281602, 40000) globals.set_int(281603, 25000) globals.set_int(281604, 15000) globals.set_float(281606, 0.25) globals.set_float(281607, 0.5) end end mmVmenu:add_toggle("Maxear los rangos", function() return e17 end, function() e17 = not e17 Max(e17) end)
-local function VCD(e) if not localplayer then return end if e then for i = 281622, 281625 do globals.set_int(i, 0) sleep(1) globals.set_int(i, 1) end else globals.set_int(281622, 1200000) globals.set_int(281623, 1680000) globals.set_int(281624, 2340000) globals.set_int(281625, 2880000) end end mmVmenu:add_toggle("Remover culdown", function() return e18 end, function() e18 = not e18 VCD(e18) end)
-local function VRC(e) if not localplayer then return end if e then for i = 281601, 281603 do globals.set_int(i, 0) end else globals.set_int(281601, 34000) globals.set_int(281602, 21250) globals.set_int(281603, 12750) end end mmVmenu:add_toggle("Remover costo de jimmy", function() return e21 end, function() e21 = not e21 VRC(e21) end) mmVmenu:add_action("---", function() end)
-mmVmenu:add_int_range("Highest End", 1000, 40000, 4000000, function() return globals.get_int(281602) end, function(value) globals.set_int(281602, value) end)
-mmVmenu:add_int_range("Medium End", 1000, 25000, 4000000, function() return globals.get_int(281603) end, function(value) globals.set_int(281603, value) end)
-mmVmenu:add_int_range("Shitty End", 1000, 15000, 4000000, function() return globals.get_int(281604) end, function(value) globals.set_int(281604, value) end)
-mmVmenu:add_float_range("Sale Showroom", 0.5, 1.5, 1000, function() return globals.get_float(281608) end, function(value) globals.set_float(281608, value) end)
-mmVmenu:add_float_range("Sale Specialist Dealer", 0.5, 2, 1000, function() return globals.get_float(281609) end, function(value) globals.set_float(281609, value) end)
-mmVmenu:add_float_range("Upgrade Cost Showroom", 0.25, 0, 1000, function() return globals.get_float(281606) end, function(value) globals.set_float(281606, value) end)
-mmVmenu:add_float_range("Upgrade Cost Specialist Dealer", 0.25, 0, 1000, function() return globals.get_float(281607) end, function(value) globals.set_float(281607, value) end)
+mmVmenu = dinMenu:add_submenu("Vehicle Cargo 'Test'$$$") local function Max(e) if not localplayer then return end if e then globals.set_int(281602, 155000) globals.set_int(281603, 155000) globals.set_int(281604, 155000) globals.set_float(281606, 0) globals.set_float(281607, 0) else globals.set_int(281602, 40000) globals.set_int(281603, 25000) globals.set_int(281604, 15000) globals.set_float(281606, 0.25) globals.set_float(281607, 0.5) end end 
+mmVmenu:add_int_range("Highest End", 1000, 40000, 4000000, function() return globals.get_int(293281) end, function(value) globals.set_int(293281, value) end)
+mmVmenu:add_int_range("Medium End", 1000, 25000, 4000000, function() return globals.get_int(293282) end, function(value) globals.set_int(293282, value) end)
+mmVmenu:add_int_range("Shitty End", 1000, 15000, 4000000, function() return globals.get_int(293283) end, function(value) globals.set_int(293283, value) end)
+mmVmenu:add_float_range("Sale Showroom", 0.5, 1.5, 1000, function() return globals.get_float(281563) end, function(value) globals.set_float(281563, value) end)
+mmVmenu:add_float_range("Sale Specialist Dealer", 0.5, 2, 1000, function() return globals.get_float(281564) end, function(value) globals.set_float(281564, value) end)
+mmVmenu:add_float_range("Upgrade Cost Showroom", 0.25, 0, 1000, function() return globals.get_float(281561) end, function(value) globals.set_float(281561, value) end)
+mmVmenu:add_float_range("Upgrade Cost Specialist Dealer", 0.25, 0, 1000, function() return globals.get_float(281562) end, function(value) globals.set_float(281562, value) end)
 mmVmenu:add_action("-----Testeado:solo public; ~Max=310k------------", function() end)
 
-monMenu = dinMenu:add_submenu("Money Loop$$$")
-monMenu:add_action("Super inseguro tu, cuidado", function() end)
-monMenu:add_action("No seleccionar muchas al mismo tiempo", function() end)
-monMenu:add_action("Despues de una esperar 2m", function() end)
-monMenu:add_action("para la siguiente", function() end)
-monMenu:add_toggle("500k/ 30s", function() return enable1 end, function() enable1 = not enable1 while enable1 == true do Loop1(enable1) end end) local function Loop2(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(p) end end
-monMenu:add_toggle("750k/ 30s", function() return enable2 end, function() enable2 = not enable2 while enable2 == true do Loop2(enable2) end end) local function Loop3(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(z) g(m, x) s(z) g(m, k) s(q) end end
-monMenu:add_toggle("1M/ 60s", function() return enable3 end, function() enable3 = not enable3 while enable3 == true do Loop3(enable3) end end) local function Loop4(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(q) end end
-monMenu:add_toggle("1.5M/ 60s", function() return enable4 end, function() enable4 = not enable4 while enable4 == true do Loop4(enable4) end end) local function Loop5(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(r) end end
-monMenu:add_toggle("3M/ 120s", function() return enable5 end, function() enable5 = not enable5 while enable5 == true do Loop5(enable5) end end)
-monMenu:add_action("-----Testeado:solo publica, INSEGURO!!!------------", function() end)
-
 mcMenu = dinMenu:add_submenu("MC Club 'Test'$$$") local function Speed(e) if not localplayer then return end if e then for i = 279591, 279595 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(279594, 300000) globals.set_int(279595, 720000) globals.set_int(279593, 3000000) globals.set_int(279592, 1800000) globals.set_int(279591, 360000) end end 
-mcMenu:add_toggle("Increase Production", function() return e16 end, function() e16 = not e16 Speed(e16) end)
-local function VRC(e) if not localplayer then return end if e then globals.set_int(281143, 1000) else globals.set_int(281143, 1000) end end 
-mcMenu:add_toggle("Remove supplies cost", function() return e22 end, function() e22 = not e22 VRC(e22) end)
+local function Speed(e) if not localplayer then return end if e then for i = 279536, 279540 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(279539, 300000) globals.set_int(279540, 720000) globals.set_int(279538, 3000000) globals.set_int(279537, 1800000) globals.set_int(279536, 360000) end end 
+local function MCgs(e) if not localplayer then return end if e then globals.set_int(280392, 0) else globals.set_int(280392, 40000) end end mmMCmenu:add_toggle("Remove Global Signal", function() return e24 end, function() e24 = not e24 MCgs(e24) end)
+local function VCD(e) if not localplayer then return end if e then for i = 281622, 281625 do globals.set_int(i, 0) sleep(1) globals.set_int(i, 1) end else globals.set_int(281622, 1200000) globals.set_int(281623, 1680000) globals.set_int(281624, 2340000) globals.set_int(281625, 2880000) end end 
+local function VRC(e) if not localplayer then return end if e then globals.set_int(281098, 1000) else globals.set_int(281098, 1000) end end 
+local function VRD(e) if not localplayer then return end if e then globals.set_int(281099, 10) else globals.set_int(281099, 600) end end 
 local function MCrr(e) if not localplayer then return end if e then for i = 0, 4 do stats.set_int(mpx.."PAYRESUPPLYTIMER"..i, 1) sleep(0.1) end else for i = 0, 4 do stats.set_int(mpx.."PAYRESUPPLYTIMER"..i, 0) end end end 
-mcMenu:add_toggle("Refill Supplies(beta)", function() return e25 end, function() e25 = not e25 MCrr(e25) end)
-local function MCgs(e) if not localplayer then return end if e then globals.set_int(280439, 0) else globals.set_int(280439, 40000) end end 
+
+mcMenu:add_toggle("Trigger Produccion", function() return e16 end, function() e16 = not e16 Speed(e16) end)
+mcMenu:add_toggle("Remove Cooldown", function() return e18 end, function() e18 = not e18 VCD(e18) end)
+mcMenu:add_action("---", function() end)
+mcMenu:add_toggle("Remove Suplies cost", function() return e22 end, function() e22 = not e22 VRC(e22) end)
+mcMenu:add_toggle("Refill Suplies(beta)", function() return e25 end, function() e25 = not e25 MCrr(e25) end)
 mcMenu:add_toggle("Remove Global Signal", function() return e24 end, function() e24 = not e24 MCgs(e24) end)
-mcMenu:add_float_range("Sale Multiplier", 0.5, 1, 1000, function() return globals.get_float(281256) end, function(value) globals.set_float(281256, value) globals.set_float(281257, value) end) 
-mcMenu:add_action(" ~Use this to obtain~ ", function() end)
+mcMenu:add_float_range("Sale Multiplication", 0.5, 1, 1000, function() return globals.get_float(281256) end, function(value) globals.set_float(281256, value) globals.set_float(281257, value) end) 
+mcMenu:add_action(" ~Use to obtain~ ", function() end)
 mcMenu:add_action(" ~Max 2.5M~ ", function() end)
 
 MMmenu = dinMenu:add_submenu("Money Loop") local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
