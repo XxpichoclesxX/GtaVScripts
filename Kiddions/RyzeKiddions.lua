@@ -1478,7 +1478,7 @@ mcMenu:add_action(" ~Max 2.5M~ ", function() end)
 
 MMmenu = dinMenu:add_submenu("Money Loop") local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
 
-local g = globals.set_int()
+local g = globals.set_int
 local m = 1968313
 local x = 1
 local y = 2
