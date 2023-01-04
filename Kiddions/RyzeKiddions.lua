@@ -136,7 +136,12 @@ local PedSelf = {}
 PedSelf[joaat("mp_m_freemode_01")] = "Hombre"
 PedSelf[joaat("mp_f_freemode_01")] = "Mujer"
 
-appMenu:add_action("Cambiar el Genero", function() stats.set_int(mpx.."ALLOW_GENDER_CHANGE", 52) globals.set_int(281050, 0) end)
+appMenu:add_array_item("Cambio de Genero", {"OFF", "ON"}, function() 
+	return xox_15 end, function(aph) 
+		if aph == 1 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 0)
+	elseif aph == 2 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 52)
+	end xox15 = aph 
+end)
 
 OnlMenu = mainMenu:add_submenu("Online")
 
@@ -923,7 +928,7 @@ local money = 1
 local kd = 1
 local kills = 1
 local deaths = 1
-local ply = spoof:get_player_id() * 862
+local ply = localplayer:get_player_id() * 862
 local skidy_1 = 1
 local skidy_2 = 1
 local skidy_3 = 1
@@ -1455,7 +1460,7 @@ mmVmenu:add_action("-----Testeado:solo public; ~Max=310k------------", function(
 
 mcMenu = dinMenu:add_submenu("Club De Moteros 'Test'$$$") local function Speed(e) if not localplayer then return end if e then for i = 279591, 279595 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(279594, 300000) globals.set_int(279595, 720000) globals.set_int(279593, 3000000) globals.set_int(279592, 1800000) globals.set_int(279591, 360000) end end 
 local function Speed(e) if not localplayer then return end if e then for i = 279536, 279540 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(279539, 300000) globals.set_int(279540, 720000) globals.set_int(279538, 3000000) globals.set_int(279537, 1800000) globals.set_int(279536, 360000) end end 
-local function MCgs(e) if not localplayer then return end if e then globals.set_int(280392, 0) else globals.set_int(280392, 40000) end end mmMCmenu:add_toggle("Remove Global Signal", function() return e24 end, function() e24 = not e24 MCgs(e24) end)
+local function MCgs(e) if not localplayer then return end if e then globals.set_int(280392, 0) else globals.set_int(280392, 40000) end end 
 local function VCD(e) if not localplayer then return end if e then for i = 281622, 281625 do globals.set_int(i, 0) sleep(1) globals.set_int(i, 1) end else globals.set_int(281622, 1200000) globals.set_int(281623, 1680000) globals.set_int(281624, 2340000) globals.set_int(281625, 2880000) end end 
 local function VRC(e) if not localplayer then return end if e then globals.set_int(281098, 1000) else globals.set_int(281098, 1000) end end 
 local function VRD(e) if not localplayer then return end if e then globals.set_int(281099, 10) else globals.set_int(281099, 600) end end 
@@ -1473,7 +1478,7 @@ mcMenu:add_action(" ~Max 2.5M~ ", function() end)
 
 MMmenu = dinMenu:add_submenu("Money Loop") local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
 
-local g = globals.set_int()
+local g = globals.set_int
 local m = 1968313
 local x = 1
 local y = 2

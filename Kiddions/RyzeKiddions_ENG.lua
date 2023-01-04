@@ -135,8 +135,12 @@ local PedSelf = {}
 PedSelf[joaat("mp_m_freemode_01")] = "Man"
 PedSelf[joaat("mp_f_freemode_01")] = "Woman"
 
-appMenu:add_action("Change gender", function() stats.set_int(mpx.."ALLOW_GENDER_CHANGE", 52) globals.set_int(281050, 0) end)
-
+appMenu:add_array_item("Gender Change", {"OFF", "ON"}, function() 
+	return xox_15 end, function(aph) 
+		if aph == 1 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 0)
+	elseif aph == 2 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 52)
+	end xox15 = aph 
+end)
 
 OnlMenu = mainMenu:add_submenu("Online")
 
