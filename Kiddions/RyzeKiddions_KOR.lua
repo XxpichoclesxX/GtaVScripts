@@ -125,8 +125,8 @@ modSp:add_action("빠른 실행 다시 로드 재설정", function() stats.set_i
 modSp:add_action("인벤토리/방탄복 재충전", function()	stats.set_int(mpx .. "NO_BOUGHT_YUM_SNACKS", 30) stats.set_int(mpx .. "NO_BOUGHT_HEALTH_SNACKS", 15) stats.set_int(mpx .. "NO_BOUGHT_EPIC_SNACKS", 5) stats.set_int(mpx .. "NUMBER_OF_CHAMP_BOUGHT", 5) stats.set_int(mpx .. "NUMBER_OF_ORANGE_BOUGHT", 11) stats.set_int(mpx .. "NUMBER_OF_BOURGE_BOUGHT", 10) stats.set_int(mpx .. "CIGARETTES_BOUGHT", 20) stats.set_int(mpx .. "MP_CHAR_ARMOUR_1_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_2_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_3_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_4_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_5_COUNT", 10) stats.set_int(mpx .. "BREATHING_APPAR_BOUGHT", 20) end) 
 
 
-badSp:add_action("나쁜 스포츠 추가", function() stats.set_int("MPPLY_BADSPORT_MESSAGE", -1) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", -1) stats.set_float("MPPLY_OVERALL_BADSPORT", 60000) stats.set_bool("MPPLY_CHAR_IS_BADSPORT", true) globals.set_int(1574589, 0) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
-badSp:add_action("나쁜 스포츠 제거", function() stats.set_int("MPPLY_BADSPORT_MESSAGE", 0) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", 0) stats.set_float("MPPLY_OVERALL_BADSPORT", 0) stats.set_bool("MPPLY_CHAR_IS_BADSPORT", false) globals.set_int(1574589, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
+badSp:add_action("나쁜 스포츠 추가", function() stats.set_int("MPPLY_BADSPORT_MESSAGE", -1) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", -1) stats.set_float("MPPLY_OVERALL_BADSPORT", 60000) stats.set_bool("MPPLY_CHAR_IS_BADSPORT", true) globals.set_int(1575015, 0) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
+badSp:add_action("나쁜 스포츠 제거", function() stats.set_int("MPPLY_BADSPORT_MESSAGE", 0) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", 0) stats.set_float("MPPLY_OVERALL_BADSPORT", 0) stats.set_bool("MPPLY_CHAR_IS_BADSPORT", false) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
 
 modelMenu:add_action("----------------- Misc ----------------", function() end)
 
@@ -136,7 +136,12 @@ local PedSelf = {}
 PedSelf[joaat("mp_m_freemode_01")] = "남성"
 PedSelf[joaat("mp_f_freemode_01")] = "여성"
 
-appMenu:add_action("변경자", function() stats.set_int(mpx.."ALLOW_GENDER_CHANGE", 52) globals.set_int(281050, 0) end)
+appMenu:add_array_item("성별 변경", {"OFF", "ON"}, function() 
+	return xox_15 end, function(aph) 
+		if aph == 1 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 0)
+	elseif aph == 2 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 52)
+	end xox15 = aph 
+end)
 
 OnlMenu = mainMenu:add_submenu("온라인")
 
@@ -1473,7 +1478,7 @@ mcMenu:add_action(" ~Max 2.5M~ ", function() end)
 
 MMmenu = dinMenu:add_submenu("현금 반복") local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
 
-local g = globals.set_int()
+local g = globals.set_int
 local m = 1968313
 local x = 1
 local y = 2
