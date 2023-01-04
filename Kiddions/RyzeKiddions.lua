@@ -136,7 +136,12 @@ local PedSelf = {}
 PedSelf[joaat("mp_m_freemode_01")] = "Hombre"
 PedSelf[joaat("mp_f_freemode_01")] = "Mujer"
 
-appMenu:add_action("Cambiar el Genero", function() stats.set_int(mpx.."ALLOW_GENDER_CHANGE", 52) globals.set_int(281050, 0) end)
+appMenu:add_array_item("Cambio de Genero", {"OFF", "ON"}, function() 
+	return xox_15 end, function(aph) 
+		if aph == 1 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 0)
+	elseif aph == 2 then stats.set_int(mpx .. "ALLOW_GENDER_CHANGE", 52)
+	end xox15 = aph 
+end)
 
 OnlMenu = mainMenu:add_submenu("Online")
 
@@ -923,7 +928,7 @@ local money = 1
 local kd = 1
 local kills = 1
 local deaths = 1
-local ply = spoof:get_player_id() * 862
+local ply = localplayer:get_player_id() * 862
 local skidy_1 = 1
 local skidy_2 = 1
 local skidy_3 = 1
