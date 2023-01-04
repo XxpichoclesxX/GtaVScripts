@@ -3349,8 +3349,16 @@ menu.toggle_loop(detections, "Voto De Kickeo", {}, "Detecta si votan por expulsa
         local kickowner = NETWORK.NETWORK_SESSION_GET_KICK_VOTE(player_id)
         local kicked = NETWORK.NETWORK_SESSION_KICK_PLAYER(player_id)
         if kicked then
-            util.draw_debug_text(players.get_name(player_id) .. " El jugador", kicked, "ha sido kickeado por:", kickowner)
+            util.draw_debug_text(players.get_name(player_id) .. " El jugador" .. kicked .. "ha sido kickeado por:" .. kickowner)
             break
+        end
+    end
+end)
+
+menu.toggle_loop(detections, "Unirse Rapido", {}, "Detecta si alguien se une a ti de manera inusual.", function()
+    for _, pid in ipairs(players.list(false, true, true)) do
+        if not util.is_session_transition_active() and get_spawn_state(player_id) == 0 and players.get_script_host() == player_id  then
+            util.toast(players.get_name(player_id) .. " Envio una deteccion (Thunder Join) y ahora es modder")
         end
     end
 end)
@@ -3384,7 +3392,7 @@ menu.toggle_loop(online, "Aceptar La Union", {}, "Aceptara automaticamente panta
     local message_hash = HUD.GET_WARNING_SCREEN_MESSAGE_HASH()
     if message_hash == 15890625 or message_hash == -398982408 or message_hash == -587688989 then
         PAD.SET_CONTROL_VALUE_NEXT_FRAME(2, 201, 1.0)
-        util.yield(200)
+        util.yield(50)
     end
 end)
 
@@ -3519,7 +3527,9 @@ menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 
     util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0xA, i, 1, 1, 1})
 end)
 
-menu.action(recovery, "Desbloquear Garage", {}, "Desbloqueara el nuevo garage temporalmente. \nSe borrara al cambiar la sesion.", function()
+local drugwars = menu.list(recovery, "Drug Wars", {}, "Contenido de DrugWars.")
+
+menu.action(drugwars, "Desbloquear Garage", {}, "Desbloqueara el nuevo garage temporalmente. \nSe borrara al cambiar la sesion.", function()
     util.toast("Iniciando proceso.")
     util.toast("Tarda 2s aprox.")
     local player = PLAYER.PLAYER_PED_ID()
@@ -3530,12 +3540,12 @@ menu.action(recovery, "Desbloquear Garage", {}, "Desbloqueara el nuevo garage te
     util.toast("Terminado, deberias poder entrar o comprarlo.")
 end)
 
-menu.action(recovery, "Desbloquear Cont/Navidad", {}, "Despues de cambiar de sesion se te desbloqueara el contenido de navidad.", function()
+menu.action(drugwars, "Desbloquear Cont/Navidad", {}, "Despues de cambiar de sesion se te desbloqueara el contenido de navidad.", function()
     memory.write_byte(memory.script_global(262145 + 33915), 1)  
     memory.write_byte(memory.script_global(262145 + 33916), 1)  
 end)
 
-menu.action(recovery, "Desbloquear Cont/DLC", {}, "Te desbloqueara el contenido del nuevo DLC \nProbablemente sea solo por la sesion.", function()
+menu.action(drugwars, "Desbloquear Cont/DLC", {}, "Te desbloqueara el contenido del nuevo DLC \nProbablemente sea solo por la sesion.", function()
     menu.trigger_commands("scripthost")
     util.yield(50)
     for i = 33974, 34112, 1 do
@@ -3543,7 +3553,7 @@ menu.action(recovery, "Desbloquear Cont/DLC", {}, "Te desbloqueara el contenido 
     end
 end)
 
-menu.action(recovery, "Desbloquear Misiones", {}, "Te desbloqueara todo. \nIncluyendo una de las nuevas misiones.", function()
+menu.action(drugwars, "Desbloquear Misiones", {}, "Te desbloqueara todo. \nIncluyendo una de las nuevas misiones.", function()
     menu.trigger_commands("scripthost")
     util.toast("Tendras las camisetas btw.")
     util.yield(50)
@@ -3553,7 +3563,7 @@ menu.action(recovery, "Desbloquear Misiones", {}, "Te desbloqueara todo. \nInclu
     end
 end)
 
-menu.action(recovery, "Desbloquear van.", {}, "Te desbloqueara la van de armas.", function()
+menu.action(drugwars, "Desbloquear van.", {}, "Te desbloqueara la van de armas.", function()
     local player = PLAYER.PLAYER_PED_ID()
     menu.trigger_commands("scripthost")
     util.yield(50)
@@ -3561,6 +3571,12 @@ menu.action(recovery, "Desbloquear van.", {}, "Te desbloqueara la van de armas."
         memory.write_byte(memory.script_global(262145 + 33800 + 1 + i), 1)
     end
     memory.write_byte(memory.script_global(262145 + 33799), 1)
+end)
+
+menu.toggle_loop(drugwars, "Misiones Del Taxi", {}, "", function() -- credit to sapphire for all of this <3 / Also Prisuhm, this is hes code.
+    if memory.read_byte(memory.script_global(262145 + 33770)) ~= 1 then
+        memory.write_byte(memory.script_global(262145 + 33770), 1)
+    return end
 end)
 
 local bypasskick = menu.list(online, "Bypass Kick", {}, "Opciones que te permiten usar metodos para \n entrar a la sesion si te estan bloqueando.")
@@ -3858,8 +3874,9 @@ menu.toggle_loop(protects, "Bloquear Error De Transaccion", {}, "Es probable que
     if on_toggle then
         menu.trigger_command(TransactionError, "on")
         menu.trigger_command(TransactionErrorV, "on")
-        for i = 1, 100 do
+        for i = 1, 300 do
             menu.trigger_commands("removeloader")
+            util.yield(1000)
         end
 --        --util.toast("No es mi culpa el error del log, esperen a que Stand lo arregle")
     end
@@ -3924,6 +3941,7 @@ menu.toggle_loop(anticage, "Anti Jaula", {"anticage"}, "", function()
         CAM.SET_GAMEPLAY_CAM_IGNORE_ENTITY_COLLISION_THIS_UPDATE(obj_handle)
         for i, data in ipairs(my_ents) do
             if data ~= 0 and ENTITY.IS_ENTITY_TOUCHING_ENTITY(data, obj_handle) and alpha > 0 then
+                util.toast("Te estan intentando enjaular.")
                 ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(obj_handle, data, false)
                 ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(data, obj_handle, false)
                 ENTITY.SET_ENTITY_ALPHA(obj_handle, alpha, false)
