@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Welcome " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 3.88
+local localVer = 3.881
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -3484,7 +3484,7 @@ menu.toggle_loop(detections, "Teleport", {}, "Detect if the player teleports", f
             for i, interior in ipairs(interior_stuff) do
                 if v3.distance(oldpos, currentpos) > 500 and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
                 and get_transition_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
-                    util.toast(players.get_name(player_id) .. "  He just teleported")
+                    util.toast(players.get_name(player_id) .. "  He teleported")
                 end
             end
         end
@@ -3496,8 +3496,16 @@ menu.toggle_loop(detections, "Vote To Kick", {}, "It detects if they vote to exp
         local kickowner = NETWORK.NETWORK_SESSION_GET_KICK_VOTE(player_id)
         local kicked = NETWORK.NETWORK_SESSION_KICK_PLAYER(player_id)
         if kicked then
-            util.draw_debug_text(players.get_name(player_id) .. " The player", kicked, "has been kicked by:", kickowner)
+            util.draw_debug_text(players.get_name(player_id) .. " The player" .. kicked .. "has been kicked by:" .. kickowner)
             break
+        end
+    end
+end)
+
+menu.toggle_loop(detections, "Thunder Join", {}, "Detects if someone is using thunder join.", function()
+    for _, pid in ipairs(players.list(false, true, true)) do
+        if not util.is_session_transition_active() and get_spawn_state(player_id) == 0 and players.get_script_host() == player_id  then
+            util.toast(players.get_name(player_id) .. " Is using (Thunder Join) and now is a modder.")
         end
     end
 end)
@@ -3532,7 +3540,7 @@ menu.toggle_loop(online, "Accept Joins", {}, "Automatically accept join screens"
     local message_hash = HUD.GET_WARNING_SCREEN_MESSAGE_HASH()
     if message_hash == 15890625 or message_hash == -398982408 or message_hash == -587688989 then
         PAD.SET_CONTROL_VALUE_NEXT_FRAME(2, 201, 1.0)
-        util.yield(200)
+        util.yield(50)
     end
 end)
 
@@ -3669,7 +3677,9 @@ menu.click_slider(coleccionables, "Junk Energy Free Flight", {""}, "", 0, 9, 0, 
     util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0xA, i, 1, 1, 1})
 end)
 
-menu.action(recovery, "Unlock 50 Garage", {}, "Will unlock the new DLC garage. \nIt will be deleted once you change from sesion.", function()
+local drugwars = menu.list(recovery, "Drug Wars", {}, "DrugWars content.")
+
+menu.action(drugwars, "Unlock 50 Garage", {}, "Will unlock the new DLC garage. \nIt will be deleted once you change from sesion.", function()
     util.toast("Starting Process.")
     util.toast("Takes 2s aprox.")
     local player = PLAYER.PLAYER_PED_ID()
@@ -3680,19 +3690,18 @@ menu.action(recovery, "Unlock 50 Garage", {}, "Will unlock the new DLC garage. \
     util.toast("Finished, enjoy.")
 end)
 
-menu.action(recovery, "Unlock XMass Content", {}, "You must change sesion.", function()
+menu.action(drugwars, "Unlock XMass Content", {}, "You must change sesion.", function()
     memory.write_byte(memory.script_global(262145 + 33915), 1)  
     memory.write_byte(memory.script_global(262145 + 33916), 1)  
 end)
 
-menu.action(recovery, "Unlock DLC Content", {}, "Probably will be deleted if you change sesion.", function()
+menu.action(drugwars, "Unlock DLC Content", {}, "Probably will be deleted if you change sesion.", function()
     for i = 33974, 34112, 1 do
         memory.write_byte(memory.script_global(262145 + i), 1)  
     end
 end)
 
---[[
-    menu.action(recovery, "Desbloquear Misiones", {}, "Te desbloqueara todo. \nIncluyendo una de las nuevas misiones.", function()
+menu.action(drugwars, "Unlock Misions", {}, "Te desbloqueara todo. \nIncluyendo una de las nuevas misiones.", function()
     menu.trigger_commands("scripthost")
     util.toast("Tendras las camisetas btw.")
     util.yield(50)
@@ -3701,16 +3710,20 @@ end)
         memory.write_byte(memory.script_global(262145 + i), 1)  
     end
 end)
-]]
 
-menu.action(recovery, "Unlock Van.", {}, "Will unlock gun van.", function()
-    local player = PLAYER.PLAYER_PED_ID()
+menu.action(drugwars, "Unlock Van.", {}, "Will unlock gun van.", function()
     menu.trigger_commands("scripthost")
-    ENTITY.SET_ENTITY_COORDS(player, 2345.4219, 3051.9492, 48.152084, 1, false)
     for i = 0, 29 do
         memory.write_byte(memory.script_global(262145 + 33800 + 1 + i), 1)
     end
     memory.write_byte(memory.script_global(262145 + 33799), 1)
+end)
+
+menu.toggle_loop(drugwars, "Taxi Misions", {}, "", function() -- credit to sapphire for all of this <3 / Also Prisuhm, this is hes code.
+    menu.trigger_commands("scripthost")
+    if memory.read_byte(memory.script_global(262145 + 33770)) ~= 1 then
+        memory.write_byte(memory.script_global(262145 + 33770), 1)
+    return end
 end)
 
 local bypasskick = menu.list(online, "Bypass Kick", {}, "Options that allow you to use methods to n enter the session if you are being blocked.")
@@ -3986,8 +3999,9 @@ menu.toggle_loop(protects, "Block Transaction Error 'Test'", {}, "Likely to lead
     if on_toggle then
         menu.trigger_command(TransactionError, "on")
         menu.trigger_command(TransactionErrorV, "on")
-        for i = 1, 100 do
+        for i = 1, 300 do
             menu.trigger_commands("removeloader")
+            util.yield(1000)
         end
         --util.toast("It's not my fault the log error, wait for Stand to fix it")
     end
@@ -4044,6 +4058,7 @@ menu.toggle_loop(anticage, "Anti Cage", {"anticage"}, "", function()
         CAM.SET_GAMEPLAY_CAM_IGNORE_ENTITY_COLLISION_THIS_UPDATE(obj_handle)
         for i, data in ipairs(my_ents) do
             if data ~= 0 and ENTITY.IS_ENTITY_TOUCHING_ENTITY(data, obj_handle) and alpha > 0 then
+                util.toast("They are trying to cage you.")
                 ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(obj_handle, data, false)
                 ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(data, obj_handle, false)
                 ENTITY.SET_ENTITY_ALPHA(obj_handle, alpha, false)
