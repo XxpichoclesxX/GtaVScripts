@@ -90,6 +90,34 @@ local function setdeaths()
 	end
 end
 
+local function GunVan_L7NEG()
+    for i = 33799, 33799, 1 do
+        globals.set_int(262145 + i, 1)
+        sleep(2)
+    end
+end
+
+local function UnlockTaxiJob_L7NEG()
+    for i = 33770, 33770, 1 do
+        globals.set_int(262145 + i, 1)
+        sleep(2)
+    end
+end
+
+local function StreetDealer_L7NEG()
+    for i = 34062, 34062, 1 do
+        globals.set_int(262145 + i, 1)
+        sleep(2)
+    end
+end
+
+local function unlockBLVDGarage_L7NEG()
+    for i = 32702, 32702, 1 do
+        globals.set_int(262145 + i, 1)
+        sleep(2)
+    end
+end
+
 local function setkills2()
 		local valuekd = globals.get_float(1853910 + 1 + ply + 205 + 26)
 		local egothisscriptisstolen = math.floor(valuekd * randomslonshit1)
@@ -128,6 +156,18 @@ badSp:add_action("Add BadSports", function() stats.set_int("MPPLY_BADSPORT_MESSA
 badSp:add_action("Remove BadSports", function() stats.set_int("MPPLY_BADSPORT_MESSAGE", 0) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", 0) stats.set_float("MPPLY_OVERALL_BADSPORT", 0) stats.set_bool("MPPLY_CHAR_IS_BADSPORT", false) globals.set_int(1574589, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
 
 modelMenu:add_action("----------------- Misc ----------------", function() end)
+
+local snowAddress = 262145 + 4752
+local isEnabled = false
+
+function toggleSnow()
+    isEnabled = not isEnabled
+    globals.set_boolean(snowAddress, isEnabled)
+end
+
+modelMenu:add_toggle("Snow", function()
+    return globals.get_boolean(snowAddress)
+end, toggleSnow)
 
 appMenu = modelMenu:add_submenu("Appearance")
 
@@ -201,6 +241,22 @@ end
 
 
 OnlMenu:add_action("----------------- Recovery ----------------", function() end)
+
+OnlMenu:add_action("Unlock Gun Van", function()
+	GunVan_L7NEG()
+end)
+
+OnlMenu:add_action("Unlock Taxi Job", function()
+	UnlockTaxiJob_L7NEG()
+end)
+
+OnlMenu:add_action("Unlock Dealers", function()
+	StreetDealer_L7NEG()
+end)
+
+OnlMenu:add_action("Unlock 50 Garage", function()
+	unlockBLVDGarage_L7NEG()
+end)
 
 OnlMenu:add_action("100% Stats", function()
 	stats.set_int(mpx .. "SCRIPT_INCREASE_DRIV", 100)
@@ -343,6 +399,39 @@ cayoPericoMenu:add_action("Instant Finish", function() fmC2020:set_int(38397, 51
 
 nMenu = OnlMenu:add_submenu("Club Nocturno")
 nMenu:add_action("Popularity 100%", function() stats.set_int(mpx .. "CLUB_POPULARITY", 1000) end)
+
+cccMenu = OnlMenu:add_submenu("Casino")
+
+local function casCctv(e) if not localplayer then return end if e then menu.remove_cctvs() else menu.remove_cctvs(nil) end end 
+cccMenu:add_array_item("Target", {"Cash", "Gold", "Art", "Diamonds"}, function() return xox_8 end, function(v) if v == 1 then stats.set_int(mpx .. "H3OPT_TARGET", 0) elseif v == 2 then stats.set_int(mpx .. "H3OPT_TARGET", 1) elseif v == 3 then stats.set_int(mpx .. "H3OPT_TARGET", 2) elseif v == 4 then stats.set_int(mpx .. "H3OPT_TARGET", 3) end xox_8 = v end)
+cccMenu:add_action("---[[Complete Preps - Finale]]---", function() stats.set_int(mpx .. "H3OPT_DISRUPTSHIP", 3) stats.set_int(mpx .. "H3OPT_KEYLEVELS", 2) stats.set_int(mpx .. "H3OPT_VEHS", 3) stats.set_int(mpx .. "H3OPT_WEAPS", 0) stats.set_int(mpx .. "H3OPT_BITSET0", -1) stats.set_int(mpx .. "H3OPT_BITSET1", -1) stats.set_int(mpx .. "H3OPT_COMPLETEDPOSIX", -1) end)
+cccMenu:add_action("---[[Reset Heist]]---", function() stats.set_int(mpx .. "H3OPT_BITSET1", 0) stats.set_int(mpx .. "H3OPT_BITSET0", 0) end) 
+cccMenu:add_action("---------------------------------------------", function() end)
+cccMenu:add_action("All POI n Accesspoints", function() stats.set_int(mpx .. "H3OPT_POI", -1) stats.set_int(mpx .. "H3OPT_ACCESSPOINTS", -1) end)
+cccMenu:add_action("Remove Casino Heist CD", function() stats.set_int(mpx .. "H3_COMPLETEDPOSIX", -1) stats.set_int("MPPLY_H3_COOLDOWN", -1) end)
+cccMenu:add_action("Choose if 1st Heist/Unlock lester cancel", function() stats.set_int(mpx .. "CAS_HEIST_NOTS", -1) stats.set_int(mpx .. "CAS_HEIST_FLOW", -1) end) local function DCHC(e) if not localplayer then return end if e then for i = 290950, 290964 do globals.set_int(i, 0) end globals.set_int(290600, 0) else globals.set_int(290600, 5) globals.set_int(290950, 5) globals.set_int(290951, 9) globals.set_int(290952, 7) globals.set_int(290953, 10) globals.set_int(290954, 8) globals.set_int(290955, 5) globals.set_int(290956, 7) globals.set_int(290957, 9) globals.set_int(290958, 6) globals.set_int(290959, 10) globals.set_int(290960, 3) globals.set_int(290961, 7) globals.set_int(290962, 5) globals.set_int(290963, 10) globals.set_int(290964, 9) end end 
+cccMenu:add_toggle("Remove Lester+Crew Cuts", function() return e8 end, function() e8 = not e8 DCHC(e8) end) 
+cccMenu:add_action("------", function() end) 
+cccMenu:add_int_range("Casino Lifes - Self", 1, 1, 10, function() return fmC:get_int(26105 + 1322 + 1) end, function(life) if fmC and fmC:is_active() then fmC:set_int(26105 + 1322 + 1,life) end end)
+cccMenu:add_action("Suicide", function() menu.suicide_player() end) cccMenu:add_action("^^^[Useful for Blackscreen Bug]", function() end) 
+cccMenu:add_action("-------", function() end)
+cccMenu:add_action("Bypass Fingerprint Hack ", function() if fmC and fmC:is_active() then if fmC:get_int(52962) == 4 then fmC:set_int(52962, 5) end end end)
+cccMenu:add_action("Bypass Door Hack ", function() if fmC and fmC:is_active() then if fmC:get_int(54024) ~= 4 then fmC:set_int(54024, 5) end end end)
+cccMenu:add_action("Quick Drill Vault Door", function() if fmC:is_active() then fmC:set_int(10098 + 7, 4) sleep(0.01) fmC:set_int(10098 + 7, 6) menu.send_key_press(1) end end)
+cccMenu:add_toggle("Remove CCTV", function() return e7 end, function() e7 = not e7 casCctv(e7) end) 
+cccMenu:add_action("Kill mission npcs", function() menu.kill_all_mission_peds() end) 
+cccMenu:add_action("Kill all npcs", function() menu.kill_all_npcs() end)
+cccMenu:add_int_range("Real Take", 100000, 1000000, 10000000, function() return fmC:get_int(22365) end, function(v) fmC:set_int(22365, v) end)
+CDNCMenu = cccMenu:add_submenu("Cuts") 
+CDNCMenu:add_array_item("Preset cuts", {"85 all", "100 all"}, function() return xox_34 end, function(G) if G == 1 then for i = 1973221, 1973224 do globals.set_int(i, 85) end elseif G == 2 then for i = 1973221, 1973224 do globals.set_int(i, 100) end end xox_34 = value end)
+CDNCMenu:add_int_range("Player 1", 5, 15, 300, function() return globals.get_int(1973221) end, function(value) globals.set_int(1973221, value) end) CDNCMenu:add_int_range("Player 2", 5, 15, 300, function() return globals.get_int(1973222) end, function(value) globals.set_int(1973222, value) end) CDNCMenu:add_int_range("Player 3", 5, 15, 300, function() return globals.get_int(1973223) end, function(value) globals.set_int(1973223, value) end) CDNCMenu:add_int_range("Player 4", 5, 15, 300, function() return globals.get_int(1973224) end, function(value) globals.set_int(1973224, value) end) CDNCMenu:add_action("-----", function() end) CDNCMenu:add_int_range("Non-Host Self Cut", 5, 15, 300, function() return globals.get_int(2722245) end, function(value) globals.set_int(2722245, value) end)
+CDNPMenu = cccMenu:add_submenu("Potential Editor") 
+CDNPMenu:add_int_range("Cash Potential", 1000000000.0, 2115000, 1000000000, function() return globals.get_int(290938) end, function(value) globals.set_int(290938, value) end) 
+CDNPMenu:add_int_range("Art Potential", 1000000000.0, 2350000, 1000000000, function() return globals.get_int(290939) end, function(value) globals.set_int(290939, value) end) 
+CDNPMenu:add_int_range("Gold Potential", 1000000000.0, 2585000, 1000000000, function() return globals.get_int(290940) end, function(value) globals.set_int(290940, value) end) 
+CDNPMenu:add_int_range("Diamond Potential", 1000000000.0, 3290000, 1000000000, function() return globals.get_int(290941) end, function(value) globals.set_int(290941, value) end) 
+cccMenu:add_array_item("Teleports", {"Vault swipe", "Staff Door Exit", "Laundry room", "Bonus room", "Roof exit"}, function() return xox_14 end, function(value) if value == 1 then TP(2468.646973, -279.083374, -71.994194, -1.083554, 0.000000, 0.000000) elseif value == 2 then TP(2547.458496, -277.744507, -59.741863, -0.071993, 0.005218, -0.113118) elseif value == 3 then TP(2536.455078, -300.772522, -60.022968, 0.000000, 0.000000, 0.000000) elseif value == 4 then TP(2521.906494, -287.172882, -60.022964, 0.000000, 0.000000, 0.000000) elseif value == 5 then TP(2522.338379, -248.534760, -25.414972, 0.000000, 0.000000, 0.000000) end xox_14 = value end)
+
 
 protMenu = mainMenu:add_submenu("Protections 'Test'")
 
