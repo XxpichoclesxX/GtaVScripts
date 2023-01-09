@@ -90,6 +90,34 @@ local function setdeaths()
 	end
 end
 
+local function GunVan_L7NEG()
+    for i = 33799, 33799, 1 do
+        globals.set_int(262145 + i, 1)
+        sleep(2)
+    end
+end
+
+local function UnlockTaxiJob_L7NEG()
+    for i = 33770, 33770, 1 do
+        globals.set_int(262145 + i, 1)
+        sleep(2)
+    end
+end
+
+local function StreetDealer_L7NEG()
+    for i = 34062, 34062, 1 do
+        globals.set_int(262145 + i, 1)
+        sleep(2)
+    end
+end
+
+local function unlockBLVDGarage_L7NEG()
+    for i = 32702, 32702, 1 do
+        globals.set_int(262145 + i, 1)
+        sleep(2)
+    end
+end
+
 local function setkills2()
 		local valuekd = globals.get_float(1853910 + 1 + ply + 205 + 26)
 		local egothisscriptisstolen = math.floor(valuekd * randomslonshit1)
@@ -130,7 +158,19 @@ badSp:add_action("나쁜 스포츠 제거", function() stats.set_int("MPPLY_BADS
 
 modelMenu:add_action("----------------- Misc ----------------", function() end)
 
-appMenu = modelMenu:add_submenu("외모")
+local snowAddress = 262145 + 4752
+local isEnabled = false
+
+function toggleSnow()
+    isEnabled = not isEnabled
+    globals.set_boolean(snowAddress, isEnabled)
+end
+
+modelMenu:add_toggle("Nieve", function()
+    return globals.get_boolean(snowAddress)
+end, toggleSnow)
+
+appMenu = modelMenu:add_submenu("Apariencia")
 
 local PedSelf = {}
 PedSelf[joaat("mp_m_freemode_01")] = "남성"
@@ -205,7 +245,23 @@ end
 
 OnlMenu:add_action("----------------- 러커버리 ----------------", function() end)
 
-OnlMenu:add_action("100% 통계", function()
+OnlMenu:add_action("밴 잠금 해제", function()
+	GunVan_L7NEG()
+end)
+
+OnlMenu:add_action("택시 작업 차단 해제", function()
+	UnlockTaxiJob_L7NEG()
+end)
+
+OnlMenu:add_action("딜러스 칼레헤로스 차단 해제", function()
+	StreetDealer_L7NEG()
+end)
+
+OnlMenu:add_action("50차고 잠금 해제", function()
+	unlockBLVDGarage_L7NEG()
+end)
+
+OnlMenu:add_action("Habilidades 100%", function()
 	stats.set_int(mpx .. "SCRIPT_INCREASE_DRIV", 100)
 	stats.set_int(mpx .. "SCRIPT_INCREASE_FLY", 100)
 	stats.set_int(mpx .. "SCRIPT_INCREASE_LUNG", 100)
@@ -342,6 +398,44 @@ cayoPericoMenu:add_action("시네마틱", function() end)
 cayoPericoMenu:add_action("------------ 빨리 -------------", function() end)
 cayoPericoMenu:add_action("준비 완료", function() stats.set_int(mpx .. "H4CNF_UNIFORM", -1) stats.set_int(mpx .. "H4CNF_GRAPPEL", -1) stats.set_int(mpx .. "H4CNF_TROJAN", 5) stats.set_int(mpx .. "H4CNF_WEP_DISRP", 3) stats.set_int(mpx .. "H4CNF_ARM_DISRP", 3) stats.set_int(mpx .. "H4CNF_HEL_DISRP", 3) end)
 cayoPericoMenu:add_action("즉시 종료", function() fmC2020:set_int(38397, 51338752) fmC2020:set_int(39772, 50) end)
+
+nMenu = OnlMenu:add_submenu("나이트클럽")
+nMenu:add_action("100%의 인기", function() stats.set_int(mpx .. "CLUB_POPULARITY", 1000) end)
+
+cccMenu = OnlMenu:add_submenu("카지노")
+
+local function casCctv(e) if not localplayer then return end if e then menu.remove_cctvs() else menu.remove_cctvs(nil) end end 
+cccMenu:add_array_item("목표", {"돈", "금", "그림", "다이아몬드"}, function() return xox_8 end, function(v) if v == 1 then stats.set_int(mpx .. "H3OPT_TARGET", 0) elseif v == 2 then stats.set_int(mpx .. "H3OPT_TARGET", 1) elseif v == 3 then stats.set_int(mpx .. "H3OPT_TARGET", 2) elseif v == 4 then stats.set_int(mpx .. "H3OPT_TARGET", 3) end xox_8 = v end)
+cccMenu:add_action("---[[준비 완료 - 끝]]--", function() stats.set_int(mpx .. "H3OPT_DISRUPTSHIP", 3) stats.set_int(mpx .. "H3OPT_KEYLEVELS", 2) stats.set_int(mpx .. "H3OPT_VEHS", 3) stats.set_int(mpx .. "H3OPT_WEAPS", 0) stats.set_int(mpx .. "H3OPT_BITSET0", -1) stats.set_int(mpx .. "H3OPT_BITSET1", -1) stats.set_int(mpx .. "H3OPT_COMPLETEDPOSIX", -1) end)
+cccMenu:add_action("---[[쿠데타를 다시 시작합니다.]]---", function() stats.set_int(mpx .. "H3OPT_BITSET1", 0) stats.set_int(mpx .. "H3OPT_BITSET0", 0) end) 
+cccMenu:add_action("------------------------------------------", function() end)
+cccMenu:add_action("모든 접근 지점들은", function() stats.set_int(mpx .. "H3OPT_POI", -1) stats.set_int(mpx .. "H3OPT_ACCESSPOINTS", -1) end)
+cccMenu:add_action("쿨다운 펀치 제거", function() stats.set_int(mpx .. "H3_COMPLETEDPOSIX", -1) stats.set_int("MPPLY_H3_COOLDOWN", -1) end)
+cccMenu:add_action("퍼스트 히트/레스터 잠금 해제", function() stats.set_int(mpx .. "CAS_HEIST_NOTS", -1) stats.set_int(mpx .. "CAS_HEIST_FLOW", -1) end) local function DCHC(e) if not localplayer then return end if e then for i = 290950, 290964 do globals.set_int(i, 0) end globals.set_int(290600, 0) else globals.set_int(290600, 5) globals.set_int(290950, 5) globals.set_int(290951, 9) globals.set_int(290952, 7) globals.set_int(290953, 10) globals.set_int(290954, 8) globals.set_int(290955, 5) globals.set_int(290956, 7) globals.set_int(290957, 9) globals.set_int(290958, 6) globals.set_int(290959, 10) globals.set_int(290960, 3) globals.set_int(290961, 7) globals.set_int(290962, 5) globals.set_int(290963, 10) globals.set_int(290964, 9) end end 
+cccMenu:add_toggle("레스터 비용 제거", function() return e8 end, function() e8 = not e8 DCHC(e8) end) 
+cccMenu:add_action("--------", function() end) 
+cccMenu:add_int_range("인비다스 델 카지노 - 투 솔로", 1, 1, 10, function() return fmC:get_int(26105 + 1322 + 1) end, function(life) if fmC and fmC:is_active() then fmC:set_int(26105 + 1322 + 1,life) end end)
+cccMenu:add_action("자살하다", function() menu.suicide_player() end) 
+cccMenu:add_action("해킹을 지문에서 지웁니다. ", function() if fmC and fmC:is_active() then if fmC:get_int(52962) == 4 then fmC:set_int(52962, 5) end end end)
+cccMenu:add_action("해킹 데 푸에르타를 제거하다 ", function() if fmC and fmC:is_active() then if fmC:get_int(54024) ~= 4 then fmC:set_int(54024, 5) end end end)
+cccMenu:add_action("레카르 페르포라르 보베다", function() if fmC:is_active() then fmC:set_int(10098 + 7, 4) sleep(0.01) fmC:set_int(10098 + 7, 6) menu.send_key_press(1) end end)
+cccMenu:add_toggle("CCTV를 제거하다", function() return e7 end, function() e7 = not e7 casCctv(e7) end) 
+cccMenu:add_action("마타르 NPC 임무", function() menu.kill_all_mission_peds() end) 
+cccMenu:add_action("npc를 모두 죽여라", function() menu.kill_all_npcs() end)
+cccMenu:add_int_range("리얼 테이크", 100000, 1000000, 10000000, function() return fmC:get_int(22365) end, function(v) fmC:set_int(22365, v) end)
+CDNCMenu = cccMenu:add_submenu("수량") 
+CDNCMenu:add_array_item("프리셋", {"85 all", "100 all"}, function() return xox_34 end, function(G) if G == 1 then for i = 1973221, 1973224 do globals.set_int(i, 85) end elseif G == 2 then for i = 1973221, 1973224 do globals.set_int(i, 100) end end xox_34 = value end)
+CDNCMenu:add_int_range("플레이어 1", 5, 15, 300, function() return globals.get_int(1973221) end, function(value) globals.set_int(1973221, value) end) 
+CDNCMenu:add_int_range("플레이어 2", 5, 15, 300, function() return globals.get_int(1973222) end, function(value) globals.set_int(1973222, value) end) 
+CDNCMenu:add_int_range("플레이어 3", 5, 15, 300, function() return globals.get_int(1973223) end, function(value) globals.set_int(1973223, value) end) 
+CDNCMenu:add_int_range("플레이어 4", 5, 15, 300, function() return globals.get_int(1973224) end, function(value) globals.set_int(1973224, value) end) 
+CDNPMenu = cccMenu:add_submenu("잠재적 편집자")
+CDNPMenu:add_int_range("잠재적 돈", 1000000000.0, 2115000, 1000000000, function() return globals.get_int(290938) end, function(value) globals.set_int(290938, value) end) 
+CDNPMenu:add_int_range("잠재적 예술", 1000000000.0, 2350000, 1000000000, function() return globals.get_int(290939) end, function(value) globals.set_int(290939, value) end) 
+CDNPMenu:add_int_range("잠재적 금", 1000000000.0, 2585000, 1000000000, function() return globals.get_int(290940) end, function(value) globals.set_int(290940, value) end) 
+CDNPMenu:add_int_range("잠재적 다이아몬드", 1000000000.0, 3290000, 1000000000, function() return globals.get_int(290941) end, function(value) globals.set_int(290941, value) end) 
+cccMenu:add_array_item("텔레포트", {"볼트 스와이프", "직원 문 출구", "세탁실", "보너스룸", "옥상 출구"}, function() return xox_14 end, function(value) if value == 1 then TP(2468.646973, -279.083374, -71.994194, -1.083554, 0.000000, 0.000000) elseif value == 2 then TP(2547.458496, -277.744507, -59.741863, -0.071993, 0.005218, -0.113118) elseif value == 3 then TP(2536.455078, -300.772522, -60.022968, 0.000000, 0.000000, 0.000000) elseif value == 4 then TP(2521.906494, -287.172882, -60.022964, 0.000000, 0.000000, 0.000000) elseif value == 5 then TP(2522.338379, -248.534760, -25.414972, 0.000000, 0.000000, 0.000000) end xox_14 = value end)
+
 
 
 protMenu = mainMenu:add_submenu("보호 'Test'")
