@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("어서오세요 " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al 스크립트!!")
 util.toast("로딩 중 기다려주세요...(1-2초)")
 local response = false
-local localVer = 3.881
+local localVer = 4.0
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -219,7 +219,7 @@ end
 
 local function BlockSyncs(player_id, callback)
     for _, i in ipairs(players.list(false, true, true)) do
-        if i ~= pid then
+        if i ~= player_id then
             local outSync = menu.ref_by_rel_path(menu.player_root(i), "Outgoing Syncs>Block")
             menu.trigger_command(outSync, "on")
         end
@@ -227,7 +227,7 @@ local function BlockSyncs(player_id, callback)
     util.yield(10)
     callback()
     for _, i in ipairs(players.list(false, true, true)) do
-        if i ~= pid then
+        if i ~= player_id then
             local outSync = menu.ref_by_rel_path(menu.player_root(i), "Outgoing Syncs>Block")
             menu.trigger_command(outSync, "off")
         end
@@ -327,16 +327,16 @@ local function kick_player_out_of_veh(player_id)
     end
 end
 
-local function get_spawn_state(pid)
-    return memory.read_int(memory.script_global(((2657589 + 1) + (pid * 466)) + 232)) -- Global_2657589[PLAYER::PLAYER_ID() /*466*/].f_232
+local function get_spawn_state(player_id)
+    return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 232)) -- Global_2657589[PLAYER::PLAYER_ID() /*466*/].f_232
 end
 
-local function get_interior_player_is_in(pid)
-    return memory.read_int(memory.script_global(((2657589 + 1) + (pid * 466)) + 245))
+local function get_interior_player_is_in(player_id)
+    return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 245))
 end
 
-local function is_player_in_interior(pid)
-    return (memory.read_int(memory.script_global(2657589 + 1 + (pid * 466) + 245)) ~= 0)
+local function is_player_in_interior(player_id)
+    return (memory.read_int(memory.script_global(2657589 + 1 + (player_id * 466) + 245)) ~= 0)
 end
 
 local function get_random_pos_on_radius(pos, radius)
@@ -366,12 +366,13 @@ end
 
 -- Menu dividers (Sections)
 
+local selfc = menu.list(menu.my_root(), "셀프", {}, "자신에 대한 옵션")
 local online = menu.list(menu.my_root(), "온라인", {}, "온라인 모드 옵션")
-local world = menu.list(menu.my_root(), "월드", {}, "당신 주변의 선택")
-local detections = menu.list(menu.my_root(), "감지", {}, "이름은 w;")
-local protects = menu.list(menu.my_root(), "보호", {}, "모더로부터 보호")
+local world = menu.list(menu.my_root(), "세계", {}, "주변 옵션")
+local detections = menu.list(menu.my_root(), "모더 감지", {}, "모더 감지 합니다.")
+local protects = menu.list(menu.my_root(), "보호", {}, "모더로부터 자신을 보호하십시오.")
 local vehicles = menu.list(menu.my_root(), "차량", {}, "차량 옵션")
-local fun = menu.list(menu.my_root(), "전환", {}, "심심하면 잠깐 놀아요 : 3")
+local fun = menu.list(menu.my_root(), "게임이", {}, "재미의 기능 요소 :3")
 local misc = menu.list(menu.my_root(), "기타", {}, "유용하고 빠른 지름길")
 
 players.on_join(function(player_id)
@@ -579,7 +580,7 @@ players.on_join(function(player_id)
 
     menu.action(cageveh, "차량 케이지", {"cage"}, "", function()
         local container_hash = util.joaat("boxville3")
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         request_model(container_hash)
         local container = entities.create_vehicle(container_hash, ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ped, 0.0, 2.0, 0.0), ENTITY.GET_ENTITY_HEADING(ped))
@@ -593,7 +594,7 @@ players.on_join(function(player_id)
     menu.action(cage, "전기 케이지", {"electriccage"}, "", function(cl)
         local number_of_cages = 6
         local elec_box = util.joaat("prop_elecbox_12")
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         pos.z -= 0.5
         request_model(elec_box)
@@ -617,7 +618,7 @@ players.on_join(function(player_id)
     menu.action(cage, "관 케이지", {""}, "", function(cl)
         local number_of_cages = 6
         local coffin_hash = util.joaat("prop_coffin_02b")
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         request_model(coffin_hash)
         local temp_v3 = v3.new(0, 0, 0)
@@ -637,7 +638,7 @@ players.on_join(function(player_id)
 
     menu.action(cage, "화물 컨테이너", {"cage"}, "", function()
         local container_hash = util.joaat("prop_container_ld_pu")
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         request_model(container_hash)
         pos.z -= 1
@@ -700,7 +701,7 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {879177392, player_id, 0, 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})    
     end)
 
-    menu.action(inf_loading, "아파트 초대 방법", {}, "", function()
+    menu.action(inf_loading, "아파트 초대", {}, "", function()
         util.trigger_script_event(434937615, player_id, 0, 1)
     end)
         
@@ -737,12 +738,12 @@ players.on_join(function(player_id)
     local freeze = menu.list(malicious, "얼리기 방법", {}, "")
 
     player_toggle_loop(freeze, player_id, "강력한 얼리기", {}, "", function()
-        util.trigger_script_event(1 << player_id, {-93722397, pid, 0, 0, 0, 0, 0})
+        util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 0, 0, 0})
         util.yield(500)
     end)
     
     player_toggle_loop(freeze, player_id, "얼리기 V1", {}, "", function()
-        util.trigger_script_event(1 << player_id, {434937615, pid, 0, 1, 0, 0})
+        util.trigger_script_event(1 << player_id, {434937615, player_id, 0, 1, 0, 0})
         util.yield(500)
     end)
 
@@ -1093,7 +1094,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(crashes, "세션 크래쉬 V4'", {"crashv27"}, "x-force에게 이것을 추천 (Big CHUNGUS)", function()
+    menu.action(crashes, "세션 크래쉬 V4", {"crashv27"}, "x-force에게 이것을 추천 (Big CHUNGUS)", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped, true)
         local mdl = util.joaat("A_C_Cat_01")
@@ -2305,7 +2306,7 @@ players.on_join(function(player_id)
             util.yield_once()
         end
     end)
-
+    
     menu.action(scriptev, "오류 2", {}, "많은 사람들이 그 소리를 들을 수 있도록 몇 가지 이벤트를 실행하세요. \n같은 방식을 가진 사람들은 당신을 감지할 수 있습니다.", function()
         local time = (util.current_time_millis() + 2000)
         while time > util.current_time_millis() do
@@ -2431,13 +2432,13 @@ players.on_join(function(player_id)
     end)
 
     menu.action(trolling, ("용병 보내기"), {}, "", function()
-        if NETWORK.NETWORK_IS_SESSION_STARTED() and NETWORK.NETWORK_IS_PLAYER_ACTIVE(pid) and
+        if NETWORK.NETWORK_IS_SESSION_STARTED() and NETWORK.NETWORK_IS_PLAYER_ACTIVE(player_id) and
         not PED.IS_PED_INJURED(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)) and not is_player_in_interior(player_id) then
     
             if not NETWORK.NETWORK_IS_SCRIPT_ACTIVE("am_gang_call", 1, true, 0) then
                 local bits_addr = memory.script_global(1853910 + (players.user() * 862 + 1) + 140)
                 memory.write_int(bits_addr, SetBit(memory.read_int(bits_addr), 1))
-                write_global.int(1853348 + (players.user() * 862 + 1) + 141, pid)
+                write_global.int(1853348 + (players.user() * 862 + 1) + 141, player_id)
             else
                 util.toast("용병들은 이미 그를 쫓고 있다")
             end
@@ -2825,8 +2826,8 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(trolling, "DDoS", {}, "DDOS 전송", function()
-        util.toast("그는 공격을 가했다 " ..players.get_name(player_id))
+    menu.action(trolling, "디도스 공격", {}, "DDOS 전송 이것에 대한 책임은 본인에게 있습니다.", function()
+        util.toast("디도스 공격 " ..players.get_name(player_id))
         local percent = 0
         while percent <= 100 do
             util.yield(100)
@@ -2837,7 +2838,12 @@ players.on_join(function(player_id)
         util.toast("뭘 기대했는데?")
     end)
 
-    menu.action(friendly, "그들에게 수준을 부여", {}, "그것은 gta의 수준을 높일 것입니다. \n크래쉬 가능성이 있습니다.", function()
+    menu.action(friendly, "화소 디스플레이", {}, "그들은 하나의 방법만으로 무한 충전 화면을 고칠 수 있었습니다.", function()
+        menu.trigger_commands("givesh" .. players.get_name(player_id))
+        menu.trigger_commands("aptme" .. players.get_name(player_id))
+    end)
+
+    menu.action(friendly, "데스 레벨", {}, "그것은 gta의 수준을 높일 것입니다. \n크래쉬 가능성이 있습니다.", function()
         util.trigger_script_event(1 << player_id, {697566862, player_id, 5, 0, 1, 1, 1})
         for i = 0, 9 do
             util.trigger_script_event(1 << player_id, {697566862, player_id, 0, i, 1, 1, 1})
@@ -2858,11 +2864,11 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.toggle_loop(friendly, "다르 갓모드 사일런트", {}, "그들은 무료 모드 메뉴를 감지합니다", function()
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+    menu.toggle_loop(friendly, "무적 모드", {}, "무료 모드 메뉴는 감지하지 못합니다.", function()
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(ped), true, true, true, true, true, false, false, true)
         end, function() 
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(ped), false, false, false, false, false, false, false, false)
     end)
 
@@ -2881,9 +2887,11 @@ players.on_join(function(player_id)
         local coords = players.get_position(player_id)
         coords.z = coords.z + 1.5  
         util.yield(50)
-        menu.trigger_commands("대가를 치르다".. players.get_name(player_id))
-        util.yield(50)
-        menu.trigger_commands("현금".. players.get_name(player_id) .. " 1")
+        menu.trigger_commands("ceopay".. players.get_name(player_id))
+        menu.trigger_commands("ceopay".. players.get_name(player_id))
+        menu.trigger_commands("rp".. players.get_name(player_id))
+        menu.trigger_commands("cards".. players.get_name(player_id))
+        --menu.trigger_commands("cash".. players.get_name(player_id) .. " 1")
     end)
 
     menu.action(friendly, "생명을 불어넣다", {}, "", function()
@@ -3108,80 +3116,9 @@ players.on_join(function(player_id)
         util.toast("아마 나오지 않으면 마크가 없을 거예요.")
     end)
 
-    menu.toggle(otherc, "그들을 지켜봐", {}, "입력할 때 알 수 있습니다..", function(on)
-        local player = players.user_ped()
-        local state = chat.get_state(player)
-        if on then
-            if state == 1 then
-                util.toast("플레이어 " .. players.get_name(player_id) .. "그는 팀 채팅에 입력하고 있습니다.")
-            elseif state == 2 then
-                util.toast("플레이어 " .. players.get_name(player_id) .. "당신은 일반 채팅에 글을 쓰고 있습니다.")
-            end
-        end
-    end)
-
 end)
 
-
-
-
-menu.slider(world, "지역 투명성", {"transparency"}, "지금은 잘 안 되네요, 나중에 고쳐보도록 하겠습니다", 0, 100, 100, 20, function(value)
-    if value > 80 then
-        ENTITY.RESET_ENTITY_ALPHA(players.user_ped())
-    else
-        ENTITY.SET_ENTITY_ALPHA(players.user_ped(), value * 2.55, false)
-    end
-end)
-
-local s_forcefield_range = 10
-local s_forcefield = 0
-local s_forcefield_names = {
-    [0] = "Push",
-    [1] = "Pull"
-}
-
-menu.toggle_loop(world, "포스필드", {"sforcefield"}, "모든 것을  날려버립니다.", function()
-    if players.exists(players.user()) then
-        local _entities = {}
-        local player_pos = players.get_position(players.user())
-
-        for _, vehicle in pairs(entities.get_all_vehicles_as_handles()) do
-            local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle, false)
-            if v3.distance(player_pos, vehicle_pos) <= s_forcefield_range then
-                table.insert(_entities, vehicle)
-            end
-        end
-        for _, ped in pairs(entities.get_all_peds_as_handles()) do
-            local ped_pos = ENTITY.GET_ENTITY_COORDS(ped, false)
-            if (v3.distance(player_pos, ped_pos) <= s_forcefield_range) and not PED.IS_PED_A_PLAYER(ped) then
-                table.insert(_entities, ped)
-            end
-        end
-        for i, entity in pairs(_entities) do
-            local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-            local entity_type = ENTITY.GET_ENTITY_TYPE(entity)
-
-            if NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(entity) and not (player_vehicle == entity) then
-                local force = ENTITY.GET_ENTITY_COORDS(entity)
-                v3.sub(force, player_pos)
-                v3.normalise(force)
-
-                if (s_forcefield == 1) then
-                    v3.mul(force, -1)
-                end
-                if (entity_type == 1) then
-                    PED.SET_PED_TO_RAGDOLL(entity, 500, 0, 0, false, false, false)
-                end
-
-                ENTITY.APPLY_FORCE_TO_ENTITY(
-                    entity, 3, force.x, force.y, force.z, 0, 0, 0.5, 0, false, false, true, false, false
-                )
-            end
-        end
-    end
-end)
-
-menu.action(world, "지역 청소", {"rcleararea"}, "그 지역의 모든 것을 청소해라", function(on_click)
+menu.action(world, "Limpiar Area", {"rcleararea"}, "Limpia todo en el area", function(on_click)
     clear_area(clear_radius)
     util.toast('청정지역:3')
 end)
@@ -3281,7 +3218,7 @@ menu.toggle_loop(detections, "빨리 달려라", {}, "더 빨리 달렸는지 �
         and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_IN_ANY_VEHICLE(ped, false)
         and not TASK.IS_PED_STILL(ped) and not PED.IS_PED_JUMPING(ped) and not ENTITY.IS_ENTITY_IN_AIR(ped) and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped)
         and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) <= 300.0 and ped_speed > 30 then -- fastest run speed is about 18ish mph but using 25 to give it some headroom to prevent false positives
-            util.toast(players.get_name(player_id) .. " 유징 슈퍼런")
+            util.toast(players.get_name(player_id) .. " 모드 슈퍼 달리기")
             break
         end
     end
@@ -3306,7 +3243,7 @@ menu.toggle_loop(detections, "노클립", {}, "플레이어가 공중부양하�
         and ENTITY.GET_ENTITY_HEIGHT_ABOVE_GROUND(ped) > 5.0 and not ENTITY.IS_ENTITY_IN_AIR(ped) and entities.player_info_get_game_state(ped_ptr) == 0
         and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
         and vel.x == 0.0 and vel.y == 0.0 and vel.z == 0.0 then
-            util.toast(players.get_name(player_id) .. " 그는 녹음을 하고 있다.")
+            util.toast(players.get_name(player_id) .. " 공중 부양을 사용중 입니다.")
             break
         end
     end
@@ -3344,7 +3281,7 @@ menu.toggle_loop(detections, "텔레포트 감지", {}, "플레이어가 텔레�
     end
 end)
 
-menu.toggle_loop(detections, "스마트 킥 'Test'", {}, "그는 그들이 매우 빨리 회의에서 누군가를 추방하는 것에 투표하는지 감지하고 경고합니다.  스탠드업 스마트 킥으로 더 잘 알려져 있습니다.", function()
+menu.toggle_loop(detections, "스마트 킥", {}, "그는 그들이 매우 빨리 회의에서 누군가를 추방하는 것에 투표하는지 감지하고 경고합니다.  스탠드업 스마트 킥으로 더 잘 알려져 있습니다.", function()
     for _, player_id in ipairs(players.list(false, true, true)) do
         local kickowner = NETWORK.NETWORK_SESSION_GET_KICK_VOTE(player_id)
         local kicked = NETWORK.NETWORK_SESSION_KICK_PLAYER(player_id)
@@ -3355,13 +3292,112 @@ menu.toggle_loop(detections, "스마트 킥 'Test'", {}, "그는 그들이 매�
     end
 end)
 
-menu.toggle_loop(detections, "빨리 합류하세요.", {}, "누군가 이례적으로 당신과 합류하는지 탐지합니다.", function()
-    for _, pid in ipairs(players.list(false, true, true)) do
+menu.toggle_loop(detections, "빨리 합류하세요.", {}, "RID조인 감지.", function()
+    for _, player_id in ipairs(players.list(false, true, true)) do
         if not util.is_session_transition_active() and get_spawn_state(player_id) == 0 and players.get_script_host() == player_id  then
-            util.toast(players.get_name(player_id) .. " (Thunder Join)을 사용하고 있으며 현재 모더 입니다.")
+            util.toast(players.get_name(player_id) .. " 모더로 감지 되었습니다.")
         end
     end
 end)
+
+--------------------------------------------------------------------------------------------------------------------------------
+--Self
+
+menu.toggle(selfc, "락온 방지", {}, "열 신호를 제거하세요.\n어떤 선수들은 여전히 당신을 볼 수 있습니다.", function(toggle)
+    local player = players.user_ped()
+    if toggle then
+        PED.SET_PED_HEATSCALE_OVERRIDE(player, 0)
+    else
+        PED.SET_PED_HEATSCALE_OVERRIDE(player, 1)
+    end
+end)
+
+local maxHealth <const> = 328
+menu.toggle_loop(selfc, ("좀비 모드 레이더"), {"undeadotr"}, "", function()
+	if ENTITY.GET_ENTITY_MAX_HEALTH(players.user_ped()) ~= 0 then
+		ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), 0)
+	end
+end, function ()
+	ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), maxHealth)
+end)
+
+menu.toggle_loop(selfc, "무기 변경 모션 없음", {}, "무기 빨리 바꿔", function()
+    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 56) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    end
+    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 92) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    end
+    if (TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 160) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 167) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 165)) and not TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 195) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    end
+end)
+
+menu.toggle_loop(selfc, "무기 재장전 속도", {}, "빠른 장전", function()
+    local player = players.user_ped()
+    local pointr = entities.handle_to_pointer(player)
+    if entities.get_health(pointr) < 100 then
+        GRAPHICS.ANIMPOSTFX_STOP_ALL()
+        memory.write_int(memory.script_global(2672505 + 1684 + 756), memory.read_int(memory.script_global(2672505 + 1684 + 756)) | 1 << 1) -- Jinx Taken
+    end
+end)
+
+local s_forcefield_range = 10
+local s_forcefield = 0
+local s_forcefield_names = {
+    [0] = "Push",
+    [1] = "Pull"
+}
+
+menu.toggle_loop(selfc, "캄포 데 포스", {"sforcefield"}, "", function()
+    if players.exists(players.user()) then
+        local _entities = {}
+        local player_pos = players.get_position(players.user())
+
+        for _, vehicle in pairs(entities.get_all_vehicles_as_handles()) do
+            local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle, false)
+            if v3.distance(player_pos, vehicle_pos) <= s_forcefield_range then
+                table.insert(_entities, vehicle)
+            end
+        end
+        for _, ped in pairs(entities.get_all_peds_as_handles()) do
+            local ped_pos = ENTITY.GET_ENTITY_COORDS(ped, false)
+            if (v3.distance(player_pos, ped_pos) <= s_forcefield_range) and not PED.IS_PED_A_PLAYER(ped) then
+                table.insert(_entities, ped)
+            end
+        end
+        for i, entity in pairs(_entities) do
+            local player_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
+            local entity_type = ENTITY.GET_ENTITY_TYPE(entity)
+
+            if NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(entity) and not (player_vehicle == entity) then
+                local force = ENTITY.GET_ENTITY_COORDS(entity)
+                v3.sub(force, player_pos)
+                v3.normalise(force)
+
+                if (s_forcefield == 1) then
+                    v3.mul(force, -1)
+                end
+                if (entity_type == 1) then
+                    PED.SET_PED_TO_RAGDOLL(entity, 500, 0, 0, false, false, false)
+                end
+
+                ENTITY.APPLY_FORCE_TO_ENTITY(
+                    entity, 3, force.x, force.y, force.z, 0, 0, 0.5, 0, false, false, true, false, false
+                )
+            end
+        end
+    end
+end)
+
+menu.slider(selfc, "지역 투명성", {"transparency"}, "지금은 잘 안 되네요, 나중에 고쳐보도록 하겠습니다", 0, 100, 100, 20, function(value)
+    if value > 80 then
+        ENTITY.RESET_ENTITY_ALPHA(players.user_ped())
+    else
+        ENTITY.SET_ENTITY_ALPHA(players.user_ped(), value * 2.55, false)
+    end
+end)
+
 --------------------------------------------------------------------------------------------------------------------------------
 --Online
 
@@ -3379,16 +3415,7 @@ menu.toggle(online, "안티 채팅", {}, "채팅 '아이콘'을 쓸 때 안 나�
 	end
 end)
 
-local maxHealth <const> = 328
-menu.toggle_loop(online, ("좀비 오프레더"), {"undeadotr"}, "", function()
-	if ENTITY.GET_ENTITY_MAX_HEALTH(players.user_ped()) ~= 0 then
-		ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), 0)
-	end
-end, function ()
-	ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), maxHealth)
-end)
-
-menu.toggle_loop(online, "결합하는 화면을 받아들임", {}, "자동으로 결합하는 화면을 받아들이게 됩니다.", function() -- credits to jinx for letting me steal this
+menu.toggle_loop(online, "라유니온을 받아들임", {}, "자동으로 결합하는 화면을 받아들이게 됩니다.", function() -- credits to jinx for letting me steal this
     local message_hash = HUD.GET_WARNING_SCREEN_MESSAGE_HASH()
     if message_hash == 15890625 or message_hash == -398982408 or message_hash == -587688989 then
         PAD.SET_CONTROL_VALUE_NEXT_FRAME(2, 201, 1.0)
@@ -3412,34 +3439,13 @@ end)
 --    end
 --end)
 
-menu.toggle(online, "냉혈한 사람 'Test'", {}, "열 신호를 제거하세요.\n어떤 선수들은 여전히 당신을 볼 수 있습니다.", function(toggle)
-    local player = players.user_ped()
-    if toggle then
-        PED.SET_PED_HEATSCALE_OVERRIDE(player, 0)
-    else
-        PED.SET_PED_HEATSCALE_OVERRIDE(player, 1)
-    end
-end)
-
 joining = false
-menu.toggle(online, "플레이어 알림", {}, "선수가 세션에 들어갈 때 경고합니다.", function(on_toggle)
+menu.toggle(online, "플레이어 알림", {}, "플레이어가 세션에 들어갈 때 경고합니다.", function(on_toggle)
 	if on_toggle then
 		joining = true
 	else
 		joining = false
 	end
-end)
-
-menu.toggle_loop(online, "애니메이션 없음", {}, "당신은 총을 빨리 바꾼다.", function()
-    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 56) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
-    end
-    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 92) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
-    end
-    if (TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 160) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 167) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 165)) and not TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 195) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
-    end
 end)
 
 local maxps = menu.list(online, "호스트 도구", {}, "")
@@ -3477,6 +3483,15 @@ menu.action(servicios, "헬리콥터 호출", {}, "귀하의 위치로 고급 �
         ryze.int(2793044 + 888, 1)
         ryze.int(2793044 + 895, 1)
 	end
+end)
+
+menu.action(servicios, "현상금 삭제 'Test'", {}, "만약 현상금이 있다면 보상을 받을 수 있습니다.", function()
+    if memory.read_int(memory.script_global(1835502 + 4 + 1 + (players.user() * 3))) == 1 then 
+        memory.write_int(memory.script_global(2815059 + 1856 + 17), -1)
+        memory.write_int(memory.script_global((2359296+1) + 5149 + 13), 2880000)
+    else 
+        util.toast("너는 보상이 없어 :3")
+    end    
 end)
 
 local recovery = menu.list(online, "리커버리", {}, "")
@@ -3573,6 +3588,13 @@ menu.action(drugwars, "차단을 해제하다.", {}, "총기를 풀어줄 거야
     memory.write_byte(memory.script_global(262145 + 33799), 1)
 end)
 
+menu.action(drugwars, "도둑을 부르다. 'Test'", {}, "선물을 주는 도둑을 불러라.", function()
+    local player = PLAYER.PLAYER_PED_ID()
+    menu.trigger_commands("scripthost")
+    memory.write_byte(memory.script_global(2756261 + 171), 1)
+    memory.write_byte(memory.script_global(2756259 + 6), 1)
+end)
+
 menu.toggle_loop(drugwars, "델 택시의 미션", {}, "", function() -- credit to sapphire for all of this <3 / Also Prisuhm, this is hes code.
     if memory.read_byte(memory.script_global(262145 + 33770)) ~= 1 then
         memory.write_byte(memory.script_global(262145 + 33770), 1)
@@ -3583,7 +3605,7 @@ local bypasskick = menu.list(online, "바이패스 킥", {}, "당신이 모든 �
 
 local normalmeth = menu.list(bypasskick, "일반 방법")
 
-menu.toggle(normalmeth, "방법 V1", {"bkick1"}, "조금 더 기능적이긴 하지만 더 많은 네트워크 오류가 있습니다.", function(on_toggle)
+menu.toggle(normalmeth, "크래쉬 V1", {"bkick1"}, "조금 더 기능적이긴 하지만 더 많은 네트워크 오류가 있습니다.", function(on_toggle)
     local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
     local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
     local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
@@ -3624,7 +3646,7 @@ menu.toggle(normalmeth, "방법 V1", {"bkick1"}, "조금 더 기능적이긴 하
     end
 end)
 
-menu.toggle(normalmeth, "모델 V2", {"bkick2"}, "보다 기능적인 방법이지만 개발자의 경우 모든 네트워크 이벤트에 대한 알림을 받게 됩니다.", function(on_toggle)
+menu.toggle(normalmeth, "크래쉬 V2", {"bkick2"}, "보다 기능적인 방법이지만 개발자의 경우 모든 네트워크 이벤트에 대한 알림을 받게 됩니다.", function(on_toggle)
 local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
 local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
 local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
@@ -3671,7 +3693,7 @@ else
 end
 end)
 
-menu.toggle(bypasskick, "방법 V3", {"bkick3"}, "게임이 종료 될수 있고, 자신의 위험을 무릅쓰고", function(on_toggle)
+menu.toggle(normalmeth, "크래쉬 V3", {"bkick3"}, "게임이 종료 될수 있고, 자신의 위험을 무릅쓰고", function(on_toggle)
     local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
     local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
     local BlockIncSyncs = menu.ref_by_path("Online>Protections>Syncs>Incoming>Any Incoming Sync>Block>Enabled")
@@ -3956,7 +3978,7 @@ end)
 
 fmugger = menu.list(protects, "오브젝트/PED", {}, "")
 
-local anti_mugger = menu.list(protects, "Anti-강도")
+local anti_mugger = menu.list(protects, "안티-강도")
 
 menu.toggle_loop(anti_mugger, "미를 향해", {}, "머거스 차단은 당신을 향한 것입니다..", function() -- thx nowiry for improving my method :D
     if NETWORK.NETWORK_IS_SCRIPT_ACTIVE("am_gang_call", 0, true, 0) then
@@ -4013,7 +4035,7 @@ menu.toggle_loop(fmugger, "F/ 객체", {"ghostobjects"}, "물체와의 충돌을
     end
 end)
 
-menu.toggle_loop(fmugger, "차량 F/", {"ghostvehicles"}, "그것은 자동차와의 충돌을 무력화시킨다.", function()
+menu.toggle_loop(fmugger, "F/ 차량", {"ghostvehicles"}, "그것은 자동차와의 충돌을 무력화시킨다.", function()
     local user = players.user_ped()
     local veh = PED.GET_VEHICLE_PED_IS_USING(user)
     local my_ents = {user, veh}
@@ -4998,6 +5020,8 @@ end
 --    end)
 --end 
 
+menu.hyperlink(misc, "디스코드 참여", "https://discord.gg/BNbSHhunPv")
+
 menu.toggle(misc, "자동으로 닫기", {}, "gta에 들어갈 때 스크립트를 자동으로 닫습니다. \n활성화하면 로딩 시간이 길어질 수 있습니다.", function(on)
     if on then
         if not SCRIPT_MANUAL_START then
@@ -5023,16 +5047,8 @@ menu.toggle(misc, "스탠드 사용자 식별", {}, "다른 스탠드 사용자�
     end
 end)
 
-menu.action(misc, "호스트 받기", {}, "그것은 당신에게 다른 사람들을 추방하는 세션의 호스트를 줄 것입니다.", function()
-    local player = players.user()
-    util.toast("스탠드에서 섹션을 찾지 못한 내가 멍청하다는 걸 알아 :/.")
-    util.yield(500)
-    players.get_host(player)
-end)
+menu.hyperlink(misc, "Github 참여", "https://github.com/xxpichoclesxx")
 
-menu.hyperlink(misc, "Github", "https://github.com/xxpichoclesxx")
-
-menu.hyperlink(menu.my_root(), "디스코드 참여!", "https://discord.gg/BNbSHhunPv")
 local credits = menu.list(misc, "신뢰 하는 사람들", {}, "")
 local devcred = menu.list(credits, "개발에 도움을 준 사람들", {}, "")
 local othercred = menu.list(credits, "이외 도움을 준 사람들", {}, "")
