@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 4.0
+local localVer = 4.1
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -143,7 +143,25 @@ ryze = {
         "weapon_railgun",
         "weapon_stungun",
         "weapon_digiscanner",
-    }
+    },
+
+    get_spawn_state = function(player_id)
+        return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 232)) -- Global_2657589[PLAYER::PLAYER_ID() /*466*/].f_232
+    end,
+
+    get_interior_of_player = function(player_id)
+        return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 245))
+    end,
+
+    is_player_in_interior = function(player_id)
+        return (memory.read_int(memory.script_global(2657589 + 1 + (player_id * 466) + 245)) ~= 0)
+    end,
+
+    get_random_pos_on_radius = function()
+        local angle = random_float(0, 2 * math.pi)
+        pos = v3.new(pos.x + math.cos(angle) * radius, pos.y + math.sin(angle) * radius, pos.z)
+        return pos
+    end
 
     --[[
             PapuCrash = function()
@@ -325,24 +343,6 @@ local function kick_player_out_of_veh(player_id)
 
         util.yield()
     end
-end
-
-local function get_spawn_state(player_id)
-    return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 232)) -- Global_2657589[PLAYER::PLAYER_ID() /*466*/].f_232
-end
-
-local function get_interior_player_is_in(player_id)
-    return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 245))
-end
-
-local function is_player_in_interior(player_id)
-    return (memory.read_int(memory.script_global(2657589 + 1 + (player_id * 466) + 245)) ~= 0)
-end
-
-local function get_random_pos_on_radius(pos, radius)
-    local angle = random_float(0, 2 * math.pi)
-    pos = v3.new(pos.x + math.cos(angle) * radius, pos.y + math.sin(angle) * radius, pos.z)
-    return pos
 end
 
 
@@ -696,13 +696,73 @@ players.on_join(function(player_id)
 
     menu.divider(trolling, "Otros")
 
+    menu.action(trolling,"Secuestrar Jugador", {}, "", function()
+        veh_to_attach = 1
+		V3 = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+
+		if table_kidnap == nil then
+			table_kidnap = {}
+		end
+
+        hash = util.joaat("stockade")
+        ped_hash = util.joaat("MP_M_Cocaine_01")
+
+        if STREAMING.IS_MODEL_A_VEHICLE(hash) then
+            STREAMING.REQUEST_MODEL(hash)
+
+            while not STREAMING.HAS_MODEL_LOADED(hash) do
+                util.yield()
+            end
+
+            coords_ped = ENTITY.GET_ENTITY_COORDS(V3, true)
+
+            local aab = 
+			{
+				x = -5784.258301,
+				y = -8289.385742,
+				z = -136.411270
+			}
+
+            ENTITY.SET_ENTITY_VISIBLE(ped_to_kidnap, false)
+            ENTITY.FREEZE_ENTITY_POSITION(ped_to_kidnap, true)
+
+            table_kidnap[veh_to_attach] = entities.create_vehicle(hash, ENTITY.GET_ENTITY_COORDS(V3, true),
+            CAM.GET_FINAL_RENDERED_CAM_ROT(0).z)
+            while not STREAMING.HAS_MODEL_LOADED(ped_hash) do
+                STREAMING.REQUEST_MODEL(ped_hash)
+                util.yield()
+            end
+            ped_to_kidnap = entities.create_ped(28, ped_hash, aab, CAM.GET_FINAL_RENDERED_CAM_ROT(2).z)
+            ped_to_drive = entities.create_ped(28, ped_hash, aab, CAM.GET_FINAL_RENDERED_CAM_ROT(2).z)
+
+            ENTITY.SET_ENTITY_INVINCIBLE(ped_to_drive, true)
+            ENTITY.SET_ENTITY_INVINCIBLE(table_kidnap[veh_to_attach], true)
+            ENTITY.ATTACH_ENTITY_TO_ENTITY(table_kidnap[veh_to_attach], ped_to_kidnap, 0, 0, 1, -1, 0, 0, 0, false,
+                true, true, false, 0, false)
+            ENTITY.SET_ENTITY_COORDS(ped_to_kidnap, coords_ped.x, coords_ped.y, coords_ped.z - 1, false, false, false,
+                false)
+            PED.SET_PED_INTO_VEHICLE(ped_to_drive, table_kidnap[veh_to_attach], -1)
+            TASK.TASK_VEHICLE_DRIVE_WANDER(ped_to_drive, table_kidnap[veh_to_attach], 20, 16777216)
+
+            util.yield(500)
+
+            entities.delete_by_handle(ped_to_kidnap)
+            veh_to_attach = veh_to_attach + 1
+
+            STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(hash)
+            STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(ped_hash)
+
+
+        end
+	end)
+
     local inf_loading = menu.list(trolling, "Pantalla de carga infinita", {}, "")
     menu.action(inf_loading, "Teleport a MC", {}, "", function()
         util.trigger_script_event(1 << player_id, {879177392, player_id, 0, 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})    
     end)
 
     menu.action(inf_loading, "Metodo Apartamento", {}, "", function()
-        util.trigger_script_event(434937615, player_id, 0, 1)
+        util.trigger_script_event(1 << player_id , {434937615, player_id, 0, 1})
     end)
         
     menu.action_slider(inf_loading, "Telefono corrupto", {}, "Click para seleccionar un estilo", invites, function(index, name)
@@ -735,22 +795,37 @@ players.on_join(function(player_id)
     end)
 
 
-    local freeze = menu.list(malicious, "Metodos Frezeo", {}, "")
+    local freeze = menu.list(malicious, "Metodos de Frezeo", {}, "")
 
-    player_toggle_loop(freeze, player_id, "Potente", {}, "", function()
+    player_toggle_loop(freeze, player_id, "Freeze de Escena", {}, "Funciona mejor que los demas.", function()
+        util.trigger_script_event(1 << player_id , {434937615, player_id, 0, 1})
+    end)
+
+    player_toggle_loop(freeze, player_id, "Freeze Escena 2", {}, "Mas parcheado que el primero.", function()
         util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 0, 0, 0})
         util.yield(500)
     end)
     
-    player_toggle_loop(freeze, player_id, "Freeze V1", {}, "", function()
+    player_toggle_loop(freeze, player_id, "Freeze V1", {}, "Funciona bien contra menus gratuitos.", function()
         util.trigger_script_event(1 << player_id, {434937615, player_id, 0, 1, 0, 0})
         util.yield(500)
     end)
 
-    player_toggle_loop(freeze, player_id, "Freeze Temporal", {}, "", function()
+    player_toggle_loop(freeze, player_id, "Freeze Nativo", {}, "Es practicamente inutil en la mayoria de menus.", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         TASK.CLEAR_PED_TASKS_IMMEDIATELY(player_id)
     end)
+
+    player_toggle_loop(freeze, player_id, "Freeze Potente", {}, "Tira todos al mismo tiempo.", function()
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 0, 0, 0})
+        util.trigger_script_event(1 << player_id, {434937615, player_id, 0, 1, 0, 0})
+        util.trigger_script_event(1 << player_id , {434937615, player_id, 0, 1})
+        TASK.CLEAR_PED_TASKS_IMMEDIATELY(player_id)
+        util.yield(500)
+    end)
+
+
 
 
     --local options <const> = {"Lazer", "Mammatus",  "Cuban800"}
@@ -2060,61 +2135,62 @@ players.on_join(function(player_id)
 
     menu.divider(crashes, "(Potentes)")
 
-    menu.action(crashes, "Bomba del tsar", {"tsarbomba"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu)", function()
-        local objective = player_id
-        --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
-        menu.trigger_commands("anticrashcamera on")
-        menu.trigger_commands("potatomode on")
-        menu.trigger_commands("trafficpotato on")
-        util.toast("Iniciando...")
-        util.toast("Pobre man")
-        menu.trigger_commands("rlag3"..players.get_name(player_id))
-        util.yield(2500)
-        menu.trigger_commands("crashv1"..players.get_name(player_id))
-        util.yield(400)
-        menu.trigger_commands("crashv2"..players.get_name(player_id))
-        util.yield(400)
-        menu.trigger_commands("crashv4"..players.get_name(player_id))
-        util.yield(500)
-        menu.trigger_commands("crashv5"..players.get_name(player_id))
-        util.yield(500)
-        menu.trigger_commands("crashv6"..players.get_name(player_id))
-        util.yield(500)
-        menu.trigger_commands("crashv7"..players.get_name(player_id))
-        util.yield(500)
-        menu.trigger_commands("crashv8"..players.get_name(player_id))
-        util.yield(700)
-        menu.trigger_commands("crashv9"..players.get_name(player_id))
-        --util.yield(400)
-        --menu.trigger_commands("crashv5"..players.get_name(player_id))
-        --util.yield(400)
-        --menu.trigger_commands("crashv6"..players.get_name(player_id))
-        --util.yield(400)
-        --menu.trigger_commands("crashv7"..players.get_name(player_id))
-        -- Turned off because of a self-crash error
-        --util.yield(600)
-        --menu.trigger_commands("crashv4"..players.get_name(player_id))
-        util.yield(2000)
-        menu.trigger_commands("crash"..players.get_name(player_id))
-        --util.yield(400)
-        --menu.trigger_commands("ngcrash"..players.get_name(player_id))
-        --util.yield(400)
-        --menu.trigger_commands("footlettuce"..players.get_name(player_id))
-        --util.yield(400)
-        --menu.trigger_commands("steamroll"..players.get_name(player_id))
-        util.yield(1800)
-        util.toast("Espera en lo que se limpia todo...")
-        --menu.trigger_command(outSync, "off")
-        menu.trigger_commands("rcleararea")
-        menu.trigger_commands("potatomode off")
-        menu.trigger_commands("trafficpotato off")
-        util.yield(8000)
-        menu.trigger_commands("anticrashcamera off")
-    end)
+    if menu.get_edition() >= 1 then 
+        menu.action(crashes, "Bomba del tsar", {"tsarbomba"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu)", function()
+            --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
+            menu.trigger_commands("anticrashcamera on")
+            menu.trigger_commands("potatomode on")
+            menu.trigger_commands("trafficpotato on")
+            util.toast("Iniciando...")
+            util.toast("Pobre man")
+            menu.trigger_commands("rlag3"..players.get_name(player_id))
+            util.yield(2500)
+            menu.trigger_commands("crashv1"..players.get_name(player_id))
+            util.yield(400)
+            menu.trigger_commands("crashv2"..players.get_name(player_id))
+            util.yield(400)
+            menu.trigger_commands("crashv4"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv5"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv6"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv7"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv8"..players.get_name(player_id))
+            util.yield(700)
+            menu.trigger_commands("crashv9"..players.get_name(player_id))
+            --util.yield(400)
+            --menu.trigger_commands("crashv5"..players.get_name(player_id))
+            --util.yield(400)
+            --menu.trigger_commands("crashv6"..players.get_name(player_id))
+            --util.yield(400)
+            --menu.trigger_commands("crashv7"..players.get_name(player_id))
+            -- Turned off because of a self-crash error
+            --util.yield(600)
+            --menu.trigger_commands("crashv4"..players.get_name(player_id))
+            util.yield(2000)
+            menu.trigger_commands("crash"..players.get_name(player_id))
+            --util.yield(400)
+            --menu.trigger_commands("ngcrash"..players.get_name(player_id))
+            --util.yield(400)
+            --menu.trigger_commands("footlettuce"..players.get_name(player_id))
+            --util.yield(400)
+            --menu.trigger_commands("steamroll"..players.get_name(player_id))
+            util.yield(1800)
+            util.toast("Espera en lo que se limpia todo...")
+            --menu.trigger_command(outSync, "off")
+            menu.trigger_commands("rlag3"..players.get_name(player_id))
+            menu.trigger_commands("rcleararea")
+            menu.trigger_commands("potatomode off")
+            menu.trigger_commands("trafficpotato off")
+            util.yield(8000)
+            menu.trigger_commands("anticrashcamera off")
+        end)
+    end
 
-    if menu.get_edition() >= 2 then 
+    if menu.get_edition() >= 2 then
         menu.action(crashes, "Bomba del tsar V2", {"tsarbomba"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu) \n(Necesita Regular Para Funcionar Bien/ Muy Posible Overload)", function()
-            local objective = player_id
             --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
             menu.trigger_commands("anticrashcamera on")
             menu.trigger_commands("potatomode on")
@@ -2159,15 +2235,19 @@ players.on_join(function(player_id)
             --menu.trigger_commands("crashv4"..players.get_name(player_id))
             util.yield(2000)
             menu.trigger_commands("crash"..players.get_name(player_id))
-            util.yield(400)
+            util.yield(200)
             menu.trigger_commands("ngcrash"..players.get_name(player_id))
             util.yield(400)
             menu.trigger_commands("footlettuce"..players.get_name(player_id))
-            util.yield(400)
+            util.yield(700)
             menu.trigger_commands("steamroll"..players.get_name(player_id))
+            menu.trigger_commands("choke"..players.get_name(player_id))
+            util.yield(200)
+            menu.trigger_commands("flashcrash"..players.get_name(player_id))
             util.yield(1800)
             util.toast("Espera en lo que se limpia todo...")
             --menu.trigger_command(outSync, "off")
+            menu.trigger_commands("rlag3"..players.get_name(player_id))
             menu.trigger_commands("rcleararea")
             menu.trigger_commands("potatomode off")
             menu.trigger_commands("trafficpotato off")
@@ -2176,58 +2256,67 @@ players.on_join(function(player_id)
         end)
     end
 
-    menu.action(crashes, "Bomba Del Tsar Especial (Modelo)", {"tsarbomba5"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu) \n(Necesita Regular Para Funcionar Bien/ Muy Posible Overload)", function()
-        local objective = player_id
-        --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
-        menu.trigger_commands("anticrashcamera on")
-        menu.trigger_commands("potatomode on")
-        menu.trigger_commands("trafficpotato on")
-        util.toast("Iniciando...")
-        util.toast("Pobre man")
-        menu.trigger_commands("rlag3"..players.get_name(player_id))
-        util.yield(2500)
-        menu.trigger_commands("crashv27"..players.get_name(player_id))
-        util.yield(620)
-        menu.trigger_commands("crashv18"..players.get_name(player_id))
-        util.yield(620)
-        menu.trigger_commands("crashv12"..players.get_name(player_id))
-        util.yield(820)
-        menu.trigger_commands("crashv10"..players.get_name(player_id))
-        util.yield(620)
-        menu.trigger_commands("crashv5"..players.get_name(player_id))
-        util.yield(620)
-        menu.trigger_commands("crashv4"..players.get_name(player_id))
-        util.yield(620)
-        menu.trigger_commands("crashv1"..players.get_name(player_id))
-        util.yield(720)
-        menu.trigger_commands("crashv13"..players.get_name(player_id))
-        util.yield(720)
-        menu.trigger_commands("crashv14"..players.get_name(player_id))
-        -- Turned off because of a self-crash error
-        --util.yield(600)
-        --menu.trigger_commands("crashv4"..players.get_name(player_id))
-        util.yield(2800)
-        menu.trigger_commands("crash"..players.get_name(player_id))
-        util.yield(700)
-        menu.trigger_commands("ngcrash"..players.get_name(player_id))
-        util.yield(700)
-        menu.trigger_commands("footlettuce"..players.get_name(player_id))
-        util.yield(700)
-        menu.trigger_commands("steamroll"..players.get_name(player_id))
-        util.yield(700)
-        menu.trigger_commands("choke"..players.get_name(player_id))
-        util.yield(700)
-        menu.trigger_commands("flashcrash"..players.get_name(player_id))
-        util.yield(1500)
-        util.toast("Espera en lo que se limpia todo...")
-        --menu.trigger_command(outSync, "off")
-        menu.trigger_commands("rlag3"..players.get_name(player_id))
-        menu.trigger_commands("rcleararea")
-        menu.trigger_commands("potatomode off")
-        menu.trigger_commands("trafficpotato off")
-        util.yield(8000)
-        menu.trigger_commands("anticrashcamera off")
-    end)
+    if menu.get_edition() >= 3 then
+        menu.action(crashes, "Bomba Del Tsar Especial (Modelo)", {"tsarbomba5"}, "Crash demandante de pc, si no tienes buena pc no te recomiendo usarlo (Inbloqueable uwu) \n(Necesita Regular Para Funcionar Bien/ Muy Posible Overload)", function()
+            local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+            --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
+            menu.trigger_commands("anticrashcamera on")
+            menu.trigger_commands("potatomode on")
+            menu.trigger_commands("trafficpotato on")
+            util.toast("Iniciando...")
+            util.toast("Pobre man")
+            menu.trigger_commands("rlag3"..players.get_name(player_id))
+            util.yield(2500)
+            menu.trigger_commands("crashv27"..players.get_name(player_id))
+            util.yield(620)
+            menu.trigger_commands("crashv18"..players.get_name(player_id))
+            util.yield(620)
+            menu.trigger_commands("crashv12"..players.get_name(player_id))
+            util.yield(820)
+            menu.trigger_commands("crashv10"..players.get_name(player_id))
+            util.yield(620)
+            menu.trigger_commands("crashv5"..players.get_name(player_id))
+            util.yield(620)
+            menu.trigger_commands("crashv4"..players.get_name(player_id))
+            util.yield(620)
+            menu.trigger_commands("crashv1"..players.get_name(player_id))
+            util.yield(720)
+            menu.trigger_commands("crashv13"..players.get_name(player_id))
+            util.yield(720)
+            menu.trigger_commands("crashv14"..players.get_name(player_id))
+            -- Turned off because of a self-crash error
+            --util.yield(600)
+            --menu.trigger_commands("crashv4"..players.get_name(player_id))
+            util.yield(2800)
+            menu.trigger_commands("crash"..players.get_name(player_id))
+            util.yield(550)
+            menu.trigger_commands("ngcrash"..players.get_name(player_id))
+            util.yield(550)
+            menu.trigger_commands("footlettuce"..players.get_name(player_id))
+            util.yield(550)
+            menu.trigger_commands("steamroll"..players.get_name(player_id))
+            util.yield(550)
+            menu.trigger_commands("choke"..players.get_name(player_id))
+            util.yield(550)
+            menu.trigger_commands("flashcrash"..players.get_name(player_id))
+            util.yield(200)
+            --menu.trigger_commands("pipebomb"..players.get_name(player_id)) Posible Anticheat Concerns
+            util.yield(400)
+            menu.trigger_commands("smash"..players.get_name(player_id))
+            if PLAYER.GET_VEHICLE_PED_IS_IN(ped, false) then
+                menu.trigger_commands("slaughter"..players.get_name(player_id))
+            end
+            util.yield(1500)
+            util.toast("Espera en lo que se limpia todo...")
+            --menu.trigger_command(outSync, "off")
+            menu.trigger_commands("rlag3"..players.get_name(player_id))
+            menu.trigger_commands("rcleararea")
+            menu.trigger_commands("potatomode off")
+            menu.trigger_commands("trafficpotato off")
+            util.yield(8000)
+            menu.trigger_commands("anticrashcamera off")
+        end)
+    end
 
     -- Structure premade for the next crash
 
@@ -2273,9 +2362,9 @@ players.on_join(function(player_id)
     end)
 
     menu.action(kicks, "Desync Kick", {}, "", function()
-        util.request_model(0x705E61F2)
+        local model = util.joaat("MP_M_Freemode_01")
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
-        local ped_ = entities.create_ped(1, 0x705E61F2, pos, 0, true, false)
+        local ped_ = entities.create_ped(1, model, pos, 0, true, false)
         PED.SET_PED_COMPONENT_VARIATION(ped_, 0, 0, 0, 39, 0)
         PED.SET_PED_COMPONENT_VARIATION(ped_, 1, 104, 25, -1, 0)
         PED.SET_PED_COMPONENT_VARIATION(ped_, 2, 49, 0, -1, 0)
@@ -2290,8 +2379,6 @@ players.on_join(function(player_id)
         PED.SET_PED_COMPONENT_VARIATION(ped_, 11, 186, 0, 0)
         util.trigger_script_event(-227800145 << player_id, {player_id, math.random(32, 23647483647), math.random(-23647, 212347), 1, 115, math.random(-2321647, 21182412647), math.random(-2147483647, 2147483647), 26249, math.random(-1257483647, 23683647), 2623, 25136})
     end)
-
-
 
     local scriptev = menu.list(malicious, "Eventos", {}, "Eventos causados por scripts. \nAquellos con mod menu de paga podran detectarte.")
 
@@ -2464,10 +2551,10 @@ players.on_join(function(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
     
         for i, interior in ipairs(interior_stuff) do
-            if get_interior_player_is_in(player_id) == interior then
+            if ryze.get_interior_of_player(player_id) == interior then
                 util.toast("Jugador no esta en interior. D:")
             return end
-            if get_interior_player_is_in(player_id) ~= interior then
+            if ryze.get_interior_of_player(player_id) ~= interior then
                 MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(pos.x, pos.y, pos.z + 1, pos.x, pos.y, pos.z, 1000, true, util.joaat("weapon_stungun"), players.user_ped(), false, true, 1.0)
             end
         end
@@ -2883,14 +2970,20 @@ players.on_join(function(player_id)
         OBJECT.CREATE_AMBIENT_PICKUP(-1009939663, coords.x, coords.y, coords.z, 0, 1, card, false, true)
     end)
 
-    menu.toggle_loop(friendly, "Money Drop", {}, "Es literalmente money drop, el que todos conocimos. \nNo se testeo, no me hare responsable de baneos.", function()
+    menu.toggle(friendly, "Money Drop", {}, "Es literalmente money drop, el que todos conocimos. \nNo se testeo, no me hare responsable de baneos.", function(on_toggle)
         local coords = players.get_position(player_id)
-        coords.z = coords.z + 1.5  
-        util.yield(50)
-        menu.trigger_commands("ceopay".. players.get_name(player_id))
-        menu.trigger_commands("ceopay".. players.get_name(player_id))
-        menu.trigger_commands("rp".. players.get_name(player_id))
-        menu.trigger_commands("cards".. players.get_name(player_id))
+        coords.z = coords.z + 1.5
+        if on_toggle then
+            util.yield(50)
+            menu.trigger_commands("ceopay".. players.get_name(player_id))
+            menu.trigger_commands("rp".. players.get_name(player_id))
+            menu.trigger_commands("cards".. players.get_name(player_id))
+        else
+            util.yield(50)
+            menu.trigger_commands("ceopay".. players.get_name(player_id))
+            menu.trigger_commands("rp".. players.get_name(player_id))
+            menu.trigger_commands("cards".. players.get_name(player_id))
+        end
         --menu.trigger_commands("cash".. players.get_name(player_id) .. " 1")
     end)
 
@@ -3085,21 +3178,33 @@ players.on_join(function(player_id)
 
     local sevents = menu.list(otherc, "Eventos", {}, "Eventos creados por scripts.")
 
-    menu.action(sevents, "Cayo Perico", {}, "Intentara varios metodos a enviar a cayo. \nSi no tiene menu muy bueno funcionara. \nHay posibilidad que funcione con Stand.", function()
+    local tps = menu.list(sevents, "Tp's", {}, "Eventos de tp a jugadores.") 
+
+    menu.action(tps, "Cayo Perico", {}, "Intentara varios metodos a enviar a cayo. \nSi no tiene menu muy bueno funcionara. \nHay posibilidad que funcione con Stand.", function()
         menu.trigger_commands("scripthost")
         for i = 1, 200 do
             util.trigger_script_event(1 << player_id, {-910497748, player_id, 1, 0})
         end
     end)
 
-    menu.action(sevents, "Cayo Perico SC", {}, "Intentara varios metodos de enviar a cayo. \nSin cinematica.", function()
+    menu.action(tps, "Cayo Perico SC", {}, "Intentara varios metodos de enviar a cayo. \nSin cinematica.", function()
         menu.trigger_commands("scripthost")
         for i = 1, 200 do
             util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 4, 1})
         end
     end)
 
-    menu.action(sevents, "Trapo Al Jugador", {}, "", function()
+    menu.action(tps, "Kickeado de cayo perico", {}, "Bloqueado por la mayoria de menus.", function()
+        menu.trigger_commands("scripthost")
+        util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 4, 0})
+    end)
+
+    menu.action(tps, "Golpe Pasado", {}, "Bloqueado por la mayoria de menus.", function()
+        menu.trigger_commands("scripthost")
+        util.trigger_script_event(1 << player_id, {-168599209, players.user(), player_id, -1, 1, 1, 0, 1, 0}) 
+    end) 
+
+    menu.action(tps, "Trapo Al Jugador", {}, "", function()
         menu.trigger_commands("scripthost")
         util.trigger_script_event(1 << player_id, {2009283752247, player_id, 2005749727232, 1, 258, 1, 1, player_id, 2701534429183, 18, 0})
     end)
@@ -3116,6 +3221,23 @@ players.on_join(function(player_id)
         util.toast("Tal vez no tenga marca si no sale.")
     end)
 
+    menu.toggle(otherc, "Spectear Automatico", {}, "Usara un metodo u otro dependiendo su estado.", function(on)
+        local spec_2 = menu.ref_by_rel_path(menu.player_root(player_id), "Spectate>Ninja Method")
+        local spec_1 = menu.ref_by_rel_path(menu.player_root(player_id), "Spectate>Legit Method")
+        if on then
+            if ryze.get_interior_of_player(player_id) == 0 then
+                spec_1.value = false
+                spec_2.value = true
+            else
+                spec_2.value = false
+                spec_1.value = true
+            end 
+        else 
+            menu.trigger_commands("stopspectating")
+        end 
+
+    end)
+        
 end)
 
 menu.action(world, "Limpiar Area", {"rcleararea"}, "Limpia todo en el area", function(on_click)
@@ -3140,7 +3262,7 @@ menu.toggle_loop(detections, "GodMode", {}, "Saldra si se detecta godmode.", fun
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
         for i, interior in ipairs(interior_stuff) do
-            if players.is_godmode(player_id) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_spawn_state(player_id) == 99 and get_interior_player_is_in(player_id) == interior then
+            if players.is_godmode(player_id) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and ryze.get_interior_of_player(player_id) == interior then
                 util.draw_debug_text(players.get_name(player_id) .. " Tiene Godmode")
                 break
             end
@@ -3155,7 +3277,7 @@ menu.toggle_loop(detections, "Godmode De Coche", {}, "Saldra si se detecta godmo
         local player_veh = PED.GET_VEHICLE_PED_IS_USING(ped)
         if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
             for i, interior in ipairs(interior_stuff) do
-                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_spawn_state(player_id) == 99 and get_interior_player_is_in(player_id) == interior then
+                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and ryze.get_interior_of_player(player_id) == interior then
                     util.draw_debug_text(players.get_name(player_id) .. " Esta en carro con godmode")
                     break
                 end
@@ -3214,7 +3336,7 @@ menu.toggle_loop(detections, "Correr Rapido", {}, "Detecta si corre mas rapido",
     for _, player_id in ipairs(players.list(false, true, true)) do
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local ped_speed = (ENTITY.GET_ENTITY_SPEED(ped)* 2.236936)
-        if not util.is_session_transition_active() and get_interior_player_is_in(player_id) == 0 and get_transition_state(player_id) ~= 0 and not PED.IS_PED_DEAD_OR_DYING(ped) 
+        if not util.is_session_transition_active() and ryze.get_interior_of_player(player_id) == 0 and get_transition_state(player_id) ~= 0 and not PED.IS_PED_DEAD_OR_DYING(ped) 
         and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_IN_ANY_VEHICLE(ped, false)
         and not TASK.IS_PED_STILL(ped) and not PED.IS_PED_JUMPING(ped) and not ENTITY.IS_ENTITY_IN_AIR(ped) and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped)
         and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) <= 300.0 and ped_speed > 30 then -- fastest run speed is about 18ish mph but using 25 to give it some headroom to prevent false positives
@@ -3234,7 +3356,7 @@ menu.toggle_loop(detections, "Noclip", {}, "Detecta si el jugador esta levitando
         local currentpos = players.get_position(player_id)
         local vel = ENTITY.GET_ENTITY_VELOCITY(ped)
         if not util.is_session_transition_active() and players.exists(player_id)
-        and get_interior_player_is_in(player_id) == 0 and get_spawn_state(player_id) ~= 0
+        and ryze.get_interior_of_player(player_id) == 0 and ryze.get_spawn_state(player_id) ~= 0
         and not PED.IS_PED_IN_ANY_VEHICLE(ped, false) -- too many false positives occured when players where driving. so fuck them. lol.
         and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped)
         and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped) and not PED.IS_PED_USING_SCENARIO(ped)
@@ -3253,7 +3375,7 @@ menu.toggle_loop(detections, "Spectateando", {}, "Detecta si te espectea o a alg
     for _, player_id in ipairs(players.list(false, true, true)) do
         for i, interior in ipairs(interior_stuff) do
             local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-            if not util.is_session_transition_active() and get_spawn_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior
+            if not util.is_session_transition_active() and ryze.get_spawn_state(player_id) ~= 0 and ryze.get_interior_of_player(player_id) == interior
             and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
                 if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(player_id)) < 15.0 and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 20.0 then
                     util.toast(players.get_name(player_id) .. " Te esta viendo")
@@ -3273,7 +3395,7 @@ menu.toggle_loop(detections, "Teleport", {}, "Detecta si el jugador se teletrans
             local currentpos = players.get_position(player_id)
             for i, interior in ipairs(interior_stuff) do
                 if v3.distance(oldpos, currentpos) > 500 and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
-                and get_transition_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
+                and get_transition_state(player_id) ~= 0 and ryze.get_interior_of_player(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
                     util.toast(players.get_name(player_id) .. " Se acaba de teletransportar")
                 end
             end
@@ -3294,7 +3416,7 @@ end)
 
 menu.toggle_loop(detections, "Unirse Rapido", {}, "Detecta si alguien se une a ti de manera inusual.", function()
     for _, player_id in ipairs(players.list(false, true, true)) do
-        if not util.is_session_transition_active() and get_spawn_state(player_id) == 0 and players.get_script_host() == player_id  then
+        if not util.is_session_transition_active() and ryze.get_spawn_state(player_id) == 0 and players.get_script_host() == player_id  then
             util.toast(players.get_name(player_id) .. " Envio una deteccion (Thunder Join) y ahora es modder")
         end
     end
@@ -3402,7 +3524,7 @@ end)
 --Online
 
 menu.toggle_loop(online, "Adicto SH", {}, "Te vuelves adicto al script host.", function()
-    if players.get_script_host() ~= players.user() and get_spawn_state(players.user()) ~= 0 then
+    if players.get_script_host() ~= players.user() and ryze.get_spawn_state(players.user()) ~= 0 then
         menu.trigger_command(menu.ref_by_path("Players>"..players.get_name_with_tags(players.user())..">Friendly>Give Script Host"))
     end
 end)
@@ -3578,15 +3700,15 @@ menu.action(drugwars, "Desbloquear Misiones", {}, "Te desbloqueara todo. \nInclu
     end
 end)
 
-menu.action(drugwars, "Desbloquear van.", {}, "Te desbloqueara la van de armas.", function()
-    local player = PLAYER.PLAYER_PED_ID()
-    menu.trigger_commands("scripthost")
-    util.yield(50)
-    for i = 0, 29 do
-        memory.write_byte(memory.script_global(262145 + 33800 + 1 + i), 1)
-    end
-    memory.write_byte(memory.script_global(262145 + 33799), 1)
-end)
+--menu.action(drugwars, "Desbloquear van.", {}, "Te desbloqueara la van de armas.", function()
+--    local player = PLAYER.PLAYER_PED_ID()
+--    menu.trigger_commands("scripthost")
+--    util.yield(50)
+--    for i = 0, 29 do
+--        memory.write_byte(memory.script_global(262145 + 33800 + 1 + i), 1)
+--    end
+--    memory.write_byte(memory.script_global(262145 + 33799), 1)
+--end)
 
 menu.action(drugwars, "Llamar al ladron 'Test'", {}, "Llamara al ladron que te da regalos.", function()
     local player = PLAYER.PLAYER_PED_ID()

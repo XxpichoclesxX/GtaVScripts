@@ -1,7 +1,7 @@
 --[[
-    This was coded and rebuild by XxpichoclesxX#0427
+    This was coded and rebuild by Pichocles#0427
     Love ya this is a rebuild of past codes and some improovements that some friends helped me with
-    Enjoy this and if you find any bug just write me on discord (XxpichoclesxX#0427)
+    Enjoy this and if you find any bug just write me on discord (Pichocles#0427)
     With love Picho <3
 ]]
 
@@ -150,24 +150,13 @@ modSp = modelMenu:add_submenu("Modifications")
 
 modSp:add_action("Fast Run and Reload", function() stats.set_int(mpx .. "CHAR_ABILITY_1_UNLCK", -1) stats.set_int(mpx .. "CHAR_ABILITY_2_UNLCK", -1) stats.set_int(mpx .. "CHAR_ABILITY_3_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_1_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_2_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_3_UNLCK", -1) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end) 
 modSp:add_action("Reset Fast Run n Reload", function() stats.set_int(mpx .. "CHAR_ABILITY_1_UNLCK", 0) stats.set_int(mpx .. "CHAR_ABILITY_2_UNLCK", 0) stats.set_int(mpx .. "CHAR_ABILITY_3_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_1_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_2_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_3_UNLCK", 0) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
+
 modSp:add_action("Refill Inventory/Armour", function()	stats.set_int(mpx .. "NO_BOUGHT_YUM_SNACKS", 30) stats.set_int(mpx .. "NO_BOUGHT_HEALTH_SNACKS", 15) stats.set_int(mpx .. "NO_BOUGHT_EPIC_SNACKS", 5) stats.set_int(mpx .. "NUMBER_OF_CHAMP_BOUGHT", 5) stats.set_int(mpx .. "NUMBER_OF_ORANGE_BOUGHT", 11) stats.set_int(mpx .. "NUMBER_OF_BOURGE_BOUGHT", 10) stats.set_int(mpx .. "CIGARETTES_BOUGHT", 20) stats.set_int(mpx .. "MP_CHAR_ARMOUR_1_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_2_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_3_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_4_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_5_COUNT", 10) stats.set_int(mpx .. "BREATHING_APPAR_BOUGHT", 20) end) 
 
 badSp:add_action("Add BadSports", function() stats.set_int("MPPLY_BADSPORT_MESSAGE", -1) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", -1) stats.set_float("MPPLY_OVERALL_BADSPORT", 60000) stats.set_bool("MPPLY_CHAR_IS_BADSPORT", true) globals.set_int(1574589, 0) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
 badSp:add_action("Remove BadSports", function() stats.set_int("MPPLY_BADSPORT_MESSAGE", 0) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", 0) stats.set_float("MPPLY_OVERALL_BADSPORT", 0) stats.set_bool("MPPLY_CHAR_IS_BADSPORT", false) globals.set_int(1574589, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
 
 modelMenu:add_action("----------------- Misc ----------------", function() end)
-
-local snowAddress = 262145 + 4752
-local isEnabled = false
-
-function toggleSnow()
-    isEnabled = not isEnabled
-    globals.set_boolean(snowAddress, isEnabled)
-end
-
-modelMenu:add_toggle("Snow", function()
-    return globals.get_boolean(snowAddress)
-end, toggleSnow)
 
 appMenu = modelMenu:add_submenu("Appearance")
 
@@ -1436,7 +1425,7 @@ cajMenu:add_action("Without cooldown for sale", function()
 end)
 
 cajMenu:add_action("Set Price (5M)", function()
-    sale_price = 5000000
+    sale_price = 4000000
 	base_address = 15788
     globals.set_int(262145+base_address, sale_price//1)
     globals.set_int(262145+base_address+1, sale_price//2)
@@ -1466,6 +1455,33 @@ ccMenu = dinMenu:add_submenu("NightClub")
 local isRunning = false
 
 ccMenu:add_toggle("Safe Money Loop $250k/10s (AFK)", function() return isRunning end, function() isRunning = not isRunning safeLoop(isRunning) end)
+
+acidMenu = dinMenu:add_submenu("Acid Lab 'Test'")
+
+acidMenu:add_int_range("Acid Labs Inrease Prodution Speed", 1.0, 1, 10, function()
+	return globals.get_int(262145 + 32700)
+end, function(value)
+	globals.set_int(262145 + 32700, 0)
+end)
+
+acidMenu:add_int_range("Decrease Production Time", 1.0, 0, 100, function() 
+	return globals.get_int(262145 + 17396)
+end, function(value)
+	globals.set_int(262145 + 17396, value)
+end)
+
+acidMenu:add_int_range("Set Acid Value < 2M ", 10000.0, 10000, 99999, function()
+return globals.get_int(262145 + 17425)
+end, function(value)
+globals.set_int(262145 + 17425, value)
+end)
+
+acidMenu:add_int_range("Change Supplies Cost", 1, 0, 10, function() 
+	return globals.get_int(262145+21869)
+end, function(value)
+	globals.set_int(262145+21869, value)
+end)
+
 
 mmHmenu = dinMenu:add_submenu("Hangar Cargo 'Test'$$$")
 function Cooldown(e) if not localplayer then return end if e then for i = 284924, 284928 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(284924, 120000) globals.set_int(284925, 180000) globals.set_int(284926, 240000) globals.set_int(284927, 60000) globals.set_int(284928, 2000) end end mmHmenu:add_toggle("Remove Cooldowns", function() return e15 end, function() e15 = not e15 Cooldown(e15) end)
@@ -1509,24 +1525,7 @@ mcMenu:add_float_range("Sale Multiplication", 0.5, 1, 1000, function() return gl
 mcMenu:add_action(" ~Use to obtain~ ", function() end)
 mcMenu:add_action(" ~Max 2.5M~ ", function() end)
 
-MMmenu = dinMenu:add_submenu("Money Loop") local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
-
-local g = globals.set_int
-local m = 1963962
-local x = 1
-local y = 2
-local z = 3
-local k
-local k = 0
-local s = sleep
-local p = 30
-local q = 60
-local r = 120
-local enable1 = false
-local enable2 = false
-local enable3 = false
-local enable4 = false
-local enable5 = false
+MMmenu = dinMenu:add_submenu("Money Loop") local g = globals.set_int local m = 1968313 local x = 1 local y = 2 local z = 3 local k = 0 local s = sleep local p = 30 local q = 60 local r = 120 local enable1 = false local enable2 = false local enable3 = false local enable4 = false local enable5 = false local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
 
 MMmenu:add_toggle("$ 500k/ 30s", function() return enable1 end, function() enable1 = not enable1 while enable1 == true do Loop1(enable1) end end) local function Loop2(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(p) end end 
 MMmenu:add_toggle("$ 750k/ 30s", function() return enable2 end, function() enable2 = not enable2 while enable2 == true do Loop2(enable2) end end) local function Loop3(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(z) g(m, x) s(z) g(m, k) s(q) end end

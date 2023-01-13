@@ -32,5 +32,5 @@ No ETA also because as i said in kiddions script i dont know actually if im goin
 ## About
 -  Probably Stand script is going to take a little bit more than kiddions, by now, kiddions script is in stand by me <3
 -  By the way to anyone who ask's about the stand script, is not entire mine, there is actually in credits every single person who i taked code from and who helped me with this.
-## Last Kiddions update: 08/01/2023
-## Last Stand update: 08/01/2023
+## Last Kiddions update: 12/01/2023
+## Last Stand update: 12/01/2023
