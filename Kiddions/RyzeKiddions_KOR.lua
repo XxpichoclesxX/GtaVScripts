@@ -148,9 +148,10 @@ modelMenu:add_action("----------------- Self ----------------", function() end)
 badSp = modelMenu:add_submenu("배드 스포츠")
 modSp = modelMenu:add_submenu("변경 사항")
 
-modSp:add_action("빠른 실행 및 다시 로드", function() stats.set_int(mpx .. "CHAR_ABILITY_1_UNLCK", -1) stats.set_int(mpx .. "CHAR_ABILITY_2_UNLCK", -1) stats.set_int(mpx .. "CHAR_ABILITY_3_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_1_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_2_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_3_UNLCK", -1) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
-modSp:add_action("빠른 실행 다시 로드 재설정", function() stats.set_int(mpx .. "CHAR_ABILITY_1_UNLCK", 0) stats.set_int(mpx .. "CHAR_ABILITY_2_UNLCK", 0) stats.set_int(mpx .. "CHAR_ABILITY_3_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_1_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_2_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_3_UNLCK", 0) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
-modSp:add_action("인벤토리/방탄복 재충전", function()	stats.set_int(mpx .. "NO_BOUGHT_YUM_SNACKS", 30) stats.set_int(mpx .. "NO_BOUGHT_HEALTH_SNACKS", 15) stats.set_int(mpx .. "NO_BOUGHT_EPIC_SNACKS", 5) stats.set_int(mpx .. "NUMBER_OF_CHAMP_BOUGHT", 5) stats.set_int(mpx .. "NUMBER_OF_ORANGE_BOUGHT", 11) stats.set_int(mpx .. "NUMBER_OF_BOURGE_BOUGHT", 10) stats.set_int(mpx .. "CIGARETTES_BOUGHT", 20) stats.set_int(mpx .. "MP_CHAR_ARMOUR_1_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_2_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_3_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_4_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_5_COUNT", 10) stats.set_int(mpx .. "BREATHING_APPAR_BOUGHT", 20) end)
+modSp:add_action("빨리 달리고 재충전하세요.", function() stats.set_int(mpx .. "CHAR_ABILITY_1_UNLCK", -1) stats.set_int(mpx .. "CHAR_ABILITY_2_UNLCK", -1) stats.set_int(mpx .. "CHAR_ABILITY_3_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_1_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_2_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_3_UNLCK", -1) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end) 
+modSp:add_action("국가 재시동", function() stats.set_int(mpx .. "CHAR_ABILITY_1_UNLCK", 0) stats.set_int(mpx .. "CHAR_ABILITY_2_UNLCK", 0) stats.set_int(mpx .. "CHAR_ABILITY_3_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_1_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_2_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_3_UNLCK", 0) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
+
+modSp:add_action("인비 갑옷을 채우다", function()	stats.set_int(mpx .. "NO_BOUGHT_YUM_SNACKS", 30) stats.set_int(mpx .. "NO_BOUGHT_HEALTH_SNACKS", 15) stats.set_int(mpx .. "NO_BOUGHT_EPIC_SNACKS", 5) stats.set_int(mpx .. "NUMBER_OF_CHAMP_BOUGHT", 5) stats.set_int(mpx .. "NUMBER_OF_ORANGE_BOUGHT", 11) stats.set_int(mpx .. "NUMBER_OF_BOURGE_BOUGHT", 10) stats.set_int(mpx .. "CIGARETTES_BOUGHT", 20) stats.set_int(mpx .. "MP_CHAR_ARMOUR_1_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_2_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_3_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_4_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_5_COUNT", 10) stats.set_int(mpx .. "BREATHING_APPAR_BOUGHT", 20) end) 
 
 
 badSp:add_action("나쁜 스포츠 추가", function() stats.set_int("MPPLY_BADSPORT_MESSAGE", -1) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", -1) stats.set_float("MPPLY_OVERALL_BADSPORT", 60000) stats.set_bool("MPPLY_CHAR_IS_BADSPORT", true) globals.set_int(1575015, 0) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
@@ -424,7 +425,6 @@ CDNPMenu:add_int_range("잠재적 다이아몬드", 1000000000.0, 3290000, 10000
 cccMenu:add_array_item("텔레포트", {"볼트 스와이프", "직원 문 출구", "세탁실", "보너스룸", "옥상 출구"}, function() return xox_14 end, function(value) if value == 1 then TP(2468.646973, -279.083374, -71.994194, -1.083554, 0.000000, 0.000000) elseif value == 2 then TP(2547.458496, -277.744507, -59.741863, -0.071993, 0.005218, -0.113118) elseif value == 3 then TP(2536.455078, -300.772522, -60.022968, 0.000000, 0.000000, 0.000000) elseif value == 4 then TP(2521.906494, -287.172882, -60.022964, 0.000000, 0.000000, 0.000000) elseif value == 5 then TP(2522.338379, -248.534760, -25.414972, 0.000000, 0.000000, 0.000000) end xox_14 = value end)
 
 
-
 protMenu = mainMenu:add_submenu("보호 'Test'")
 
 local function Text(text)
@@ -451,23 +451,23 @@ local function KickCrashes(bool)
 end
 
 local function CeoKick(bool)
-	if bool then
-		globals.set_bool(1669984, true)
+	if bool then 
+		globals.set_bool(1669984, true) 
 	else
 		globals.set_bool(1669984, false)
 	end
 end
 
 local function CeoBan(bool)
-	if bool then
-		globals.set_bool(1670006, true)
+	if bool then 
+		globals.set_bool(1670006, true) 
 	else
 		globals.set_bool(1670006, false)
 	end
 end
 
 local function SoundSpam(bool)
-	if bool then
+	if bool then 
 		globals.set_bool(1669879, true)
 		globals.set_bool(1670243, true)
 		globals.set_bool(1669394, true)
@@ -477,8 +477,8 @@ local function SoundSpam(bool)
 
 	else
 		globals.set_bool(1669879, false)
-		globals.set_bool(1670243, false)
-		globals.set_bool(1669394, false)
+		globals.set_bool(1670243, false) 
+		globals.set_bool(1669394, false) 
 		globals.set_bool(1670529, false)
 		globals.set_bool(1670058, false)
 		globals.set_bool(1669421, false)
@@ -486,8 +486,8 @@ local function SoundSpam(bool)
 end
 
 local function InfiniteLoad(bool)
-	if bool then
-		globals.set_bool(1669947, true)
+	if bool then 		
+		globals.set_bool(1669947, true) 
 		globals.set_bool(1670076, true)
 	else
 		globals.set_bool(1669947, false)
@@ -497,31 +497,31 @@ end
 
 
 local function Collectibles(bool)
-	if bool then
-		globals.set_bool(1670208, true)
+	if bool then 
+		globals.set_bool(1670208, true) 
 	else
 		globals.set_bool(1670208, false)
 	end
 end
 
 local function PassiveMode(bool)
-	if bool then
-		globals.set_bool(1669996, true)
+	if bool then 
+		globals.set_bool(1669996, true) 
 	else
 		globals.set_bool(1669996, false)
 	end
 end
 
-local function TransactionError(bool)
-	if bool then
-		globals.set_bool(1669797, true)
+local function TransactionError(bool) 
+	if bool then 
+		globals.set_bool(1669797, true) 
 	else
 		globals.set_bool(1669797, false)
 	end
 end
 
-local function RemoveMoneyMessage(bool)
-	if bool then
+local function RemoveMoneyMessage(bool) 
+	if bool then 
 		globals.set_bool(1669880, true)
 		globals.set_bool(1669426, true)
 		globals.set_bool(1670057, true)
@@ -534,63 +534,63 @@ local function RemoveMoneyMessage(bool)
 	end
 end
 
-local function ExtraTeleport(bool)
-	if bool then
-		globals.set_bool(1669741, true)
-		globals.set_bool(1670138, true)
+local function ExtraTeleport(bool) 
+	if bool then 
+		globals.set_bool(1669741, true) 
+		globals.set_bool(1670138, true) 
 	else
-		globals.set_bool(1669741, false)
-		globals.set_bool(1670138, false)
+		globals.set_bool(1669741, false) 
+		globals.set_bool(1670138, false) 
 	end
 end
 
 
-local function ClearWanted(bool)
-	if bool then
+local function ClearWanted(bool) 
+	if bool then 
 		globals.set_bool(1669938, true)
 	else
 		globals.set_bool(1669938, false)
 	end
 end
 
-local function OffTheRadar(bool)
-	if bool then
+local function OffTheRadar(bool) 
+	if bool then 
 		globals.set_bool(1669940, true)
 	else
 		globals.set_bool(1669940, false)
 	end
 end
 
-local function SendCutscene(bool)
-	if bool then
+local function SendCutscene(bool) 
+	if bool then 
 		globals.set_bool(1670198, true)
 	else
 		globals.set_bool(1670198, false)
 	end
 end
 
-local function Godmode(bool)
-	if bool then
+local function Godmode(bool) 
+	if bool then 
 		globals.set_bool(1669396, true)
 	else
 		globals.set_bool(1669396, false)
 	end
 end
 
-local function PersonalVehicleDestroy(bool)
-	if bool then
+local function PersonalVehicleDestroy(bool) 
+	if bool then 
 		globals.set_bool(1669480, true)
-		globals.set_bool(1670063, true)
+		globals.set_bool(1670063, true) 
 		globals.set_bool(1669947, true)
-
+		
 	else
 		globals.set_bool(1669480, false)
-		globals.set_bool(1670063, false)
-		globals.set_bool(1669947, false)
+		globals.set_bool(1670063, false) 
+		globals.set_bool(1669947, false) 
 	end
 end
 
-local function All(bool)
+local function All(bool) 
 	CeoKick(bool)
 	CeoBan(bool)
 	SoundSpam(bool)
@@ -613,7 +613,7 @@ protMenu:add_toggle("모두 활성화", function()
 end, function()
 	boolall = not boolall
 	All(boolall)
-
+	
 end)
 Text("--")
 
@@ -622,7 +622,7 @@ protMenu:add_toggle("차단 SE-킥", function()
 end, function()
 	boolcbt = not boolcbt
 	KickCrashes(boolcbt)
-
+	
 end)
 
 protMenu:add_toggle("차단 CEO-킥", function()
@@ -637,7 +637,7 @@ protMenu:add_toggle("차단 CEO 밴", function()
 end, function()
 	boolcb = not boolcb
 	CeoBan(boolcb)
-
+	
 end)
 
 protMenu:add_toggle("스팸 소리 차단", function()
@@ -645,7 +645,7 @@ protMenu:add_toggle("스팸 소리 차단", function()
 end, function()
 	boolsps = not boolsps
 	SoundSpam(boolsps)
-
+	
 end)
 
 protMenu:add_toggle("무한 로딩 화면 차단", function()
@@ -653,7 +653,7 @@ protMenu:add_toggle("무한 로딩 화면 차단", function()
 end, function()
 	boolil = not boolil
 	InfiniteLoad(boolil)
-
+	
 end)
 
 protMenu:add_toggle("패시브 모드 차단", function()
@@ -661,7 +661,7 @@ protMenu:add_toggle("패시브 모드 차단", function()
 end, function()
 	boolb = not boolb
 	PassiveMode(boolb)
-
+	
 end)
 
 protMenu:add_toggle("트랜잭션 오류 차단", function()
@@ -669,7 +669,7 @@ protMenu:add_toggle("트랜잭션 오류 차단", function()
 end, function()
 	boolte = not boolte
 	TransactionError(boolte)
-
+	
 end)
 
 protMenu:add_toggle("알림 수정/SMS 차단", function()
@@ -677,7 +677,7 @@ protMenu:add_toggle("알림 수정/SMS 차단", function()
 end, function()
 	boolrm = not boolrm
 	RemoveMoneyMessage(boolrm)
-
+	
 end)
 
 protMenu:add_toggle("검색 삭제 차단", function()
@@ -685,7 +685,7 @@ protMenu:add_toggle("검색 삭제 차단", function()
 end, function()
 	boolclw = not boolclw
 	ClearWanted(boolclw)
-
+	
 end)
 
 protMenu:add_toggle("레이더 차단", function()
@@ -693,7 +693,7 @@ protMenu:add_toggle("레이더 차단", function()
 end, function()
 	boolotr = not boolotr
 	OffTheRadar(boolotr)
-
+	
 end)
 
 protMenu:add_toggle("차단 차량 파괴", function()
@@ -701,7 +701,7 @@ protMenu:add_toggle("차단 차량 파괴", function()
 end, function()
 	boolpvd = not boolpvd
 	PersonalVehicleDestroy(boolpvd)
-
+	
 end)
 
 protMenu:add_toggle("컷신으로 전송 차단", function()
@@ -709,7 +709,7 @@ protMenu:add_toggle("컷신으로 전송 차단", function()
 end, function()
 	boolstc = not boolstc
 	SendCutscene(boolstc)
-
+	
 end)
 
 protMenu:add_toggle("신 모드 차단", function()
@@ -717,7 +717,7 @@ protMenu:add_toggle("신 모드 차단", function()
 end, function()
 	boolgod = not boolgod
 	Godmode(boolgod)
-
+	
 end)
 
 protMenu:add_toggle("수집품 차단", function()
@@ -725,7 +725,7 @@ protMenu:add_toggle("수집품 차단", function()
 end, function()
 	boolgc = not boolgc
 	Collectibles(boolgc)
-
+	
 end)
 
 protMenu:add_toggle("카요페리코 보내기 차단", function()
@@ -733,7 +733,7 @@ protMenu:add_toggle("카요페리코 보내기 차단", function()
 end, function()
 	boolcbt = not boolcbt
 	ExtraTeleport(boolcbt)
-
+	
 end)
 
 protMenu:add_action("----------------- 통계 수정 ----------------", function() end)
@@ -952,7 +952,7 @@ local money = 1
 local kd = 1
 local kills = 1
 local deaths = 1
-local ply = spoof:get_player_id() * 862
+local ply = localplayer:get_player_id() * 862
 local skidy_1 = 1
 local skidy_2 = 1
 local skidy_3 = 1
@@ -1063,7 +1063,7 @@ spoof:add_array_item(
     function(value)
 		if value == 1 then
 		kd_key = menu.register_hotkey(122, setkd)
-		removeset4 = 1
+		removeset4 = 1		
 		end
         skidy_2 = value
     end
@@ -1138,7 +1138,7 @@ spoof:add_toggle("활성화/비활성화", function()
 end, function()
 	boolsr = not boolsr
 	sad(boolsr)
-
+	
 end)
 Text("--")
 local cus = spoof:add_submenu("설정")
@@ -1458,27 +1458,27 @@ ccMenu = dinMenu:add_submenu("나이트 클럽")
 local isRunning = false
 ccMenu:add_toggle("안전한 머니 루프 $250k/10s (AFK)", function() return isRunning end, function() isRunning = not isRunning safeLoop(isRunning) end)
 
-acidMenu = dinMenu:add_submenu("Laboratorio De Acido 'Test'")
+acidMenu = dinMenu:add_submenu("아시도 연구소 'Test'")
 
-acidMenu:add_int_range("Aumentar Produccion", 1.0, 1, 10, function()
+acidMenu:add_int_range("생산 증대", 1.0, 1, 10, function()
 	return globals.get_int(262145 + 32700)
 end, function(value)
 	globals.set_int(262145 + 32700, 0)
 end)
 
-acidMenu:add_int_range("Disminuir Estado de produccion", 1.0, 0, 100, function()
+acidMenu:add_int_range("생산 상태를 줄이다.", 1.0, 0, 100, function()
 	return globals.get_int(262145 + 17396)
 end, function(value)
 	globals.set_int(262145 + 17396, value)
 end)
 
-acidMenu:add_int_range("Poner el valor de acido < 2M ", 10000.0, 10000, 99999, function()
+acidMenu:add_int_range("산값을 매기다. < 2M ", 10000.0, 10000, 99999, function()
 	return globals.get_int(262145 + 17425)
 	end, function(value)
 	globals.set_int(262145 + 17425, value)
 end)
 
-acidMenu:add_int_range("Costo de suministros", 1, 0, 10, function()
+acidMenu:add_int_range("공급 비용", 1, 0, 10, function()
 	return globals.get_int(262145+21869)
 end, function(value)
 	globals.set_int(262145+21869, value)
