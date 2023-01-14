@@ -72,9 +72,9 @@ local int_min = -2147483647
 local int_max = 2147483647
 
 -- Memory Functions
-memory.scan("ChangeNetObjOwner", "48 8B C4 48 89 58 08 48 89 68 10 48 89 70 18 48 89 78 20 41 54 41 56 41 57 48 81 EC ? ? ? ? 44 8A 62 4B", function (address)
-    ChangeNetObjOwner_addr = address
-end)
+--memory.scan("ChangeNetObjOwner", "48 8B C4 48 89 58 08 48 89 68 10 48 89 70 18 48 89 78 20 41 54 41 56 41 57 48 81 EC ? ? ? ? 44 8A 62 4B", function (address)
+--    ChangeNetObjOwner_addr = address
+--end)
 
 -- Ryze Functions
 
