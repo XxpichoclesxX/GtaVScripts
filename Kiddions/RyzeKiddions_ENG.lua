@@ -1398,63 +1398,63 @@ dinMenu:add_action("it is safe until a point", function() end)
 dinMenu:add_action("Lova ya, picho <3", function() end)
 dinMenu:add_action("-------------------------------------------", function() end)
 
---cajMenu = dinMenu:add_submenu("Cajas CEO $")
+cajMenu = dinMenu:add_submenu("Cajas CEO 'PROB DETECTED'")
 
---cajMenu:add_action("End Sale Mision", function()
---	sale_mission = script("gb_contraband_sell")
---	if sale_mission:is_active()
---		then
---			base_address = 540
---			sale_mission:set_int(base_address+1,99999)
---		end
---end)
+cajMenu:add_action("End Sale Mision", function()
+	sale_mission = script("gb_contraband_sell")
+	if sale_mission:is_active()
+		then
+			base_address = 540
+			sale_mission:set_int(base_address+1,99999)
+		end
+end)
 
---cajMenu:add_action("End Buy/Rob Mision", function()
---	buy_mission = script("gb_contraband_buy")
---	if buy_mission:is_active()
---		then
---			base_address = 598
---			buy_mission:set_int(base_address+5, 1)
---			buy_mission:set_int(base_address+191, 6)
---			buy_mission:set_int(base_address+192, 4)
---		end
---end)
+cajMenu:add_action("End Buy/Rob Mision", function()
+	buy_mission = script("gb_contraband_buy")
+	if buy_mission:is_active()
+		then
+			base_address = 598
+			buy_mission:set_int(base_address+5, 1)
+			buy_mission:set_int(base_address+191, 6)
+			buy_mission:set_int(base_address+192, 4)
+		end
+end)
 
---cajMenu:add_action("Without cooldown for sale", function()
---    globals.set_int(262145+15554, 0) 
---end)
+cajMenu:add_action("Without cooldown for sale", function()
+    globals.set_int(262145+15554, 0) 
+end)
 
---cajMenu:add_action("Set Price (5M)", function()
---    sale_price = 4000000
---	base_address = 15788
---    globals.set_int(262145+base_address, sale_price//1)
---    globals.set_int(262145+base_address+1, sale_price//2)
---    globals.set_int(262145+base_address+2, sale_price//3)
---    globals.set_int(262145+base_address+3, sale_price//5)
---    globals.set_int(262145+base_address+4, sale_price//7)
---    globals.set_int(262145+base_address+5, sale_price//9)
---    globals.set_int(262145+base_address+6, sale_price//14)
---    globals.set_int(262145+base_address+7, sale_price//19)
---    globals.set_int(262145+base_address+8, sale_price//24)
---    globals.set_int(262145+base_address+9, sale_price//29)
---    globals.set_int(262145+base_address+10, sale_price//34)
---    globals.set_int(262145+base_address+11, sale_price//39)
---    globals.set_int(262145+base_address+12, sale_price//44)
---    globals.set_int(262145+base_address+13, sale_price//49)
---    globals.set_int(262145+base_address+14, sale_price//59)
---    globals.set_int(262145+base_address+15, sale_price//69)
---    globals.set_int(262145+base_address+16, sale_price//79)
---    globals.set_int(262145+base_address+17, sale_price//89)
---    globals.set_int(262145+base_address+18, sale_price//99)
---    globals.set_int(262145+base_address+19, sale_price//110)
---    globals.set_int(262145+base_address+20, sale_price//111)
---end)
+cajMenu:add_action("Set Price (5M)", function()
+    sale_price = 4000000
+	base_address = 15788
+    globals.set_int(262145+base_address, sale_price//1)
+    globals.set_int(262145+base_address+1, sale_price//2)
+    globals.set_int(262145+base_address+2, sale_price//3)
+    globals.set_int(262145+base_address+3, sale_price//5)
+    globals.set_int(262145+base_address+4, sale_price//7)
+    globals.set_int(262145+base_address+5, sale_price//9)
+    globals.set_int(262145+base_address+6, sale_price//14)
+    globals.set_int(262145+base_address+7, sale_price//19)
+    globals.set_int(262145+base_address+8, sale_price//24)
+    globals.set_int(262145+base_address+9, sale_price//29)
+    globals.set_int(262145+base_address+10, sale_price//34)
+    globals.set_int(262145+base_address+11, sale_price//39)
+    globals.set_int(262145+base_address+12, sale_price//44)
+    globals.set_int(262145+base_address+13, sale_price//49)
+    globals.set_int(262145+base_address+14, sale_price//59)
+    globals.set_int(262145+base_address+15, sale_price//69)
+    globals.set_int(262145+base_address+16, sale_price//79)
+    globals.set_int(262145+base_address+17, sale_price//89)
+    globals.set_int(262145+base_address+18, sale_price//99)
+    globals.set_int(262145+base_address+19, sale_price//110)
+    globals.set_int(262145+base_address+20, sale_price//111)
+end)
 
---ccMenu = dinMenu:add_submenu("NightClub")
+ccMenu = dinMenu:add_submenu("NightClub")
 
---local isRunning = false
+local isRunning = false
 
---ccMenu:add_toggle("Safe Money Loop $250k/10s (AFK)", function() return isRunning end, function() isRunning = not isRunning safeLoop(isRunning) end)
+ccMenu:add_toggle("Safe Money Loop $250k/10s (AFK)", function() return isRunning end, function() isRunning = not isRunning safeLoop(isRunning) end)
 
 acidMenu = dinMenu:add_submenu("Acid Lab 'Test'")
 
@@ -1525,19 +1525,19 @@ mcMenu:add_float_range("Sale Multiplication", 0.5, 1, 1000, function() return gl
 mcMenu:add_action(" ~Use to obtain~ ", function() end)
 mcMenu:add_action(" ~Max 2.5M~ ", function() end)
 
---MMmenu = dinMenu:add_submenu("Money Loop") local g = globals.set_int local m = 1968313 local x = 1 local y = 2 local z = 3 local k = 0 local s = sleep local p = 30 local q = 60 local r = 120 local enable1 = false local enable2 = false local enable3 = false local enable4 = false local enable5 = false local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
+MMmenu = dinMenu:add_submenu("Money Loop 'SUPER RISKY'") local g = globals.set_int local m = 1968313 local x = 1 local y = 2 local z = 3 local k = 0 local s = sleep local p = 30 local q = 60 local r = 120 local enable1 = false local enable2 = false local enable3 = false local enable4 = false local enable5 = false local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
 
---MMmenu:add_toggle("$ 500k/ 30s", function() return enable1 end, function() enable1 = not enable1 while enable1 == true do Loop1(enable1) end end) local function Loop2(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(p) end end 
---MMmenu:add_toggle("$ 750k/ 30s", function() return enable2 end, function() enable2 = not enable2 while enable2 == true do Loop2(enable2) end end) local function Loop3(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(z) g(m, x) s(z) g(m, k) s(q) end end
---MMmenu:add_toggle("$ 1M/ 60s", function() return enable3 end, function() enable3 = not enable3 while enable3 == true do Loop3(enable3) end end) local function Loop4(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(q) end end 
---MMmenu:add_toggle("$ 1.5M/ 60s", function() return enable4 end, function() enable4 = not enable4 while enable4 == true do Loop4(enable4) end end) local function Loop5(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(r) end end    
---MMmenu:add_toggle("$ 3M/ 120s", function() return enable5 end, function() enable5 = not enable5 while enable5 == true do Loop5(enable5) end end)
+MMmenu:add_toggle("$ 500k/ 30s", function() return enable1 end, function() enable1 = not enable1 while enable1 == true do Loop1(enable1) end end) local function Loop2(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(p) end end 
+MMmenu:add_toggle("$ 750k/ 30s", function() return enable2 end, function() enable2 = not enable2 while enable2 == true do Loop2(enable2) end end) local function Loop3(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(z) g(m, x) s(z) g(m, k) s(q) end end
+MMmenu:add_toggle("$ 1M/ 60s", function() return enable3 end, function() enable3 = not enable3 while enable3 == true do Loop3(enable3) end end) local function Loop4(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(q) end end 
+MMmenu:add_toggle("$ 1.5M/ 60s", function() return enable4 end, function() enable4 = not enable4 while enable4 == true do Loop4(enable4) end end) local function Loop5(e) if not localplayer then return end if e then g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(z) g(m, y) s(z) g(m, k) s(r) end end    
+MMmenu:add_toggle("$ 3M/ 120s", function() return enable5 end, function() enable5 = not enable5 while enable5 == true do Loop5(enable5) end end)
 
---MMmenu:add_action("---------------> IMPORTANT <-----------------", function() end)
+MMmenu:add_action("---------------> IMPORTANT <-----------------", function() end)
 
---MMmenu:add_action("Choose 1 option only. To stop", function() end)
---MMmenu:add_action("Leave config alone. If you want", function() end)
---MMmenu:add_action("change the option, leave again and wait", function() end) 
---MMmenu:add_action("2 minutes before selecting a new one.", function() end) 
+MMmenu:add_action("Choose 1 option only. To stop", function() end)
+MMmenu:add_action("Leave config alone. If you want", function() end)
+MMmenu:add_action("change the option, leave again and wait", function() end) 
+MMmenu:add_action("2 minutes before selecting a new one.", function() end) 
 
 local CREDMenu = mainMenu:add_submenu("Creditos") CREDMenu:add_action("Kiddions ", function() end) CREDMenu:add_action("Pichocles", function() end) CREDMenu:add_action("Pepe ", function() end) CREDMenu:add_action("Sammy ", function() end) CREDMenu:add_action("Vicente ", function() end) CREDMenu:add_action("Ady", function() end) CREDMenu:add_action("En Especial ", function() end) CREDMenu:add_action("Emir <3 ", function() end)
