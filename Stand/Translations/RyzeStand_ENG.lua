@@ -10,7 +10,7 @@ util.require_natives(1663599433)
 util.toast("Welcome " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 4.1
+local localVer = 4.11
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -140,7 +140,25 @@ ryze = {
         "weapon_railgun",
         "weapon_stungun",
         "weapon_digiscanner",
-    }
+    },
+
+    get_spawn_state = function(player_id)
+        return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 232)) -- Global_2657589[PLAYER::PLAYER_ID() /*466*/].f_232
+    end,
+
+    get_interior_of_player = function(player_id)
+        return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 245))
+    end,
+
+    is_player_in_interior = function(player_id)
+        return (memory.read_int(memory.script_global(2657589 + 1 + (player_id * 466) + 245)) ~= 0)
+    end,
+
+    get_random_pos_on_radius = function()
+        local angle = random_float(0, 2 * math.pi)
+        pos = v3.new(pos.x + math.cos(angle) * radius, pos.y + math.sin(angle) * radius, pos.z)
+        return pos
+    end
 
     --PapuCrash = function()
     --    local addr = memory.scan("48 81 EC ? ? ? ? 48 8B E9 48 8B CA 0F 29 74 24 ? 48 8B DA") - 0x15
@@ -330,25 +348,6 @@ local function kick_player_out_of_veh(player_id)
         util.yield()
     end
 end
-
-local function get_transition_state(player_id)
-    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (player_id * 0x1C5)) + 230))
-end
-
-local function get_interior_player_is_in(player_id)
-    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (player_id * 0x1C5)) + 243)) 
-end
-
-local function is_player_in_interior(player_id)
-    return (memory.read_int(memory.script_global(0x2908D3 + 1 + (player_id * 0x1C5) + 243)) ~= 0)
-end
-
-local function get_random_pos_on_radius(pos, radius)
-    local angle = random_float(0, 2 * math.pi)
-    pos = v3.new(pos.x + math.cos(angle) * radius, pos.y + math.sin(angle) * radius, pos.z)
-    return pos
-end
-
 
 local function player_toggle_loop(root, player_id, menu_name, command_names, help_text, callback)
     return menu.toggle_loop(root, menu_name, command_names, help_text, function()
@@ -804,7 +803,7 @@ players.on_join(function(player_id)
 
 	menu.action(trolling, ("Send Mercenaries"), {}, "", function()
 		if NETWORK.NETWORK_IS_SESSION_STARTED() and NETWORK.NETWORK_IS_PLAYER_ACTIVE(player_id) and
-		not PED.IS_PED_INJURED(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)) and not is_player_in_interior(player_id) then
+		not PED.IS_PED_INJURED(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)) and not ryze.is_player_in_interior(player_id) then
 
             if not NETWORK.NETWORK_IS_SCRIPT_ACTIVE("am_gang_call", 1, true, 0) then
                 local bits_addr = memory.script_global(1853910 + (players.user() * 862 + 1) + 140)
@@ -3388,7 +3387,7 @@ menu.toggle_loop(detections, "GodMode", {}, "It will detect if player has godmod
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
         for i, interior in ipairs(interior_stuff) do
-            if players.is_godmode(player_id) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_spawn_state(player_id) == 99 and get_interior_player_is_in(player_id) == interior then
+            if players.is_godmode(player_id) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and get_interior_player_is_in(player_id) == interior then
                 util.draw_debug_text(players.get_name(player_id) .. " Has Godmode")
                 break
             end
@@ -3403,7 +3402,7 @@ menu.toggle_loop(detections, "Vehicle Godmode", {}, "It will detect if the car i
         local player_veh = PED.GET_VEHICLE_PED_IS_USING(ped)
         if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
             for i, interior in ipairs(interior_stuff) do
-                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and get_spawn_state(player_id) == 99 and get_interior_player_is_in(player_id) == interior then
+                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and get_interior_player_is_in(player_id) == interior then
                     util.draw_debug_text(players.get_name(player_id) .. " Car with Godmode")
                     break
                 end
@@ -3542,7 +3541,7 @@ end)
 
 menu.toggle_loop(detections, "Thunder Join", {}, "Detects if someone is using thunder join.", function()
     for _, player_id in ipairs(players.list(false, true, true)) do
-        if not util.is_session_transition_active() and get_spawn_state(player_id) == 0 and players.get_script_host() == player_id  then
+        if not util.is_session_transition_active() and ryze.get_spawn_state(player_id) == 0 and players.get_script_host() == player_id  then
             util.toast(players.get_name(player_id) .. " Is using (Thunder Join) and now is a modder.")
         end
     end
@@ -3651,7 +3650,7 @@ end)
 --Online
 
 menu.toggle_loop(online, "Addict SH", {}, "You become addicted to the host script", function()
-    if players.get_script_host() ~= players.user() and get_spawn_state(players.user()) ~= 0 then
+    if players.get_script_host() ~= players.user() and ryze.get_spawn_state(players.user()) ~= 0 then
         menu.trigger_command(menu.ref_by_path("Players>"..players.get_name_with_tags(players.user())..">Friendly>Give Script Host"))
     end
 end)
@@ -3736,53 +3735,53 @@ menu.action(servicios, "Deluxe Helicopter", {}, "Request a helicopter to your lo
 	end
 end)
 
-local recovery = menu.list(online, "Recovery", {}, "")
+--local recovery = menu.list(online, "Recovery", {}, "")
 
-local coleccionables = menu.list(recovery, "Collectibles", {}, "")
+--local coleccionables = menu.list(recovery, "Collectibles", {}, "")
 
-menu.click_slider(coleccionables, "Dvd's", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x0, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Dvd's", {""}, "", 0, 9, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x0, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Hidden Caches", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x1, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Hidden Caches", {""}, "", 0, 9, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x1, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Treasure Chest", {""}, "", 0, 1, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x2, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Treasure Chest", {""}, "", 0, 1, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x2, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Radio Antennas", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x3, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Radio Antennas", {""}, "", 0, 9, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x3, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "USBs", {""}, "", 0, 19, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x4, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "USBs", {""}, "", 0, 19, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x4, i, 1, 1, 1})
+--end)
 
-menu.action(coleccionables, "Shipwrecks", {""}, "", function()
-    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x5, 0, 1, 1, 1})
-end)
+--menu.action(coleccionables, "Shipwrecks", {""}, "", function()
+--    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x5, 0, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Burried", {""}, "", 0, 1, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x6, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Burried", {""}, "", 0, 1, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x6, i, 1, 1, 1})
+--end)
 
-menu.action(coleccionables, "Halloween Shirts", {""}, "", function()
-    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x7, 1, 1, 1, 1})
-end)
+--menu.action(coleccionables, "Halloween Shirts", {""}, "", function()
+--    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x7, 1, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Lanterns", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x8, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Lanterns", {""}, "", 0, 9, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x8, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Organic Products", {""}, "", 0, 99, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x9, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Organic Products", {""}, "", 0, 99, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x9, i, 1, 1, 1})
+--end)
 
-menu.click_slider(coleccionables, "Junk Energy Free Flight", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0xA, i, 1, 1, 1})
-end)
+--menu.click_slider(coleccionables, "Junk Energy Free Flight", {""}, "", 0, 9, 0, 1, function(i)
+--    util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0xA, i, 1, 1, 1})
+--end)
 
 local drugwars = menu.list(recovery, "Drug Wars", {}, "DrugWars content.")
 
