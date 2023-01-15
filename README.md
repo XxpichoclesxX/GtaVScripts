@@ -28,7 +28,7 @@ Im just making this for fun and i started making it because my friends asked for
 This is a lua also for the paid modding engine called stand, it is a complement of various scripts also known, im just improving the code and adding some extra features that the menu doesn't have like more protections to make unable to the modders to grief you, lag you etc.
 Im also thinking on some extra features, like more protections and trolling options and much more than i have in today's version.
 
-No ETA for big updates also because as i said in kiddions script i dont know actually if im going to continue this by now, because of my classes and everything so, this is just a fun and helpfull project, if anyone want's to use it, is free and you can use my script has a template for free.
+No ETA for big updates also because as i already said in kiddions script, i don't know actually if im going to be able to continue this script (boths) because i have a life and i need to study. This is a helpfull and fun project for everyone who wants to use it, is free and you can use my script has a template.
 --------------------------------------------------------------------------------------------------
 ## About
 -  Probably Stand script is going to take a little bit more than kiddions, by now, kiddions script is in stand by me <3
