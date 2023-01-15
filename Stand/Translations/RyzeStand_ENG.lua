@@ -11,7 +11,7 @@ util.require_natives(1663599433)
 util.toast("Welcome " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 4.51
+local localVer = 4.52
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -68,7 +68,41 @@ local drivingStyles = {786603, 1074528293, 8388614, 1076, 2883621, 786468, 26214
 local interior_stuff = {0, 233985, 169473, 169729, 169985, 170241, 177665, 177409, 185089, 184833, 184577, 163585, 167425, 167169}
 
 -- Memory Functions
-memory.scan("ChangeNetObjOwner", "48 8B C4 48 89 58 08 48 89 68 10 48 89 70 18 48 89 78 20 41 54 41 56 41 57 48 81 EC ? ? ? ? 44 8A 62 4B", function (address)
+
+local orgScan = memory.scan
+
+function myModule(name, pattern, callback)
+    local address = orgScan(pattern)
+    if address ~= NULL then
+        util.log("Encontrado " .. name)
+        callback(address)
+    else
+        util.log("No se encontro " .. name)
+        util.stop_script()
+    end
+end
+
+---@param entity Entity
+---@return integer
+function get_net_obj(entity)
+    local pEntity = entities.handle_to_pointer(entity)
+    return pEntity ~= NULL and memory.read_long(pEntity + 0x00D0) or NULL
+end
+
+---@param player integer
+---@return integer
+function GetNetGamePlayer(player)
+    return util.call_foreign_function(GetNetGamePlayer_addr, player)
+end
+
+myModule("GetNetGamePlayer", "48 83 EC ? 33 C0 38 05 ? ? ? ? 74 ? 83 F9", function (address)
+    GetNetGamePlayer_addr = address
+end)
+myModule("CNetworkObjectMgr", "48 8B 0D ? ? ? ? 45 33 C0 E8 ? ? ? ? 33 FF 4C 8B F0", function (address)
+    CNetworkObjectMgr = memory.rip(address + 3)
+end)
+
+myModule("ChangeNetObjOwner", "48 8B C4 48 89 58 08 48 89 68 10 48 89 70 18 48 89 78 20 41 54 41 56 41 57 48 81 EC ? ? ? ? 44 8A 62 4B", function (address)
     ChangeNetObjOwner_addr = address
 end)
 
@@ -168,6 +202,35 @@ ryze = {
         local angle = random_float(0, 2 * math.pi)
         pos = v3.new(pos.x + math.cos(angle) * radius, pos.y + math.sin(angle) * radius, pos.z)
         return pos
+    end,
+
+    get_transition_state = function(player_id)
+        return memory.read_int(memory.script_global(((0x2908D3 + 1) + (player_id * 0x1C5)) + 230))
+    end,
+
+    ChangeNetObjOwner = function(object, player)
+        if NETWORK.NETWORK_IS_IN_SESSION() then
+            local net_object_mgr = memory.read_long(CNetworkObjectMgr)
+            if net_object_mgr == NULL then
+                return false
+            end
+            if not ENTITY.DOES_ENTITY_EXIST(object) then
+                return false
+            end
+            local netObj = get_net_obj(object)
+            if netObj == NULL then
+                return false
+            end
+            local net_game_player = GetNetGamePlayer(player)
+            if net_game_player == NULL then
+                return false
+            end
+            util.call_foreign_function(ChangeNetObjOwner_addr, net_object_mgr, netObj, net_game_player, 0)
+            return true
+        else
+            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(object)
+            return true
+        end
     end,
 
     ChangeNetObjOwner = function(object, player)
@@ -537,7 +600,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.toggle_loop(lagplay, "Method V2", {rlag2}, "Freeze Player To Make Work.", function()
+    menu.toggle_loop(lagplay, "Method V2", {"rlag2"}, "Freeze Player To Make Work.", function()
         if players.exists(player_id) then
             local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
             local player_pos = players.get_position(player_id)
@@ -551,7 +614,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.toggle_loop(lagplay, "Method V3", {rlag3}, "Freeze Player To Make Work.", function()
+    menu.toggle_loop(lagplay, "Method V3", {"rlag3"}, "Freeze Player To Make Work.", function()
         if players.exists(player_id) then
             local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
             local player_pos = players.get_position(player_id)
@@ -565,7 +628,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.toggle_loop(lagplay, "Method V4", {rlag4}, "Freeze Player To Make Work.", function()
+    menu.toggle_loop(lagplay, "Method V4", {"rlag4"}, "Freeze Player To Make Work.", function()
         if players.exists(player_id) then
             local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
             local player_pos = players.get_position(player_id)
@@ -578,11 +641,24 @@ players.on_join(function(player_id)
             menu.set_value(freeze_toggle, false)
         end
     end)
+    
+    menu.toggle_loop(lagplay, "Metodo V5", {"rlag5"}, "Freeze Player To Make Work.", function()
+        if players.exists(player_id) then
+            local freeze_toggle = menu.ref_by_rel_path(menu.player_root(player_id), "Trolling>Freeze")
+            local player_pos = players.get_position(player_id)
+            menu.set_value(freeze_toggle, true)
+            request_ptfx_asset("core")
+            GRAPHICS.USE_PARTICLE_FX_ASSET("core")
+            GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD(
+                "veh_rotor_break", player_pos.x, player_pos.y, player_pos.z, 0, 0, 0, 2.5, false, false, false)
+            menu.set_value(freeze_toggle, false)
+        end
+    end)
 	
     local cageveh = menu.list(trolling, "Cage Car", {}, "")
 
     menu.action(cageveh, "Caging Vehicle", {"cage"}, "", function()
-        local container_hash = util.joaat("boxville3")
+        local container_hash = util.joaat("benson")
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         request_model(container_hash)
@@ -880,10 +956,10 @@ players.on_join(function(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
     
         for i, interior in ipairs(interior_stuff) do
-            if get_interior_player_is_in(player_id) == interior then
+            if ryze.is_player_in_interior(player_id) == interior then
                 util.toast("Jugador no esta en interior. D:")
             return end
-            if get_interior_player_is_in(player_id) ~= interior then
+            if ryze.is_player_in_interior(player_id) ~= interior then
                 MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(pos.x, pos.y, pos.z + 1, pos.x, pos.y, pos.z, 1000, true, util.joaat("weapon_stungun"), players.user_ped(), false, true, 1.0)
             end
         end
@@ -3291,7 +3367,7 @@ end --]]
     local desv = menu.list(vehicle, "Disable Vehicles.", {}, "")
 
    	menu.action(desv, "Disable Vehicle", {}, "It's better than stand", function(toggle)
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        --local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
         if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
             TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
@@ -3540,6 +3616,20 @@ end --]]
 	
 end)
 
+menu.toggle_loop(world, "Improve No Restriction", {}, "Will improve stand's one, you will be able to jump in some interiors.", function()
+    if not PAD.IS_CONTROL_ENABLED(0, 22) and not menu.command_box_is_open() then
+        if PAD.IS_DISABLED_CONTROL_JUST_PRESSED(0, 22) then
+            MISC.SET_FORCED_JUMP_THIS_FRAME(players.user())
+        end
+    end
+end)
+
+menu.toggle_loop(world, "Turn off Horns", {}, "Will put off all horns nearby you.", function()
+    for _, vehicle in ipairs(entities.get_all_vehicles_as_handles()) do
+        AUDIO.SET_HORN_ENABLED(vehicle, false)
+    end
+end)
+
 menu.action(world, "Clear Area", {"cleararea"}, "Clean everything in the area", function(on_click)
     clear_area(clear_radius)
     util.toast('Area limpia:3')
@@ -3562,7 +3652,7 @@ menu.toggle_loop(detections, "GodMode", {}, "It will detect if player has godmod
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
         for i, interior in ipairs(interior_stuff) do
-            if players.is_godmode(player_id) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and get_interior_player_is_in(player_id) == interior then
+            if players.is_godmode(player_id) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and ryze.is_player_in_interior(player_id) == interior then
                 util.draw_debug_text(players.get_name(player_id) .. " Has Godmode")
                 break
             end
@@ -3577,7 +3667,7 @@ menu.toggle_loop(detections, "Vehicle Godmode", {}, "It will detect if the car i
         local player_veh = PED.GET_VEHICLE_PED_IS_USING(ped)
         if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
             for i, interior in ipairs(interior_stuff) do
-                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and get_interior_player_is_in(player_id) == interior then
+                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and ryze.is_player_in_interior(player_id) == interior then
                     util.draw_debug_text(players.get_name(player_id) .. " Car with Godmode")
                     break
                 end
@@ -3636,7 +3726,7 @@ menu.toggle_loop(detections, "Running Fast", {}, "Detect if you run faster", fun
     for _, player_id in ipairs(players.list(false, true, true)) do
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local ped_speed = (ENTITY.GET_ENTITY_SPEED(ped)* 2.236936)
-        if not util.is_session_transition_active() and get_interior_player_is_in(player_id) == 0 and get_transition_state(player_id) ~= 0 and not PED.IS_PED_DEAD_OR_DYING(ped) 
+        if not util.is_session_transition_active() and ryze.is_player_in_interior(player_id) == 0 and ryze.get_transition_state(player_id) ~= 0 and not PED.IS_PED_DEAD_OR_DYING(ped) 
         and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_IN_ANY_VEHICLE(ped, false)
         and not TASK.IS_PED_STILL(ped) and not PED.IS_PED_JUMPING(ped) and not ENTITY.IS_ENTITY_IN_AIR(ped) and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped)
         and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) <= 300.0 and ped_speed > 30 then -- fastest run speed is about 18ish mph but using 25 to give it some headroom to prevent false positives
@@ -3656,7 +3746,7 @@ menu.toggle_loop(detections, "Noclip", {}, "Detects if the player is levitating/
         local currentpos = players.get_position(player_id)
         local vel = ENTITY.GET_ENTITY_VELOCITY(ped)
         if not util.is_session_transition_active() and players.exists(player_id)
-        and get_interior_player_is_in(player_id) == 0 and get_transition_state(player_id) ~= 0
+        and ryze.is_player_in_interior(player_id) == 0 and ryze.get_transition_state(player_id) ~= 0
         and not PED.IS_PED_IN_ANY_VEHICLE(ped, false) -- too many false positives occured when players where driving. so fuck them. lol.
         and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped)
         and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped) and not PED.IS_PED_USING_SCENARIO(ped)
@@ -3675,7 +3765,7 @@ menu.toggle_loop(detections, "Spectating", {}, "Detect if you or someone else is
     for _, player_id in ipairs(players.list(false, true, true)) do
         for i, interior in ipairs(interior_stuff) do
             local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-            if not util.is_session_transition_active() and get_transition_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior
+            if not util.is_session_transition_active() and ryze.get_transition_state(player_id) ~= 0 and ryze.is_player_in_interior(player_id) == interior
             and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
                 if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(player_id)) < 15.0 and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 20.0 then
                     util.toast(players.get_name(player_id) .. " Is watching you")
@@ -3695,7 +3785,7 @@ menu.toggle_loop(detections, "Teleport", {}, "Detect if the player teleports", f
             local currentpos = players.get_position(player_id)
             for i, interior in ipairs(interior_stuff) do
                 if v3.distance(oldpos, currentpos) > 500 and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
-                and get_transition_state(player_id) ~= 0 and get_interior_player_is_in(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
+                and ryze.get_transition_state(player_id) ~= 0 and ryze.is_player_in_interior(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
                     util.toast(players.get_name(player_id) .. "  He teleported")
                 end
             end
@@ -4505,6 +4595,16 @@ end)
 menu.toggle_loop(vehicles, "Silent GodMode", {}, "It will not be detected by most menus", function()
     ENTITY.SET_ENTITY_PROOFS(entities.get_user_vehicle_as_handle(), true, true, true, true, true, 0, 0, true)
     end, function() ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(players.user(), false), false, false, false, false, false, 0, 0, false)
+end)
+
+menu.toggle_loop(vehicles, "Unlock Lock-On", {}, "You should be able to lock on vehicles.", function()
+    for _, player_id in ipairs(players.list(false, true, true)) do
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local veh = PED.GET_VEHICLE_PED_IS_USING(ped)
+        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
+            VEHICLE.SET_VEHICLE_ALLOW_HOMING_MISSLE_LOCKON_SYNCED(veh, true)
+        end
+    end
 end)
 
 menu.toggle_loop(vehicles, "Indicator Lights", {}, "", function()

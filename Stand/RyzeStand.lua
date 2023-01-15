@@ -11,7 +11,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 4.51
+local localVer = 4.52
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -99,6 +99,9 @@ function GetNetGamePlayer(player)
     return util.call_foreign_function(GetNetGamePlayer_addr, player)
 end
 
+myModule("GetNetGamePlayer", "48 83 EC ? 33 C0 38 05 ? ? ? ? 74 ? 83 F9", function (address)
+    GetNetGamePlayer_addr = address
+end)
 myModule("CNetworkObjectMgr", "48 8B 0D ? ? ? ? 45 33 C0 E8 ? ? ? ? 33 FF 4C 8B F0", function (address)
     CNetworkObjectMgr = memory.rip(address + 3)
 end)
@@ -206,6 +209,10 @@ ryze = {
         local angle = random_float(0, 2 * math.pi)
         pos = v3.new(pos.x + math.cos(angle) * radius, pos.y + math.sin(angle) * radius, pos.z)
         return pos
+    end,
+
+    get_transition_state = function(player_id)
+        return memory.read_int(memory.script_global(((0x2908D3 + 1) + (player_id * 0x1C5)) + 230))
     end,
 
     ChangeNetObjOwner = function(object, player)
@@ -429,11 +436,6 @@ local function get_blip_coords(blipId)
     return v3(0, 0, 0)
 end
 
-
---local function get_transition_state(pid)
---    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 230))
---end
-
 -- Menu dividers (Sections)
 
 local selfc = menu.list(menu.my_root(), "Self", {}, "Opciones para ti mismo.")
@@ -656,7 +658,7 @@ players.on_join(function(player_id)
     local cageveh = menu.list(trolling, "Enjaular Coches", {}, "")
 
     menu.action(cageveh, "Enjaular Vehiculo", {"cage"}, "", function()
-        local container_hash = util.joaat("boxville3")
+        local container_hash = util.joaat("benson")
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         request_model(container_hash)
@@ -3199,7 +3201,7 @@ players.on_join(function(player_id)
     local desv = menu.list(vehicle, "Deshabilitar vehiculos.", {}, "")
 
     menu.action(desv, "Deshabilitar Vehiculo", {}, "Es mejor que el de stand", function(toggle)
-        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        --local pos = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
         if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
             TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
@@ -3207,7 +3209,7 @@ players.on_join(function(player_id)
             local veh2 = PED.GET_VEHICLE_PED_IS_TRYING_TO_ENTER(p)
             entities.delete_by_handle(veh2)
         end
-        ENTITY.SET_ENTITY_COORDS(ped, pos.x, pos.y, pos.z, 1, false)
+        --ENTITY.SET_ENTITY_COORDS(ped, pos.x, pos.y, pos.z, 1, false)
     end)
 
     menu.action(desv, "Deshabilitar Vehiculo V2", {}, "Inbloqueable por stand", function(toggle)
@@ -3447,6 +3449,20 @@ players.on_join(function(player_id)
         
 end)
 
+menu.toggle_loop(world, "Mejorar El Anti-Restriccion", {}, "Mejora el anti-restriccion de stand, podras saltar en interiores.", function()
+    if not PAD.IS_CONTROL_ENABLED(0, 22) and not menu.command_box_is_open() then
+        if PAD.IS_DISABLED_CONTROL_JUST_PRESSED(0, 22) then
+            MISC.SET_FORCED_JUMP_THIS_FRAME(players.user())
+        end
+    end
+end)
+
+menu.toggle_loop(world, "Quitar Claxon", {}, "Deshabilita todos los claxons cerca tuyo.", function()
+    for _, vehicle in ipairs(entities.get_all_vehicles_as_handles()) do
+        AUDIO.SET_HORN_ENABLED(vehicle, false)
+    end
+end)
+
 menu.action(world, "Limpiar Area", {"rcleararea"}, "Limpia todo en el area", function(on_click)
     clear_area(clear_radius)
     util.toast('Area limpia:3')
@@ -3543,7 +3559,7 @@ menu.toggle_loop(detections, "Correr Rapido", {}, "Detecta si corre mas rapido",
     for _, player_id in ipairs(players.list(false, true, true)) do
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local ped_speed = (ENTITY.GET_ENTITY_SPEED(ped)* 2.236936)
-        if not util.is_session_transition_active() and ryze.get_interior_of_player(player_id) == 0 and get_transition_state(player_id) ~= 0 and not PED.IS_PED_DEAD_OR_DYING(ped) 
+        if not util.is_session_transition_active() and ryze.get_interior_of_player(player_id) == 0 and ryze.get_transition_state(player_id) ~= 0 and not PED.IS_PED_DEAD_OR_DYING(ped) 
         and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_IN_ANY_VEHICLE(ped, false)
         and not TASK.IS_PED_STILL(ped) and not PED.IS_PED_JUMPING(ped) and not ENTITY.IS_ENTITY_IN_AIR(ped) and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped)
         and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) <= 300.0 and ped_speed > 30 then -- fastest run speed is about 18ish mph but using 25 to give it some headroom to prevent false positives
@@ -3602,7 +3618,7 @@ menu.toggle_loop(detections, "Teleport", {}, "Detecta si el jugador se teletrans
             local currentpos = players.get_position(player_id)
             for i, interior in ipairs(interior_stuff) do
                 if v3.distance(oldpos, currentpos) > 500 and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
-                and get_transition_state(player_id) ~= 0 and ryze.get_interior_of_player(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
+                and ryze.get_transition_state(player_id) ~= 0 and ryze.get_interior_of_player(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
                     util.toast(players.get_name(player_id) .. " Se acaba de teletransportar")
                 end
             end
@@ -4220,16 +4236,9 @@ if bailOnAdminJoin then
 end
 
 menu.toggle_loop(protects, "Bloquear Error De Transaccion", {}, "Es probable que conlleve errores, usar bajo responsabilidad", function(on_toggle)
---    local TransactionError = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Block")
---    local TransactionErrorV = menu.ref_by_path("Online>Protections>Events>Transaction Error Event>Notification")
-    if on_toggle then
-        menu.trigger_command(TransactionError, "on")
-        menu.trigger_command(TransactionErrorV, "on")
-        for i = 1, 300 do
-            menu.trigger_commands("removeloader")
-            util.yield(1000)
-        end
---        --util.toast("No es mi culpa el error del log, esperen a que Stand lo arregle")
+    if HUD.GET_WARNING_SCREEN_MESSAGE_HASH() == -991495373 then
+        PAD.SET_CONTROL_VALUE_NEXT_FRAME(2, 201, 1.0)
+        util.yield(100)
     end
 end)
 
@@ -4443,6 +4452,16 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- Coches
+menu.toggle_loop(vehicles, "Poder Bloquear Misiles", {}, "Podras apuntarle con misiles a las personas que lo bloquean.", function()
+    for _, player_id in ipairs(players.list(false, true, true)) do
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local veh = PED.GET_VEHICLE_PED_IS_USING(ped)
+        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
+            VEHICLE.SET_VEHICLE_ALLOW_HOMING_MISSLE_LOCKON_SYNCED(veh, true)
+        end
+    end
+end)
+
 menu.toggle_loop(vehicles, "GodMode Silencioso", {}, "No sera detectado por la mayoria de menus", function()
     ENTITY.SET_ENTITY_PROOFS(entities.get_user_vehicle_as_handle(), true, true, true, true, true, 0, 0, true)
     end, function() ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(players.user(), false), false, false, false, false, false, 0, 0, false)
