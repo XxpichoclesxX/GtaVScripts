@@ -1,5 +1,5 @@
 --[[
-    This was created by Pichocles#0427#0427 with some help already mentioned in credits.
+    This was created by Pichocles#0427 with some help already mentioned in credits.
     The original download site should be github.com/xxpichoclesxx, if you got this script from anyone selling it, you got sadly scammed.
     Also this is only for some new stand people because is a trolling and online feature script, not recovery.
     So enjoy and pls join my discord, to know when the script is updated or be able to participate in polls.
@@ -11,7 +11,7 @@ util.require_natives(1663599433)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 4.5
+local localVer = 4.51
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -72,9 +72,40 @@ local int_min = -2147483647
 local int_max = 2147483647
 
 -- Memory Functions
---memory.scan("ChangeNetObjOwner", "48 8B C4 48 89 58 08 48 89 68 10 48 89 70 18 48 89 78 20 41 54 41 56 41 57 48 81 EC ? ? ? ? 44 8A 62 4B", function (address)
---    ChangeNetObjOwner_addr = address
---end)
+
+local orgScan = memory.scan
+
+function myModule(name, pattern, callback)
+    local address = orgScan(pattern)
+    if address ~= NULL then
+        util.log("Encontrado " .. name)
+        callback(address)
+    else
+        util.log("No se encontro " .. name)
+        util.stop_script()
+    end
+end
+
+---@param entity Entity
+---@return integer
+function get_net_obj(entity)
+    local pEntity = entities.handle_to_pointer(entity)
+    return pEntity ~= NULL and memory.read_long(pEntity + 0x00D0) or NULL
+end
+
+---@param player integer
+---@return integer
+function GetNetGamePlayer(player)
+    return util.call_foreign_function(GetNetGamePlayer_addr, player)
+end
+
+myModule("CNetworkObjectMgr", "48 8B 0D ? ? ? ? 45 33 C0 E8 ? ? ? ? 33 FF 4C 8B F0", function (address)
+    CNetworkObjectMgr = memory.rip(address + 3)
+end)
+
+myModule("ChangeNetObjOwner", "48 8B C4 48 89 58 08 48 89 68 10 48 89 70 18 48 89 78 20 41 54 41 56 41 57 48 81 EC ? ? ? ? 44 8A 62 4B", function (address)
+    ChangeNetObjOwner_addr = address
+end)
 
 -- Ryze Functions
 
@@ -175,6 +206,31 @@ ryze = {
         local angle = random_float(0, 2 * math.pi)
         pos = v3.new(pos.x + math.cos(angle) * radius, pos.y + math.sin(angle) * radius, pos.z)
         return pos
+    end,
+
+    ChangeNetObjOwner = function(object, player)
+        if NETWORK.NETWORK_IS_IN_SESSION() then
+            local net_object_mgr = memory.read_long(CNetworkObjectMgr)
+            if net_object_mgr == NULL then
+                return false
+            end
+            if not ENTITY.DOES_ENTITY_EXIST(object) then
+                return false
+            end
+            local netObj = get_net_obj(object)
+            if netObj == NULL then
+                return false
+            end
+            local net_game_player = GetNetGamePlayer(player)
+            if net_game_player == NULL then
+                return false
+            end
+            util.call_foreign_function(ChangeNetObjOwner_addr, net_object_mgr, netObj, net_game_player, 0)
+            return true
+        else
+            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(object)
+            return true
+        end
     end
 
     --[[
@@ -2601,7 +2657,7 @@ players.on_join(function(player_id)
     
             if not NETWORK.NETWORK_IS_SCRIPT_ACTIVE("am_gang_call", 1, true, 0) then
                 local bits_addr = memory.script_global(1853910 + (players.user() * 862 + 1) + 140)
-                memory.write_int(bits_addr, SetBit(memory.read_int(bits_addr), 1))
+                memory.write_int(bits_addr, memory.write_byte(memory.read_int(bits_addr), 1))
                 write_global.int(1853348 + (players.user() * 862 + 1) + 141, player_id)
             else
                 util.toast("Ya lo siguen los mercenarios")
@@ -3335,8 +3391,8 @@ players.on_join(function(player_id)
         local myveh = PED.GET_VEHICLE_PED_IS_IN(pped, true)
         PED.SET_PED_INTO_VEHICLE(pped, veh, -2)
         util.yield(50)
-        ChangeNetObjOwner(veh, player_id)
-        ChangeNetObjOwner(veh, pped)
+        ryze.ChangeNetObjOwner(veh, player_id)
+        ryze.ChangeNetObjOwner(veh, pped)
         util.yield(50)
         PED.SET_PED_INTO_VEHICLE(pped, myveh, -1)
     end)
