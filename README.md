@@ -9,7 +9,7 @@ For Stand it is actually the same way, but first before initiating the script yo
 --------------------------------------------------------------------------------------------------
 
 # GtaVScripts
-Im presenting you some Gta V Scripts for online or campaign, these are made by me so if you find an error please dm to discord. (XxpichoclesxX#0427)
+Im presenting you some Gta V Scripts for online or campaign, these are made by me so if you find an error please dm to discord. (Pichocles#0427)
 1- A really nice lua, complement for kiddions modding engine for Gta V, im not aware of use you can do to this shitty lua script.
 2- A nice lua for Stand!, a paid modding engine that has more features and a super nice lua api, so no problems in this one, coming soon boys with a lot of online features and player op lua crashes.
 
@@ -32,5 +32,5 @@ No ETA also because as i said in kiddions script i dont know actually if im goin
 ## About
 -  Probably Stand script is going to take a little bit more than kiddions, by now, kiddions script is in stand by me <3
 -  By the way to anyone who ask's about the stand script, is not entire mine, there is actually in credits every single person who i taked code from and who helped me with this.
-## Last Kiddions update: 12/01/2023
-## Last Stand update: 12/01/2023
+## Last Kiddions update: 15/01/2023
+## Last Stand update: 15/01/2023
