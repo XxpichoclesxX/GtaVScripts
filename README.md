@@ -17,14 +17,10 @@ Im presenting you some Gta V Scripts for online or campaign, these are made by m
 
 --------------------------------------------------------------------------------------------------
 # Questions Ryze-Kiddions-GtaV: 
--
-
-The kiddions lua is for the modding engine yall maybe know for Gta-V called "Kiddions", it is made for everyone who doesn't like to be annoyed by any type of modder, and if you want to make youre account op. This has recovery features, protection features and some Online features also.
+- The kiddions lua is for the modding engine yall maybe know for Gta-V called "Kiddions", it is made for everyone who doesn't like to be annoyed by any type of modder, and if you want to make youre account op. This has recovery features, protection features and some Online features also.
 --------------------------------------------------------------------------------------------------
 #Questions Ryze-Stand-GtaV 
--
-
-This is a lua also for the paid modding engine called stand, it is a complement of various scripts also known, im just improving the code and adding some extra features that the menu doesn't have like more protections to make unable to the modders to grief you, lag you etc.
+- This is a lua also for the paid modding engine called stand, it is a complement of various scripts also known, im just improving the code and adding some extra features that the menu doesn't have like more protections to make unable to the modders to grief you, lag you etc.
 Im also thinking on some extra features, like more protections and trolling options and much more than i have in today's version.
 --------------------------------------------------------------------------------------------------
 No ETA for big updates also because i don't know actually if im going to be able to continue this script (boths) because i have a life and i need to study. This is a helpfull and fun project for everyone who wants to use it, is free and you can use my script has a template.
