@@ -434,6 +434,16 @@ end
 Text("Protecciones")
 Text("----------")
 
+local function AntiMod(bool)
+	if bool then
+		globals.set_bool(1669394 + 792, true)
+		globals.set_bool(1669394 + 504, true)
+	else
+		globals.set_bool(1669394 + 792, false)
+		globals.set_bool(1669394 + 504, false)
+	end
+end
+
 local function KickCrashes(bool)
 	if bool then 
 		globals.set_bool(1670036, true)
@@ -606,6 +616,7 @@ local function All(bool)
 	Collectibles(bool)
 	ExtraTeleport(bool)
 	KickCrashes(bool)
+	AntiMod(bool)
 end
 
 protMenu:add_toggle("Activar todo", function()
@@ -616,6 +627,14 @@ end, function()
 	
 end)
 Text("--")
+
+protMenu:add_toggle("Block Remote-Modifications", function()
+	return boolsec
+end, function()
+	boolsec = not boolsec
+	AntiMod(boolsec)
+	
+end)
 
 protMenu:add_toggle("Blockear SE Crash", function()
 	return boolcbt
