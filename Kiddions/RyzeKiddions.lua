@@ -34,6 +34,20 @@ local function SetUndeadOffradar(value)
 	end
 end
 
+local Config = {}
+Config.SubmenuStyle = false
+Config.SlamType = 1
+Config.SlamHeight = 1
+Config.SlamTypes = {"Rhino", "Khanjali", "Halftrack"}
+Config.VehicleSpawnGlobal = 2671449
+Config.VehicleTypes = {}
+Config.VehicleTypes["Super"] = {"Krieger", "Prototipo", "T20"}
+Config.VehicleTypes["Sports"] = {"Kuruma", "Kuruma2"}
+Config.VehicleTypes["Sports Classic"] = {"Toreador", "Artdent"}
+Config.VehicleTypes["Millitary"] = {"Rhino", "Khanjali", "Halftrack"}
+Config.VehicleTypes["Bikes"] = {"Oppressor", "Oppressor2", "Akuma"}
+Config.VehicleTypes["Planes"] = {"Hydra", "Lazer", "Titan", "Cargoplane"}
+
 local function safeLoop(state)
     while state do
         stats.set_int("MP0_CLUB_POPULARITY", 1000)
@@ -54,6 +68,7 @@ local function safeLoop(state)
     end
 end
 
+global_overridebase = 262145
 fmC2020 = script("fm_mission_controller_2020") 
 fmC = script("fm_mission_controller") 
 PlayerIndex = stats.get_int("MPPLY_LAST_MP_CHAR") 
@@ -97,6 +112,15 @@ local function GunVan_L7NEG()
     end
 end
 
+local function resetoverrideBounty()
+	globals.set_int(global_overridebase + 2348, 2000)
+	globals.set_int(global_overridebase + 2349, 4000)
+	globals.set_int(global_overridebase + 2350, 6000)
+	globals.set_int(global_overridebase + 2351, 8000)
+	globals.set_int(global_overridebase + 2352, 10000)
+	globals.set_int(global_overridebase + 7105, 1000)
+end
+
 local function UnlockTaxiJob_L7NEG()
     for i = 33770, 33770, 1 do
         globals.set_int(262145 + i, 1)
@@ -125,6 +149,10 @@ local function setkills2()
 end
 local function setdeaths2()
 		globals.set_int(1853910 + 1 + ply + 205 + 29, randomslonshit1)
+end
+
+local function GetPlayerCount()
+	return player.get_number_of_players()
 end
 
 local function setkd()
@@ -197,7 +225,11 @@ OnlMenu:add_action("----------------- Misiones/Online ----------------", functio
 
 OnlMenu:add_array_item("Pedir Servicios", {"M.O.C", "Avenger", "TerrorByte", "Kosatka", "Bote", "Armadura Balistica"}, function() return xox_01 end, function(v) if v == 1 then globals.set_int(2815059 + 913, 1) elseif v == 2 then globals.set_int(2815059 + 921, 1) elseif v == 3 then globals.set_int(2815059 + 925, 1) elseif v == 4 then globals.set_int(2815059 + 933, 1) elseif v == 5 then globals.set_int(2815059 + 945, 1) else globals.set_int(2815059 + 884, 1) end xox_01 = v end)
 
-local function orb(e) if not localplayer then return end if e then stats.set_int(mpx.."ORBITAL_CANNON_COOLDOWN", 0) else stats.get_int(mpx.."ORBITAL_CANNON_COOLDOWN") end end
+OnlMenu:add_action("Resetear Servicio de Lester (bounty)", function()
+    resetoverrideBounty()
+end)
+
+function orb(e) if not localplayer then return end if e then stats.set_int(mpx.."ORBITAL_CANNON_COOLDOWN", 0) else stats.get_int(mpx.."ORBITAL_CANNON_COOLDOWN") end end
 OnlMenu:add_action("Quitar Delay Cañon Orbital", function() return e2 end, function() e2 = not e2 orb(e2) end)
 
 OnlMenu:add_action("Quitar Error De Transaccion", function() if globals.get_int(4536679) == 20 or globals.get_int(4536679) == 4 then globals.set_int(4536673, 0) end end)
@@ -206,19 +238,19 @@ OnlMenu:add_action("Saltar misiones de Lamar", function() stats.set_bool(mpx .. 
 OnlMenu:add_action("Saltar Misiones Yate", function() stats.set_int(mpx .. "YACHT_MISSION_PROG", 0) stats.set_int(mpx .. "YACHT_MISSION_FLOW", 21845) stats.set_int(mpx .. "CASINO_DECORATION_GIFT_1", -1) end)
 OnlMenu:add_toggle("Habilitar Peyote", function() return globals.get_boolean(289278) end, function(v) globals.set_boolean(289278, v) globals.set_boolean(290039, v) end)
 
-local function Fceomc(e) if not localplayer then return end if e then globals.set_int(262145 + 15891, 0) globals.set_int(262145 + 18025, 0) else globals.set_int(262145 + 15891, 50000) globals.set_int(262145 + 18025, 50000) end end 
+function Fceomc(e) if not localplayer then return end if e then globals.set_int(262145 + 15891, 0) globals.set_int(262145 + 18025, 0) else globals.set_int(262145 + 15891, 50000) globals.set_int(262145 + 18025, 50000) end end 
 OnlMenu:add_toggle("Cambiar Nombre Del CEO Gratis", function() return e37 end, function() e37 = not e37 Fceomc(e37) end)
 
-local function FCv(e) if not localplayer then return end if e then for i = 274984, 274988 do globals.set_int(i, 0) end for j = 278168, 278173 do globals.set_int(j, 0) end globals.set_int(281492, 0) globals.set_int(281494, 0) else globals.set_int(274984, 20000) for i = 274985, 274987 do globals.set_int(i, 5000) end globals.set_int(274988, 25000) globals.set_int(278168, 10000) globals.set_int(278169, 7000) globals.set_int(278170, 9000) for j = 278171, 278173 do globals.set_int(j, 5000) end globals.set_int(281492, 5000) globals.set_int(281494, 10000)end end 
+function FCv(e) if not localplayer then return end if e then for i = 274984, 274988 do globals.set_int(i, 0) end for j = 278168, 278173 do globals.set_int(j, 0) end globals.set_int(281492, 0) globals.set_int(281494, 0) else globals.set_int(274984, 20000) for i = 274985, 274987 do globals.set_int(i, 5000) end globals.set_int(274988, 25000) globals.set_int(278168, 10000) globals.set_int(278169, 7000) globals.set_int(278170, 9000) for j = 278171, 278173 do globals.set_int(j, 5000) end globals.set_int(281492, 5000) globals.set_int(281494, 10000)end end 
 OnlMenu:add_toggle("Vehiculos de CEO Gratis", function() return e40 end, function() e40 = not e40 FCv(e40) end)
 
-local function FCa(e) if not localplayer then return end if e then for i = 274989, 274993 do globals.set_int(i, 0) end globals.set_int(278090, 0) else globals.set_int(278090, 5000) globals.set_int(262145 + 12844, 1000) globals.set_int(262145 + 12845, 1500) globals.set_int(262145 + 12846, 1000) globals.set_int(262145 + 12847, 12000) globals.set_int(262145 + 12848, 15000) end end 
+function FCa(e) if not localplayer then return end if e then for i = 274989, 274993 do globals.set_int(i, 0) end globals.set_int(278090, 0) else globals.set_int(278090, 5000) globals.set_int(262145 + 12844, 1000) globals.set_int(262145 + 12845, 1500) globals.set_int(262145 + 12846, 1000) globals.set_int(262145 + 12847, 12000) globals.set_int(262145 + 12848, 15000) end end 
 OnlMenu:add_toggle("Habilidades de CEO Gratis", function() return e19 end, function() e19 = not e19 FCa(e19) end)
 
-local function Terrcd(e) if not localplayer then return end if e then for i = 286781, 286785 do globals.set_int(i, 0) end else for i = 286782, 286785 do globals.set_int(286781, 300000) globals.set_int(i, 1800000) end end end 
+function Terrcd(e) if not localplayer then return end if e then for i = 286781, 286785 do globals.set_int(i, 0) end else for i = 286782, 286785 do globals.set_int(286781, 300000) globals.set_int(i, 1800000) end end end 
 OnlMenu:add_toggle("Remover Tiempo/Misiones Terrorbyte", function() return e26 end, function() e26 = not e26 Terrcd(e26) end)
 
-local function Ego(e) if not localplayer then return end if e then globals.set_int(262145 + 13146, 599940000) else  globals.set_int(262145 + 13146, 180000) end end 
+function Ego(e) if not localplayer then return end if e then globals.set_int(262145 + 13146, 599940000) else  globals.set_int(262145 + 13146, 180000) end end 
 OnlMenu:add_toggle("Extender tiempo de ORG/Fantasma", function() return e0 end, function() e0 = not e0 Ego(e0) end)
 
 OnlMenu:add_toggle("Fuera Del Radar", GetUndeadOffradar, SetUndeadOffradar)
@@ -423,6 +455,30 @@ CDNPMenu:add_int_range("Arte Potencial", 1000000000.0, 2350000, 1000000000, func
 CDNPMenu:add_int_range("Oro Potencial", 1000000000.0, 2585000, 1000000000, function() return globals.get_int(290940) end, function(value) globals.set_int(290940, value) end) 
 CDNPMenu:add_int_range("Diamante Potencial", 1000000000.0, 3290000, 1000000000, function() return globals.get_int(290941) end, function(value) globals.set_int(290941, value) end) 
 cccMenu:add_array_item("Teletransportes", {"Vault swipe", "Staff Door Exit", "Laundry room", "Bonus room", "Roof exit"}, function() return xox_14 end, function(value) if value == 1 then TP(2468.646973, -279.083374, -71.994194, -1.083554, 0.000000, 0.000000) elseif value == 2 then TP(2547.458496, -277.744507, -59.741863, -0.071993, 0.005218, -0.113118) elseif value == 3 then TP(2536.455078, -300.772522, -60.022968, 0.000000, 0.000000, 0.000000) elseif value == 4 then TP(2521.906494, -287.172882, -60.022964, 0.000000, 0.000000, 0.000000) elseif value == 5 then TP(2522.338379, -248.534760, -25.414972, 0.000000, 0.000000, 0.000000) end xox_14 = value end)
+
+csMenu = OnlMenu:add_submenu("Contratos")
+
+script_name = "fm_mission_controller_2020"
+AutoShop_passed_trigger = 38397
+AutoShop_heist_passed_value = 39772
+
+csMenu:add_action("Terminar misiones de DRE", function()
+	PlayerIndex = globals.get_int(1574918)
+	if PlayerIndex == 0 then
+		stats.set_int("MP0_FIXER_STORY_BS", 4092)
+		stats.set_int("MP0_FIXER_STORY_STRAND", -1)
+	else
+		stats.set_int("MP1_FIXER_STORY_BS", 4092)
+		stats.set_int("MP1_FIXER_STORY_STRAND", -1)
+	end
+end)
+
+csMenu:add_action("Saltar Golpe (instantaneo)", function()
+    if(script(script_name):is_active()) then
+        script(script_name):set_int(AutoShop_passed_trigger, 51338976)
+        script(script_name):set_int(AutoShop_heist_passed_value, 101)
+    end
+end)
 
 
 protMenu = mainMenu:add_submenu("Protecciones 'Test'")
@@ -1561,4 +1617,8 @@ MMmenu:add_action("Salga desde la configuración. Si quiere", function() end)
 MMmenu:add_action("cambiar la opcion,salga primero Y espere", function() end) 
 MMmenu:add_action("2 minutos antes de seleccionar una nueva.", function() end) 
 
-local CREDMenu = mainMenu:add_submenu("Creditos") CREDMenu:add_action("Kiddions ", function() end) CREDMenu:add_action("Pichocles", function() end) CREDMenu:add_action("Pepe ", function() end) CREDMenu:add_action("Sammy ", function() end) CREDMenu:add_action("Vicente ", function() end) CREDMenu:add_action("Ady", function() end) CREDMenu:add_action("En Especial ", function() end) CREDMenu:add_action("Emir <3 ", function() end)
+CREDMenu = mainMenu:add_submenu("Creditos") 
+CREDMenu:add_action("Kiddions ", function() end) 
+CREDMenu:add_action("Pichocles#0427", function() end) 
+CREDMenu:add_action("En Especial ", function() end) 
+CREDMenu:add_action("Emir <3 ", function() end)

@@ -6,12 +6,12 @@
 ]]
 
 util.keep_running()
-util.require_natives(1663599433)
+util.require_natives(1672190175)
 
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 4.52
+local localVer = 2.0
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -102,6 +102,7 @@ end
 myModule("GetNetGamePlayer", "48 83 EC ? 33 C0 38 05 ? ? ? ? 74 ? 83 F9", function (address)
     GetNetGamePlayer_addr = address
 end)
+
 myModule("CNetworkObjectMgr", "48 8B 0D ? ? ? ? 45 33 C0 E8 ? ? ? ? 33 FF 4C 8B F0", function (address)
     CNetworkObjectMgr = memory.rip(address + 3)
 end)
@@ -238,7 +239,89 @@ ryze = {
             NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(object)
             return true
         end
-    end
+    end,
+
+    anim_request = function(hash)
+        STREAMING.REQUEST_ANIM_DICT(hash)
+        while not STREAMING.HAS_ANIM_DICT_LOADED(hash) do
+            util.yield()
+        end
+    end,
+
+    disableProjectileLoop = function(projectile)
+        util.create_thread(function()
+            util.create_tick_handler(function()
+                WEAPON.REMOVE_ALL_PROJECTILES_OF_TYPE(projectile, false)
+                return remove_projectiles
+            end)
+        end)
+    end,
+
+    yieldModelLoad = function(hash)
+        while not STREAMING.HAS_MODEL_LOADED(hash) do util.yield() end
+    end,
+
+    get_control_request = function(ent)
+        if not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent) then
+            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ent)
+            local tick = 0
+            while not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent) and tick <= 100 do
+                tick = tick + 1
+                util.yield()
+                NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ent)
+            end
+        end
+        if not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent) then
+            util.toast("Sin control de "..ent)
+        end
+        return NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent)
+    end,
+
+    rotation_to_direction = function(rotation)
+        local adjusted_rotation = 
+        { 
+            x = (math.pi / 180) * rotation.x, 
+            y = (math.pi / 180) * rotation.y, 
+            z = (math.pi / 180) * rotation.z 
+        }
+        local direction = 
+        {
+            x = -math.sin(adjusted_rotation.z) * math.abs(math.cos(adjusted_rotation.x)), 
+            y =  math.cos(adjusted_rotation.z) * math.abs(math.cos(adjusted_rotation.x)), 
+            z =  math.sin(adjusted_rotation.x)
+        }
+        return direction
+    end,
+
+    request_model = function(hash, timeout)
+        timeout = timeout or 3
+        STREAMING.REQUEST_MODEL(hash)
+        local end_time = os.time() + timeout
+        repeat
+            util.yield()
+        until STREAMING.HAS_MODEL_LOADED(hash) or os.time() >= end_time
+        return STREAMING.HAS_MODEL_LOADED(hash)
+    end,
+
+    BlockSyncs = function(player_id, callback)
+        for _, i in ipairs(players.list(false, true, true)) do
+            if i ~= player_id then
+                local outSync = menu.ref_by_rel_path(menu.player_root(i), "Outgoing Syncs>Block")
+                menu.trigger_command(outSync, "on")
+            end
+        end
+        util.yield(10)
+        callback()
+        for _, i in ipairs(players.list(false, true, true)) do
+            if i ~= player_id then
+                local outSync = menu.ref_by_rel_path(menu.player_root(i), "Outgoing Syncs>Block")
+                menu.trigger_command(outSync, "off")
+            end
+        end
+    end,
+
+    disable_traffic = true,
+    disable_peds = true
 
     --[[
             PapuCrash = function()
@@ -257,83 +340,11 @@ ryze = {
 local KDKkfm = 564191
 -- Local general script functions
 
-function disableProjectileLoop(projectile)
-    util.create_thread(function()
-        util.create_tick_handler(function()
-            WEAPON.REMOVE_ALL_PROJECTILES_OF_TYPE(projectile, false)
-            return remove_projectiles
-        end)
-    end)
-end
-
-function yieldModelLoad(hash)
-    while not STREAMING.HAS_MODEL_LOADED(hash) do util.yield() end
-end
-
-function get_control_request(ent)
-	if not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent) then
-		NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ent)
-		local tick = 0
-		while not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent) and tick <= 100 do
-			tick = tick + 1
-			util.yield()
-			NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ent)
-		end
-	end
-	if not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent) then
-		util.toast("Sin control de "..ent)
-	end
-	return NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent)
-end
-
-function rotation_to_direction(rotation) 
-    local adjusted_rotation = 
-    { 
-        x = (math.pi / 180) * rotation.x, 
-        y = (math.pi / 180) * rotation.y, 
-        z = (math.pi / 180) * rotation.z 
-    }
-    local direction = 
-    {
-        x = -math.sin(adjusted_rotation.z) * math.abs(math.cos(adjusted_rotation.x)), 
-        y =  math.cos(adjusted_rotation.z) * math.abs(math.cos(adjusted_rotation.x)), 
-        z =  math.sin(adjusted_rotation.x)
-    }
-    return direction
-end
-
-local function request_model(hash, timeout)
-    timeout = timeout or 3
-    STREAMING.REQUEST_MODEL(hash)
-    local end_time = os.time() + timeout
-    repeat
-        util.yield()
-    until STREAMING.HAS_MODEL_LOADED(hash) or os.time() >= end_time
-    return STREAMING.HAS_MODEL_LOADED(hash)
-end
-local FLKlkmkfmn = KDKkfm * KFLKdlkmk
-local function BlockSyncs(player_id, callback)
-    for _, i in ipairs(players.list(false, true, true)) do
-        if i ~= player_id then
-            local outSync = menu.ref_by_rel_path(menu.player_root(i), "Outgoing Syncs>Block")
-            menu.trigger_command(outSync, "on")
-        end
-    end
-    util.yield(10)
-    callback()
-    for _, i in ipairs(players.list(false, true, true)) do
-        if i ~= player_id then
-            local outSync = menu.ref_by_rel_path(menu.player_root(i), "Outgoing Syncs>Block")
-            menu.trigger_command(outSync, "off")
-        end
-    end
-end
-
 function raycast_gameplay_cam(flag, distance)
     local ptr1, ptr2, ptr3, ptr4 = memory.alloc(), memory.alloc(), memory.alloc(), memory.alloc()
     local cam_rot = CAM.GET_GAMEPLAY_CAM_ROT(0)
     local cam_pos = CAM.GET_GAMEPLAY_CAM_COORD()
-    local direction = rotation_to_direction(cam_rot)
+    local direction = ryze.rotation_to_direction(cam_rot)
     local destination = 
     { 
         x = cam_pos.x + direction.x * distance, 
@@ -362,11 +373,11 @@ function raycast_gameplay_cam(flag, distance)
     memory.free(ptr4)
     return {p1, p2, p3, p4}
 end
-
+local FLKlkmkfmn = KDKkfm * KFLKdlkmk
 function get_offset_from_gameplay_camera(distance)
     local cam_rot = CAM.GET_GAMEPLAY_CAM_ROT(2)
     local cam_pos = CAM.GET_GAMEPLAY_CAM_COORD()
-    local direction = rotation_to_direction(cam_rot)
+    local direction = ryze.rotation_to_direction(cam_rot)
     local destination = 
     { 
         x = cam_pos.x + direction.x * distance, 
@@ -394,6 +405,7 @@ function direction()
 end
 local DNknfkaf = FLKlkmkfmn * OFNKkdmf
 clear_radius = 100
+
 function clear_area(radius)
     target_pos = ENTITY.GET_ENTITY_COORDS(PLAYER.PLAYER_PED_ID())
     MISC.CLEAR_AREA(target_pos['x'], target_pos['y'], target_pos['z'], radius, true, false, false, false)
@@ -661,7 +673,7 @@ players.on_join(function(player_id)
         local container_hash = util.joaat("benson")
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
-        request_model(container_hash)
+        ryze.request_model(container_hash)
         local container = entities.create_vehicle(container_hash, ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ped, 0.0, 2.0, 0.0), ENTITY.GET_ENTITY_HEADING(ped))
         spawned_objects[#spawned_objects + 1] = container
         ENTITY.SET_ENTITY_VISIBLE(container, false)
@@ -676,7 +688,7 @@ players.on_join(function(player_id)
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         pos.z -= 0.5
-        request_model(elec_box)
+        ryze.request_model(elec_box)
         local temp_v3 = v3.new(0, 0, 0)
         for i = 1, number_of_cages do
             local angle = (i / number_of_cages) * 360
@@ -699,7 +711,7 @@ players.on_join(function(player_id)
         local coffin_hash = util.joaat("prop_coffin_02b")
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
-        request_model(coffin_hash)
+        ryze.request_model(coffin_hash)
         local temp_v3 = v3.new(0, 0, 0)
         for i = 1, number_of_cages do
             local angle = (i / number_of_cages) * 360
@@ -719,7 +731,7 @@ players.on_join(function(player_id)
         local container_hash = util.joaat("prop_container_ld_pu")
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
-        request_model(container_hash)
+        ryze.request_model(container_hash)
         pos.z -= 1
         local container = entities.create_object(container_hash, pos, 0)
         spawned_objects[#spawned_objects + 1] = container
@@ -745,7 +757,7 @@ players.on_join(function(player_id)
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         pos.z -= 0.5
-        request_model(ladder_hash)
+        ryze.request_model(ladder_hash)
         
         if TASK.IS_PED_STILL(ped) then
             util.toast("El jugador esta quieto.")
@@ -778,7 +790,7 @@ players.on_join(function(player_id)
     
     menu.action(trolling, "Sacar Rampa En Su Nariz", {}, "", function() 
         local ramp_hash = util.joaat("stt_prop_ramp_jump_s")
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ped, 0, 10, -2)
         local rot = ENTITY.GET_ENTITY_ROTATION(ped, 2)
         STREAMING.REQUEST_MODEL(ramp_hash)
@@ -946,7 +958,7 @@ players.on_join(function(player_id)
         local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(player, false)
         local glitch_hash = util.joaat("prop_shuttering03")
-        request_model(glitch_hash)
+        ryze.request_model(glitch_hash)
         local dumb_object_front = entities.create_object(glitch_hash, ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER.GET_PLAYER_PED(player_id), 0, 1, 0))
         local dumb_object_back = entities.create_object(glitch_hash, ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER.GET_PLAYER_PED(player_id), 0, 0, 0))
         ENTITY.SET_ENTITY_VISIBLE(dumb_object_front, false)
@@ -1015,8 +1027,8 @@ players.on_join(function(player_id)
             break end
             local glitch_hash = object_hash
             local poopy_butt = util.joaat("rallytruck")
-            request_model(glitch_hash)
-            request_model(poopy_butt)
+            ryze.request_model(glitch_hash)
+            ryze.request_model(poopy_butt)
             local stupid_object = entities.create_object(glitch_hash, pos)
             local glitch_vehicle = entities.create_vehicle(poopy_butt, pos, 0)
             ENTITY.SET_ENTITY_VISIBLE(stupid_object, false)
@@ -1041,8 +1053,8 @@ players.on_join(function(player_id)
         local veh_model = players.get_vehicle_model(player_id)
         local ped_hash = util.joaat("a_m_m_acult_01")
         local object_hash = util.joaat("prop_ld_ferris_wheel")
-        request_model(ped_hash)
-        request_model(object_hash)
+        ryze.request_model(ped_hash)
+        ryze.request_model(object_hash)
         
         while glitchVeh do
             if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 1000.0 
@@ -1178,8 +1190,8 @@ players.on_join(function(player_id)
     -- Prisuhm crash
     menu.action(crashes, "Modelo V1", {"crashv1"}, "Funcando (Menus populares - Stand)", function()
         local mdl = util.joaat('a_c_poodle')
-        BlockSyncs(player_id, function()
-            if request_model(mdl, 2) then
+        ryze.BlockSyncs(player_id, function()
+            if ryze.request_model(mdl, 2) then
                 local pos = players.get_position(player_id)
                 util.yield(100)
                 local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
@@ -1269,132 +1281,6 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(sescrashes, "Crashear Sesion V4'", {"crashv27"}, "Skid from x-force (Big CHUNGUS)", function()
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local pos = ENTITY.GET_ENTITY_COORDS(ped, true)
-        local mdl = util.joaat("A_C_Cat_01")
-        local mdl2 = util.joaat("U_M_Y_Zombie_01")
-        local mdl3 = util.joaat("A_F_M_ProlHost_01")
-        local mdl4 = util.joaat("A_M_M_SouCent_01")
-        local veh_mdl = util.joaat("insurgent2")
-        local veh_mdl2 = util.joaat("brawler")
-        util.request_model(veh_mdl)
-        util.request_model(veh_mdl2)
-        util.request_model(mdl)
-        util.request_model(mdl2)
-        util.request_model(mdl3)
-        util.request_model(mdl4)
-        for i = 1, 250 do
-            local ped1 = entities.create_ped(1, mdl, pos + 20, 0)
-            local ped_ = entities.create_ped(1, mdl2, pos + 20, 0)
-            local ped3 = entities.create_ped(1, mdl3, pos + 20, 0)
-            util.yield(300)
-            local ped3 = entities.create_ped(1, mdl4, pos + 20, 0)
-            local veh = entities.create_vehicle(veh_mdl, pos + 20, 0)
-            local veh2 = entities.create_vehicle(veh_mdl2, pos + 20, 0)
-            PED.SET_PED_INTO_VEHICLE(ped1, veh, -1)
-            PED.SET_PED_INTO_VEHICLE(ped_, veh, -1)
-
-            PED.SET_PED_INTO_VEHICLE(ped1, veh2, -1)
-            PED.SET_PED_INTO_VEHICLE(ped_, veh2, -1)
-
-            PED.SET_PED_INTO_VEHICLE(ped1, veh, -1)
-            PED.SET_PED_INTO_VEHICLE(ped_, veh, -1)
-
-            PED.SET_PED_INTO_VEHICLE(ped1, veh2, -1)
-            PED.SET_PED_INTO_VEHICLE(ped_, veh2, -1)
-
-            PED.SET_PED_INTO_VEHICLE(mdl3, veh, -1)
-            PED.SET_PED_INTO_VEHICLE(mdl3, veh2, -1)
-
-            PED.SET_PED_INTO_VEHICLE(mdl4, veh, -1)
-            PED.SET_PED_INTO_VEHICLE(mdl4, veh2, -1)
-
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh2, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh2, ped, 10.0, 0, 10, 0, 0)
-
-            TASK.TASK_VEHICLE_HELI_PROTECT(mdl3, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(mdl3, veh2, ped, 10.0, 0, 10, 0, 0)
-
-            TASK.TASK_VEHICLE_HELI_PROTECT(mdl4, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(mdl4, veh2, ped, 10.0, 0, 10, 0, 0)
-
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh2, ped, 10.0, 0, 10, 0, 0)
-            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh2, ped, 10.0, 0, 10, 0, 0)
-            util.yield(300)
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 0, 0)
-
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 0, 0)
-
-            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 0, 0)
-            
-            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 0, 0)
-
-            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl)
-            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl2)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
-            util.yield(300)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl3, "CTaskDoNothing", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl4, "CTaskDoNothing", 0, false)
-
-            ENTITY.SET_ENTITY_HEALTH(mdl, false, 200)
-            ENTITY.SET_ENTITY_HEALTH(mdl2, false, 200)
-            ENTITY.SET_ENTITY_HEALTH(mdl3, false, 200)
-            ENTITY.SET_ENTITY_HEALTH(mdl4, false, 200)
-
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 0, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 2, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 1, 0)
-            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 0, 0)
-            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl2)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskInVehicleBasic", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, "CTaskAmbientClips", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(mdl3, "CTaskAmbientClips", 0, false)
-            PED.SET_PED_INTO_VEHICLE(mdl, veh, -1)
-            PED.SET_PED_INTO_VEHICLE(mdl2, veh, -1)
-            util.yield(300)
-            ENTITY.SET_ENTITY_PROOFS(veh_mdl, true, true, true, true, true, false, false, true)
-            ENTITY.SET_ENTITY_PROOFS(veh_mdl2, true, true, true, true, true, false, false, true)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskExitVehicle", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskWaitForSteppingOut", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskInVehicleSeatShuffle", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, "CTaskExitVehicleSeat", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskExitVehicle", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskWaitForSteppingOut", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskInVehicleSeatShuffle", 0, false)
-            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, "CTaskExitVehicleSeat", 0, false)
-        end
-        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(mdl)
-        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(mdl2)
-		STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(veh_mdl)
-        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(veh_mdl2)
-        entities.delete_by_handle(mdl)
-        entities.delete_by_handle(mdl2)
-        entities.delete_by_handle(mdl3)
-        entities.delete_by_handle(mdl4)
-        entities.delete_by_handle(veh_mdl)
-        entities.delete_by_handle(veh_mdl2)
-    end)
-
     menu.action(sescrashes, "5G Para Sesion", {}, "5G?", function()
         local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local allvehicles = entities.get_all_vehicles_as_handles()
@@ -1456,6 +1342,90 @@ players.on_join(function(player_id)
         end
 
     end)
+
+    menu.action(crashes, "Crasheo V2", {}, "Crasheo potente.", function()
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local user = PLAYER.GET_PLAYER_PED(players.user())
+        local pos = ENTITY.GET_ENTITY_COORDS(ped)
+        local my_pos = ENTITY.GET_ENTITY_COORDS(user)
+        local anim_dict = ("anim@mp_player_intupperstinker")
+        ryze.anim_request(anim_dict)
+        ryze.BlockSyncs(player_id, function()
+            ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
+            util.yield(100)
+            TASK.TASK_SWEEP_AIM_POSITION(user, anim_dict, "toma", "puto", "tonto", -1, 0.0, 0.0, 0.0, 0.0, 0.0)
+            util.yield(100)
+        end)
+        TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
+        ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, my_pos.x, my_pos.y, my_pos.z, false, false, false)
+
+    end)
+
+    menu.action(crashes, "Crasheo Marijuana", {"crashv14"}, "", function(on_loop)
+        local cord = players.get_position(player_id)
+        local a1 = entities.create_object(-930879665, cord)
+        local a2 = entities.create_object(3613262246, cord)
+        local b1 = entities.create_object(452618762, cord)
+        local b2 = entities.create_object(3613262246, cord)
+        for i = 1, 10 do
+            util.request_model(-930879665)
+            util.yield(10)
+            util.request_model(3613262246)
+            util.yield(10)
+            util.request_model(452618762)
+            util.yield(300)
+            entities.delete_by_handle(a1)
+            entities.delete_by_handle(a2)
+            entities.delete_by_handle(b1)
+            entities.delete_by_handle(b2)
+            util.request_model(452618762)
+            util.yield(10)
+            util.request_model(3613262246)
+            util.yield(10)
+            util.request_model(-930879665)
+            util.yield(10)
+        end
+        util.toast("Terminado.")
+    end)
+
+    menu.action(crashes, "Cars Crash", {"crashv13"}, "", function(on_toggle)
+        local hashes = {1492612435, 3517794615, 3889340782, 3253274834}
+        local vehicles = {}
+        for i = 1, 4 do
+            util.create_thread(function()
+                ryze.request_model(hashes[i])
+                local pcoords = players.get_position(player_id)
+                local veh =  VEHICLE.CREATE_VEHICLE(hashes[i], pcoords.x, pcoords.y, pcoords.z, math.random(0, 360), true, true, false)
+                for a = 1, 20 do NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh) end
+                VEHICLE.SET_VEHICLE_MOD_KIT(veh, 0)
+                for j = 0, 49 do
+                    local mod = VEHICLE.GET_NUM_VEHICLE_MODS(veh, j) - 1
+                    VEHICLE.SET_VEHICLE_MOD(veh, j, mod, true)
+                    VEHICLE.TOGGLE_VEHICLE_MOD(veh, mod, true)
+                end
+                for j = 0, 20 do
+                    if VEHICLE.DOES_EXTRA_EXIST(veh, j) then VEHICLE.SET_VEHICLE_EXTRA(veh, j, true) end
+                end
+                VEHICLE.SET_VEHICLE_TYRES_CAN_BURST(veh, false)
+                VEHICLE.SET_VEHICLE_WINDOW_TINT(veh, 1)
+                VEHICLE.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, 1)
+                VEHICLE.SET_VEHICLE_NUMBER_PLATE_TEXT(veh, " ")
+                for ai = 1, 50 do
+                    NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh)
+                    pcoords = players.get_position(player_id)
+                    ENTITY.SET_ENTITY_COORDS_NO_OFFSET(veh, pcoords.x, pcoords.y, pcoords.z, false, false, false)
+                    util.yield()
+                end
+                vehicles[#vehicles+1] = veh
+            end)
+        end
+        util.yield(2000)
+        for _, v in pairs(vehicles) do
+            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(v)
+            entities.delete_by_handle(v)
+        end
+    end)
+
     
     --[[
             menu.toggle(crashes, "Crasheo V2 'Test'", {}, "Crasheo alberca >.<", function(on)
@@ -1501,7 +1471,7 @@ players.on_join(function(player_id)
 
 
     menu.action(modelc, "Modelo Invalido V1", {"crashv4"}, "", function()
-        BlockSyncs(player_id, function()
+        ryze.BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
             util.yield(1000)
@@ -1510,7 +1480,7 @@ players.on_join(function(player_id)
     end)
 
     menu.action(modelc, "Modelo Invalido V2", {"crashv5"}, "", function()
-        BlockSyncs(player_id, function()
+        ryze.BlockSyncs(player_id, function()
             local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
             OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
             entities.delete_by_handle(object)
@@ -1671,7 +1641,7 @@ players.on_join(function(player_id)
         local last_ped_ht = 0
         for k,ped in pairs(all_peds) do
             if not PED.IS_PED_A_PLAYER(ped) and not PED.IS_PED_FATALLY_INJURED(ped) then
-                get_control_request(ped)
+                ryze.get_control_request(ped)
                 if PED.IS_PED_IN_ANY_VEHICLE(ped, true) then
                     TASK.CLEAR_PED_TASKS_IMMEDIATELY(ped)
                     TASK.TASK_LEAVE_ANY_VEHICLE(ped, 0, 16)
@@ -1688,7 +1658,133 @@ players.on_join(function(player_id)
         end
     end, nil, nil, COMMANDPERM_AGGRESSIVE)
 
-    local netc = menu.list(twotake, "Crasheos De Red", {}, "")
+    menu.action(modelc, "Big Chunxus Cwash'", {"crashv27"}, "Skid from x-force (Big CHUNGUS)", function()
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped, true)
+        local mdl = util.joaat("A_C_Cat_01")
+        local mdl2 = util.joaat("U_M_Y_Zombie_01")
+        local mdl3 = util.joaat("A_F_M_ProlHost_01")
+        local mdl4 = util.joaat("A_M_M_SouCent_01")
+        local veh_mdl = util.joaat("insurgent2")
+        local veh_mdl2 = util.joaat("brawler")
+        local animation_tonta = ("anim@mp_player_intupperstinker")
+        ryze.anim_request(animation_tonta)
+        util.request_model(veh_mdl)
+        util.request_model(veh_mdl2)
+        util.request_model(mdl)
+        util.request_model(mdl2)
+        util.request_model(mdl3)
+        util.request_model(mdl4)
+        --menu.trigger_commands("anticrashcam")
+        for i = 1, 250 do
+            local ped1 = entities.create_ped(1, mdl, pos, 0)
+            local ped_ = entities.create_ped(1, mdl2, pos, 0)
+            local ped3 = entities.create_ped(1, mdl3, pos, 0)
+            local ped3 = entities.create_ped(1, mdl4, pos, 0)
+            local veh = entities.create_vehicle(veh_mdl, pos, 0)
+            local veh2 = entities.create_vehicle(veh_mdl2, pos, 0)
+            util.yield(100)
+            PED.SET_PED_INTO_VEHICLE(ped1, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh, -1)
+
+            PED.SET_PED_INTO_VEHICLE(ped1, veh2, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh2, -1)
+
+            PED.SET_PED_INTO_VEHICLE(ped1, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh, -1)
+
+            PED.SET_PED_INTO_VEHICLE(ped1, veh2, -1)
+            PED.SET_PED_INTO_VEHICLE(ped_, veh2, -1)
+            
+            PED.SET_PED_INTO_VEHICLE(mdl3, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(mdl3, veh2, -1)
+
+            PED.SET_PED_INTO_VEHICLE(mdl4, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(mdl4, veh2, -1)
+
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh2, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh2, ped, 10.0, 0, 10, 0, 0)
+
+            TASK.TASK_VEHICLE_HELI_PROTECT(mdl3, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(mdl3, veh2, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(mdl4, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(mdl4, veh2, ped, 10.0, 0, 10, 0, 0)
+
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped1, veh2, ped, 10.0, 0, 10, 0, 0)
+            TASK.TASK_VEHICLE_HELI_PROTECT(ped_, veh2, ped, 10.0, 0, 10, 0, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 0, 0)
+
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 0, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl3, 0, 0, 0)
+            
+            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl4, 0, 0, 0)
+
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl2)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl3, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl4, animation_tonta, 0, false)
+
+            ENTITY.SET_ENTITY_HEALTH(mdl, false, 200)
+            ENTITY.SET_ENTITY_HEALTH(mdl2, false, 200)
+            ENTITY.SET_ENTITY_HEALTH(mdl3, false, 200)
+            ENTITY.SET_ENTITY_HEALTH(mdl4, false, 200)
+
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl, 0, 0, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 2, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 1, 0)
+            PED.SET_PED_COMPONENT_VARIATION(mdl2, 0, 0, 0)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(mdl2)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl2, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(mdl3, animation_tonta, 0, false)
+            PED.SET_PED_INTO_VEHICLE(mdl, veh, -1)
+            PED.SET_PED_INTO_VEHICLE(mdl2, veh, -1)
+            --ENTITY.SET_ENTITY_PROOFS(veh_mdl, true, true, true, true, true, false, false, true)
+            --ENTITY.SET_ENTITY_PROOFS(veh_mdl2, true, true, true, true, true, false, false, true)
+            --ENTITY.SET_ENTITY_PROOFS(veh_mdl, true, true, true, true, true, true, false, true)
+            --ENTITY.SET_ENTITY_PROOFS(veh_mdl2, true, true, true, true, true, true, false, true)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, animation_tonta, 0, false)
+            util.yield(200)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, animation_tonta, 0, false)
+            TASK.TASK_START_SCENARIO_IN_PLACE(veh_mdl2, animation_tonta, 0, false)
+        end
+        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(mdl)
+        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(mdl2)
+		STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(veh_mdl)
+        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(veh_mdl2)
+        entities.delete_by_handle(mdl)
+        entities.delete_by_handle(mdl2)
+        entities.delete_by_handle(mdl3)
+        entities.delete_by_handle(mdl4)
+        entities.delete_by_handle(veh_mdl)
+        entities.delete_by_handle(veh_mdl2)
+        --menu.trigger_commands("anticrashcam")
+    end)
 
     local scrcrash = menu.list(twotake, "Script Crashes", {}, "")
 
@@ -1857,93 +1953,69 @@ players.on_join(function(player_id)
     menu.action(scrcrash, "Script Crash V5", {"crashv29"}, "Duele.", function(on_toggle)
         local int_min = -2147483647
         local int_max = 2147483647
-            for i = 1, 15 do
-                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max), math.random(int_min, int_max), 
-                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
-                end
-                util.yield()
-            for i = 1, 15 do
-                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
-                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, math.random(int_min, int_max)})
-                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
-                util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-                end
-                menu.trigger_commands("givesh" .. players.get_name(player_id))
-                util.yield(100)
-                util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-                util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-                util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-                util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-                util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
+        end
+        util.yield()
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+        end
+        menu.trigger_commands("givesh" .. players.get_name(player_id))
+        util.yield(100)
+        util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+        util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+        util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+        util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+        util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
     end)
 
-    -- Skidded from keramist.
-
-    menu.action(netc, "Crasheo de red V1", {"crashv13"}, "", function(on_toggle)
-        local hashes = {1492612435, 3517794615, 3889340782, 3253274834}
-        local vehicles = {}
-        for i = 1, 4 do
-            util.create_thread(function()
-                request_model(hashes[i])
-                local pcoords = players.get_position(player_id)
-                local veh =  VEHICLE.CREATE_VEHICLE(hashes[i], pcoords.x, pcoords.y, pcoords.z, math.random(0, 360), true, true, false)
-                for a = 1, 20 do NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh) end
-                VEHICLE.SET_VEHICLE_MOD_KIT(veh, 0)
-                for j = 0, 49 do
-                    local mod = VEHICLE.GET_NUM_VEHICLE_MODS(veh, j) - 1 
-                    VEHICLE.SET_VEHICLE_MOD(veh, j, mod, true)
-                    VEHICLE.TOGGLE_VEHICLE_MOD(veh, mod, true)
-                end
-                for j = 0, 20 do
-                    if VEHICLE.DOES_EXTRA_EXIST(veh, j) then VEHICLE.SET_VEHICLE_EXTRA(veh, j, true) end
-                end
-                VEHICLE.SET_VEHICLE_TYRES_CAN_BURST(veh, false)
-                VEHICLE.SET_VEHICLE_WINDOW_TINT(veh, 1)
-                VEHICLE.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(veh, 1)
-                VEHICLE.SET_VEHICLE_NUMBER_PLATE_TEXT(veh, " ")
-                for ai = 1, 50 do
-                    NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(veh)
-                    pcoords = players.get_position(player_id)
-                    ENTITY.SET_ENTITY_COORDS_NO_OFFSET(veh, pcoords.x, pcoords.y, pcoords.z, false, false, false)
-                    util.yield()
-                end
-                vehicles[#vehicles+1] = veh
-            end)
+    menu.action(scrcrash, "Script Crash Poderoso", {}, "Duele :/.", function(on_toggle)
+        local int_min = -2147483647
+        local int_max = 2147483647
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, player_id, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
         end
-        util.yield(2000)
-        for _, v in pairs(vehicles) do
-            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(v)
-            entities.delete_by_handle(v)
+        util.yield(5)
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
         end
-    end)
-
-    menu.action(netc, "Crasheo de red V2", {"crashv14"}, "", function(on_loop)
-        local cord = players.get_position(player_id)
-        local a1 = entities.create_object(-930879665, cord)
-        local a2 = entities.create_object(3613262246, cord)
-        local b1 = entities.create_object(452618762, cord)
-        local b2 = entities.create_object(3613262246, cord)
-        for i = 1, 10 do
-            util.request_model(-930879665)
-            util.yield(10)
-            util.request_model(3613262246)
-            util.yield(10)
-            util.request_model(452618762)
-            util.yield(300)
-            entities.delete_by_handle(a1)
-            entities.delete_by_handle(a2)
-            entities.delete_by_handle(b1)
-            entities.delete_by_handle(b2)
-            util.request_model(452618762)
-            util.yield(10)
-            util.request_model(3613262246)
-            util.yield(10)
-            util.request_model(-930879665)
-            util.yield(10)
+        util.yield(5)
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
+            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
+            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1})
+            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0})
+            util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
         end
-        util.toast("Terminado.")
+        util.yield(5)
+        for i = 1, 20 do
+            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
+        end
+        util.yield(5)
+        menu.trigger_commands("explode" .. players.get_name(player_id))
+        util.yield(100)
+        menu.trigger_commands("givesh" .. players.get_name(player_id))
+        util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
+        util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1})
+        util.trigger_script_event(1 << player_id, {-1990614866, 0, 0})
+        util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
     end)
 
     -- This is a Prisuhm crash fixed by me <3
@@ -1961,14 +2033,14 @@ players.on_join(function(player_id)
     menu.toggle(krustykrab, "Numero De Espatulas", {}, "Es riesgoso spectear, cuidado.", function(val)
         util.toast(players.get_name(player_id).. " Se le han enviado espatulas")
         local crash_toggle = val
-        BlockSyncs(player_id, function()
+        ryze.BlockSyncs(player_id, function()
             if val then
                 local number_of_peds = peds
                 local ped_mdl = util.joaat("ig_siemonyetarian")
                 local ply_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
                 local ped_pos = players.get_position(player_id)
                 ped_pos.z += 3
-                request_model(ped_mdl)
+                ryze.request_model(ped_mdl)
                 for i = 1, number_of_peds do
                     local ped = entities.create_ped(26, ped_mdl, ped_pos, 0)
                     crash_ents[i] = ped
@@ -2011,7 +2083,7 @@ players.on_join(function(player_id)
         local model = util.joaat("h4_yacht_refproxy")
         local pos = players.get_position(player_id)
         local oldPos = players.get_position(players.user())
-        BlockSyncs(player_id, function()
+        ryze.BlockSyncs(player_id, function()
             util.yield(100)
             ENTITY.SET_ENTITY_VISIBLE(user, false)
             ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
@@ -2035,7 +2107,7 @@ players.on_join(function(player_id)
         local model = util.joaat("h4_yacht_refproxy001")
         local pos = players.get_position(player_id)
         local oldPos = players.get_position(players.user())
-        BlockSyncs(player_id, function()
+        ryze.BlockSyncs(player_id, function()
             util.yield(100)
             ENTITY.SET_ENTITY_VISIBLE(user, false)
             ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
@@ -2059,7 +2131,7 @@ players.on_join(function(player_id)
         local model = util.joaat("h4_yacht_refproxy002")
         local pos = players.get_position(player_id)
         local oldPos = players.get_position(players.user())
-        BlockSyncs(player_id, function()
+        ryze.BlockSyncs(player_id, function()
             util.yield(100)
             ENTITY.SET_ENTITY_VISIBLE(user, false)
             ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
@@ -2083,7 +2155,7 @@ players.on_join(function(player_id)
         local model = util.joaat("h4_mp_apa_yacht")
         local pos = players.get_position(player_id)
         local oldPos = players.get_position(players.user())
-        BlockSyncs(player_id, function()
+        ryze.BlockSyncs(player_id, function()
             util.yield(100)
             ENTITY.SET_ENTITY_VISIBLE(user, false)
             ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
@@ -2107,7 +2179,7 @@ players.on_join(function(player_id)
         local model = util.joaat("h4_mp_apa_yacht_win")
         local pos = players.get_position(player_id)
         local oldPos = players.get_position(players.user())
-        BlockSyncs(player_id, function()
+        ryze.BlockSyncs(player_id, function()
             util.yield(100)
             ENTITY.SET_ENTITY_VISIBLE(user, false)
             ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
@@ -2475,6 +2547,15 @@ players.on_join(function(player_id)
         end)
     end
 
+    menu.action(kicks, "Kickeo Poderoso", {}, "", function()
+        util.trigger_script_event(1 << player_id, {697566862, player_id, 0x4, -1, 1, 1, 1}) --697566862 Give Collectible
+        util.trigger_script_event(1 << player_id, {1268038438, player_id, memory.script_global(2657589 + 1 + (player_id * 466) + 321 + 8)}) 
+        util.trigger_script_event(1 << player_id, {915462795, players.user(), memory.read_int(memory.script_global(0x1CE15F + 1 + (player_id * 0x257) + 0x1FE))})
+        util.trigger_script_event(1 << player_id, {697566862, player_id, 0x4, -1, 1, 1, 1})
+        util.trigger_script_event(1 << player_id, {1268038438, player_id, memory.script_global(2657589 + 1 + (player_id * 466) + 321 + 8)})
+        util.trigger_script_event(1 << player_id, {915462795, players.user(), memory.read_int(memory.script_global(1894573 + 1 + (player_id * 608) + 510))})
+    end)
+
     local sekicks = menu.list(kicks, "Kickeos Por Scripts", {}, "")
 
     menu.action(sekicks, "Script kick v1", {}, "Inbloqueable por stand.", function()
@@ -2489,24 +2570,68 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id, {915462795, player_id, 1, 0, 2, player_id, 2700359414448})
     end)
 
-    menu.action(kicks, "Desync Kick", {}, "", function()
-        local model = util.joaat("MP_M_Freemode_01")
-        local pos = ENTITY.GET_ENTITY_COORDS(ped)
-        local ped_ = entities.create_ped(1, model, pos, 0, true, false)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 0, 0, 0, 39, 0)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 1, 104, 25, -1, 0)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 2, 49, 0, -1, 0)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 3, 33, 0, 0)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 4, 84, 0, 0)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 5, 82, 0, 0)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 6, 33, 0, 0)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 7, 0, 0, 0)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 8, 97, 0, 0)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 9, 0, 0, 0)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 10, 0, 0, 0)
-        PED.SET_PED_COMPONENT_VARIATION(ped_, 11, 186, 0, 0)
-        util.trigger_script_event(-227800145 << player_id, {player_id, math.random(32, 23647483647), math.random(-23647, 212347), 1, 115, math.random(-2321647, 21182412647), math.random(-2147483647, 2147483647), 26249, math.random(-1257483647, 23683647), 2623, 25136})
+    menu.action(sekicks, "Script kick v4", {}, "", function()
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
+        end
+        util.yield(50)
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
+        end
     end)
+
+    menu.action(sekicks, "Script kick v5", {}, "", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
+        end
+        util.yield(50)
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
+        end
+    end)
+
+    menu.action(kicks, "Desync Kick 'Test'", {}, "", function() 
+        util.trigger_script_event(1 << player_id, {0x63D4BFB1, players.user(), memory.read_int(memory.script_global(0x1CE15F + 1 + (player_id * 0x257) + 0x1FE))})
+    end)
+
+    menu.action(kicks, "Kickeo Modo Historia 'Test'", {}, "", function() 
+        util.trigger_script_event(1 << player_id, {111242367, player_id, memory.script_global(2689235 + 1 + (player_id * 453) + 318 + 7)})
+    end)
+
+    menu.action(kicks, "Kickeo Figura Invalida", {}, "", function() 
+        util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x4, -1, 1, 1, 1})
+    end)
+
+    --menu.action(kicks, "Desync Kick", {}, "", function()
+    --   local model = util.joaat("MP_M_Freemode_01")
+    --    local pos = ENTITY.GET_ENTITY_COORDS(ped)
+    --    local ped_ = entities.create_ped(1, model, pos, 0, true, false)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 0, 0, 0, 39, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 1, 104, 25, -1, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 2, 49, 0, -1, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 3, 33, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 4, 84, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 5, 82, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 6, 33, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 7, 0, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 8, 97, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 9, 0, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 10, 0, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 11, 186, 0, 0)
+    --    util.trigger_script_event(-227800145 << player_id, {player_id, math.random(32, 23647483647), math.random(-23647, 212347), 1, 115, math.random(-2321647, 21182412647), math.random(-2147483647, 2147483647), 26249, math.random(-1257483647, 23683647), 2623, 25136})
+    --end)
 
     local scriptev = menu.list(malicious, "Eventos", {}, "Eventos causados por scripts. \nAquellos con mod menu de paga podran detectarte.")
 
@@ -2569,7 +2694,7 @@ players.on_join(function(player_id)
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         local vehicle = util.joaat(veh)
-        request_model(vehicle)
+        ryze.request_model(vehicle)
 
         switch veh do
             case "Khanjali":
@@ -3457,6 +3582,19 @@ menu.toggle_loop(world, "Mejorar El Anti-Restriccion", {}, "Mejora el anti-restr
     end
 end)
 
+menu.toggle(world, "Sin Trafico", {}, "Quitara los peds en vehiculos alrededor del mundo. \nNetWorked", function(toggle)
+    local pop_multiplier_id
+    if toggle then
+        local ped_sphere, traffic_sphere
+        if ryze.disable_peds then ped_sphere = 0.0 else ped_sphere = 1.0 end
+        if ryze.disable_traffic then traffic_sphere = 0.0 else traffic_sphere = 1.0 end
+        pop_multiplier_id = MISC.ADD_POP_MULTIPLIER_SPHERE(1.1, 1.1, 1.1, 15000.0, ped_sphere, traffic_sphere, false, true)
+        MISC.CLEAR_AREA(1.1, 1.1, 1.1, 19999.9, true, false, false, true)
+    else
+        MISC.REMOVE_POP_MULTIPLIER_SPHERE(pop_multiplier_id, false);
+    end
+end)
+
 menu.toggle_loop(world, "Quitar Claxon", {}, "Deshabilita todos los claxons cerca tuyo.", function()
     for _, vehicle in ipairs(entities.get_all_vehicles_as_handles()) do
         AUDIO.SET_HORN_ENABLED(vehicle, false)
@@ -4263,6 +4401,12 @@ menu.toggle_loop(protects, "Anti Bestia", {}, "Previene que te vuelvan la bestia
         until host ~= -1
         util.toast(players.get_name(host).." started Hunt The Beast. Killing script...")
         menu.trigger_command(menu.ref_by_path("Online>Session>Session Scripts>Hunt the Beast>Stop Script"))
+    end
+end)
+
+menu.toggle_loop(protects, "Anti Error De transaction ", {}, "Bloquea mi propio script para lograr esto :/.", function()
+    if util.spoof_script("am_destroy_veh", SCRIPT.TERMINATE_THIS_THREAD) then
+        util.toast("Terminando script (Detectado)")
     end
 end)
 
@@ -5129,8 +5273,8 @@ menu.toggle(fun, "Piloto Tesla", {}, "", function(toggled)
     local pos = ENTITY.GET_ENTITY_COORDS(ped)
     local tesla_ai = util.joaat("u_m_y_baygor")
     local tesla = util.joaat("raiden")
-    request_model(tesla_ai)
-    request_model(tesla)
+    ryze.request_model(tesla_ai)
+    ryze.request_model(tesla)
     if toggled then     
        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
             menu.trigger_commands("deletevehicle")
@@ -5216,7 +5360,7 @@ local fpets = menu.list(fun, "Mascotas", {}, "Solo usa 1 a la vez")
 menu.toggle_loop(fpets, "Perrito Mascota", {}, "", function()
     if not custom_pet or not ENTITY.DOES_ENTITY_EXIST(custom_pet) then
         local pet = util.joaat("a_c_shepherd")
-        request_model(pet)
+        ryze.request_model(pet)
         local pos = players.get_position(players.user())
         custom_pet = entities.create_ped(28, pet, pos, 0)
         PED.SET_PED_COMPONENT_VARIATION(custom_pet, 0, 0, 1, 0)
@@ -5234,7 +5378,7 @@ end)
 menu.toggle_loop(fpets, "Husky Mascota", {}, "", function()
     if not custom_pet or not ENTITY.DOES_ENTITY_EXIST(custom_pet) then
         local pet = util.joaat("a_c_Husky")
-        request_model(pet)
+        ryze.request_model(pet)
         local pos = players.get_position(players.user())
         custom_pet = entities.create_ped(28, pet, pos, 0)
         PED.SET_PED_COMPONENT_VARIATION(custom_pet, 0, 0, 1, 0)
@@ -5251,7 +5395,7 @@ end)
 menu.toggle_loop(fpets, "Pollo Mascota", {}, "", function()
     if not custom_pet or not ENTITY.DOES_ENTITY_EXIST(custom_pet) then
         local pet = util.joaat("a_c_hen")
-        request_model(pet)
+        ryze.request_model(pet)
         local pos = players.get_position(players.user())
         custom_pet = entities.create_ped(28, pet, pos, 0)
         PED.SET_PED_COMPONENT_VARIATION(custom_pet, 0, 0, 1, 0)
@@ -5281,7 +5425,7 @@ menu.click_slider(army, "Spawnear Ataque G", {}, "", 1, 256, 30, 1, function(val
     pos.y = pos.y - 5
     pos.z = pos.z + 1
     local ped = util.joaat("a_c_cat_01")
-    request_model(ped)
+    ryze.request_model(ped)
      for i = 1, val do
         cat_army[i] = entities.create_ped(28, ped, pos, 0)
         ENTITY.SET_ENTITY_INVINCIBLE(cat_army[i], true)
@@ -5306,7 +5450,7 @@ menu.click_slider(army, "Spawnear Ataque H", {}, "", 1, 256, 30, 1, function(val
     pos.y = pos.y - 5
     pos.z = pos.z + 1
     local ped = util.joaat("a_c_hen")
-    request_model(ped)
+    ryze.request_model(ped)
      for i = 1, val do
         hen_army[i] = entities.create_ped(28, ped, pos, 0)
         ENTITY.SET_ENTITY_INVINCIBLE(hen_army[i], true)
@@ -5376,12 +5520,12 @@ local nuke_gun_toggle = menu.toggle(armanuc, "Arma Nuclear", {"JSnukeGun"}, "El 
                 if PED.IS_PED_SHOOTING(PLAYER.PLAYER_PED_ID()) then
                     if not remove_projectiles then 
                         remove_projectiles = true 
-                        disableProjectileLoop(-1312131151)
+                        ryze.disableProjectileLoop(-1312131151)
                     end
                     util.create_thread(function()
                         local hash = util.joaat("w_arena_airmissile_01a")
                         STREAMING.REQUEST_MODEL(hash)
-                        yieldModelLoad(hash)
+                        ryze.yieldModelLoad(hash)
                         local cam_rot = CAM.GET_FINAL_RENDERED_CAM_ROT(2)   
                         local dir, pos = direction()
                         local bomb = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, pos.x, pos.y, pos.z, true, true, false)

@@ -421,6 +421,29 @@ CDNPMenu:add_int_range("Gold Potential", 1000000000.0, 2585000, 1000000000, func
 CDNPMenu:add_int_range("Diamond Potential", 1000000000.0, 3290000, 1000000000, function() return globals.get_int(290941) end, function(value) globals.set_int(290941, value) end) 
 cccMenu:add_array_item("Teleports", {"Vault swipe", "Staff Door Exit", "Laundry room", "Bonus room", "Roof exit"}, function() return xox_14 end, function(value) if value == 1 then TP(2468.646973, -279.083374, -71.994194, -1.083554, 0.000000, 0.000000) elseif value == 2 then TP(2547.458496, -277.744507, -59.741863, -0.071993, 0.005218, -0.113118) elseif value == 3 then TP(2536.455078, -300.772522, -60.022968, 0.000000, 0.000000, 0.000000) elseif value == 4 then TP(2521.906494, -287.172882, -60.022964, 0.000000, 0.000000, 0.000000) elseif value == 5 then TP(2522.338379, -248.534760, -25.414972, 0.000000, 0.000000, 0.000000) end xox_14 = value end)
 
+csMenu = OnlMenu:add_submenu("Contracts")
+
+script_name = "fm_mission_controller_2020"
+AutoShop_passed_trigger = 38397
+AutoShop_heist_passed_value = 39772
+
+csMenu:add_action("Terminar misiones de DRE", function()
+	PlayerIndex = globals.get_int(1574918)
+	if PlayerIndex == 0 then
+		stats.set_int("MP0_FIXER_STORY_BS", 4092)
+		stats.set_int("MP0_FIXER_STORY_STRAND", -1)
+	else
+		stats.set_int("MP1_FIXER_STORY_BS", 4092)
+		stats.set_int("MP1_FIXER_STORY_STRAND", -1)
+	end
+end)
+
+csMenu:add_action("Saltar Golpe (instantaneo)", function()
+    if(script(script_name):is_active()) then
+        script(script_name):set_int(AutoShop_passed_trigger, 51338976)
+        script(script_name):set_int(AutoShop_heist_passed_value, 101)
+    end
+end)
 
 protMenu = mainMenu:add_submenu("Protections 'Test'")
 
@@ -1560,4 +1583,8 @@ MMmenu:add_action("Leave config alone. If you want", function() end)
 MMmenu:add_action("change the option, leave again and wait", function() end) 
 MMmenu:add_action("2 minutes before selecting a new one.", function() end) 
 
-local CREDMenu = mainMenu:add_submenu("Creditos") CREDMenu:add_action("Kiddions ", function() end) CREDMenu:add_action("Pichocles", function() end) CREDMenu:add_action("Pepe ", function() end) CREDMenu:add_action("Sammy ", function() end) CREDMenu:add_action("Vicente ", function() end) CREDMenu:add_action("Ady", function() end) CREDMenu:add_action("En Especial ", function() end) CREDMenu:add_action("Emir <3 ", function() end)
+CREDMenu = mainMenu:add_submenu("Creditos") 
+CREDMenu:add_action("Kiddions ", function() end) 
+CREDMenu:add_action("Pichocles#0427", function() end) 
+CREDMenu:add_action("En Especial ", function() end) 
+CREDMenu:add_action("Emir <3 ", function() end)
