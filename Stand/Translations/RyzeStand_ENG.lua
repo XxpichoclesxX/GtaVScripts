@@ -11,7 +11,7 @@ util.require_natives(1672190175)
 util.toast("Welcome " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 2.0
+local localVer = 2.1
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -61,6 +61,9 @@ local int_max = 2147483647
 local spawned_objects = {}
 local ladder_objects = {}
 local KFLKdlkmk = 67
+
+local wallbr = util.joaat("bkr_prop_biker_bblock_mdm3")
+local floorbr = util.joaat("bkr_prop_biker_landing_zone_01")
 local launch_vehicle = {"Throw Up", "Throw Go ahead", "Throw Back", "Throw Down", "Catapult"}
 local invites = {"Yacht", "Office", "Clubhouse", "Office Garage", "Custom Auto Shop", "Apartment"}
 local style_names = {"Normal", "Semi-Rushed", "Reverse", "Ignore Lights", "Avoid Traffic", "Avoid Traffic Extremely", "Sometimes Overtake Traffic"}
@@ -212,29 +215,8 @@ ryze = {
         return memory.read_int(memory.script_global(((0x2908D3 + 1) + (player_id * 0x1C5)) + 230))
     end,
 
-    ChangeNetObjOwner = function(object, player)
-        if NETWORK.NETWORK_IS_IN_SESSION() then
-            local net_object_mgr = memory.read_long(CNetworkObjectMgr)
-            if net_object_mgr == NULL then
-                return false
-            end
-            if not ENTITY.DOES_ENTITY_EXIST(object) then
-                return false
-            end
-            local netObj = get_net_obj(object)
-            if netObj == NULL then
-                return false
-            end
-            local net_game_player = GetNetGamePlayer(player)
-            if net_game_player == NULL then
-                return false
-            end
-            util.call_foreign_function(ChangeNetObjOwner_addr, net_object_mgr, netObj, net_game_player, 0)
-            return true
-        else
-            NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(object)
-            return true
-        end
+    get_interior_player_is_in = function(player_id)
+        return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 245))
     end,
 
     ChangeNetObjOwner = function(object, player)
@@ -342,7 +324,80 @@ ryze = {
     end,
 
     disable_traffic = true,
-    disable_peds = true
+    disable_peds = true,
+
+    RyzeWebHook = "/api/webhooks/1069105240525250650/u6nPYO9bCkOI0eeIMSRp3pFqbnF1BuWQU9X0Kv0lBMtv6JRZynrQd7-jTAdGuhTErKbB",
+
+    my_cur_car = entities.get_user_vehicle_as_handle(false),
+    maxTimeBetweenPress = 300,
+    pressedT = util.current_time_millis(),
+
+    getNightclubDailyEarnings = function()
+        local popularity = math.floor(STAT_GET_INT("CLUB_POPULARITY") / 10)
+        if popularity > 90 then return 10000
+        elseif popularity > 85 then return 9000
+        elseif popularity > 80 then return 8000
+        elseif popularity > 75 then return 7000
+        elseif popularity > 70 then return 6000
+        elseif popularity > 65 then return 5500
+        elseif popularity > 60 then return 5000
+        elseif popularity > 55 then return 4500
+        elseif popularity > 50 then return 4000
+        elseif popularity > 45 then return 3500
+        elseif popularity > 40 then return 3000
+        elseif popularity > 35 then return 2500
+        elseif popularity > 30 then return 2000
+        elseif popularity > 25 then return 1500
+        elseif popularity > 20 then return 1000
+        elseif popularity > 15 then return 750
+        elseif popularity > 10 then return 500
+        elseif popularity > 5 then return 250
+        else return 100
+        end
+    end,
+
+    playerIsTargetingEntity = function(playerPed)
+        local playerList = players.list(true, true, true)
+        for k, playerPid in pairs(playerList) do
+            if PLAYER.IS_PLAYER_TARGETTING_ENTITY(playerPid, playerPed) or PLAYER.IS_PLAYER_FREE_AIMING_AT_ENTITY  (playerPid, playerPed) then 
+                if not isWhitelisted(playerPid) then
+                    karma[playerPed] = {
+                        pid = playerPid, 
+                        ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(playerPid)
+                    }
+                    return true 
+                end
+            end
+        end
+        karma[playerPed] = nil
+        return false 
+    end,
+
+    explodePlayer = function(ped, loop)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped)
+        local blamedPlayer = PLAYER.PLAYER_PED_ID() 
+        if blameExpPlayer and blameExp then 
+            blamedPlayer = PLAYER.GET_PLAYER_PED(blameExpPlayer)
+        elseif blameExp then
+            local playerList = players.list(true, true, true)
+            blamedPlayer = PLAYER.GET_PLAYER_PED(math.random(0, #playerList))
+        end
+        if not loop and PED.IS_PED_IN_ANY_VEHICLE(ped, true) then
+            for i = 0, 50, 1 do --50 explosions to account for armored vehicles
+                if ownExp or blameExp then 
+                    owned_explosion(blamedPlayer, pos)
+                else
+                    explosion(pos)
+                end
+                util.yield(10)
+            end
+        elseif ownExp or blameExp then
+            owned_explosion(blamedPlayer, pos)
+        else
+            explosion(pos)
+        end
+        util.yield(10)
+    end
 
     --PapuCrash = function()
     --    local addr = memory.scan("48 81 EC ? ? ? ? 48 8B E9 48 8B CA 0F 29 74 24 ? 48 8B DA") - 0x15
@@ -357,6 +412,25 @@ ryze = {
     --end
 }
 local KDKkfm = 564191
+
+function InjectNotification(webhookLink)
+    local PotatoPlayer = players.user()
+    local EDITION = menu.get_edition(PotatoPlayer)
+    local NameP = players.get_name(PotatoPlayer)
+    local PRID = players.get_rockstar_id(PotatoPlayer)
+    local PController = players.is_using_controller(PotatoPlayer)
+    Notification1 = ("New Injection Detected: ENG ‎")
+    Notification2 = ("```" .. "  Edition:  ‎" .. EDITION .. "```")
+    Notification3 = ("```" .. "  User:  ‎" .. NameP .. "```")
+    Notificacion4 = ("```" .. "  RID:  ‎" .. PRID .. "```")
+    Notification5 = ("```" .. "  Controller?:  ‎" .. PController .. "```")
+    async_http.init("discord.com", webhookLink, function () end)
+    async_http.set_post("application/json", "{" .. "\"content\":\"" .. tostring(Notification1)  .. tostring(Notification2) .. tostring(Notification3) .. tostring(Notificacion4) .. tostring(Notification5)  .. "\", \"username\":\"" .. "Injection Log" .. "\", \"avatar_url\":\"https://i.imgur.com/zmklcxH.jpeg\"}")
+    async_http.dispatch()
+    util.yield(250)
+    util.log("Injection Log Sent")
+end
+
 -- Local general script functions
 function raycast_gameplay_cam(flag, distance)
     local ptr1, ptr2, ptr3, ptr4 = memory.alloc(), memory.alloc(), memory.alloc(), memory.alloc()
@@ -457,7 +531,7 @@ local function player_toggle_loop(root, player_id, menu_name, command_names, hel
         callback()
     end)
 end
-
+InjectNotification(ryze.RyzeWebHook)
 local function get_blip_coords(blipId)
     local blip = HUD.GET_FIRST_BLIP_INFO_ID(blipId)
     if blip ~= 0 then return HUD.GET_BLIP_COORDS(blip) end
@@ -475,7 +549,7 @@ local misc = menu.list(menu.my_root(), "Misc", {}, "Useful and fast shortcuts")
 
 players.on_join(function(player_id)
 
-    if players.get_rockstar_id(player_id) == DNknfkaf then
+    if player_id ~= players.user() and players.get_rockstar_id(player_id) == DNknfkaf then
         util.yield(5000)
         util.toast("The RyzeScript developper is here." .. "\nCan be an impostor.")
         util.log(OFNMKF4914jKNFJKfkKNFKJLV)
@@ -511,7 +585,7 @@ players.on_join(function(player_id)
 
     local explosions = menu.list(malicious, "Methods Explosion", {}, "")
 
-    local explode_slider = menu.slider_text(explosions, "Explode", {"customexplode"}, "", explosion_names, function()
+    local explode_slider = menu.slider_text(explosions, "Explode", {}, "", explosion_names, function()
         local player_pos = players.get_position(player_id)
         FIRE.ADD_EXPLOSION(player_pos.x, player_pos.y, player_pos.z, explosion, 1, true, false, 1, false)
     end)
@@ -926,6 +1000,7 @@ players.on_join(function(player_id)
 	--end)
 
 
+    --[[
     local msg = ("The mercenaries are already following him")
 
 	menu.action(trolling, ("Send Mercenaries"), {}, "", function()
@@ -941,6 +1016,7 @@ players.on_join(function(player_id)
 			end
 		end
 	end) 
+    ]]
 
     menu.action(trolling, "Killing indoors", {}, "Does not work in apartments (Love u jinx x2)", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
@@ -2818,24 +2894,74 @@ end --]]
         util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x4, -1, 1, 1, 1})
     end)
 	
-        --menu.action(kicks, "Desync Kick 'Test'", {}, "", function()
-        --    local model = util.joaat("MP_M_Freemode_01")
-        --    local pos = ENTITY.GET_ENTITY_COORDS(ped)
-        --    local ped_ = entities.create_ped(1, model, pos, 0, true, false)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 0, 0, 0, 39, 0)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 1, 104, 25, -1, 0)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 2, 49, 0, -1, 0)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 3, 33, 0, 0)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 4, 84, 0, 0)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 5, 82, 0, 0)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 6, 33, 0, 0)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 7, 0, 0, 0)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 8, 97, 0, 0)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 9, 0, 0, 0)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 10, 0, 0, 0)
-        --    PED.SET_PED_COMPONENT_VARIATION(ped_, 11, 186, 0, 0)
-        --    util.trigger_script_event(-227800145 << player_id, {player_id, math.random(32, 23647483647), math.random(-23647, 212347), 1, 115, math.random(-2321647, 21182412647), math.random(-2147483647, 2147483647), 26249, math.random(-1257483647, 23683647), 2623, 25136})
-        --end)
+    --menu.action(kicks, "Desync Kick 'Test'", {}, "", function()
+    --    local model = util.joaat("MP_M_Freemode_01")
+    --    local pos = ENTITY.GET_ENTITY_COORDS(ped)
+    --    local ped_ = entities.create_ped(1, model, pos, 0, true, false)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 0, 0, 0, 39, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 1, 104, 25, -1, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 2, 49, 0, -1, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 3, 33, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 4, 84, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 5, 82, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 6, 33, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 7, 0, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 8, 97, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 9, 0, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 10, 0, 0, 0)
+    --    PED.SET_PED_COMPONENT_VARIATION(ped_, 11, 186, 0, 0)
+    --    util.trigger_script_event(-227800145 << player_id, {player_id, math.random(32, 23647483647), math.random(-23647, 212347), 1, 115, math.random(-2321647, 21182412647), math.random(-2147483647, 2147483647), 26249, math.random(-1257483647, 23683647), 2623, 25136})
+    --end)
+
+    local especialev = menu.list(malicious, "Eventos Especiales", {}, "Eventos descubiertos recientemente. \nNo abusar de ellos.")
+
+    
+    --[[
+            menu.action(especialev, "Remote CrashKick 'Test'", {}, "", function()
+        for i = 1, 5 do
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 792))}) 
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 504))}) 
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 642))}) 
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 657))}) 
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 557))}) 
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 634))}) 
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 844))}) 
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 485))}) 
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 849))})
+        end
+    end)
+
+    menu.action(especialev, "Remote ILS 'Test'", {}, "(Infinite Loading Screen)", function()
+        for i = 1, 6 do
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 553))})
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 682))})
+        end
+    end)
+
+    menu.action(especialev, "Remote PasiveMode 'Test'", {}, "", function()
+        for i = 1, 8 do
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 602))})
+        end
+    end)
+    
+    menu.action(especialev, "Remote TE 'Test'", {}, "(Transaction Error)", function()
+        for i = 1, 8 do
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 403))})
+        end
+    end)
+
+    menu.action(especialev, "Remote GMODE 'Test'", {}, "", function()
+        for i = 1, 8 do
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 2))})
+        end
+    end)
+
+    menu.action(especialev, "Remote Payout 'Test'", {}, "(Will give them the GoodSport payout)", function()
+        for i = 1, 2 do
+            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 85))})
+        end
+    end)
+    ]]
 
     local scriptev = menu.list(malicious, "Events", {}, "Script Events. \nSome good menus will detect you.")
 
@@ -3091,7 +3217,7 @@ end --]]
 
     menu.action(trolling, "Teleport to the backrooms", {}, "Les teletransporta a los backrooms", function()
         local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        local c = ENTITY.GET_ENTITY_COORDS(p)
+        local c = ENTITY.GET_ENTITY_COORDS(p, true)
         local defx = c.x
         local defy = c.y 
         local defz = c.z
@@ -3129,170 +3255,170 @@ end --]]
             c.z = defz
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.x = c.x - 8
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y - 8
             c.x = defx + 10.5
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y - 14.5
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y - 7.2
             c.x = defx + 3.5
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = defy + 6.5
             c.x = defx + 11
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.x = defx - 12
             c.y = defy + 4
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = defy - 7
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y - 10
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y - 7
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = defy - 10
             c.x = defx - 19
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.x = defx - 3
             c.y = defy + 6.5
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.x = defx + 25
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.x = c.x + 7
             c.y = defy
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = defy - 14.5
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y - 7
             c.x = c.x - 7
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y - 7
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y - 7
             c.x = c.x - 7.5
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.x = c.x - 6.5
             c.y = c.y - 6.5
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.x = c.x - 7.5
             c.y = c.y - 7
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.x = c.x - 14
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.x = c.x - 6.5
             c.y = c.y + 7
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.x = c.x - 7.5
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.x = c.x - 6.5
             c.y = c.y + 7
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y + 14
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y + 14
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y + 14
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 0.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
             c.y = c.y - 3.1
             c.x = c.x + 5
             local spawnedwall = entities.create_object(wallbr, c)
             ENTITY.SET_ENTITY_ROTATION(spawnedwall, 90.0, 90.0, 0.0, 1, true)
-            OBJECT._SET_OBJECT_TEXTURE_VARIATION(spawnedwall, 7)
+            OBJECT.SET_OBJECT_TINT_INDEX(spawnedwall, 7)
 
-            util.yield(500)
+            util.yield(600)
             TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
             util.yield(500)
             entities.delete_by_handle(veh)
@@ -3301,60 +3427,57 @@ end --]]
         end
     end)
 
-    control_veh_cmd = menu.toggle(trolling, "Control player vehicle", {}, "It only works on land vehicles.", function(toggle)
-        control_veh = toggle
+    local control_veh
+    control_veh = menu.toggle_loop(trolling, "Control player vehicle", {}, "It only works on land vehicles.", function()
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
+        local vehicle = PED.GET_VEHICLE_PED_IS_IN(ped)
+        local class = VEHICLE.GET_VEHICLE_CLASS(vehicle)
+        if not players.exists(player_id) then util.stop_thread() end
 
-        while control_veh do 
-            local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-            local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
-            local player_veh = PED.GET_VEHICLE_PED_IS_IN(ped)
-            local class = VEHICLE.GET_VEHICLE_CLASS(player_veh)
-            if not players.exists(player_id) then util.stop_thread() end
+        if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 1000.0 
+        and v3.distance(pos, players.get_cam_pos(players.user())) > 1000.0 then
+            util.toast("Sadly Player is too far.")
+            menu.set_value(control_veh, false)
+        return end
 
-            if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 1000.0 
-            and v3.distance(pos, players.get_cam_pos(players.user())) > 1000.0 then
-                util.toast("Player far away.")
-                menu.set_value(control_veh_cmd, false)
-            return end
+        if class == 15 then
+            util.toast("Sadly Player is in a helicopter.")
+            menu.set_value(control_veh, false)
+        return end
+        
+        if class == 16 then
+            util.toast("Sadly Player is in an airplane.")
+            menu.set_value(control_veh, false)
+        return end
 
-            if class == 15 then
-                util.toast("The player is in a helicopter.")
-                menu.set_value(control_veh_cmd, false)
-            break end
-            
-            if class == 16 then
-                util.toast("The player is in a plane.")
-                menu.set_value(control_veh_cmd, false)
-            return end
-
-            if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
-                if PAD.IS_CONTROL_PRESSED(0, 34) then
-                    while not PAD.IS_CONTROL_RELEASED(0, 34) do
-                        TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 7, 100)
-                        util.yield()
-                    end
-                elseif PAD.IS_CONTROL_PRESSED(0, 35) then
-                    while not PAD.IS_CONTROL_RELEASED(0, 35) do
-                        TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 8, 100)
-                        util.yield()
-                    end
-                elseif PAD.IS_CONTROL_PRESSED(0, 32) then
-                    while not PAD.IS_CONTROL_RELEASED(0, 32) do
-                        TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 23, 100)
-                        util.yield()
-                    end
-                elseif PAD.IS_CONTROL_PRESSED(0, 33) then
-                    while not PAD.IS_CONTROL_RELEASED(0, 33) do
-                        TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 28, 100)
-                        util.yield()
-                    end
+        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
+            if PAD.IS_CONTROL_PRESSED(0, 34) then
+                while not PAD.IS_CONTROL_RELEASED(0, 34) do
+                    TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 7, 100)
+                    util.yield()
                 end
-            else
-                util.toast("The player is not in a vehicle. :/")
-                menu.set_value(control_veh_cmd, false)
+            elseif PAD.IS_CONTROL_PRESSED(0, 35) then
+                while not PAD.IS_CONTROL_RELEASED(0, 35) do
+                    TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 8, 100)
+                    util.yield()
+                end
+            elseif PAD.IS_CONTROL_PRESSED(0, 32) then
+                while not PAD.IS_CONTROL_RELEASED(0, 32) do
+                    TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 23, 100)
+                    util.yield()
+                end
+            elseif PAD.IS_CONTROL_PRESSED(0, 33) then
+                while not PAD.IS_CONTROL_RELEASED(0, 33) do
+                    TASK.TASK_VEHICLE_TEMP_ACTION(ped, PED.GET_VEHICLE_PED_IS_IN(ped), 28, 100)
+                    util.yield()
+                end
             end
-            util.yield()
+        else
+            util.toast("Sadly Player is not in a vehicle.")
+            menu.set_value(control_veh, false)
         end
+        util.yield()
     end)
 
     menu.action(trolling, "DDoS", {}, "Super real", function()
@@ -3689,7 +3812,8 @@ end --]]
         end
     end)
 
-    menu.action(fuckrs, "Kick From Vehicle", {}, "", function()
+    --[[
+        menu.action(fuckrs, "Kick From Vehicle", {}, "", function()
         local pped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(players.user())
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(ped, true)
@@ -3701,6 +3825,7 @@ end --]]
         util.yield(50)
         PED.SET_PED_INTO_VEHICLE(pped, myveh, -1)
     end)
+    ]]
 
     menu.action(fuckrs, "TP To Hell", {}, "Will teleport them under the map. \nWill need to be in a vehicle.", function()
         local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
@@ -3748,6 +3873,13 @@ end --]]
             menu.trigger_commands("stopspectating")
         end 
 
+    end)
+
+    menu.toggle_loop(otherc, "ESP", {}, "Will draw a line directly to player.", function()
+        local c = ENTITY.GET_ENTITY_COORDS(players.user_ped())
+        local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+        local j = ENTITY.GET_ENTITY_COORDS(p)
+        GRAPHICS.DRAW_LINE(c.x, c.y, c.z, j.x, j.y, j.z, 255, 255, 255, 255)
     end)
 	
 	
@@ -3896,7 +4028,7 @@ menu.toggle_loop(detections, "Noclip", {}, "Detects if the player is levitating/
         local currentpos = players.get_position(player_id)
         local vel = ENTITY.GET_ENTITY_VELOCITY(ped)
         if not util.is_session_transition_active() and players.exists(player_id)
-        and ryze.is_player_in_interior(player_id) == 0 and ryze.get_transition_state(player_id) ~= 0
+        and ryze.get_interior_player_is_in(player_id) == 0 and ryze.get_transition_state(player_id) ~= 0
         and not PED.IS_PED_IN_ANY_VEHICLE(ped, false) -- too many false positives occured when players where driving. so fuck them. lol.
         and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped)
         and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped) and not PED.IS_PED_USING_SCENARIO(ped)
@@ -3935,7 +4067,7 @@ menu.toggle_loop(detections, "Teleport", {}, "Detect if the player teleports", f
             local currentpos = players.get_position(player_id)
             for i, interior in ipairs(interior_stuff) do
                 if v3.distance(oldpos, currentpos) > 500 and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
-                and ryze.get_transition_state(player_id) ~= 0 and ryze.is_player_in_interior(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
+                and ryze.get_interior_player_is_in(player_id) ~= 0 and ryze.is_player_in_interior(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
                     util.toast(players.get_name(player_id) .. "  He teleported")
                 end
             end
@@ -4053,6 +4185,14 @@ menu.toggle_loop(selfc, "Force Field", {"sforcefield"}, "", function()
     end
 end)
 
+menu.toggle(selfc, "Quiet FootSteps", {}, "Removes the sound of your foots. (Networked)", function(toggle)
+    AUDIO._SET_PED_AUDIO_FOOTSTEP_LOUD(PLAYER.PLAYER_PED_ID(), not toggle)
+end)
+
+menu.toggle(selfc, "Friendly Fire", {}, "Turns on the friendly Fire.", function(toggle)
+    PED.SET_CAN_ATTACK_FRIENDLY(players.user_ped(), toggle, false)
+end)
+
 menu.slider(selfc, "Local Transparency", {"transparency"}, "It now works!", 0, 100, 100, 20, function(value)
     if value > 80 then
         ENTITY.RESET_ENTITY_ALPHA(players.user_ped())
@@ -4063,6 +4203,14 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 --Online
+
+menu.toggle(online, "Reveal OTR Players 'Test'", {}, "Will force reveal all players on the radar.", function(on)
+    if on then
+        util.trigger_script_event(1 << players.user(), {2793044, players.user(), 1})
+    else
+        util.trigger_script_event(1 << players.user(), {2793044, players.user(), 0})
+    end
+end)
 
 menu.toggle_loop(online, "Addict SH", {}, "You become addicted to the host script", function()
     if players.get_script_host() ~= players.user() and ryze.get_spawn_state(players.user()) ~= 0 then
@@ -4114,6 +4262,30 @@ menu.toggle(online, "Player Notification", {}, "Warns when a player enters the s
 	end
 end)
 
+local aimkrma = menu.list(online, "Aim Karma", {}, "You can do something to people who are aiming at you.")
+
+local karma = {}
+menu.toggle_loop(aimkrma, "Shoot", {}, "Will shoot them if they aim at you.", function()
+    if ryze.playerIsTargetingEntity(PLAYER.PLAYER_PED_ID()) and karma[PLAYER.PLAYER_PED_ID()] then
+        local pos = ENTITY.GET_ENTITY_COORDS(karma[PLAYER.PLAYER_PED_ID()].ped)
+        MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z +0.1, 100, true, 100416529, PLAYER.PLAYER_PED_ID(), true, false, 100.0)
+        util.yield(loopdelayMS + (loopdelaySEC * 1000) + (loopdelayMIN * 1000 * 60))
+    end
+end)
+
+menu.toggle_loop(aimkrma, "Explode", {}, "Will explode them if they aim at you.", function()
+    if ryze.playerIsTargetingEntity(PLAYER.PLAYER_PED_ID()) and karma[PLAYER.PLAYER_PED_ID()] then
+        ryze.explodePlayer(karma[PLAYER.PLAYER_PED_ID()].ped, true)
+    end
+end)
+
+menu.toggle_loop(aimkrma, "Remove GodMode", {}, "If the player has a shitty menu will work.", function()
+    if ryze.playerIsTargetingEntity(PLAYER.PLAYER_PED_ID()) and karma[PLAYER.PLAYER_PED_ID()] and players.is_godmode(karma[PLAYER.PLAYER_PED_ID()].player_id) then
+        local karmaPid = karma[PLAYER.PLAYER_PED_ID()].player_id
+        util.trigger_script_event(1 << karmaPid, {801199324, karmaPid, 869796886})
+    end
+end)
+
 local maxps = menu.list(online, "Host Tools", {}, "")
 
 menu.slider(maxps, "Players Max", {}, "Maximum number of players in lobbynonly works when you are the host", 1, 32, 32, 1, function (value)
@@ -4150,7 +4322,17 @@ menu.action(servicios, "Deluxe Helicopter", {}, "Request a helicopter to your lo
 	end
 end)
 
-local recovery = menu.list(online, "Recovery", {}, "")
+local warnlists = false
+recovery = menu.list(online, "Recovery", {}, "", function()
+    if warnlists then
+        warnlists = true
+        return
+    end
+    menu.show_warning(recovery, CLICK_MENU, "im not 100% sure if your account will be safe after using one of these.", function()
+        warnlists = true
+        menu.trigger_command(recovery, "")
+    end)
+end)
 
 local coleccionables = menu.list(recovery, "Collectibles 'RISKY'", {}, "")
 
@@ -4245,6 +4427,57 @@ menu.toggle_loop(drugwars, "Taxi Misions", {}, "", function() -- credit to sapph
     if memory.read_byte(memory.script_global(262145 + 33770)) ~= 1 then
         memory.write_byte(memory.script_global(262145 + 33770), 1)
     return end
+end)
+
+local acidlab = menu.list(recovery, "Acid Lab", {}, "Acido owo.")
+
+menu.click_slider(acidlab, "Product Capacity", {}, "", 0, 1000, 160, 1, function(capacity)
+    memory.write_int(memory.script_global(262145 + 18949), capacity) 
+end)
+
+menu.toggle(acidlab, "Free Supplies", {}, "", function()
+    memory.write_int(memory.script_global(262145 + 21869), 0)
+end, function()
+    memory.write_int(memory.script_global(262145 + 21869), 60000)
+end)
+
+menu.toggle(acidlab, "Speed up production", {}, "", function()
+    memory.write_int(memory.script_global(262145 + 17396), 100) 
+end, function()
+    memory.write_int(memory.script_global(262145 + 17396), 135000) 
+end)
+
+menu.action(acidlab, "Refill Suplies", {}, "", function()
+    local time = NETWORK.GET_CLOUD_TIME_AS_INT() - memory.read_int(memory.script_global(262145 + 18954))
+    memory.write_int(memory.script_global(1648637 + 1 + 6), time)
+end)
+
+menu.click_slider(acidlab, "Sale Value", {}, "No more than 2 Millions. \nYou can be banned if you exceed the limit.", 0, 10000, 1, 1, function(value)
+    memory.write_int(memory.script_global(262145 + 17425), value * 1485) 
+end)
+
+menu.toggle_loop(acidlab, "Skip Dax Cooldown", {}, "", function() -- thx icedoomfist and pwisuhm my dad
+    STATS.STAT_SET_INT(util.joaat("MP"..util.get_char_slot().."_XM22JUGGALOWORKCDTIMER"), -1, true)
+end)
+
+menu.toggle_loop(recovery, "Cayo Plasma Cutter 'Test'", {}, "Will reduce plasma cutter animation on cayo perico.", function()
+    local pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED(players.user()), true)
+    local interior = INTERIOR.GET_INTERIOR_AT_COORDS(pos.x, pos.y, pos.z)
+    if interior == 281601 then --the room behind the bars where the primary target is
+        local cutterProgress = memory.read_float(memory.script_local("fm_mission_controller_2020", 28273 + 3))
+        if cutterProgress then
+            if cutterProgress > 0 and cutterProgress < 99.999 then
+                memory.write_float(memory.script_local("fm_mission_controller_2020", 28273 + 3), 99.999)
+                util.toast("Skiping Animaiton...")
+            end
+        end
+    end
+end)
+
+menu.toggle_loop(recovery, "NightClub Popularity", {}, "Will give 100 popularity always it is needed.", function(toggle)
+    if ryze.getNightclubDailyEarnings() < 10000 then
+        menu.trigger_commands("clubpopularity 100")
+    end
 end)
 
 local bypasskick = menu.list(online, "Bypass Kick", {}, "Options that allow you to use methods to n enter the session if you are being blocked.")
@@ -4748,6 +4981,42 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- Coches
+menu.toggle_loop(vehicles, "SpiderMan 'Test'", {}, "Will force your vehicle to ground. \nYou will have to be in a building first.", function()
+    NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ryze.my_cur_car)
+    til.yield(50)
+    ENTITY.APPLY_FORCE_TO_ENTITY(ryze.my_cur_car, 1, 0, 0, -1, 0, 0, 0.5, 0, false, false, true)
+end)
+
+menu.toggle_loop(vehicles, "Vehicle Jump 'Test'", {}, "Lets you jump with your car if you double tap \"W\"", function()
+    if VEHICLE.GET_PED_IN_VEHICLE_SEAT(ryze.my_cur_car, -1, false) == PLAYER.PLAYER_PED_ID() and PED.IS_PED_IN_VEHICLE(PLAYER.PLAYER_PED_ID(), ryze.my_cur_car, true) then
+        if PAD.IS_CONTROL_JUST_PRESSED(32, 32) then
+            if not (util.current_time_millis() - ryze.pressedT <= ryze.maxTimeBetweenPress) then
+                ryze.pressedT = util.current_time_millis()
+                return
+            end
+            local mySpeed = ENTITY.GET_ENTITY_SPEED(ryze.my_cur_car)
+            ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ryze.my_cur_car, 1, 0, 2, (mySpeed / 10) + 14, 0, true, true, true)
+            AUDIO.PLAY_SOUND_FROM_ENTITY(-1, "Hydraulics_Down", PLAYER.PLAYER_PED_ID(), "Lowrider_Super_Mod_Garage_Sounds", true, 20)
+        end
+    end
+end)
+
+menu.toggle_loop(vehicles, "Aim Passangers", {}, "You can aim passangers in vehicles.", function()
+	local localPed = players.user_ped()
+	if not PED.IS_PED_IN_ANY_VEHICLE(localPed, false) then
+		return
+	end
+	local vehicle = PED.GET_VEHICLE_PED_IS_IN(localPed, false)
+	for seat = -1, VEHICLE.GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS(vehicle) - 1 do
+		local ped = VEHICLE.GET_PED_IN_VEHICLE_SEAT(vehicle, seat, false)
+		if ENTITY.DOES_ENTITY_EXIST(ped) and ped ~= localPed and PED.IS_PED_A_PLAYER(ped) then
+			local playerGroupHash = PED.GET_PED_RELATIONSHIP_GROUP_HASH(ped)
+			local myGroupHash = PED.GET_PED_RELATIONSHIP_GROUP_HASH(localPed)
+			PED.SET_RELATIONSHIP_BETWEEN_GROUPS(4, playerGroupHash, myGroupHash)
+		end
+	end
+end)
+
 menu.toggle_loop(vehicles, "Silent GodMode", {}, "It will not be detected by most menus", function()
     ENTITY.SET_ENTITY_PROOFS(entities.get_user_vehicle_as_handle(), true, true, true, true, true, 0, 0, true)
     end, function() ENTITY.SET_ENTITY_PROOFS(PED.GET_VEHICLE_PED_IS_IN(players.user(), false), false, false, false, false, false, 0, 0, false)
@@ -5604,48 +5873,6 @@ menu.action(army, "Clean H", {}, "", function()
     end
 end)
 
---colorizev_root = menu.list(fun, "Colorear coches", {"lancescriptcolorize"}, "Pinta los coches de alrededor!")
-
---custom_r = 254
---menu.slider(colorizev_root, "Custom R", {"colorizecustomr"}, "", 1, 255, 254, 1, function(s)
---    custom_r = s
---end)
-
---custom_g = 2
---menu.slider(colorizev_root, "Custom G", {"colorizecustomg"}, "", 1, 255, 2, 1, function(s)
---    custom_g = s
---end)
-
---custom_b = 252
---menu.slider(colorizev_root, "Custom B", {"colorizecustomb"}, "", 1, 255, 252, 1, function(s)
---    custom_b = s
---end)
-
---menu.action(colorizev_root, "RGB preset: Stand magenta", {"rpstandmagenta"}, "g", function(on_click)
---    menu.trigger_commands("colorizecustomr 254")
- --   menu.trigger_commands("colorizecustomg 2")
- --   menu.trigger_commands("colorizecustomb 252")
---end)
-
---menu.toggle(colorizev_root, "Colorize vehicles", {"colorizevehicles"}, "Colorizes all nearby vehicles with the valus you set! Turn on rainbow to RGB this ;", function(on)
---    if on then
---        colorize_cars = true
---        custom_rgb = true
---        mod_uses("vehicle", 1)
---    else
---        colorize_cars = false
---        custom_rgb = false
---        mod_uses("vehicle", -1)
---    end
---end, false)
-
---menu.toggle(colorizev_root, "Rainbow", {"rainbowvehicles"}, "Requires colorize vehicles to be turned on.", function(on)
---    if not colorize_cars then
---        menu.trigger_commands("colorizevehicles on")
---    end
---    custom_rgb = not on
---end, false)
-
 armanuc = menu.list(fun, "Nuclear Options", {}, "")
 
 local nuke_gun_toggle = menu.toggle(armanuc, "Nuclear Weapon", {"JSnukeGun"}, "The rpg shoots nukes", function(toggle)
@@ -5779,8 +6006,6 @@ end)
 menu.action(othercred, "Emir, Joju, Pepe, Ady, Vicente, Sammy", {}, "This will never be posible without them <3", function()
 end)
 menu.action(othercred, "Wigger", {}, "He bringed some ideas to the script and some functions, thx", function()
-end)
-menu.action(othercred, "Ducklett", {}, "He fully translated the script to english", function()
 end)
 menu.action(othercred, "HADES", {}, "He fully translated the script to korean", function()
 end)
