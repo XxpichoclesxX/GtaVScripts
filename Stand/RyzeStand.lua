@@ -11,7 +11,7 @@ util.require_natives(1672190175)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.1
+local localVer = 2.11
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -4018,7 +4018,7 @@ menu.toggle_loop(selfc, "Campo De Fuerza", {"sforcefield"}, "", function()
 end)
 
 menu.toggle(selfc, "Pasos Silenciosos", {}, "Quita el sonido de tus pasos. (Networked)", function(toggle)
-    AUDIO._SET_PED_AUDIO_FOOTSTEP_LOUD(PLAYER.PLAYER_PED_ID(), not toggle)
+    AUDIO.SET_PED_FOOTSTEPS_EVENTS_ENABLED(PLAYER.PLAYER_PED_ID(), not toggle)
 end)
 
 menu.toggle(selfc, "Fuego Amigo", {}, "Habilita el fuego amigo.", function(toggle)
