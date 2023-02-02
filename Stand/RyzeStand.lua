@@ -11,7 +11,7 @@ util.require_natives(1672190175)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.11
+local localVer = 2.12
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -61,6 +61,7 @@ local spawned_objects = {}
 local ladder_objects = {}
 local remove_projectiles = false
 local PapuCrash = false
+local karma = {}
 
 local wallbr = util.joaat("bkr_prop_biker_bblock_mdm3")
 local floorbr = util.joaat("bkr_prop_biker_landing_zone_01")
@@ -328,7 +329,7 @@ ryze = {
     pressedT = util.current_time_millis(),
 
     getNightclubDailyEarnings = function()
-        local popularity = math.floor(STAT_GET_INT("CLUB_POPULARITY") / 10)
+        local popularity = math.floor(STATS.STAT_GET_INT("CLUB_POPULARITY") / 10)
         if popularity > 90 then return 10000
         elseif popularity > 85 then return 9000
         elseif popularity > 80 then return 8000
@@ -349,6 +350,20 @@ ryze = {
         elseif popularity > 5 then return 250
         else return 100
         end
+    end,
+
+    isWhitelisted = function(playerPid)
+        if whitelistedPlayerName then
+            if players.get_name(playerPid) == whitelistedPlayerName then return true end
+        end
+        local whitelist = players.list(not whitelistSelf, not whitelistFriends, not whitelistStrangers)
+        for i = 1, #whitelist do
+            if playerPid == whitelist[i] then return true end
+        end
+        for k, v in pairs(whitelistListTable) do 
+            if playerPid == v then return true end
+        end
+        return false
     end,
 
     playerIsTargetingEntity = function(playerPed)
@@ -1871,238 +1886,6 @@ players.on_join(function(player_id)
         --menu.trigger_commands("anticrashcam")
     end)
 
-    local scrcrash = menu.list(twotake, "Script Crashes", {}, "")
-
-    local secrcrash = menu.list(twotake, "SE Crashes", {}, "")
-
-    menu.action(secrcrash, "SE Crash (S0)", {"crashv54"}, "Crash SE.", function(on_toggle)
-        local int_min = -2147483647
-        local int_max = 2147483647
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-        end
-        menu.trigger_commands("givesh" .. players.get_name(player_id))
-        util.yield()
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-        end
-    end)
-
-    menu.action(secrcrash, "SE Crash (S1)", {"crashv97"}, "Crash SE.", function(on_toggle)
-        local int_min = -2147483647
-        local int_max = 2147483647
-            for i = 1, 15 do
-                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, math.random(int_min, int_max), math.random(int_min, int_max), 
-                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-            end
-            menu.trigger_commands("givesh" .. players.get_name(player_id))
-            util.yield()
-            for i = 1, 15 do
-                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, player_id, math.random(int_min, int_max)})
-                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-            end
-    end)
-
-    menu.action(secrcrash, "SE Crash (S3)", {"crashv84"}, "Crash SE.", function(on_toggle)
-        local int_min = -2147483647
-        local int_max = 2147483647
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0})
-            end
-            menu.trigger_commands("givesh" .. players.get_name(player_id))
-            util.yield()
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0})
-            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0})
-            end
-    end)
-
-    menu.action(secrcrash, "SE Crash (S4)", {"crashv51"}, "Crash SE.", function(on_toggle)
-        local int_min = -2147483647
-        local int_max = 2147483647
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1})
-            end
-            menu.trigger_commands("givesh" .. players.get_name(player_id))
-            util.yield()
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1})
-            end
-        end)
-
-    menu.action(secrcrash, "SE Crash (S7)", {"crashv91"}, "Crash SE.", function(on_toggle)
-        local int_min = -2147483647
-        local int_max = 2147483647
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
-            end
-            menu.trigger_commands("givesh" .. players.get_name(player_id))
-            util.yield()
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
-            end
-    end)
-
-    menu.action(scrcrash, "Script Crash V1", {"crashv61"}, "", function()
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {697566862, player_id, 0, i, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {697566862, player_id, 1, i, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {697566862, player_id, 2, i, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {697566862, player_id, 10, i, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {697566862, player_id, 2, i, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {697566862, player_id, 6, i, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {697566862, player_id, 4, i, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {697566862, player_id, 9, i, 1, 1, 1})
-        end
-    
-    end)
-
-    menu.action(scrcrash, "Script Crash V2", {"crashv7"}, "", function()
-        for i = 1, 200 do
-            util.trigger_script_event(1 << player_id, {548471420, 16, 804923209, -303901118, 577104152, 653299499, -1218005427, -1010050857, 1831797592, 1508078618, 9, -700037855, -1565442250, 932677838})
-        end
-    end)
-
-    menu.action(scrcrash, "Script Crash V3", {"crashv8"}, "", function()
-        local int_min = -2147483647
-        local int_max = 2147483647
-            for i = 1, 15 do
-                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, math.random(int_min, int_max), math.random(int_min, int_max), 
-                math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-                math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-            end
-            menu.trigger_commands("givesh" .. players.get_name(player_id))
-            util.yield()
-            for i = 1, 15 do
-                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, player_id, math.random(int_min, int_max)})
-                util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-            end
-            util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-    end)
-
-    menu.action(scrcrash, "Script Crash V4", {"crashv9"}, "", function()
-        local int_min = -2147483647
-        local int_max = 2147483647
-        for i = 1, 20 do
-            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-        end
-        for i = 1, 20 do
-            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-        end
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-        end
-        util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-        end
-        menu.trigger_commands("givesh" .. players.get_name(player_id))
-        util.yield(200)
-        for i = 1, 200 do
-            util.trigger_script_event(1 << player_id, {548471420, 16, 804923209, -303901118, 577104152, 653299499, -1218005427, -1010050857, 1831797592, 1508078618, 9, -700037855, -1565442250, 932677838})
-        end
-    end)
-
-    menu.action(scrcrash, "Script Crash V5", {"crashv29"}, "Duele.", function(on_toggle)
-        local int_min = -2147483647
-        local int_max = 2147483647
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
-        end
-        util.yield()
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-        end
-        menu.trigger_commands("givesh" .. players.get_name(player_id))
-        util.yield(100)
-        util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-        util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-        util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-        util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-        util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
-    end)
-
-    menu.action(scrcrash, "Script Crash Poderoso", {}, "Duele :/.", function(on_toggle)
-        local int_min = -2147483647
-        local int_max = 2147483647
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, player_id, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-        end
-        util.yield(5)
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-        end
-        util.yield(5)
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {879177392, 3, 7264839016258354765, 10597, 73295, 3274114858851387039, 4862623901289893625, 54483})
-            util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
-            util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {-1990614866, 0, 0})
-            util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-        end
-        util.yield(5)
-        for i = 1, 20 do
-            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-            util.trigger_script_event(1 << player_id, {697566862, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-        end
-        util.yield(5)
-        menu.trigger_commands("explode" .. players.get_name(player_id))
-        util.yield(100)
-        menu.trigger_commands("givesh" .. players.get_name(player_id))
-        util.trigger_script_event(1 << player_id, {548471420, 3, 804923209, 1128590390, 136699892, -168325547, -814593329, 1630974017, 1101362956, 1510529262, 2, 1875285955, 633832161, -1097780228})
-        util.trigger_script_event(1 << player_id, {697566862, 3, 10, 9, 1, 1, 1})
-        util.trigger_script_event(1 << player_id, {-1990614866, 0, 0})
-        util.trigger_script_event(1 << player_id, {-904555865, 0, 2291045226935366863, 3941791475669737503, 4412177719075258724, 1343321191, 3457004567006375106, 7887301962187726958, -890968357, 415984063236915669, 1084786880, -452708595, 3922984074620229282, 1929770021948630845, 1437514114, 4913381462110453197, 2254569481770203512, 483555136, 743446330622376960, 2252773221044983930, 513716686466719435, 9003636501510659402, 627697547355134532, 1535056389, 436406710, 4096191743719688606, 4258288501459434149})
-    end)
-
     -- This is a Prisuhm crash fixed by me <3
 
     local krustykrab = menu.list(twotake, "Don Crangrejo", {}, "Es riesgoso spectear, cuidado: funciona en usuarios de 2T1")
@@ -2492,23 +2275,6 @@ players.on_join(function(player_id)
             util.yield(500)
             menu.trigger_commands("crashv5"..players.get_name(player_id))
             util.yield(500)
-            menu.trigger_commands("crashv6"..players.get_name(player_id))
-            util.yield(500)
-            menu.trigger_commands("crashv7"..players.get_name(player_id))
-            util.yield(500)
-            menu.trigger_commands("crashv8"..players.get_name(player_id))
-            util.yield(500)
-            menu.trigger_commands("crashv9"..players.get_name(player_id))
-            util.yield(500)
-            menu.trigger_commands("crashv29"..players.get_name(player_id))
-            util.yield(500)
-            menu.trigger_commands("crashv91"..players.get_name(player_id))
-            util.yield(500)
-            menu.trigger_commands("crashv97"..players.get_name(player_id))
-            util.yield(500)
-            menu.trigger_commands("crashv84"..players.get_name(player_id))
-            util.yield(700)
-            menu.trigger_commands("crashv51"..players.get_name(player_id))
             --util.yield(400)
             --menu.trigger_commands("crashv5"..players.get_name(player_id))
             --util.yield(400)
@@ -2614,90 +2380,6 @@ players.on_join(function(player_id)
     
     
     --end)
-
-    local kicks = menu.list(malicious, "Kicks", {}, "")
-
-    if menu.get_edition() >= 2 then 
-        menu.action(kicks, "Kickeo Adaptivo", {}, "", function()
-            util.trigger_script_event(1 << player_id, {915462795, player_id, 1, 0, 2, player_id, 2700359414448})
-            util.trigger_script_event(1 << player_id, {1268038438, player_id, -1018058175, player_id, -1125813865, player_id, -1113136291, player_id, -2123789977})
-            util.trigger_script_event(1 << player_id, {243072129, player_id, 1, 0, 2, math.random(13, 257), 3, 1})
-            menu.trigger_commands("breakup" .. players.get_name(player_id))
-        end)
-    else
-        menu.action(kicks, "Kickeo adaptivo V2", {}, "", function()
-            util.trigger_script_event(1 << player_id, {915462795, player_id, 1, 0, 2, player_id, 2700359414448})
-            util.trigger_script_event(1 << player_id, {1268038438, player_id, -1018058175, player_id, -1125813865, player_id, -1113136291, player_id, -2123789977})
-            util.trigger_script_event(1 << player_id, {243072129, player_id, 1, 0, 2, math.random(13, 257), 3, 1})
-        end)
-    end
-
-    menu.action(kicks, "Kickeo Poderoso", {}, "", function()
-        util.trigger_script_event(1 << player_id, {697566862, player_id, 0x4, -1, 1, 1, 1}) --697566862 Give Collectible
-        util.trigger_script_event(1 << player_id, {1268038438, player_id, memory.script_global(2657589 + 1 + (player_id * 466) + 321 + 8)}) 
-        util.trigger_script_event(1 << player_id, {915462795, players.user(), memory.read_int(memory.script_global(0x1CE15F + 1 + (player_id * 0x257) + 0x1FE))})
-        util.trigger_script_event(1 << player_id, {697566862, player_id, 0x4, -1, 1, 1, 1})
-        util.trigger_script_event(1 << player_id, {1268038438, player_id, memory.script_global(2657589 + 1 + (player_id * 466) + 321 + 8)})
-        util.trigger_script_event(1 << player_id, {915462795, players.user(), memory.read_int(memory.script_global(1894573 + 1 + (player_id * 608) + 510))})
-    end)
-
-    local sekicks = menu.list(kicks, "Kickeos Por Scripts", {}, "")
-
-    menu.action(sekicks, "Script kick v1", {}, "Inbloqueable por stand.", function()
-        util.trigger_script_event(1 << player_id, {243072129, player_id, 1, 0, 2, math.random(13, 257), 3, 1})
-    end)
-
-    menu.action(sekicks, "Script kick v2", {}, "", function()
-        util.trigger_script_event(1 << player_id, {1268038438, player_id, -1018058175, player_id, -1125813865, player_id, -1113136291, player_id, -2123789977})
-    end)
-
-    menu.action(sekicks, "Script kick v3", {}, "", function()
-        util.trigger_script_event(1 << player_id, {915462795, player_id, 1, 0, 2, player_id, 2700359414448})
-    end)
-
-    menu.action(sekicks, "Script kick v4", {}, "", function()
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
-        end
-        util.yield(50)
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
-        end
-    end)
-
-    menu.action(sekicks, "Script kick v5", {}, "", function()
-        local int_min = -2147483647
-        local int_max = 2147483647
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
-        end
-        util.yield(50)
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
-        end
-    end)
-
-    menu.action(kicks, "Desync Kick 'Test'", {}, "", function() 
-        util.trigger_script_event(1 << player_id, {0x63D4BFB1, players.user(), memory.read_int(memory.script_global(0x1CE15F + 1 + (player_id * 0x257) + 0x1FE))})
-    end)
-
-    menu.action(kicks, "Kickeo Modo Historia 'Test'", {}, "", function() 
-        util.trigger_script_event(1 << player_id, {111242367, player_id, memory.script_global(2689235 + 1 + (player_id * 453) + 318 + 7)})
-    end)
-
-    menu.action(kicks, "Kickeo Figura Invalida", {}, "", function() 
-        util.trigger_script_event(1 << player_id, {0xB9BA4D30, player_id, 0x4, -1, 1, 1, 1})
-    end)
 
     --menu.action(kicks, "Desync Kick", {}, "", function()
     --   local model = util.joaat("MP_M_Freemode_01")
@@ -3573,37 +3255,6 @@ players.on_join(function(player_id)
 
     local sevents = menu.list(otherc, "Eventos", {}, "Eventos creados por scripts.")
 
-    local tps = menu.list(sevents, "Tp's", {}, "Eventos de tp a jugadores.") 
-
-    menu.action(tps, "Cayo Perico", {}, "Intentara varios metodos a enviar a cayo. \nSi no tiene menu muy bueno funcionara. \nHay posibilidad que funcione con Stand.", function()
-        menu.trigger_commands("scripthost")
-        for i = 1, 200 do
-            util.trigger_script_event(1 << player_id, {-910497748, player_id, 1, 0})
-        end
-    end)
-
-    menu.action(tps, "Cayo Perico SC", {}, "Intentara varios metodos de enviar a cayo. \nSin cinematica.", function()
-        menu.trigger_commands("scripthost")
-        for i = 1, 200 do
-            util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 4, 1})
-        end
-    end)
-
-    menu.action(tps, "Kickeado de cayo perico", {}, "Bloqueado por la mayoria de menus.", function()
-        menu.trigger_commands("scripthost")
-        util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 4, 0})
-    end)
-
-    menu.action(tps, "Golpe Pasado", {}, "Bloqueado por la mayoria de menus.", function()
-        menu.trigger_commands("scripthost")
-        util.trigger_script_event(1 << player_id, {-168599209, players.user(), player_id, -1, 1, 1, 0, 1, 0}) 
-    end) 
-
-    menu.action(tps, "Trapo Al Jugador", {}, "", function()
-        menu.trigger_commands("scripthost")
-        util.trigger_script_event(1 << player_id, {2009283752247, player_id, 2005749727232, 1, 258, 1, 1, player_id, 2701534429183, 18, 0})
-    end)
-
     local fuckrs = menu.list(sevents, "Rompedores", {}, "Eventos que les jodera.")
 
     menu.action(fuckrs, "Error De Transaccion", {}, "Es inconcistente pero funciona.", function()
@@ -4111,7 +3762,6 @@ end)
 
 local aimkrma = menu.list(online, "Aim Karma", {}, "Les puedes hacer algo a las personas que te apunten.")
 
-local karma = {}
 menu.toggle_loop(aimkrma, "Disparar", {}, "Le dispara al jugadore que te apunta.", function()
     if ryze.playerIsTargetingEntity(PLAYER.PLAYER_PED_ID()) and karma[PLAYER.PLAYER_PED_ID()] then
         local pos = ENTITY.GET_ENTITY_COORDS(karma[PLAYER.PLAYER_PED_ID()].ped)
@@ -4191,7 +3841,8 @@ recovery = menu.list(online, "Recovery", {}, "", function()
     end)
 end)
 
-local coleccionables = menu.list(recovery, "Coleccionables 'RISKY'", {}, "")
+--[[
+    local coleccionables = menu.list(recovery, "Coleccionables 'RISKY'", {}, "")
 
 menu.click_slider(coleccionables, "Cintas", {""}, "", 0, 9, 0, 1, function(i)
     util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0x0, i, 1, 1, 1})
@@ -4236,6 +3887,7 @@ end)
 menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 1, function(i)
     util.trigger_script_event(1 << players.user(), {697566862, players.user(), 0xA, i, 1, 1, 1})
 end)
+]]
 
 local drugwars = menu.list(recovery, "Drug Wars", {}, "Contenido de DrugWars.")
 
@@ -4271,30 +3923,6 @@ menu.action(drugwars, "Desbloquear Misiones", {}, "Te desbloqueara todo. \nInclu
     for i = 33910, 34794, 1 do
         memory.write_byte(memory.script_global(262145 + i), 1)  
     end
-end)
-
-
---menu.action(drugwars, "Desbloquear van.", {}, "Te desbloqueara la van de armas.", function()
---    local player = PLAYER.PLAYER_PED_ID()
---    menu.trigger_commands("scripthost")
---    util.yield(50)
---    for i = 0, 29 do
---        memory.write_byte(memory.script_global(262145 + 33800 + 1 + i), 1)
---    end
---    memory.write_byte(memory.script_global(262145 + 33799), 1)
---end)
-
-menu.action(drugwars, "Llamar al ladron 'Test'", {}, "Llamara al ladron que te da regalos.", function()
-    local player = PLAYER.PLAYER_PED_ID()
-    menu.trigger_commands("scripthost")
-    memory.write_byte(memory.script_global(2756261 + 171), 1)
-    memory.write_byte(memory.script_global(2756259 + 6), 1)
-end)
-
-menu.toggle_loop(drugwars, "Misiones Del Taxi", {}, "", function() -- credit to sapphire for all of this <3 / Also Prisuhm, this is hes code.
-    if memory.read_byte(memory.script_global(262145 + 33770)) ~= 1 then
-        memory.write_byte(memory.script_global(262145 + 33770), 1)
-    return end
 end)
 
 local acidlab = menu.list(recovery, "Acid Lab", {}, "Acido owo.")

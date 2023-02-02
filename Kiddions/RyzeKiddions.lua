@@ -5,7 +5,7 @@
     With love Picho <3
 ]]
 
-require_game_build(2802) -- (v2802)
+require_game_build(2824) -- (V1.66)
 
 local function GetUndeadOffradar()
 	if localplayer == nil then
