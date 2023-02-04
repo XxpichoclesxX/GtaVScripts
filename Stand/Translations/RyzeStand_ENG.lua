@@ -11,7 +11,7 @@ util.require_natives(1672190175)
 util.toast("Welcome " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 2.12
+local localVer = 2.15
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -69,10 +69,6 @@ local invites = {"Yacht", "Office", "Clubhouse", "Office Garage", "Custom Auto S
 local style_names = {"Normal", "Semi-Rushed", "Reverse", "Ignore Lights", "Avoid Traffic", "Avoid Traffic Extremely", "Sometimes Overtake Traffic"}
 local drivingStyles = {786603, 1074528293, 8388614, 1076, 2883621, 786468, 262144, 786469, 512, 5, 6}
 local interior_stuff = {0, 233985, 169473, 169729, 169985, 170241, 177665, 177409, 185089, 184833, 184577, 163585, 167425, 167169}
-
-local int_min = -2147483647
-local int_max = 2147483647
-
 
 -- Memory Functions
 
@@ -919,37 +915,37 @@ players.on_join(function(player_id)
 
     local inf_loading = menu.list(trolling, "Infinite loading screen", {}, "")
     menu.action(inf_loading, "Teleport a MC", {}, "", function()
-        util.trigger_script_event(1 << player_id, {879177392, player_id, 0, 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})    
+        util.trigger_script_event(1 << player_id, {891653640, player_id, 0, 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})    
     end)
 
     menu.action(inf_loading, "Method Apartament", {}, "", function()
-        util.trigger_script_event(1 << player_id , {434937615, player_id, 0, 1})
+        util.trigger_script_event(1 << player_id , {-1796714618, player_id, 0, 1, player_id})
     end)
         
     menu.action_slider(inf_loading, "Telephone corrupt", {}, "Click to select a style", invites, function(index, name)
         switch name do
             case 1:
-                util.trigger_script_event(1 << player_id, {-1891171016, player_id, 1})
+                util.trigger_script_event(1 << player_id, {36077543, player_id, 1})
                 util.toast("Invitacion a yate")
             break
             case 2:
-                util.trigger_script_event(1 << player_id, {-1891171016, player_id, 2})
+                util.trigger_script_event(1 << player_id, {36077543, player_id, 2})
                 util.toast("Invitacion a oficina")
             break
             case 3:
-                util.trigger_script_event(1 << player_id, {-1891171016, player_id, 3})
+                util.trigger_script_event(1 << player_id, {36077543, player_id, 3})
                 util.toast("Invitacion al club")
             break
             case 4:
-                util.trigger_script_event(1 << player_id, {-1891171016, player_id, 4})
+                util.trigger_script_event(1 << player_id, {36077543, player_id, 4})
                 util.toast("Invitacion al garage de oficina")
             break
             case 5:
-                util.trigger_script_event(1 << player_id, {-1891171016, player_id, 5})
+                util.trigger_script_event(1 << player_id, {36077543, player_id, 5})
                 util.toast("Invitacion a los santos cs")
             break
             case 6:
-                util.trigger_script_event(1 << player_id, {-1891171016, player_id, 6})
+                util.trigger_script_event(1 << player_id, {36077543, player_id, 6})
                 util.toast("Invitacion a apartamento")
             break
         end
@@ -959,16 +955,11 @@ players.on_join(function(player_id)
     local freeze = menu.list(malicious, "Freeze Methods", {}, "")
 
     player_toggle_loop(freeze, player_id, "Scene Freeze", {}, "Works Better Than Most Of Them.", function()
-        util.trigger_script_event(1 << player_id , {434937615, player_id, 0, 1})
+        util.trigger_script_event(1 << player_id , {330622597, player_id, 0, 0, 0, 0, 0})
     end)
 
     player_toggle_loop(freeze, player_id, "Scene Freeze V2", {}, "Works less than upper one.", function()
-        util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 0, 0, 0})
-        util.yield(500)
-    end)
-
-    player_toggle_loop(freeze, player_id, "Freeze V1", {}, "Patched for almost all paid menus.", function()
-        util.trigger_script_event(1 << player_id, {434937615, player_id, 0, 1, 0, 0})
+        util.trigger_script_event(1 << player_id, {-1796714618, player_id, 0, 1, 0, 0})
         util.yield(500)
     end)
 
@@ -980,8 +971,7 @@ players.on_join(function(player_id)
     player_toggle_loop(freeze, player_id, "Powerful Freeze", {}, "Triggers all events.", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 0, 0, 0})
-        util.trigger_script_event(1 << player_id, {434937615, player_id, 0, 1, 0, 0})
-        util.trigger_script_event(1 << player_id , {434937615, player_id, 0, 1})
+        util.trigger_script_event(1 << player_id, {330622597, player_id, 0, 0, 0, 0, 0})
         TASK.CLEAR_PED_TASKS_IMMEDIATELY(player_id)
         util.yield(500)
     end)
@@ -2237,6 +2227,62 @@ players.on_join(function(player_id)
 
     menu.action(crashes, "TSAR BOMB", {"tsarbomba"}, "Crash pc demander, if you do not have good pc I do not recommend using it (Unblockable uwu)", function()
         local objective = player_id
+        --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
+        menu.trigger_commands("anticrashcamera on")
+        menu.trigger_commands("potatomode on")
+        menu.trigger_commands("trafficpotato on")
+        util.toast("Iniciando...")
+        util.toast("Pobre man")
+        menu.trigger_commands("rlag3"..players.get_name(player_id))
+        util.yield(2500)
+        menu.trigger_commands("crashv1"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("crashv2"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("crashv3"..players.get_name(player_id))
+        util.yield(400)
+        menu.trigger_commands("crashv4"..players.get_name(player_id))
+        util.yield(500)
+        menu.trigger_commands("crashv5"..players.get_name(player_id))
+        util.yield(500)
+        menu.trigger_commands("crashv6"..players.get_name(player_id))
+        util.yield(500)
+        menu.trigger_commands("crashv7"..players.get_name(player_id))
+        util.yield(500)
+        menu.trigger_commands("crashv8"..players.get_name(player_id))
+        util.yield(700)
+        menu.trigger_commands("crashv9"..players.get_name(player_id))
+        --util.yield(400)
+        --menu.trigger_commands("crashv5"..players.get_name(player_id))
+        --util.yield(400)
+        --menu.trigger_commands("crashv6"..players.get_name(player_id))
+        --util.yield(400)
+        --menu.trigger_commands("crashv7"..players.get_name(player_id))
+        -- Turned off because of a self-crash error
+        --util.yield(600)
+        --menu.trigger_commands("crashv4"..players.get_name(player_id))
+        util.yield(2000)
+        menu.trigger_commands("crash"..players.get_name(player_id))
+      --  util.yield(400)
+      --  menu.trigger_commands("ngcrash"..players.get_name(player_id))
+      --  util.yield(400)
+      --  menu.trigger_commands("footlettuce"..players.get_name(player_id))
+      --  util.yield(400)
+      --  menu.trigger_commands("steamroll"..players.get_name(player_id))
+        util.yield(1800)
+        util.toast("Espera en lo que se limpia todo...")
+        --menu.trigger_command(outSync, "off")
+        menu.trigger_commands("rlag3"..players.get_name(player_id))
+        menu.trigger_commands("rcleararea")
+        menu.trigger_commands("potatomode off")
+        menu.trigger_commands("trafficpotato off")
+        util.yield(8000)
+        menu.trigger_commands("anticrashcamera off")
+    end)
+
+    if menu.get_edition() >= 2 then 
+        menu.action(crashes, "TSAR BOMB V2", {"tsarbomba"}, "Crash pc demander, if you do not have good pc I do not recommend using it (Unblockable uwu) \n(Needs regular to work fine)", function()
+            local objective = player_id
             --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
             menu.trigger_commands("anticrashcamera on")
             menu.trigger_commands("potatomode on")
@@ -2258,54 +2304,18 @@ players.on_join(function(player_id)
             menu.trigger_commands("crashv7"..players.get_name(player_id))
             util.yield(500)
             menu.trigger_commands("crashv8"..players.get_name(player_id))
-            util.yield(700)
-            menu.trigger_commands("crashv9"..players.get_name(player_id))
-            --util.yield(400)
-            --menu.trigger_commands("crashv5"..players.get_name(player_id))
-            --util.yield(400)
-            --menu.trigger_commands("crashv6"..players.get_name(player_id))
-            --util.yield(400)
-            --menu.trigger_commands("crashv7"..players.get_name(player_id))
-            -- Turned off because of a self-crash error
-            --util.yield(600)
-            --menu.trigger_commands("crashv4"..players.get_name(player_id))
-            util.yield(2000)
-            menu.trigger_commands("crash"..players.get_name(player_id))
-            --util.yield(400)
-            --menu.trigger_commands("ngcrash"..players.get_name(player_id))
-            --util.yield(400)
-            --menu.trigger_commands("footlettuce"..players.get_name(player_id))
-            --util.yield(400)
-            --menu.trigger_commands("steamroll"..players.get_name(player_id))
-            util.yield(1800)
-            util.toast("Espera en lo que se limpia todo...")
-            --menu.trigger_command(outSync, "off")
-            menu.trigger_commands("rlag3"..players.get_name(player_id))
-            menu.trigger_commands("rcleararea")
-            menu.trigger_commands("potatomode off")
-            menu.trigger_commands("trafficpotato off")
-            util.yield(8000)
-            menu.trigger_commands("anticrashcamera off")
-    end)
-
-    if menu.get_edition() >= 2 then 
-        menu.action(crashes, "TSAR BOMB V2", {"tsarbomba"}, "Crash pc demander, if you do not have good pc I do not recommend using it (Unblockable uwu) \n(Needs regular to work fine)", function()
-            local objective = player_id
-            --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
-            menu.trigger_commands("anticrashcamera on")
-            menu.trigger_commands("potatomode on")
-            menu.trigger_commands("trafficpotato on")
-            util.toast("Iniciando...")
-            util.toast("Pobre man")
-            menu.trigger_commands("rlag3"..players.get_name(player_id))
-            util.yield(2500)
-            menu.trigger_commands("crashv1"..players.get_name(player_id))
-            util.yield(400)
-            menu.trigger_commands("crashv2"..players.get_name(player_id))
-            util.yield(400)
-            menu.trigger_commands("crashv4"..players.get_name(player_id))
             util.yield(500)
-            menu.trigger_commands("crashv5"..players.get_name(player_id))
+            menu.trigger_commands("crashv9"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv29"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv91"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv97"..players.get_name(player_id))
+            util.yield(500)
+            menu.trigger_commands("crashv84"..players.get_name(player_id))
+            util.yield(700)
+            menu.trigger_commands("crashv51"..players.get_name(player_id))
             --util.yield(400)
             --menu.trigger_commands("crashv5"..players.get_name(player_id))
             --util.yield(400)
@@ -2579,6 +2589,11 @@ end --]]
 
     local especialev = menu.list(malicious, "Eventos Especiales", {}, "Eventos descubiertos recientemente. \nNo abusar de ellos.")
 
+    menu.action(especialev, "Remote ILS 'Test'", {}, "(Infinite Loading Screen)", function()
+        for i = 1, 6 do
+            util.trigger_script_event(1 << player_id, {891653640, player_id, math.random(1, 32), 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+        end
+    end)
     
     --[[
             menu.action(especialev, "Remote CrashKick 'Test'", {}, "", function()
@@ -2592,13 +2607,6 @@ end --]]
             util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 844))}) 
             util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 485))}) 
             util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 849))})
-        end
-    end)
-
-    menu.action(especialev, "Remote ILS 'Test'", {}, "(Infinite Loading Screen)", function()
-        for i = 1, 6 do
-            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 553))})
-            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 682))})
         end
     end)
 
@@ -2723,7 +2731,7 @@ end --]]
     end)
 
     player_toggle_loop(antimodder, player_id, "Remove Godmode", {}, "It is blocked by many", function()
-        util.trigger_script_event(1 << player_id, {0xAD36AA57, player_id, 0x96EDB12F, math.random(0, 0x270F)})
+        util.trigger_script_event(1 << player_id, {-1428749433, player_id, 448051697, math.random(0, 9999)})
     end)
 
     --player_toggle_loop(antimodder, player_id, "Vehicle Anti-Godmode", {}, "", function()
@@ -3404,6 +3412,28 @@ end --]]
 
     local sevents = menu.list(otherc, "Events", {}, "Script Events.")		
 
+    local tps = menu.list(sevents, "Tp's", {}, "TP Events.") 
+    
+    menu.action(tps, "Cayo Perico", {}, "Blocked by most menus.", function()
+        util.trigger_script_event(1 << player_id, {330622597, player_id, 0, 0, 3, 1})
+    end)
+
+    menu.action(tps, "Cayo Perico v2", {}, "Blocked by most menus.", function()
+        util.trigger_script_event(1 << player_id, {-369672308, player_id, 1})
+    end)
+
+    menu.action(tps, "Ready Heist", {}, "Blocked by most menus.", function()
+        util.trigger_script_event(1 << player_id, {-702866045, players.user(), player_id, -1, 1, 1, 0, 1, 0}) 
+    end) 
+
+    menu.action(tps, "Cayo Perico SC", {}, "Blocked by most menus.", function()
+        util.trigger_script_event(1 << player_id, {330622597, player_id, 0, 0, 4, 1})
+    end)
+
+    menu.action(tps, "Kicked From Cayo", {}, "Blocked by most menus.", function()
+        util.trigger_script_event(1 << player_id, {330622597, player_id, 0, 0, 4, 0})
+    end)
+
     local fuckrs = menu.list(sevents, "Breakers", {}, "Fucker Events.")
 
     menu.action(fuckrs, "Force Transaction Error", {}, "Inconsistent but working.", function()
@@ -3836,6 +3866,10 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 --Online
+
+menu.toggle_loop(weapons, "Max Lockon Range", {}, "You can lock any vehicle to any distance.", function()
+    PLAYER.SET_PLAYER_LOCKON_RANGE_OVERRIDE(players.user(), 99999999.0)
+end)
 
 menu.toggle(online, "Reveal OTR Players 'Test'", {}, "Will force reveal all players on the radar.", function(on)
     if on then
