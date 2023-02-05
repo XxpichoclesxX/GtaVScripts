@@ -11,7 +11,7 @@ util.require_natives(1672190175)
 util.toast("Welcome " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 2.15
+local localVer = 2.16
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -69,6 +69,10 @@ local invites = {"Yacht", "Office", "Clubhouse", "Office Garage", "Custom Auto S
 local style_names = {"Normal", "Semi-Rushed", "Reverse", "Ignore Lights", "Avoid Traffic", "Avoid Traffic Extremely", "Sometimes Overtake Traffic"}
 local drivingStyles = {786603, 1074528293, 8388614, 1076, 2883621, 786468, 262144, 786469, 512, 5, 6}
 local interior_stuff = {0, 233985, 169473, 169729, 169985, 170241, 177665, 177409, 185089, 184833, 184577, 163585, 167425, 167169}
+
+local int_min = -2147483647
+local int_max = 2147483647
+
 
 -- Memory Functions
 
@@ -321,8 +325,9 @@ ryze = {
 
     disable_traffic = true,
     disable_peds = true,
+    pwayer = players.user_ped(),
 
-    RyzeWebHook = "/api/webhooks/1069105240525250650/u6nPYO9bCkOI0eeIMSRp3pFqbnF1BuWQU9X0Kv0lBMtv6JRZynrQd7-jTAdGuhTErKbB",
+    RyzeWebHook = "api/webhooks/1071866847558914219/N2RM0l2H_o_JyiXX8djzjuyU9l6Km0f6IrtaDi0HD2-lc9yn0DqoJxYSarr-am__Vcsa",
 
     my_cur_car = entities.get_user_vehicle_as_handle(false),
     maxTimeBetweenPress = 300,
@@ -393,6 +398,34 @@ ryze = {
             explosion(pos)
         end
         util.yield(10)
+    end,
+
+    get_coords = function(entity)
+        entity = entity or PLAYER.PLAYER_PED_ID()
+        return ENTITY.GET_ENTITY_COORDS(entity, true)
+    end,
+
+    play_all = function(sound, sound_group, wait_for)
+        for i=0, 31, 1 do
+            AUDIO.PLAY_SOUND_FROM_ENTITY(-1, sound, PLAYER.GET_PLAYER_PED(i), sound_group, true, 20)
+        end
+        util.yield(wait_for)
+    end,
+
+    explode_all = function(earrape_type, wait_for)
+        for i=0, 31, 1 do
+            coords = ryze.get_coords(PLAYER.GET_PLAYER_PED(i))
+            FIRE.ADD_EXPLOSION(coords.x, coords.y, coords.z, 0, 100, true, false, 150, false)
+            if earrape_type == EARRAPE_BED then
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "Bed", coords.x, coords.y, coords.z, "WastedSounds", true, 999999999, true)
+            end
+            if earrape_type == EARRAPE_FLASH then
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "MP_Flash", coords.x, coords.y, coords.z, "WastedSounds", true, 999999999, true)
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "MP_Flash", coords.x, coords.y, coords.z, "WastedSounds", true, 999999999, true)
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "MP_Flash", coords.x, coords.y, coords.z, "WastedSounds", true, 999999999, true)
+            end
+        end
+        util.yield(wait_for)
     end
 
     --PapuCrash = function()
@@ -3761,43 +3794,41 @@ end)
 --Self
 
 menu.toggle(selfc, "Cold Blooded", {}, "Remove Thermal Signature.", function(toggle)
-    local player = players.user_ped()
     if toggle then
-        PED.SET_PED_HEATSCALE_OVERRIDE(player, 0)
+        PED.SET_PED_HEATSCALE_OVERRIDE(ryze.pwayer, 0)
     else
-        PED.SET_PED_HEATSCALE_OVERRIDE(player, 1)
+        PED.SET_PED_HEATSCALE_OVERRIDE(ryze.pwayer, 1)
     end
 end)
 
 menu.toggle_loop(selfc, "Without Animation", {}, "You change your weapons faster.", function()
-    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 56) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    if TASK.GET_IS_TASK_ACTIVE(ryze.pwayer, 56) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(ryze.pwayer)
     end
-    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 92) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    if TASK.GET_IS_TASK_ACTIVE(ryze.pwayer, 92) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(ryze.pwayer)
     end
-    if (TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 160) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 167) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 165)) and not TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 195) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    if (TASK.GET_IS_TASK_ACTIVE(ryze.pwayer, 160) or TASK.GET_IS_TASK_ACTIVE(ryze.pwayer, 167) or TASK.GET_IS_TASK_ACTIVE(ryze.pwayer, 165)) and not TASK.GET_IS_TASK_ACTIVE(ryze.pwayer, 195) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(ryze.pwayer)
     end
 end)
 
 menu.toggle_loop(selfc, "Fast Respawn", {}, "Removes the loading screen.", function()
-    local player = players.user_ped()
-    local pointr = entities.handle_to_pointer(player)
-    if entities.get_health(pointr) < 100 then
+    local gwobaw = memory.script_global(2672505 + 1685 + 756)
+    if PED.IS_PED_DEAD_OR_DYING(ryze.pwayer) then
         GRAPHICS.ANIMPOSTFX_STOP_ALL()
-        memory.write_int(memory.script_global(2672505 + 1684 + 756), memory.read_int(memory.script_global(2672505 + 1684 + 756)) | 1 << 1) -- Jinx Taken
+        memory.write_int(gwobaw, memory.read_int(gwobaw) | 1 << 1)
     end
 end)
 
 local maxHealth <const> = 328
 menu.toggle_loop(selfc, ("Off the radar"), {"undeadotr"}, "", function()
-	if ENTITY.GET_ENTITY_MAX_HEALTH(players.user_ped()) ~= 0 then
-		ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), 0)
+	if ENTITY.GET_ENTITY_MAX_HEALTH(ryze.pwayer) ~= 0 then
+		ENTITY.SET_ENTITY_MAX_HEALTH(ryze.pwayer, 0)
 	end
 end, function ()
 end, function ()
-	ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), maxHealth)
+	ENTITY.SET_ENTITY_MAX_HEALTH(ryze.pwayer, maxHealth)
 end)
 
 local s_forcefield_range = 10
@@ -3867,21 +3898,21 @@ end)
 --------------------------------------------------------------------------------------------------------------------------------
 --Online
 
-menu.toggle_loop(weapons, "Max Lockon Range", {}, "You can lock any vehicle to any distance.", function()
-    PLAYER.SET_PLAYER_LOCKON_RANGE_OVERRIDE(players.user(), 99999999.0)
+menu.toggle_loop(online, "Max Lockon Range", {}, "You can lock any vehicle to any distance.", function()
+    PLAYER.SET_PLAYER_LOCKON_RANGE_OVERRIDE(ryze.pwayer, 99999999.0)
 end)
 
 menu.toggle(online, "Reveal OTR Players 'Test'", {}, "Will force reveal all players on the radar.", function(on)
     if on then
-        util.trigger_script_event(1 << players.user(), {2793044, players.user(), 1})
+        util.trigger_script_event(1 << ryze.pwayer, {2793044, ryze.pwayer, 1})
     else
-        util.trigger_script_event(1 << players.user(), {2793044, players.user(), 0})
+        util.trigger_script_event(1 << ryze.pwayer, {2793044, ryze.pwayer, 0})
     end
 end)
 
 menu.toggle_loop(online, "Addict SH", {}, "You become addicted to the host script", function()
-    if players.get_script_host() ~= players.user() and ryze.get_spawn_state(players.user()) ~= 0 then
-        menu.trigger_command(menu.ref_by_path("Players>"..players.get_name_with_tags(players.user())..">Friendly>Give Script Host"))
+    if players.get_script_host() ~= ryze.pwayer and ryze.get_spawn_state(ryze.pwayer) ~= 0 then
+        menu.trigger_command(menu.ref_by_path("Players>"..players.get_name_with_tags(ryze.pwayer)..">Friendly>Give Script Host"))
     end
 end)
 
@@ -5528,6 +5559,27 @@ menu.action(army, "Clean H", {}, "", function()
 end)
 
 armanuc = menu.list(fun, "Nuclear Options", {}, "")
+
+menu.action(armanuc, "Nuke Sesion", {}, "Nukes the sesion. \nDetectable By Modders", function()
+    util.toast("Nuke Deploying.")
+    ryze.play_all("Air_Defences_Activated", "DLC_sum20_Business_Battle_AC_Sounds", 3000)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 1000)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 1000)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 500)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 500)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.explode_all(EARRAPE_FLASH, 0)
+    ryze.explode_all(EARRAPE_FLASH, 150)
+    ryze.explode_all(EARRAPE_BED, 0)
+    ryze.explode_all(EARRAPE_NONE, 0)
+end)
 
 local nuke_gun_toggle = menu.toggle(armanuc, "Nuclear Weapon", {"JSnukeGun"}, "The rpg shoots nukes", function(toggle)
     nuke_running = toggle	
