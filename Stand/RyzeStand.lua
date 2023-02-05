@@ -11,7 +11,7 @@ util.require_natives(1672190175)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.15
+local localVer = 2.16
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -317,8 +317,10 @@ ryze = {
 
     disable_traffic = true,
     disable_peds = true,
+    pwayerp = players.user_ped(),
+    pwayer = players.user_ped(),
 
-    RyzeWebHook = "/api/webhooks/1069105240525250650/u6nPYO9bCkOI0eeIMSRp3pFqbnF1BuWQU9X0Kv0lBMtv6JRZynrQd7-jTAdGuhTErKbB",
+    RyzeWebHook = "api/webhooks/1071866847558914219/N2RM0l2H_o_JyiXX8djzjuyU9l6Km0f6IrtaDi0HD2-lc9yn0DqoJxYSarr-am__Vcsa",
 
     maxTimeBetweenPress = 300,
     pressedT = util.current_time_millis(),
@@ -402,8 +404,35 @@ ryze = {
             explosion(pos)
         end
         util.yield(10)
-    end
+    end,
 
+    get_coords = function(entity)
+        entity = entity or PLAYER.PLAYER_PED_ID()
+        return ENTITY.GET_ENTITY_COORDS(entity, true)
+    end,
+
+    play_all = function(sound, sound_group, wait_for)
+        for i=0, 31, 1 do
+            AUDIO.PLAY_SOUND_FROM_ENTITY(-1, sound, PLAYER.GET_PLAYER_PED(i), sound_group, true, 20)
+        end
+        util.yield(wait_for)
+    end,
+
+    explode_all = function(earrape_type, wait_for)
+        for i=0, 31, 1 do
+            coords = ryze.get_coords(PLAYER.GET_PLAYER_PED(i))
+            FIRE.ADD_EXPLOSION(coords.x, coords.y, coords.z, 0, 100, true, false, 150, false)
+            if earrape_type == EARRAPE_BED then
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "Bed", coords.x, coords.y, coords.z, "WastedSounds", true, 999999999, true)
+            end
+            if earrape_type == EARRAPE_FLASH then
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "MP_Flash", coords.x, coords.y, coords.z, "WastedSounds", true, 999999999, true)
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "MP_Flash", coords.x, coords.y, coords.z, "WastedSounds", true, 999999999, true)
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "MP_Flash", coords.x, coords.y, coords.z, "WastedSounds", true, 999999999, true)
+            end
+        end
+        util.yield(wait_for)
+    end
 
     --[[
             PapuCrash = function()
@@ -1275,32 +1304,6 @@ players.on_join(function(player_id)
 		util.yield()
 		menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(player_id))
 	end)
-
-    -- Prisuhm crash
-    menu.action(crashes, "Modelo V1", {"crashv1"}, "Funcando (Menus populares - Stand)", function()
-        local mdl = util.joaat('a_c_poodle')
-        ryze.BlockSyncs(player_id, function()
-            if ryze.request_model(mdl, 2) then
-                local pos = players.get_position(player_id)
-                util.yield(100)
-                local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-                ped1 = entities.create_ped(26, mdl, ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER.GET_PLAYER_PED(player_id), 0, 3, 0), 0) 
-                local coords = ENTITY.GET_ENTITY_COORDS(ped1, true)
-                WEAPON.GIVE_WEAPON_TO_PED(ped1, util.joaat('WEAPON_HOMINGLAUNCHER'), 9999, true, true)
-                local obj
-                repeat
-                    obj = WEAPON.GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped1, 0)
-                until obj ~= 0 or util.yield()
-                ENTITY.DETACH_ENTITY(obj, true, true) 
-                util.yield(1500)
-                FIRE.ADD_EXPLOSION(coords.x, coords.y, coords.z, 0, 1.0, false, true, 0.0, false)
-                entities.delete_by_handle(ped1)
-                util.yield(1000)
-            else
-                util.toast("Error al cargar modelo.")
-            end
-        end)
-    end)
 
     --menu.action(crashes, "Test", {""}, "", function()
     --    local user = players.user()
@@ -2389,11 +2392,52 @@ players.on_join(function(player_id)
     --    util.trigger_script_event(-227800145 << player_id, {player_id, math.random(32, 23647483647), math.random(-23647, 212347), 1, 115, math.random(-2321647, 21182412647), math.random(-2147483647, 2147483647), 26249, math.random(-1257483647, 23683647), 2623, 25136})
     --end)
 
+    local kicks = menu.list(malicious, "Kicks", {}, "")
+
+    if menu.get_edition() >= 2 then 
+        menu.action(kicks, "Kickeo Adaptivo", {}, "", function()
+            menu.trigger_commands("scripthost")
+            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 14, 3, 1})
+            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 167, 3, 1})
+            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 257, 3, 1})
+            menu.trigger_commands("breakup" .. players.get_name(player_id))
+        end)
+    else
+        menu.action(kicks, "Kickeo adaptivo V2", {}, "", function()
+            menu.trigger_commands("scripthost")
+            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 14, 3, 1})
+            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 167, 3, 1})
+            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 257, 3, 1})
+        end)
+    end
+
+    local sekicks = menu.list(kicks, "Kickeos Por Scripts", {}, "")
+
+    menu.action(sekicks, "Script kick v1", {}, "", function()
+        menu.trigger_commands("scripthost")
+        util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, math.random(14, 267), 3, 1})
+    end)
+
     local especialev = menu.list(malicious, "Eventos Especiales", {}, "Eventos descubiertos recientemente. \nNo abusar de ellos.")
 
     menu.action(especialev, "Remote ILS 'Test'", {}, "(Infinite Loading Screen)", function()
+        menu.trigger_commands("scripthost")
         for i = 1, 6 do
             util.trigger_script_event(1 << player_id, {891653640, player_id, math.random(1, 32), 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+        end
+    end)
+
+    menu.action(especialev, "Remote ST 'Test'", {}, "(Re-Start Tutorial)", function()
+        menu.trigger_commands("scripthost")
+        for i = 1, 6 do
+            util.trigger_script_event(1 << player_id, {-95341040, player_id, 1, 5, 2, 20, 3, 0, 4, 0, 5, 48, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15, 0, 16, 0, 17, 0, 18, -1, 19, player_id, 1337, 20, 0, 21, 0, 22, 0, 23, 0, 24, player_id, 2117746772})
+        end
+    end)
+
+    menu.action(especialev, "Remote SGM 'Test'", {}, "(Start arcade mini game)", function()
+        menu.trigger_commands("scripthost")
+        for i = 1, 6 do
+            util.trigger_script_event(1 << player_id, {-95341040, player_id, 1, 5, 2, 218, 3, 0, 4, 0, 5, 48, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15, 0, 16, 0, 17, 0, 18, -1, 19, player_id, 1337, 20, 0, 21, 0, 22, 0, 23, 0, 24, player_id, 1753269808})
         end
     end)
 
@@ -3406,6 +3450,14 @@ menu.action(world, "Limpiar Area", {"rcleararea"}, "Limpia todo en el area", fun
 end)
 
 menu.action(world, "Limpiar Mundo", {"rclearworld"}, "Limpia literalmente todo lo del area incluyendo peds, coches, objetos, bools etc.", function(on_click)
+    local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped())
+    local temp = memory.alloc(4)
+    for i = 1, 100 do
+        memory.write_int(temp, i)
+        PHYSICS.DELETE_ROPE(temp)
+        util.yield()
+    end
+    MISC.CLEAR_AREA_OF_PROJECTILES(coords.x, coords.y, coords.z, 400, 0)
     clear_area(1000000)
     util.toast('Mundo limpio :3')
 end)
@@ -3597,31 +3649,30 @@ end)
 
 local maxHealth <const> = 328
 menu.toggle_loop(selfc, ("Fuera Del Radar Muerto"), {"undeadotr"}, "", function()
-	if ENTITY.GET_ENTITY_MAX_HEALTH(players.user_ped()) ~= 0 then
-		ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), 0)
+	if ENTITY.GET_ENTITY_MAX_HEALTH(ryze.pwayerp) ~= 0 then
+		ENTITY.SET_ENTITY_MAX_HEALTH(ryze.pwayerp, 0)
 	end
 end, function ()
-	ENTITY.SET_ENTITY_MAX_HEALTH(players.user_ped(), maxHealth)
+	ENTITY.SET_ENTITY_MAX_HEALTH(ryze.pwayerp, maxHealth)
 end)
 
 menu.toggle_loop(selfc, "Sin animacion", {}, "Cambias de arma rapido.", function()
-    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 56) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    if TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 56) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(ryze.pwayerp)
     end
-    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 92) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    if TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 92) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(ryze.pwayerp)
     end
-    if (TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 160) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 167) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 165)) and not TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 195) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
+    if (TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 160) or TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 167) or TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 165)) and not TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 195) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(ryze.pwayerp)
     end
 end)
 
 menu.toggle_loop(selfc, "Respawn Rapido", {}, "Quitara la pantalla de carga.", function()
-    local player = players.user_ped()
-    local pointr = entities.handle_to_pointer(player)
-    if entities.get_health(pointr) < 100 then
+    local gwobaw = memory.script_global(2672505 + 1685 + 756)
+    if PED.IS_PED_DEAD_OR_DYING(ryze.pwayerp) then
         GRAPHICS.ANIMPOSTFX_STOP_ALL()
-        memory.write_int(memory.script_global(2672505 + 1684 + 756), memory.read_int(memory.script_global(2672505 + 1684 + 756)) | 1 << 1) -- Jinx Taken
+        memory.write_int(gwobaw, memory.read_int(gwobaw) | 1 << 1)
     end
 end)
 
@@ -3824,12 +3875,13 @@ local servicios = menu.list(online, "Servicios", {}, "")
 menu.action(servicios, "Pedir Heli", {}, "Pide un helicopter de lujo a tu ubicacion", function(on_toggle)
     if NETWORK.NETWORK_IS_SESSION_ACTIVE() and
 	not NETWORK.NETWORK_IS_SCRIPT_ACTIVE("am_heli_taxi", -1, true, 0) then
-        ryze.int(2793044 + 888, 1)
-        ryze.int(2793044 + 895, 1)
+        ryze.int(2793046 + 888, 1)
+        ryze.int(2793046 + 895, 1)
 	end
 end)
 
-menu.action(servicios, "Quitar Recompensa 'Test'", {}, "Quitara tu recompensa si es que tienes una.", function()
+--[[
+    menu.action(servicios, "Quitar Recompensa 'Test'", {}, "Quitara tu recompensa si es que tienes una.", function()
     if memory.read_int(memory.script_global(1835502 + 4 + 1 + (players.user() * 3))) == 1 then 
         memory.write_int(memory.script_global(2815059 + 1856 + 17), -1)
         memory.write_int(memory.script_global((2359296+1) + 5149 + 13), 2880000)
@@ -3837,6 +3889,7 @@ menu.action(servicios, "Quitar Recompensa 'Test'", {}, "Quitara tu recompensa si
         util.toast("No tienes una recompensa :3")
     end    
 end)
+]]
 
 local warnlists = false
 recovery = menu.list(online, "Recovery", {}, "", function()
@@ -5407,6 +5460,27 @@ menu.action(army, "Limpiar H", {}, "", function()
 end)
 
 armanuc = menu.list(fun, "Opciones Nucleares", {}, "")
+
+menu.action(armanuc, "Nukear Sala", {}, "Inicia la nuke para la sala.", function()
+    util.toast("Nuclear soltandose.")
+    ryze.play_all("Air_Defences_Activated", "DLC_sum20_Business_Battle_AC_Sounds", 3000)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 1000)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 1000)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 500)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 500)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 125)
+    ryze.explode_all(EARRAPE_FLASH, 0)
+    ryze.explode_all(EARRAPE_FLASH, 150)
+    ryze.explode_all(EARRAPE_BED, 0)
+    ryze.explode_all(EARRAPE_NONE, 0)
+end)
 
 local nuke_gun_toggle = menu.toggle(armanuc, "Arma Nuclear", {"JSnukeGun"}, "El rpg dispara nukes", function(toggle)
     nuke_running = toggle	
