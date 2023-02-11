@@ -90,20 +90,6 @@ local function setdeaths()
 	end
 end
 
-local function GunVan_L7NEG()
-    for i = 33799, 33799, 1 do
-        globals.set_int(262145 + i, 1)
-        sleep(2)
-    end
-end
-
-local function UnlockTaxiJob_L7NEG()
-    for i = 33770, 33770, 1 do
-        globals.set_int(262145 + i, 1)
-        sleep(2)
-    end
-end
-
 local function StreetDealer_L7NEG()
     for i = 34062, 34062, 1 do
         globals.set_int(262145 + i, 1)
@@ -209,10 +195,10 @@ local function Fceomc(e) if not localplayer then return end if e then globals.se
 OnlMenu:add_toggle("Change CEO/MC Name Free", function() return e37 end, function() e37 = not e37 Fceomc(e37) end)
 
 local function FCv(e) if not localplayer then return end if e then for i = 274984, 274988 do globals.set_int(i, 0) end for j = 278168, 278173 do globals.set_int(j, 0) end globals.set_int(281492, 0) globals.set_int(281494, 0) else globals.set_int(274984, 20000) for i = 274985, 274987 do globals.set_int(i, 5000) end globals.set_int(274988, 25000) globals.set_int(278168, 10000) globals.set_int(278169, 7000) globals.set_int(278170, 9000) for j = 278171, 278173 do globals.set_int(j, 5000) end globals.set_int(281492, 5000) globals.set_int(281494, 10000)end end 
-OnlMenu:add_toggle("Request Ceo Vehicles Free", function() return e40 end, function() e40 = not e40 FCv(e40) end)
+OnlMenu:add_toggle("Request Ceo Vehicles Free 'Test'", function() return e40 end, function() e40 = not e40 FCv(e40) end)
 
 local function FCa(e) if not localplayer then return end if e then for i = 274989, 274993 do globals.set_int(i, 0) end globals.set_int(278090, 0) else globals.set_int(278090, 5000) globals.set_int(262145 + 12844, 1000) globals.set_int(262145 + 12845, 1500) globals.set_int(262145 + 12846, 1000) globals.set_int(262145 + 12847, 12000) globals.set_int(262145 + 12848, 15000) end end 
-OnlMenu:add_toggle("Request Ceo Abilities Free", function() return e19 end, function() e19 = not e19 FCa(e19) end)
+OnlMenu:add_toggle("Request Ceo Abilities Free 'Test'", function() return e19 end, function() e19 = not e19 FCa(e19) end)
 
 local function Terrcd(e) if not localplayer then return end if e then for i = 286781, 286785 do globals.set_int(i, 0) end else for i = 286782, 286785 do globals.set_int(286781, 300000) globals.set_int(i, 1800000) end end end 
 OnlMenu:add_toggle("Remove TerrorByte Missions Cooldown", function() return e26 end, function() e26 = not e26 Terrcd(e26) end)
@@ -230,14 +216,6 @@ end
 
 
 OnlMenu:add_action("----------------- Recovery ----------------", function() end)
-
-OnlMenu:add_action("Unlock Gun Van", function()
-	GunVan_L7NEG()
-end)
-
-OnlMenu:add_action("Unlock Taxi Job", function()
-	UnlockTaxiJob_L7NEG()
-end)
 
 OnlMenu:add_action("Unlock Dealers", function()
 	StreetDealer_L7NEG()
@@ -1242,7 +1220,6 @@ end, function()
 end)
 
 recMenu = mainMenu:add_submenu("Recovery $$$")
-recMenu:add_action("Test Phase", function() end)
 recMenu:add_action("Im not aware", function() end)
 recMenu:add_action("Of bad use", function() end)
 
@@ -1441,7 +1418,7 @@ dinMenu:add_action("it is safe until a point", function() end)
 dinMenu:add_action("Lova ya, picho <3", function() end)
 dinMenu:add_action("-------------------------------------------", function() end)
 
-cajMenu = dinMenu:add_submenu("Cajas CEO 'PROB DETECTED'")
+cajMenu = dinMenu:add_submenu("Cajas CEO")
 
 cajMenu:add_action("End Sale Mision", function()
 	sale_mission = script("gb_contraband_sell")

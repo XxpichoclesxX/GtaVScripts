@@ -105,13 +105,6 @@ local function setdeaths()
 	end
 end
 
-local function GunVan_L7NEG()
-    for i = 33799, 33799, 1 do
-        globals.set_int(262145 + i, 1)
-        sleep(2)
-    end
-end
-
 local function resetoverrideBounty()
 	globals.set_int(global_overridebase + 2348, 2000)
 	globals.set_int(global_overridebase + 2349, 4000)
@@ -119,13 +112,6 @@ local function resetoverrideBounty()
 	globals.set_int(global_overridebase + 2351, 8000)
 	globals.set_int(global_overridebase + 2352, 10000)
 	globals.set_int(global_overridebase + 7105, 1000)
-end
-
-local function UnlockTaxiJob_L7NEG()
-    for i = 33770, 33770, 1 do
-        globals.set_int(262145 + i, 1)
-        sleep(2)
-    end
 end
 
 local function StreetDealer_L7NEG()
@@ -242,10 +228,10 @@ function Fceomc(e) if not localplayer then return end if e then globals.set_int(
 OnlMenu:add_toggle("Cambiar Nombre Del CEO Gratis", function() return e37 end, function() e37 = not e37 Fceomc(e37) end)
 
 function FCv(e) if not localplayer then return end if e then for i = 274984, 274988 do globals.set_int(i, 0) end for j = 278168, 278173 do globals.set_int(j, 0) end globals.set_int(281492, 0) globals.set_int(281494, 0) else globals.set_int(274984, 20000) for i = 274985, 274987 do globals.set_int(i, 5000) end globals.set_int(274988, 25000) globals.set_int(278168, 10000) globals.set_int(278169, 7000) globals.set_int(278170, 9000) for j = 278171, 278173 do globals.set_int(j, 5000) end globals.set_int(281492, 5000) globals.set_int(281494, 10000)end end 
-OnlMenu:add_toggle("Vehiculos de CEO Gratis", function() return e40 end, function() e40 = not e40 FCv(e40) end)
+OnlMenu:add_toggle("Vehiculos de CEO Gratis 'Test'", function() return e40 end, function() e40 = not e40 FCv(e40) end)
 
 function FCa(e) if not localplayer then return end if e then for i = 274989, 274993 do globals.set_int(i, 0) end globals.set_int(278090, 0) else globals.set_int(278090, 5000) globals.set_int(262145 + 12844, 1000) globals.set_int(262145 + 12845, 1500) globals.set_int(262145 + 12846, 1000) globals.set_int(262145 + 12847, 12000) globals.set_int(262145 + 12848, 15000) end end 
-OnlMenu:add_toggle("Habilidades de CEO Gratis", function() return e19 end, function() e19 = not e19 FCa(e19) end)
+OnlMenu:add_toggle("Habilidades de CEO Gratis 'Test'", function() return e19 end, function() e19 = not e19 FCa(e19) end)
 
 function Terrcd(e) if not localplayer then return end if e then for i = 286781, 286785 do globals.set_int(i, 0) end else for i = 286782, 286785 do globals.set_int(286781, 300000) globals.set_int(i, 1800000) end end end 
 OnlMenu:add_toggle("Remover Tiempo/Misiones Terrorbyte", function() return e26 end, function() e26 = not e26 Terrcd(e26) end)
@@ -265,14 +251,6 @@ end
 
 
 OnlMenu:add_action("----------------- Recovery ----------------", function() end)
-
-OnlMenu:add_action("Desbloquear Van", function()
-	GunVan_L7NEG()
-end)
-
-OnlMenu:add_action("Desbloquear Trabajo De Taxi", function()
-	UnlockTaxiJob_L7NEG()
-end)
 
 OnlMenu:add_action("Desbloquear Dealers Callejeros", function()
 	StreetDealer_L7NEG()
@@ -1276,7 +1254,6 @@ end, function()
 end)
 
 recMenu = mainMenu:add_submenu("Recovery $$$")
-recMenu:add_action("Fase de testeo", function() end)
 recMenu:add_action("No me hago responsable", function() end)
 recMenu:add_action("De mal uso", function() end)
 
@@ -1475,7 +1452,7 @@ dinMenu:add_action("baneo, es seguro hasta cierto punto", function() end)
 dinMenu:add_action("Los quiero, picho <3", function() end)
 dinMenu:add_action("-------------------------------------------", function() end)
 
-cajMenu = dinMenu:add_submenu("Cajas CEO 'PROB DETECTADO'")
+cajMenu = dinMenu:add_submenu("Cajas CEO")
 
 cajMenu:add_action("Finalizar Mision De Venta", function()
 	sale_mission = script("gb_contraband_sell")
