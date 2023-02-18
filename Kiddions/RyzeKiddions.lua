@@ -121,13 +121,6 @@ local function StreetDealer_L7NEG()
     end
 end
 
-local function unlockBLVDGarage_L7NEG()
-    for i = 32702, 32702, 1 do
-        globals.set_int(262145 + i, 1)
-        sleep(2)
-    end
-end
-
 local function setkills2()
 		local valuekd = globals.get_float(1853910 + 1 + ply + 205 + 26)
 		local egothisscriptisstolen = math.floor(valuekd * randomslonshit1)
@@ -254,10 +247,6 @@ OnlMenu:add_action("----------------- Recovery ----------------", function() end
 
 OnlMenu:add_action("Desbloquear Dealers Callejeros", function()
 	StreetDealer_L7NEG()
-end)
-
-OnlMenu:add_action("Desbloquear Garage 50", function()
-	unlockBLVDGarage_L7NEG()
 end)
 
 OnlMenu:add_action("Habilidades 100%", function()
@@ -1452,6 +1441,12 @@ dinMenu:add_action("baneo, es seguro hasta cierto punto", function() end)
 dinMenu:add_action("Los quiero, picho <3", function() end)
 dinMenu:add_action("-------------------------------------------", function() end)
 
+nightMenu = dinMenu:add_submenu("NightClub 1B")
+
+nightMenu:add_action("Vender NC 1B", function()
+	stats.set_int(mpx .. "PROP_NIGHTCLUB_VALUE", 1999000000)
+end)
+
 cajMenu = dinMenu:add_submenu("Cajas CEO")
 
 cajMenu:add_action("Finalizar Mision De Venta", function()
@@ -1503,6 +1498,53 @@ cajMenu:add_action("Poner Precio (5M)", function()
     globals.set_int(262145+base_address+19, sale_price//110)
     globals.set_int(262145+base_address+20, sale_price//111)
 end)
+
+ediCaj = cajMenu:add_submenu("Editor de datos")
+
+ediCaj:add_action("Perfil Editor", function() end)
+ediCaj:add_int_range("Cambiar Ventas De Por Vida", 1, 0, 10000, function()
+PlayerIndex = globals.get_int(1574918)
+	if PlayerIndex == 0 then
+		mpx = "MP0_"
+	else
+		mpx = "MP1_"
+	end
+    return 
+        stats.get_int(mpx.."LIFETIME_SELL_COMPLETE") end,   function(value)
+        stats.set_int(mpx.."LIFETIME_BUY_COMPLETE", value) 
+        stats.set_int(mpx.."LIFETIME_BUY_UNDERTAKEN", value) 
+        stats.set_int(mpx.."LIFETIME_SELL_COMPLETE", value) 
+        stats.set_int(mpx.."LIFETIME_SELL_UNDERTAKEN", value)
+
+end)
+
+ediCaj:add_int_range("Ganancias De Por Vida", 200000.0, 0, 10000000, function()
+PlayerIndex = globals.get_int(1574918)
+	if PlayerIndex == 0 then
+		mpx = "MP0_"
+	else
+		mpx = "MP1_"
+	end
+                                       return 
+   stats.get_int(mpx.."LIFETIME_CONTRA_EARNINGS") end,           
+	   function(value) 
+stats.set_int(mpx.."LIFETIME_CONTRA_EARNINGS", value * 1)
+end)
+
+ediCaj:add_action(
+    "Re-Establecer Ventas-Ganancias a 0",
+    function()
+        stats.set_int(mpx .. "LIFETIME_BUY_COMPLETE",  0)
+        stats.set_int(mpx .. "LIFETIME_BUY_UNDERTAKEN", 0)
+        stats.set_int(mpx .. "LIFETIME_SELL_COMPLETE",  0)
+        stats.set_int(mpx .. "LIFETIME_SELL_UNDERTAKEN",  0)
+        stats.set_int(mpx .. "LIFETIME_CONTRA_EARNINGS",  0)
+        globals.set_int(1575017, 1)         ----PlayerSessionBlank--------
+        globals.set_int(1574589, 1)         ----PlayerSessionNew----------
+        sleep(0.2)
+        globals.set_int(1574589, 0)         ----PlayerSessionNew------
+    end
+)
 
 ccMenu = dinMenu:add_submenu("Club Nocturno")
 
