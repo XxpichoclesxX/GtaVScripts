@@ -25,6 +25,7 @@ Im also thinking on some extra features, like more protections and trolling opti
 --------------------------------------------------------------------------------------------------
 ## Questions RyzeM-redENGINE
 - This is a lua also for the paid modding engine called redENGINE, it is a menu re-build from the past one called Fallout, I was a couple of years working on this project has a main idea but sadly i got beamed from FiveM, right now i have the vision to continue it because it is a pretty well made menu, so enjoy it and make fun in some servers.
+- By the way you need redENGINE obviously.
 - Meaning Emojis:
 ✅ Undetected
 🚧 Working on
