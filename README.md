@@ -23,6 +23,20 @@ Im presenting you some Gta V Scripts for online or campaign, these are made by m
 - This is a lua also for the paid modding engine called stand, it is a complement of various scripts also known, im just improving the code and adding some extra features that the menu doesn't have like more protections to make unable to the modders to grief you, lag you etc.
 Im also thinking on some extra features, like more protections and trolling options and much more than i have in today's version.
 --------------------------------------------------------------------------------------------------
+## Questions RyzeM-redENGINE
+- This is a lua also for the paid modding engine called redENGINE, it is a menu re-build from the past one called Fallout, I was a couple of years working on this project has a main idea but sadly i got beamed from FiveM, right now i have the vision to continue it because it is a pretty well made menu, so enjoy it and make fun in some servers.
+- Meaning Emojis:
+✅ Undetected
+🚧 Working on
+🔻 Detected
+- Status on Menu:
+ * FiveM Undetected: ✅
+ * ChocoHax Status: ✅
+ * GodZilla Status: ✅
+ * FiveGuard Status: 🚧
+ * FiveEye Status: 🚧
+I'm aware and im working on anticheat detections, just becarefull with "SafeMode" this should make the Menu undetected for majority of servers.
+--------------------------------------------------------------------------------------------------
 No ETA for big updates also because i don't know actually if im going to be able to continue this script (boths) because i have a life and i need to study. This is a helpfull and fun project for everyone who wants to use it, is free and you can use my script has a template.
 
 ## About
