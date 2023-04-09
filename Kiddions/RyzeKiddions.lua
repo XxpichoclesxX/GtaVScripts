@@ -114,13 +114,6 @@ local function resetoverrideBounty()
 	globals.set_int(global_overridebase + 7105, 1000)
 end
 
-local function StreetDealer_L7NEG()
-    for i = 34062, 34062, 1 do
-        globals.set_int(262145 + i, 1)
-        sleep(2)
-    end
-end
-
 local function setkills2()
 		local valuekd = globals.get_float(1853910 + 1 + ply + 205 + 26)
 		local egothisscriptisstolen = math.floor(valuekd * randomslonshit1)
@@ -184,6 +177,9 @@ OnlMenu = mainMenu:add_submenu("Online")
 OnlMenu:add_array_item("Sesiones Online", {"Unirse Sesion publica", "Iniciar Sesion Publica", "Sesion de invitacion", "Sesion cerrada de crew", "Sesion por crew", "Sesion cerrrada de amigos", "Encontrar Sesion por jugadores", "Sesion Solo"}, function() return xox_00 end, function(value) xox_00 = value if value == 1 then globals.set_int(1575017, 0) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 2 then globals.set_int(1575017, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 3 then globals.set_int(1575017, 11) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 4 then globals.set_int(1575017, 2) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 5 then globals.set_int(1575017, 3) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 6 then globals.set_int(1575017, 6) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 7 then globals.set_int(1575017, 9) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 8 then globals.set_int(1575017, 8) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 9 then globals.set_int(1575017, -1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end end)
 
 repMenu = OnlMenu:add_submenu("Ver Reportes")
+
+repMenu:add_action("Borrar Reportes Activos", function() stats.set_int("MPPLY_REPORT_STRENGTH", 0) stats.set_int("MPPLY_COMMEND_STRENGTH", 0) stats.set_int("MPPLY_GRIEFING", 0) stats.set_int("MPPLY_VC_ANNOYINGME", 0) stats.set_int("MPPLY_VC_HATE", 0) stats.set_int("MPPLY_TC_ANNOYINGME", 0) stats.set_int("MPPLY_TC_HATE", 0) stats.set_int("MPPLY_OFFENSIVE_LANGUAGE", 0) stats.set_int("MPPLY_OFFENSIVE_TAGPLATE", 0) stats.set_int("MPPLY_OFFENSIVE_UGC", 0) stats.set_int("MPPLY_BAD_CREW_NAME", 0) stats.set_int("MPPLY_BAD_CREW_MOTTO", 0) stats.set_int("MPPLY_BAD_CREW_STATUS", 0) stats.set_int("MPPLY_BAD_CREW_EMBLEM", 0) stats.set_int("MPPLY_EXPLOITS", 0) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", 0) stats.set_int("MPPLY_DESTROYED_PVEHICLES", 0) stats.set_int("MPPLY_BADSPORT_MESSAGE", 0) stats.set_int("MPPLY_GAME_EXPLOITS", 0) stats.set_int("MPPLY_PLAYER_MENTAL_STATE", 0) stats.set_int("MPPLY_PLAYERMADE_TITLE", 0) stats.set_int("MPPLY_PLAYERMADE_DESC", 0) stats.set_int("MPPLY_ISPUNISHED", 0) stats.set_int("MPPLY_WAS_I_BAD_SPORT", 0) stats.set_int("MPPLY_WAS_I_CHEATER", 0) stats.set_int("MPPLY_CHAR_IS_BADSPORT", 0) stats.set_int("MPPLY_OVERALL_BADSPORT", 0) stats.set_int("MPPLY_OVERALL_CHEAT", 0) end)
+repMenu:add_action("--------------------------------------", function() end)
 repMenu:add_bare_item("", function() return "Grifear:".. (string.format("%03d", stats.get_int("MPPLY_GRIEFING"))) end, function() end, function()end, function() return end)
 repMenu:add_bare_item("", function() return "Hacks:".. (string.format("%03d", stats.get_int("MPPLY_EXPLOITS"))) end, function() end, function()end, function()end)
 repMenu:add_bare_item("", function() return "Acoso textual:".. (string.format("%03d", stats.get_int("MPPLY_TC_ANNOYINGME"))) end, function() end, function()end, function()end)
@@ -203,6 +199,12 @@ repMenu:add_bare_item("", function() return "Ayudante:".. (string.format("%03d",
 OnlMenu:add_action("----------------- Misiones/Online ----------------", function() end)
 
 OnlMenu:add_array_item("Pedir Servicios", {"M.O.C", "Avenger", "TerrorByte", "Kosatka", "Bote", "Armadura Balistica"}, function() return xox_01 end, function(v) if v == 1 then globals.set_int(2815059 + 913, 1) elseif v == 2 then globals.set_int(2815059 + 921, 1) elseif v == 3 then globals.set_int(2815059 + 925, 1) elseif v == 4 then globals.set_int(2815059 + 933, 1) elseif v == 5 then globals.set_int(2815059 + 945, 1) else globals.set_int(2815059 + 884, 1) end xox_01 = v end)
+
+repvehmenu = OnlMenu:add_submenu("Opciones Para Autos")
+ 
+repvehmenu:add_action("Destruir Todos Los Carros", function() for v in replayinterface.get_vehicles() do if v ~= nil then v:set_health(0) end end end)
+ 
+repvehmenu:add_action("Reparar Todos Los Carros", function() for v in replayinterface.get_vehicles() do if v ~= nil then v:set_health(1000) end end end)
 
 OnlMenu:add_action("Resetear Servicio de Lester (bounty)", function()
     resetoverrideBounty()
@@ -245,10 +247,6 @@ end
 
 OnlMenu:add_action("----------------- Recovery ----------------", function() end)
 
-OnlMenu:add_action("Desbloquear Dealers Callejeros", function()
-	StreetDealer_L7NEG()
-end)
-
 OnlMenu:add_action("Habilidades 100%", function()
 	stats.set_int(mpx .. "SCRIPT_INCREASE_DRIV", 100)
 	stats.set_int(mpx .. "SCRIPT_INCREASE_FLY", 100)
@@ -259,7 +257,8 @@ OnlMenu:add_action("Habilidades 100%", function()
 	stats.set_int(mpx .. "SCRIPT_INCREASE_STRN", 100)
 end)
 
-OnlMenu:add_int_range("RP Correction", 1, 0, 8000, function() if PlayerIndex > 1 or PlayerIndex < 0 then return end local currentRP = 0 if PlayerIndex == 0 then currentRP = stats.get_int("MP0_CHAR_SET_RP_GIFT_ADMIN") else currentRP = stats.get_int("MP1_CHAR_SET_RP_GIFT_ADMIN") end if currentRP <= 0 then currentRP = globals.get_int(1659760 + PlayerIndex) end local rpLevel = 0 for i = 0,8000 do if currentRP < globals.get_int(295825 + i) then break else rpLevel = i end end return rpLevel end, function(value) if PlayerIndex > 1 or PlayerIndex < 0 then return end local newRP = globals.get_int(295825 + value) + 100 stats.set_int(mpx.."CHAR_SET_RP_GIFT_ADMIN", newRP) sleep(2) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end) 
+OnlMenu:add_int_range("RP Correction (NIVEL)", 1, 0, 8000, function() return globals.get_int(1854122 + localplayer:get_player_id() * 862) end, function() end) 
+OnlMenu:add_int_range("RP Correction (VALOR)", 1, 0, 1787576850, function() return globals.get_int(1854117 + localplayer:get_player_id() * 862) end, function() end) 
 OnlMenu:add_action("Completar Objetivos", function() stats.set_int(mpx .. "COMPLETEDAILYOBJ", 100) stats.set_int(mpx .. "COMPLETEDAILYOBJTOTAL", 100) stats.set_int(mpx .. "TOTALDAYCOMPLETED", 100) stats.set_int(mpx .. "TOTALWEEKCOMPLETED", 400) stats.set_int(mpx .. "TOTALMONTHCOMPLETED", 1800) stats.set_int(mpx .. "CONSECUTIVEDAYCOMPLETED", 30) stats.set_int(mpx .. "CONSECUTIVEWEEKCOMPLETED", 4) stats.set_int(mpx .. "CONSECUTIVEMONTHCOMPLETE", 1) stats.set_int(mpx .. "COMPLETEDAILYOBJSA", 100) stats.set_int(mpx .. "COMPLETEDAILYOBJTOTALSA", 100) stats.set_int(mpx .. "TOTALDAYCOMPLETEDSA", 100) stats.set_int(mpx .. "TOTALWEEKCOMPLETEDSA", 400) stats.set_int(mpx .. "TOTALMONTHCOMPLETEDSA", 1800) stats.set_int(mpx .. "CONSECUTIVEDAYCOMPLETEDSA", 30) stats.set_int(mpx .. "CONSECUTIVEWEEKCOMPLETEDSA", 4) stats.set_int(mpx .. "CONSECUTIVEMONTHCOMPLETESA", 1) stats.set_int(mpx .. "AWD_DAILYOBJCOMPLETEDSA", 100) stats.set_int(mpx .. "AWD_DAILYOBJCOMPLETED", 100) stats.set_bool(mpx .. "AWD_DAILYOBJMONTHBONUS", true) stats.set_bool(mpx .. "AWD_DAILYOBJWEEKBONUS", true) stats.set_bool(mpx .. "AWD_DAILYOBJWEEKBONUSSA", true) stats.set_bool(mpx .. "AWD_DAILYOBJMONTHBONUSSA", true) end) 
 
 WepMenu = OnlMenu:add_submenu("Desbloquear Armas")
@@ -1198,6 +1197,8 @@ end)
 
 vehMenu = mainMenu:add_submenu("Vehiculos")
 
+vehMenu:add_toggle("Modo Dios Vehiculo", function() return vehiclegodmode end, function() if localplayer ~= nil and localplayer:is_in_vehicle() then localplayer:get_current_vehicle():set_godmode(true) end end)
+
 F1Mod = false
 OldF1Hash = 0
 vehMenu:add_toggle("Ruedas de Formula 1", function()
@@ -1440,12 +1441,6 @@ dinMenu:add_action("No soy responsable del uso o algun", function() end)
 dinMenu:add_action("baneo, es seguro hasta cierto punto", function() end)
 dinMenu:add_action("Los quiero, picho <3", function() end)
 dinMenu:add_action("-------------------------------------------", function() end)
-
-nightMenu = dinMenu:add_submenu("NightClub 1B")
-
-nightMenu:add_action("Vender NC 1B", function()
-	stats.set_int(mpx .. "PROP_NIGHTCLUB_VALUE", 1999000000)
-end)
 
 cajMenu = dinMenu:add_submenu("Cajas CEO")
 

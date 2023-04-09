@@ -90,13 +90,6 @@ local function setdeaths()
 	end
 end
 
-local function StreetDealer_L7NEG()
-    for i = 34062, 34062, 1 do
-        globals.set_int(262145 + i, 1)
-        sleep(2)
-    end
-end
-
 local function setkills2()
 		local valuekd = globals.get_float(1853910 + 1 + ply + 205 + 26)
 		local egothisscriptisstolen = math.floor(valuekd * randomslonshit1)
@@ -154,7 +147,9 @@ OnlMenu = mainMenu:add_submenu("Online")
 
 OnlMenu:add_array_item("Online Session", {"Join Public", "Start New Public", "Invite Only", "Closed Crew Session", "Crew Session", "Closed Friend Session", "Find Friend Session", "Solo Session", "Leave Online"}, function() return xox_00 end, function(value) xox_00 = value if value == 1 then globals.set_int(1575017, 0) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 2 then globals.set_int(1575017, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 3 then globals.set_int(1575017, 11) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 4 then globals.set_int(1575017, 2) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 5 then globals.set_int(1575017, 3) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 6 then globals.set_int(1575017, 6) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 7 then globals.set_int(1575017, 9) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 8 then globals.set_int(1575017, 8) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 9 then globals.set_int(1575017, -1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end end)
 
-repMenu = OnlMenu:add_submenu("Ver Reportes")
+repMenu = OnlMenu:add_submenu("See Reports")
+repMenu:add_action("Delete Active Reports", function() stats.set_int("MPPLY_REPORT_STRENGTH", 0) stats.set_int("MPPLY_COMMEND_STRENGTH", 0) stats.set_int("MPPLY_GRIEFING", 0) stats.set_int("MPPLY_VC_ANNOYINGME", 0) stats.set_int("MPPLY_VC_HATE", 0) stats.set_int("MPPLY_TC_ANNOYINGME", 0) stats.set_int("MPPLY_TC_HATE", 0) stats.set_int("MPPLY_OFFENSIVE_LANGUAGE", 0) stats.set_int("MPPLY_OFFENSIVE_TAGPLATE", 0) stats.set_int("MPPLY_OFFENSIVE_UGC", 0) stats.set_int("MPPLY_BAD_CREW_NAME", 0) stats.set_int("MPPLY_BAD_CREW_MOTTO", 0) stats.set_int("MPPLY_BAD_CREW_STATUS", 0) stats.set_int("MPPLY_BAD_CREW_EMBLEM", 0) stats.set_int("MPPLY_EXPLOITS", 0) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", 0) stats.set_int("MPPLY_DESTROYED_PVEHICLES", 0) stats.set_int("MPPLY_BADSPORT_MESSAGE", 0) stats.set_int("MPPLY_GAME_EXPLOITS", 0) stats.set_int("MPPLY_PLAYER_MENTAL_STATE", 0) stats.set_int("MPPLY_PLAYERMADE_TITLE", 0) stats.set_int("MPPLY_PLAYERMADE_DESC", 0) stats.set_int("MPPLY_ISPUNISHED", 0) stats.set_int("MPPLY_WAS_I_BAD_SPORT", 0) stats.set_int("MPPLY_WAS_I_CHEATER", 0) stats.set_int("MPPLY_CHAR_IS_BADSPORT", 0) stats.set_int("MPPLY_OVERALL_BADSPORT", 0) stats.set_int("MPPLY_OVERALL_CHEAT", 0) end)
+repMenu:add_action("--------------------------------------", function() end)
 repMenu:add_bare_item("", function() return "Grifier:".. (string.format("%03d", stats.get_int("MPPLY_GRIEFING"))) end, function() end, function()end, function() return end)
 repMenu:add_bare_item("", function() return "Hacks:".. (string.format("%03d", stats.get_int("MPPLY_EXPLOITS"))) end, function() end, function()end, function()end)
 repMenu:add_bare_item("", function() return "Textual Harassment:".. (string.format("%03d", stats.get_int("MPPLY_TC_ANNOYINGME"))) end, function() end, function()end, function()end)
@@ -209,10 +204,6 @@ end
 
 
 OnlMenu:add_action("----------------- Recovery ----------------", function() end)
-
-OnlMenu:add_action("Unlock Dealers", function()
-	StreetDealer_L7NEG()
-end)
 
 OnlMenu:add_action("100% Stats", function()
 	stats.set_int(mpx .. "SCRIPT_INCREASE_DRIV", 100)
@@ -1164,6 +1155,8 @@ end)
 
 vehMenu = mainMenu:add_submenu("Vehicles")
 
+vehMenu:add_toggle("Vehicle GodMode", function() return vehiclegodmode end, function() if localplayer ~= nil and localplayer:is_in_vehicle() then localplayer:get_current_vehicle():set_godmode(true) end end)
+
 F1Mod = false
 OldF1Hash = 0
 vehMenu:add_toggle("Formula 1 Wheels", function()
@@ -1406,12 +1399,6 @@ dinMenu:add_action("Im not aware of bans", function() end)
 dinMenu:add_action("it is safe until a point", function() end)
 dinMenu:add_action("Lova ya, picho <3", function() end)
 dinMenu:add_action("-------------------------------------------", function() end)
-
-nightMenu = dinMenu:add_submenu("NightClub 1B")
-
-nightMenu:add_action("Vender NC 1B", function()
-	stats.set_int(mpx .. "PROP_NIGHTCLUB_VALUE", 1999000000)
-end)
 
 cajMenu = dinMenu:add_submenu("CEO Crates")
 
