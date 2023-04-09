@@ -23,10 +23,28 @@ Im presenting you some Gta V Scripts for online or campaign, these are made by m
 - This is a lua also for the paid modding engine called stand, it is a complement of various scripts also known, im just improving the code and adding some extra features that the menu doesn't have like more protections to make unable to the modders to grief you, lag you etc.
 Im also thinking on some extra features, like more protections and trolling options and much more than i have in today's version.
 --------------------------------------------------------------------------------------------------
+## Questions RyzeM-redENGINE
+- This is a lua also for the paid modding engine called redENGINE, it is a menu re-build from the past one called Fallout, I was a couple of years working on this project has a main idea but sadly i got beamed from FiveM, right now i have the vision to continue it because it is a pretty well made menu, so enjoy it and make fun in some servers.
+- By the way you need redENGINE obviously.
+
+- Meaning Emojis:
+✅ Undetected
+🚧 Working on
+🔻 Detected
+- Status of the Menu:
+ * FiveM Undetected: ✅
+ * ChocoHax Status: ✅
+ * GodZilla Status: ✅
+ * FiveGuard Status: 🚧
+ * FiveEye Status: 🚧
+
+I'm aware and im working on anticheat detections, just becarefull with "SafeMode" this should make the Menu undetected for majority of servers.
+--------------------------------------------------------------------------------------------------
 No ETA for big updates also because i don't know actually if im going to be able to continue this script (boths) because i have a life and i need to study. This is a helpfull and fun project for everyone who wants to use it, is free and you can use my script has a template.
 
 ## About
 -  Probably Stand script is going to take a little bit more than kiddions, by now, kiddions script is in stand by me <3
 -  By the way to anyone who ask's about the stand script, is not entire mine, there is actually in credits every single person who i taked code from and who helped me with this.
-## Last Kiddions update: 2/02/2023
-## Last Stand update: 2/02/2023
+## Last Ryze Kiddions update: 2/03/2023
+## Last Ryze Stand update: 18/02/2023
+## Last Ryze FivemM update: 17/03/2023
