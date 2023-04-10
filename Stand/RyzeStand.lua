@@ -11,7 +11,7 @@ util.require_natives(1676318796)
 util.toast("Bienvenidx " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al Script!!")
 util.toast("Cargando, espere... (1-2s)")
 local response = false
-local localVer = 2.181
+local localVer = 2.182
 --local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
@@ -709,7 +709,7 @@ players.on_join(function(player_id)
             case 3:
                 explosion = 82
                 break
-            pluto_default:
+            default:
                 explosion = 18
         end
     end)

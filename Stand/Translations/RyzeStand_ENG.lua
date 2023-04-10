@@ -11,7 +11,7 @@ util.require_natives(1676318796)
 util.toast("Welcome " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " to the script!!")
 util.toast("Loading, wait... (1-2s)")
 local response = false
-local localVer = 2.181
+local localVer = 2.182
 --local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
@@ -686,7 +686,7 @@ players.on_join(function(player_id)
 
         local index = menu.get_value(explode_slider)
 
-        pluto_switch index do
+        switch index do
             case 1:
                 explosion = 0
                 break
@@ -696,7 +696,7 @@ players.on_join(function(player_id)
             case 3:
                 explosion = 82
                 break
-            pluto_default:
+            default:
                 explosion = 18
         end
     end)
@@ -1300,7 +1300,7 @@ players.on_join(function(player_id)
             return
         end
 
-        pluto_switch value do
+        switch value do
             case "Lanzar Arriba":
                 ENTITY.APPLY_FORCE_TO_ENTITY(veh, 1, 0.0, 0.0, 100000.0, 0.0, 0.0, 0.0, 0, 1, 1, 1, 0, 1)
                 break
