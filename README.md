@@ -3,7 +3,7 @@ For every script there is a different use and ways to fully take advantage on ot
 
 For Kiddions script is just puting the script into scripts directory, inside the Kiddions files.
 
-For Stand it is actually the same way, but first before initiating the script you will need to go into library and search for the native-1663599433 and then you will be able to use the script and his various functions.
+For Stand it is actually the same way, but first before initiating the script you will need to go into library and search for the natives-1676318796 and then you will be able to use the script and his various functions.
 
 
 --------------------------------------------------------------------------------------------------
@@ -46,5 +46,5 @@ No ETA for big updates also because i don't know actually if im going to be able
 -  Probably Stand script is going to take a little bit more than kiddions, by now, kiddions script is in stand by me <3
 -  By the way to anyone who ask's about the stand script, is not entire mine, there is actually in credits every single person who i taked code from and who helped me with this.
 ## Last Ryze Kiddions update: 09/04/2023
-## Last Ryze Stand update: 18/02/2023
+## Last Ryze Stand update: 10/04/2023
 ## Last Ryze FivemM update: 17/03/2023
