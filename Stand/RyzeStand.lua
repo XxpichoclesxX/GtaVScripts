@@ -11,6 +11,34 @@ util.require_natives(1681379138)
 util.show_corner_help("~p~Cargado ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Bienvenidx ".. "~r~" .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() ..  " ~s~\n" .. "Disfruta Usando El Script :)")
 util.yield(800)
 
+local response = false
+local localVer = 3.0
+local localKs = false
+async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
+    currentVer = tonumber(output)
+    response = true
+    if localVer ~= currentVer then
+        util.toast("[Ryze Script] Hay una actualizacion disponible, reinicia para actualizarlo.")
+        menu.action(menu.my_root(), "Actualizar Lua", {}, "", function()
+            async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeStand.lua',function(a)
+                local err = select(2,load(a))
+                if err then
+                    util.toast("Hubo un fallo porfavor procede a la actualizacion manual con github.")
+                return end
+                local f = io.open(filesystem.scripts_dir()..SCRIPT_RELPATH, "wb")
+                f:write(a)
+                f:close()
+                util.toast("Script actualizado, reiniciando el script :3")
+                util.restart_script()
+            end)
+            async_http.dispatch()
+        end)
+    end
+end, function() response = true end)
+async_http.dispatch()
+repeat 
+    util.yield()
+until response
 
 --Because i love consuming resources >.<
 
