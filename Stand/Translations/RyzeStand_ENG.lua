@@ -11,35 +11,6 @@ util.require_natives(1676318796)
 util.show_corner_help("~p~Loaded ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Welcome ".. "~r~" .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() ..  " ~s~\n" .. "Have a good game with the script :)")
 util.yield(800)
 
-local response = false
-local localVer = 3.1
-local localKs = false
-async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
-    currentVer = tonumber(output)
-    response = true
-    if localVer ~= currentVer then
-        util.toast("[Ryze Script] There is an update available, restart the script to update it.")
-        menu.action(menu.my_root(), "Update Script", {}, "", function()
-            async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeStand.lua',function(a)
-                local err = select(2,load(a))
-                if err then
-                    util.toast("There was a failure, please update it manually from github.")
-                return end
-                local f = io.open(filesystem.scripts_dir()..SCRIPT_RELPATH, "wb")
-                f:write(a)
-                f:close()
-                util.toast("Script updated, restarting :3")
-                util.restart_script()
-            end)
-            async_http.dispatch()
-        end)
-    end
-end, function() response = true end)
-async_http.dispatch()
-repeat 
-    util.yield()
-until response
-
 --Because i love consuming resources >.<
 
 util.log("                                           ")
@@ -647,16 +618,6 @@ players.on_join(function(player_id)
         end
     end
 
-    local explosion = 18
-    local explosion_names = {
-        [0] = "Small",
-        [1] = "Medium",
-        [2] = "Big",
-        [3] = "Vicente"
-    }
-
-    local explosions = menu.list(malicious, "Explosion methods", {}, "")
-
     menu.toggle_loop(explosions, "Explosion loop", {"customexplodeloop"}, "", function()
         if players.exists(player_id) then
             local player_pos = players.get_position(player_id)
@@ -929,7 +890,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action_slider(glitchiar, "Yeet a player's vehicle", {}, "", launch_vehicle, function(index, value)
+    menu.list_action(glitchiar, "Yeet a player's vehicle", {}, "", launch_vehicle, function(index, value)
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(ped, false)
         if not PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
@@ -1065,7 +1026,7 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id , {-1796714618, player_id, 0, 1, player_id})
     end)
         
-    menu.action_slider(inf_loading, "Corrupted cellphone", {}, "Click to select style", invites, function(index, name)
+    menu.list_action(inf_loading, "Corrupted cellphone", {}, "Click to select style", invites, function(index, name)
         switch name do
             case 1:
                 util.trigger_script_event(1 << player_id, {36077543, player_id, 1})
@@ -2225,14 +2186,22 @@ players.on_join(function(player_id)
         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(pos.x, pos.y, pos.z + 1, pos.x, pos.y, pos.z, 99999, true, util.joaat("weapon_stungun"), players.user_ped(), false, true, 1.0)
     end)
 
-    menu.action(kill_godmode, "To The Ground", {}, "", function(index, veh)
+    menu.list_action(kill_godmode, "Push Them", {}, "", {"Khanjali", "APC"}, function(index, veh)
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         local vehicle = util.joaat(veh)
         ryze.request_model(vehicle)
 
-        height = 3.4
-        offset = -1.5
+        switch veh do
+            case "Khanjali":
+            height = 2.8
+            offset = 0
+            break
+            case "APC":
+            height = 3.4
+            offset = -1.5
+            break
+        end
 
         if TASK.IS_PED_STILL(ped) then
             distance = 0
@@ -2253,7 +2222,7 @@ players.on_join(function(player_id)
         for i = 1, #spawned_vehs do
             entities.delete_by_handle(spawned_vehs[i])
         end
-    end)    
+    end)   
 
     player_toggle_loop(antimodder, player_id, "Remove godmode", {}, "A of menus block it", function()
         util.trigger_script_event(1 << player_id, {-1428749433, player_id, 448051697, math.random(0, 9999)})
