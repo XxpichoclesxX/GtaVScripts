@@ -5,12 +5,12 @@
     So enjoy and pls join my discord, to know when the script is updated or be able to participate in polls.
 ]]
 
-util.require_natives(1663599433)
+util.require_natives(1676318796)
 
 util.toast("어서오세요 " .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() .. " Al 스크립트!!")
 util.toast("로딩 중 기다려주세요...(1-2초)")
 local response = false
-local localVer = 4.11
+local localVer = 3.1
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
