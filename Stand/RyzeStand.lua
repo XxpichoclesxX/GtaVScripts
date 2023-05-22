@@ -6,13 +6,13 @@
 ]]
 
 util.keep_running()
-util.require_natives(1681379138)
+util.require_natives(1676318796)
 
 util.show_corner_help("~p~Cargado ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Bienvenidx ".. "~r~" .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() ..  " ~s~\n" .. "Disfruta Usando El Script :)")
 util.yield(800)
 
 local response = false
-local localVer = 3.0
+local localVer = 3.1
 local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
