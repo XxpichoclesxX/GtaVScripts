@@ -932,7 +932,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action_slider(glitchiar, "Lanzar Coche De Jugador", {}, "", launch_vehicle, function(index, value)
+    menu.list_action(glitchiar, "Lanzar Coche De Jugador", {}, "", launch_vehicle, function(index, value)
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(ped, false)
         if not PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
@@ -1068,7 +1068,7 @@ players.on_join(function(player_id)
         util.trigger_script_event(1 << player_id , {-1796714618, player_id, 0, 1, player_id})
     end)
         
-    menu.action_slider(inf_loading, "Telefono corrupto", {}, "Click para seleccionar un estilo", invites, function(index, name)
+    menu.list_action(inf_loading, "Telefono corrupto", {}, "Click para seleccionar un estilo", invites, function(index, name)
         switch name do
             case 1:
                 util.trigger_script_event(1 << player_id, {36077543, player_id, 1})
