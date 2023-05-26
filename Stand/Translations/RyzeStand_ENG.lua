@@ -11,6 +11,34 @@ util.require_natives(1676318796)
 util.show_corner_help("~p~Loaded ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Welcome ".. "~r~" .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() ..  " ~s~\n" .. "Have a good game with the script :)")
 util.yield(800)
 
+local response = false
+local localVer = 3.1
+local localKs = false
+async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
+    currentVer = tonumber(output)
+    response = true
+    if localVer ~= currentVer then
+        util.toast("[Ryze Script] There is an update, click on the button to update the script.")
+        menu.action(menu.my_root(), "Update Lua", {}, "", function()
+            async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/Translations/RyzeStand_ENG.lua',function(a)
+                local err = select(2,load(a))
+                if err then
+                    util.toast("There was a failure updating the script, do it manually from github.")
+                return end
+                local f = io.open(filesystem.scripts_dir()..SCRIPT_RELPATH, "wb")
+                f:write(a)
+                f:close()
+                util.toast("Script updated :3")
+                util.restart_script()
+            end)
+            async_http.dispatch()
+        end)
+    end
+end, function() response = true end)
+async_http.dispatch()
+repeat 
+    util.yield()
+until response
 
 local response = false
 local localVer = 3.1
@@ -625,7 +653,7 @@ players.on_join(function(player_id)
 
     if player_id ~= players.user() and players.get_rockstar_id(player_id) == DNknfkaf then
         util.yield(5000)
-        util.toast("RyzeScript's developer has been spotted in your game." .. "\nWatch out, it could be an impostor.")
+        util.toast("RyzeScript's developer has been spotted in your game.")
         util.log(OFNMKF4914jKNFJKfkKNFKJLV)
     end
 
@@ -648,7 +676,9 @@ players.on_join(function(player_id)
         end
     end
 
-    menu.toggle_loop(explosions, "Explosion loop", {"customexplodeloop"}, "", function()
+    local flushes = menu.list(malicious, "Loops", {}, "")
+
+    menu.toggle_loop(flushes, "Explosion loop", {"customexplodeloop"}, "", function()
         if players.exists(player_id) then
             local player_pos = players.get_position(player_id)
             FIRE.ADD_EXPLOSION(player_pos.x, player_pos.y, player_pos.z, explosion, 1, true, false, 1, false)
@@ -656,7 +686,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.toggle_loop(explosions, "Atomize loop", {"atomizeloop"}, "", function()
+    menu.toggle_loop(flushes, "Atomize loop", {"atomizeloop"}, "", function()
         if players.exists(player_id) then
             local player_pos = players.get_position(player_id)
             FIRE.ADD_EXPLOSION(player_pos.x, player_pos.y, player_pos.z - 1, 70, 1, true, false, 1, false)
@@ -664,16 +694,13 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.toggle_loop(explosions, "Firework loop", {"fireworkloop"}, "", function()
+    menu.toggle_loop(flushes, "Firework loop", {"fireworkloop"}, "", function()
         if players.exists(player_id) then
             local player_pos = players.get_position(player_id)
             FIRE.ADD_EXPLOSION(player_pos.x, player_pos.y, player_pos.z - 1, 38, 1, true, false, 1, false)
             util.yield(100)
         end
     end)
-
-
-    local flushes = menu.list(malicious, "Loops", {}, "")
 
     menu.toggle_loop(flushes, "Fire loop", {"flameloop"}, "", function()
         if players.exists(player_id) then
