@@ -12,7 +12,7 @@ util.show_corner_help("~p~Loaded ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Welcome "..
 util.yield(800)
 
 local response = false
-local localVer = 3.1
+local localVer = 3.2
 local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
@@ -192,12 +192,14 @@ ryze = {
     end,
 
     modded_vehicles = {
-        "virtue",
-        "broadway",
-        "panthere",
-        "everon2",
-        "eudora",
-        "boor"
+        "conada2",
+        "inductor",
+        "inductor2",
+        "buffalo5",
+        "brigham",
+        "gauntlet6",
+        "squaddie",
+        "coureur"
     },
 
     pets = {
@@ -213,11 +215,11 @@ ryze = {
     },
 
     get_spawn_state = function(player_id)
-        return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 232)) -- Global_2657589[PLAYER::PLAYER_ID() /*466*/].f_232
+        return memory.read_int(memory.script_global(((2657704 + 1) + (player_id * 463)) + 232)) -- Global_2657589[PLAYER::PLAYER_ID() /*466*/].f_232
     end,
 
-    get_interior_of_player = function(player_id)
-        return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 245))
+    get_interior_player_is_in = function(player_id)
+        return memory.read_int(memory.script_global(((2657704 + 1) + (player_id * 463)) + 245))
     end,
 
     is_player_in_interior = function(player_id)
@@ -232,10 +234,6 @@ ryze = {
 
     get_transition_state = function(player_id)
         return memory.read_int(memory.script_global(((0x2908D3 + 1) + (player_id * 0x1C5)) + 230))
-    end,
-
-    get_interior_player_is_in = function(player_id)
-        return memory.read_int(memory.script_global(((2657589 + 1) + (player_id * 466)) + 245))
     end,
 
     ChangeNetObjOwner = function(object, player)
@@ -1076,11 +1074,11 @@ players.on_join(function(player_id)
 
     local inf_loading = menu.list(trolling, "Infinite loading screen", {}, "")
     menu.action(inf_loading, "Teleport to MC", {}, "", function()
-        util.trigger_script_event(1 << player_id, {891653640, player_id, 0, 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})    
+        util.trigger_script_event(1 << player_id, {891653640, players.user(), 0, 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
     end)
 
     menu.action(inf_loading, "Apartment method", {}, "", function()
-        util.trigger_script_event(1 << player_id , {-1796714618, player_id, 0, 1, player_id})
+        util.trigger_script_event(1 << player_id, {-1796714618, players.user(), 0, 1, player_id})
     end)
         
     menu.list_action(inf_loading, "Corrupted cellphone", {}, "Click to select style", invites, function(index, name)
@@ -2149,22 +2147,20 @@ players.on_join(function(player_id)
 
     menu.action(especialev, "Remote ST 'Test'", {}, "(Re-Start Tutorial)", function()
         menu.trigger_commands("scripthost")
-        for i = 1, 6 do
-            util.trigger_script_event(1 << player_id, {-95341040, player_id, 1, 5, 2, 20, 3, 0, 4, 0, 5, 48, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15, 0, 16, 0, 17, 0, 18, -1, 19, player_id, 1337, 20, 0, 21, 0, 22, 0, 23, 0, 24, player_id, 2117746772})
-        end
+        local int = memory.read_int(memory.script_global(1894573 + 1 + (player_id * 608) + 510))
+        util.trigger_script_event(1 << player_id, {-95341040, players.user(), 20, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, int})
+        util.trigger_script_event(1 << player_id, {1742713914, players.user(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
     end)
 
     menu.action(especialev, "Remote SGM 'Test'", {}, "(Start arcade mini game)", function()
         menu.trigger_commands("scripthost")
-        for i = 1, 6 do
-            util.trigger_script_event(1 << player_id, {-95341040, player_id, 1, 5, 2, 218, 3, 0, 4, 0, 5, 48, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15, 0, 16, 0, 17, 0, 18, -1, 19, player_id, 1337, 20, 0, 21, 0, 22, 0, 23, 0, 24, player_id, 1753269808})
-        end
+        util.trigger_script_event(1 << player_id, {-95341040, players.user(), player_id, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, int})
+        util.trigger_script_event(1 << player_id, {1742713914, players.user(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
     end)
 
-    menu.action(especialev, "Remote PasiveMode 'Test'", {}, "", function()
-        for i = 1, 8 do
-            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 602))})
-        end
+    menu.action(especialev, "Remote 1v1 'Test'", {}, "", function()
+        util.trigger_script_event(1 << player_id, {-95341040, players.user(), 197, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, int})
+        util.trigger_script_event(1 << player_id, {1742713914, players.user(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
     end)
     
     menu.action(especialev, "Remote TE 'Test'", {}, "(Transaction Error)", function()
@@ -2313,10 +2309,10 @@ players.on_join(function(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
     
         for i, interior in ipairs(interior_stuff) do
-            if ryze.get_interior_of_player(player_id) == interior then
+            if ryze.get_interior_player_is_in(player_id) == interior then
                 util.toast("Player is not on interior grounds. D:")
             return end
-            if ryze.get_interior_of_player(player_id) ~= interior then
+            if ryze.get_interior_player_is_in(player_id) ~= interior then
                 MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(pos.x, pos.y, pos.z + 1, pos.x, pos.y, pos.z, 1000, true, util.joaat("weapon_stungun"), players.user_ped(), false, true, 1.0)
             end
         end
@@ -2961,7 +2957,7 @@ players.on_join(function(player_id)
         local spec_2 = menu.ref_by_rel_path(menu.player_root(player_id), "Spectate>Nuts Method")
         local spec_1 = menu.ref_by_rel_path(menu.player_root(player_id), "Spectate>Legit Method")
         if on then
-            if ryze.get_interior_of_player(player_id) == 0 then
+            if ryze.get_interior_player_is_in(player_id) == 0 then
                 spec_1.value = false
                 spec_2.value = true
             else
@@ -3040,7 +3036,7 @@ menu.toggle_loop(normalmod, "GodMode", {}, "It'll pop up if godmode is detected.
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
         for i, interior in ipairs(interior_stuff) do
-            if players.is_godmode(player_id) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and ryze.get_interior_of_player(player_id) == interior then
+            if players.is_godmode(player_id) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and ryze.get_interior_player_is_in(player_id) == interior then
                 util.draw_debug_text(players.get_name(player_id) .. " Has godmode.")
                 break
             end
@@ -3055,7 +3051,7 @@ menu.toggle_loop(normalmod, "Vehicle godmode", {}, "It'll pop up if godmode on a
         local player_veh = PED.GET_VEHICLE_PED_IS_USING(ped)
         if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
             for i, interior in ipairs(interior_stuff) do
-                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and ryze.get_interior_of_player(player_id) == interior then
+                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(player_id) == 99 and ryze.get_interior_player_is_in(player_id) == interior then
                     util.draw_debug_text(players.get_name(player_id) .. " Is inside a vehicle with godmode")
                     break
                 end
@@ -3103,7 +3099,7 @@ menu.toggle_loop(normalmod, "Run fast", {}, "It'll pop up if a player is running
     for _, player_id in ipairs(players.list(false, true, true)) do
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local ped_speed = (ENTITY.GET_ENTITY_SPEED(ped)* 2.236936)
-        if not util.is_session_transition_active() and ryze.get_interior_of_player(player_id) == 0 and ryze.get_transition_state(player_id) ~= 0 and not PED.IS_PED_DEAD_OR_DYING(ped) 
+        if not util.is_session_transition_active() and ryze.get_interior_player_is_in(player_id) == 0 and ryze.get_transition_state(player_id) ~= 0 and not PED.IS_PED_DEAD_OR_DYING(ped) 
         and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_IN_ANY_VEHICLE(ped, false)
         and not TASK.IS_PED_STILL(ped) and not PED.IS_PED_JUMPING(ped) and not ENTITY.IS_ENTITY_IN_AIR(ped) and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped)
         and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) <= 300.0 and ped_speed > 30 then -- fastest run speed is about 18ish mph but using 25 to give it some headroom to prevent false positives
@@ -3142,7 +3138,7 @@ menu.toggle_loop(normalmod, "Spectating", {}, "Detects if someone is spectating 
     for _, player_id in ipairs(players.list(false, true, true)) do
         for i, interior in ipairs(interior_stuff) do
             local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-            if not util.is_session_transition_active() and ryze.get_spawn_state(player_id) ~= 0 and ryze.get_interior_of_player(player_id) == interior
+            if not util.is_session_transition_active() and ryze.get_spawn_state(player_id) ~= 0 and ryze.get_interior_player_is_in(player_id) == interior
             and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
                 if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(player_id)) < 15.0 and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 20.0 then
                     util.toast(players.get_name(player_id) .. " Is watching you")
@@ -3429,6 +3425,7 @@ recovery = menu.list(online, "Recovery", {}, "", function()
 end)
 
 
+--[[
 local coleccionables = menu.list(recovery, "Coleccionables 'RISKY'", {}, "")
 
 menu.click_slider(coleccionables, "Tapes", {""}, "", 0, 9, 0, 1, function(i)
@@ -3525,6 +3522,7 @@ end)
 menu.toggle_loop(acidlab, "Skip Dax's cooldown", {}, "", function() -- thx icedoomfist and pwisuhm my dad
     STATS.STAT_SET_INT(util.joaat("MP"..util.get_char_slot().."_XM22JUGGALOWORKCDTIMER"), -1, true)
 end)
+]]
 
 menu.toggle_loop(recovery, "Plasma cutter cayo perico 'Test'", {}, "It'll reduce the time the plasma cutter takes.", function()
     local pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED(players.user()), true)
