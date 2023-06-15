@@ -12,7 +12,7 @@ util.show_corner_help("~p~Cargado ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Bienvenidx
 util.yield(800)
 
 local response = false
-local localVer = 3.2
+local localVer = 3.21
 local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
@@ -2211,7 +2211,6 @@ players.on_join(function(player_id)
     menu.action(especialev, "Remote 1v1 'Test'", {}, "", function()
         util.trigger_script_event(1 << player_id, {-95341040, players.user(), 197, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, int})
         util.trigger_script_event(1 << player_id, {1742713914, players.user(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
-    end)
     end)
     
     menu.action(especialev, "Remote TE 'Test'", {}, "(Transaction Error)", function()
