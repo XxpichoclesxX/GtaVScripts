@@ -625,7 +625,7 @@ players.on_join(function(player_id)
 
     if player_id ~= players.user() and players.get_rockstar_id(player_id) == DNknfkaf then
         util.yield(5000)
-        util.toast("Se detecto al developper de RyzeScript." .. "\nCuidado puede ser un impostor.")
+        util.toast("Se detecto al developper de RyzeScript.")
         util.log(OFNMKF4914jKNFJKfkKNFKJLV)
     end
 
