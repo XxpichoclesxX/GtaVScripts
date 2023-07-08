@@ -1,0 +1,23 @@
+local Moneytab = gui.get_tab("Money Loop")
+
+Moneytab:add_button("1 Mil 1 Click", function ()
+    globals.set_int(4536533+ 1, 2147483646)
+    globals.set_int(4536533+ 7, 2147483647)
+    globals.set_int(4536533+ 6, 0)
+    globals.set_int(4536533+ 5, 0)
+    globals.set_int(4536533+ 3, 0x615762F1)
+    globals.set_int(4536533+ 2, 1000000)
+    globals.set_int(4536533,2)
+end)
+
+Moneytab:add_button("750k 1 Click", function()
+    globals.set_int(1969112, 2)
+    script_util:sleep(50)
+    globals.set_int(1969112, 0)
+end)
+
+Moneytab:add_button("500k 1 Click", function()
+    globals.set_int(1969112, 1)
+    script_util:sleep(50)
+    globals.set_int(1969112, 0)
+end)
