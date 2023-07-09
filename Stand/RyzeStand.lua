@@ -3523,6 +3523,7 @@ end)
 menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 1, function(i)
     util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0xA, i, 1, 1, 1})
 end)
+]]
 
 local acidlab = menu.list(recovery, "Acid Lab 'Test'", {}, "Acido owo.")
 
