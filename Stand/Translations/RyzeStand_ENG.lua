@@ -12,7 +12,7 @@ util.show_corner_help("~p~Loaded ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Welcome "..
 util.yield(800)
 
 local response = false
-local localVer = 3.21
+local localVer = 3.22
 local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
@@ -3471,67 +3471,41 @@ end)
 menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 1, function(i)
     util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0xA, i, 1, 1, 1})
 end)
+]]
 
-local drugwars = menu.list(recovery, "Drug Wars", {}, "DrugWars content.")
+local acidlab = menu.list(recovery, "Acid Lab 'Test'", {}, "Acido owo.")
 
-menu.action(drugwars, "Unlock Cont/DLC", {}, "It'll unlock the content of the new DLC \nProbably for the session you're in.", function()
-    menu.trigger_commands("scripthost")
-    util.yield(50)
-    for i = 33974, 34112, 1 do
-        memory.write_byte(memory.script_global(262145 + i), 1)  
-    end
-end)
-
-menu.action(drugwars, "Unlock missions", {}, "It unlocks you everything. \nIncluding the new missions.", function()
-    menu.trigger_commands("scripthost")
-    util.toast("You'll have the t-shirts btw.")
-    util.yield(50)
-    util.toast("You'll have the new missions, dealers, and who knows, maybe more?.")
-    for i = 33910, 34794, 1 do
-        memory.write_byte(memory.script_global(262145 + i), 1)  
-    end
-end)
-
-local acidlab = menu.list(recovery, "Acid Lab", {}, "Acid owo.")
-
-menu.click_slider(acidlab, "Product capacity", {}, "", 0, 1000, 160, 1, function(capacity)
+--[[
+menu.click_slider(acidlab, "Capacidad De Producto", {}, "", 0, 1000, 160, 1, function(capacity)
     memory.write_int(memory.script_global(262145 + 18949), capacity) 
 end)
+]]
 
-menu.toggle(acidlab, "Free suplies", {}, "", function()
-    memory.write_int(memory.script_global(262145 + 21869), 0)
+menu.toggle(acidlab, "Free Supplies", {}, "", function()
+    memory.write_int(memory.script_global(285557), 0)
 end, function()
-    memory.write_int(memory.script_global(262145 + 21869), 60000)
+    memory.write_int(memory.script_global(285557), 12000)
 end)
 
-menu.toggle(acidlab, "Increase production speed", {}, "", function()
-    memory.write_int(memory.script_global(262145 + 17396), 100) 
+menu.toggle(acidlab, "Speed Up Production", {}, "", function()
+    memory.write_int(memory.script_global(279721), 100) 
 end, function()
-    memory.write_int(memory.script_global(262145 + 17396), 135000) 
+    memory.write_int(memory.script_global(279721), 135000) 
 end)
 
-menu.action(acidlab, "Fill suplies", {}, "", function()
+menu.action(acidlab, "Fill Supplies", {}, "", function()
     local time = NETWORK.GET_CLOUD_TIME_AS_INT() - memory.read_int(memory.script_global(262145 + 18954))
     memory.write_int(memory.script_global(1648637 + 1 + 6), time)
 end)
-
-menu.click_slider(acidlab, "Selling value", {}, "NO MORE THAN 2 MILLION. \nYou can get banned if you exceed.", 0, 10000, 1, 1, function(value)
-    memory.write_int(memory.script_global(262145 + 17425), value * 1485) 
-end)
-
-menu.toggle_loop(acidlab, "Skip Dax's cooldown", {}, "", function() -- thx icedoomfist and pwisuhm my dad
-    STATS.STAT_SET_INT(util.joaat("MP"..util.get_char_slot().."_XM22JUGGALOWORKCDTIMER"), -1, true)
-end)
-]]
 
 menu.toggle_loop(recovery, "Plasma cutter cayo perico 'Test'", {}, "It'll reduce the time the plasma cutter takes.", function()
     local pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED(players.user()), true)
     local interior = INTERIOR.GET_INTERIOR_AT_COORDS(pos.x, pos.y, pos.z)
     if interior == 281601 then
-        local cutterProgress = memory.read_float(memory.script_local("fm_mission_controller_2020", 28273 + 3))
+        local cutterProgress = memory.read_float(memory.script_local("fm_mission_controller_2020", 284959))
         if cutterProgress then
             if cutterProgress > 0 and cutterProgress < 99.999 then
-                memory.write_float(memory.script_local("fm_mission_controller_2020", 28273 + 3), 99.999)
+                memory.write_float(memory.script_local("fm_mission_controller_2020", 284959), 99.999)
                 util.toast("Saltando Animacion...")
             end
         end
@@ -3543,54 +3517,21 @@ menu.toggle_loop(recovery, "Club popularity", {}, "It'll set the popularity of y
         menu.trigger_commands("clubpopularity 100")
     end
 end)
-
-local bypasskick = menu.list(online, "Bypass Kick", {}, "Options that let you use methods to \n get into a session if you're getting blocked.")
-
-local testmeth = menu.list(bypasskick, "Functional method", {}, "Read the instructions reeeeally carefully.")
-
-menu.divider(testmeth, "Phase 1", {}, "")
-
-menu.toggle(testmeth, "Activate this", {}, "Activate this before selecting the name. \nDeactivate in the step 3", function(on)
-    if on then
-        menu.trigger_commands("bkick1 on")
-    else
-        menu.trigger_commands("bkick1 off")
-    end
-end)
-
-menu.divider(testmeth, "Phase 2", {}, "")
-
-menu.text_input(testmeth, "Name (Join)", {"name"}, "Write the name of the player. \nTo get into his session.", function(playername)
-    menu.trigger_commands("historyspectate".. playername)
-end)
-
-menu.divider(testmeth, "Phase 3", {}, "")
-
-menu.text_input(testmeth, "Name (Kick)", {"name2"}, "Write the name of the player. \nTo kick him before he realizes.", function(playername)
-    menu.trigger_commands("kick".. playername)
-end)
-
-menu.divider(testmeth, "Fase 3", {}, "")
-menu.action(testmeth, "Click me", {}, "Click here when you get into the session and kicked him succesfully.", function()
-    menu.trigger_commands("rejoin")
-end)
-
 --------------------------------------------------------------------------------------------------------------------------------
 --Protecciones
-
-menu.action(protects, "Stop all sounds", {"stopsounds"}, "", function()
-    for i = -1,100 do
-        AUDIO.STOP_SOUND(i)
-        AUDIO.RELEASE_SOUND_ID(i)
-        AUDIO.STOP_PED_RINGTONE(i)
-    end
-end)
-
 menu.action(protects, "Remove things", {}, "It'll remove stuff sutck to you or really close to you.", function()
     if PED.IS_PED_MALE(PLAYER.PLAYER_PED_ID()) then
         menu.trigger_commands("mpmale")
     else
         menu.trigger_commands("mpfemale")
+    end
+end)
+
+menu.toggle_loop(protects, "Stop all sounds", {"stopsounds"}, "", function()
+    for i = -1,100 do
+        AUDIO.STOP_SOUND(i)
+        AUDIO.RELEASE_SOUND_ID(i)
+        AUDIO.STOP_PED_RINGTONE(i)
     end
 end)
 
