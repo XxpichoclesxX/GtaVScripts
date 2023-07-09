@@ -1016,25 +1016,25 @@ local function MCrr(e) if not localplayer then return end if e then for i = 0, 4
 local function MCgs(e) if not localplayer then return end if e then globals.set_int(283700, 0) else globals.set_int(283700, 40000) end end 
 
 mcMenu:add_toggle("Speed Up Production", function() return e16 end, function() e16 = not e16 Speed(e16) end)
-mmMCmenu:add_toggle("Get More Sell Time", function() return e46 end, function() e46 = not e46 EMCdt(e46) end)
-mmMCmenu:add_toggle("Remove Supply Cost", function() return e22 end, function() e22 = not e22 VRC(e22) end) 
-mmMCmenu:add_toggle("Remove Supply Delay", function() return e42 end, function() e42 = not e42 VRD(e42) end)
-mmMCmenu:add_toggle("Give Supplies (experimental)", function() return e25 end, function() e25 = not e25 MCrr(e25) end)
-mmMCmenu:add_toggle("Remove Global Signal", function() return e24 end, function() e24 = not e24 MCgs(e24) end)
-mmMCmenu:add_float_range("Sale Multiplier", 0.5, 1, 1000, function() return globals.get_float(283262) end, function(value) globals.set_float(283262, value) globals.set_float(283799, value) end) 
-mmMCmenu:add_action(" ~Use it to get max 8m~ ", function() end)
+mcMenu:add_toggle("Get More Sell Time", function() return e46 end, function() e46 = not e46 EMCdt(e46) end)
+mcMenu:add_toggle("Remove Supply Cost", function() return e22 end, function() e22 = not e22 VRC(e22) end) 
+mcMenu:add_toggle("Remove Supply Delay", function() return e42 end, function() e42 = not e42 VRD(e42) end)
+mcMenu:add_toggle("Give Supplies (experimental)", function() return e25 end, function() e25 = not e25 MCrr(e25) end)
+mcMenu:add_toggle("Remove Global Signal", function() return e24 end, function() e24 = not e24 MCgs(e24) end)
+mcMenu:add_float_range("Sale Multiplier", 0.5, 1, 1000, function() return globals.get_float(283262) end, function(value) globals.set_float(283262, value) globals.set_float(283799, value) end) 
+mcMenu:add_action(" ~Use it to get max 8m~ ", function() end)
 
 mmVmenu = dinMenu:add_submenu("Vehicle Cargo $$$") local function Max(e) if not localplayer then return end if e then globals.set_int(281602, 155000) globals.set_int(281603, 155000) globals.set_int(281604, 155000) globals.set_float(281606, 0) globals.set_float(281607, 0) else globals.set_int(281602, 40000) globals.set_int(281603, 25000) globals.set_int(281604, 15000) globals.set_float(281606, 0.25) globals.set_float(281607, 0.5) end end 
 local function ACCC(e) if not localplayer then return end if e then globals.set_int(290970, 0) else globals.set_int(290970, 2880) end end 
 local function etCC(e) if not localplayer then return end if e then globals.set_int(278114, 99999) else globals.set_int(278114, 600) end end 
 
-mmCCmenu:add_toggle("Remove Cooldown", function() return e35 end, function() e35 = not e35 ACCC(e35) end)
-mmCCmenu:add_int_range("% Chance", 5, 0, 100, function() return globals.get_int(277941) end, function(value) globals.set_int(277941, value) end)
-mmCCmenu:add_float_range("2 Lift Cooldown Multiplier", 0.5, 0.0, 100, function() return globals.get_float(281807) end, function(value) globals.set_float(281807, value) end)
-mmCCmenu:add_toggle("Extend Sale Time", function() return e36 end, function() e36 = not e36 etCC(e36) end)
-mmCCmenu:add_int_range("Bad Tier", 5000, 20000, 100000, function() return globals.get_int(281261) end, function(value) globals.set_int(281261, value) end)
-mmCCmenu:add_int_range("Medium Tier", 5000, 25000, 125000, function() return globals.get_int(290156) end, function(value) globals.set_int(290156, value) end)
-mmCCmenu:add_int_range("Hight Tier", 5000, 30000, 150000, function() return globals.get_int(274100) end, function(value) globals.set_int(274100, value) end)
+mmVmenu:add_toggle("Remove Cooldown", function() return e35 end, function() e35 = not e35 ACCC(e35) end)
+mmVmenu:add_int_range("% Chance", 5, 0, 100, function() return globals.get_int(277941) end, function(value) globals.set_int(277941, value) end)
+mmVmenu:add_float_range("2 Lift Cooldown Multiplier", 0.5, 0.0, 100, function() return globals.get_float(281807) end, function(value) globals.set_float(281807, value) end)
+mmVmenu:add_toggle("Extend Sale Time", function() return e36 end, function() e36 = not e36 etCC(e36) end)
+mmVmenu:add_int_range("Bad Tier", 5000, 20000, 100000, function() return globals.get_int(281261) end, function(value) globals.set_int(281261, value) end)
+mmVmenu:add_int_range("Medium Tier", 5000, 25000, 125000, function() return globals.get_int(290156) end, function(value) globals.set_int(290156, value) end)
+mmVmenu:add_int_range("Hight Tier", 5000, 30000, 150000, function() return globals.get_int(274100) end, function(value) globals.set_int(274100, value) end)
 
 MMmenu = dinMenu:add_submenu("Money Loop 'SUPER RISKY'") local g = globals.set_int local m = 1969112 local x = 1 local y = 2 local z = 3 local k = 0 local s = sleep local p = 30 local q = 60 local r = 120 local enable1 = false local enable2 = false local enable3 = false local enable4 = false local enable5 = false local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
 
