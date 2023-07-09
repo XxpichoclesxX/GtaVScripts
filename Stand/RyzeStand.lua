@@ -3524,51 +3524,29 @@ menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 
     util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0xA, i, 1, 1, 1})
 end)
 
-local drugwars = menu.list(recovery, "Drug Wars", {}, "Contenido de DrugWars.")
+local acidlab = menu.list(recovery, "Acid Lab 'Test'", {}, "Acido owo.")
 
-menu.action(drugwars, "Desbloquear Cont/DLC", {}, "Te desbloqueara el contenido del nuevo DLC \nProbablemente sea solo por la sesion.", function()
-    menu.trigger_commands("scripthost")
-    util.yield(50)
-    for i = 33974, 34112, 1 do
-        memory.write_byte(memory.script_global(262145 + i), 1)  
-    end
-end)
-
-menu.action(drugwars, "Desbloquear Misiones", {}, "Te desbloqueara todo. \nIncluyendo una de las nuevas misiones.", function()
-    menu.trigger_commands("scripthost")
-    util.toast("Tendras las camisetas btw.")
-    util.yield(50)
-    util.toast("Tendras las nuevas misiones, los vendedores, y quien sabe, mas?.")
-    for i = 33910, 34794, 1 do
-        memory.write_byte(memory.script_global(262145 + i), 1)  
-    end
-end)
-
-local acidlab = menu.list(recovery, "Acid Lab", {}, "Acido owo.")
-
+--[[
 menu.click_slider(acidlab, "Capacidad De Producto", {}, "", 0, 1000, 160, 1, function(capacity)
     memory.write_int(memory.script_global(262145 + 18949), capacity) 
 end)
+]]
 
 menu.toggle(acidlab, "Suministros Gratis", {}, "", function()
-    memory.write_int(memory.script_global(262145 + 21869), 0)
+    memory.write_int(memory.script_global(285557), 0)
 end, function()
-    memory.write_int(memory.script_global(262145 + 21869), 60000)
+    memory.write_int(memory.script_global(285557), 12000)
 end)
 
 menu.toggle(acidlab, "Aumentar Velocidad De Produccion", {}, "", function()
-    memory.write_int(memory.script_global(262145 + 17396), 100) 
+    memory.write_int(memory.script_global(279721), 100) 
 end, function()
-    memory.write_int(memory.script_global(262145 + 17396), 135000) 
+    memory.write_int(memory.script_global(279721), 135000) 
 end)
 
 menu.action(acidlab, "Llenar Suministros", {}, "", function()
     local time = NETWORK.GET_CLOUD_TIME_AS_INT() - memory.read_int(memory.script_global(262145 + 18954))
     memory.write_int(memory.script_global(1648637 + 1 + 6), time)
-end)
-
-menu.click_slider(acidlab, "Valor De Venta", {}, "No mas de 2 Millones. \nPueden banearte si excedes.", 0, 10000, 1, 1, function(value)
-    memory.write_int(memory.script_global(262145 + 17425), value * 1485) 
 end)
 
 menu.toggle_loop(acidlab, "Saltar Cooldown De Dax", {}, "", function() -- thx icedoomfist and pwisuhm my dad
@@ -3580,10 +3558,10 @@ menu.toggle_loop(recovery, "Cortadora Laser Cayo 'Test'", {}, "Reducira el tiemp
     local pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED(players.user()), true)
     local interior = INTERIOR.GET_INTERIOR_AT_COORDS(pos.x, pos.y, pos.z)
     if interior == 281601 then --the room behind the bars where the primary target is
-        local cutterProgress = memory.read_float(memory.script_local("fm_mission_controller_2020", 28273 + 3))
+        local cutterProgress = memory.read_float(memory.script_local("fm_mission_controller_2020", 284959))
         if cutterProgress then
             if cutterProgress > 0 and cutterProgress < 99.999 then
-                memory.write_float(memory.script_local("fm_mission_controller_2020", 28273 + 3), 99.999)
+                memory.write_float(memory.script_local("fm_mission_controller_2020", 284959), 99.999)
                 util.toast("Saltando Animacion...")
             end
         end
@@ -3596,53 +3574,22 @@ menu.toggle_loop(recovery, "Popularidad Del Club", {}, "Te pondra la popularidad
     end
 end)
 
-local bypasskick = menu.list(online, "Bypass Kick", {}, "Opciones que te permiten usar metodos para \n entrar a la sesion si te estan bloqueando.")
-
-local testmeth = menu.list(bypasskick, "Metodo Funcional", {}, "Lee con cautela las instrucciones en las opciones.")
-
-menu.divider(testmeth, "Fase 1", {}, "")
-
-menu.toggle(testmeth, "Activa Esto", {}, "Activa esto antes de seleccionar el nombre. \nDesactiva en el paso 3", function(on)
-    if on then
-        menu.trigger_commands("bkick1 on")
-    else
-        menu.trigger_commands("bkick1 off")
-    end
-end)
-
-menu.divider(testmeth, "Fase 2", {}, "")
-
-menu.text_input(testmeth, "Nombre (Join)", {"name"}, "Escribe el nombre del jugador. \nPara entrar a su sesion.", function(playername)
-    menu.trigger_commands("historyspectate".. playername)
-end)
-
-menu.divider(testmeth, "Fase 3", {}, "")
-
-menu.text_input(testmeth, "Nombre (Kick)", {"name2"}, "Escribe el nombre del jugador. \nPara kickearle antes que se de cuenta.", function(playername)
-    menu.trigger_commands("kick".. playername)
-end)
-
-menu.divider(testmeth, "Fase 3", {}, "")
-menu.action(testmeth, "Dame Click", {}, "Dale click aqui cuando estes en la sesion y lo hayas kickeado.", function()
-    menu.trigger_commands("rejoin")
-end)
-
 --------------------------------------------------------------------------------------------------------------------------------
 --Protecciones
-
-menu.action(protects, "Parar Todos Los Sonidos", {"stopsounds"}, "", function()
-    for i = -1,100 do
-        AUDIO.STOP_SOUND(i)
-        AUDIO.RELEASE_SOUND_ID(i)
-        AUDIO.STOP_PED_RINGTONE(i)
-    end
-end)
 
 menu.action(protects, "Quitar Cosas", {}, "Quitara las cosas pegadas a ti.", function()
     if PED.IS_PED_MALE(PLAYER.PLAYER_PED_ID()) then
         menu.trigger_commands("mpmale")
     else
         menu.trigger_commands("mpfemale")
+    end
+end)
+
+menu.toggle_loop(protects, "Parar Todos Los Sonidos", {"stopsounds"}, "", function()
+    for i = -1,100 do
+        AUDIO.STOP_SOUND(i)
+        AUDIO.RELEASE_SOUND_ID(i)
+        AUDIO.STOP_PED_RINGTONE(i)
     end
 end)
 
