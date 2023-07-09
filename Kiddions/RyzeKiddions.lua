@@ -74,86 +74,22 @@ fmC = script("fm_mission_controller")
 PlayerIndex = stats.get_int("MPPLY_LAST_MP_CHAR") 
 mpx = PlayerIndex if PlayerIndex == 0 then mpx = "MP0_" else mpx = "MP1_" end xox_00 = 1 xox_01 = 1 xox_0 = 1 xox_1 = 1 xox_2 = 1 xox_3 = 1 xox_4 = 1 xox_5 = 1 xox_6 = 1 xox_7 = 1 xox_8 = 1 xox_9 = 1 xox_10 = 1 xox_11 = 1 xox_12 = 1 xox_13 = 1 xox_14 = 1 xox_15 = 1 xox_16 = 1 xox_17 = 1 xox_18 = 1 xox_19 = 1 xox_20 = 1 xox_21 = 1 xox_22 = 1 xox_23 = 1 xox_24 = 1 xox_25 = 1 xox_26 = 1 xox_27 = 1 xox_28 = 1 xox_29 = 1 xox_30 = 1 xox_31 = 1 xox_32 = 1 xox_33 = 1 xox_34 = 1 xox_35 = 1 e0 = false e1 = false e2 = false e3 = false e4 = false e5 = false e6 = false e7 = false e8 = false e9 = false e10 = false e11 = false e12 = false e13 = false e14 = false e15 = false e16 = false e17 = false e18 = false e19 = false e20 = false e21 = false e22 = false e23 = false e24 = false e25 = false e26 = false e27 = false e28 = false e29 = false e30 = false e31 = false e32 = false e33 = false e34 = false e35 = false e36 = false e37 = false e38 = false e39 = false e40 = false e41 = false e42 = false e43 = false e44 = false e45 = false e46 = false e47 = false e48 = false e49 = false e50 = false 
 
-local function setrank()
-	if boolrp then
-		globals.set_int(1853910 + 1 + ply + 205 + 6, rank)
-		if rank <= 8000 then
-			local schwonz = math.floor(rpfromwikibecausezjzsaidthaticantcodecplusplus[rank] + randomslonshit2)
-			globals.set_int(1853910 + 1 + ply + 205 + 1, schwonz)
-		end
-	else
-		globals.set_int(1853910 + 1 + ply + 205 + 6, rank)
-	end
-end
-
-local function setbmoney()
-	globals.set_int(1853910 + 1 + ply + 205 + 56, bmoney)  
-end
-
-local function setmoney()
-	globals.set_int(1853910 + 1 + ply + 205 + 3, money)  
-end
-
-local function setkills()
-	if not boolkd then
-		globals.set_int(1853910 + 1 + ply + 205 + 28, kills)
-	end
-end
-local function setdeaths()
-	if not boolkd then
-		globals.set_int(1853910 + 1 + ply + 205 + 29, deaths)
-	end
-end
-
-local function resetoverrideBounty()
-	globals.set_int(global_overridebase + 2348, 2000)
-	globals.set_int(global_overridebase + 2349, 4000)
-	globals.set_int(global_overridebase + 2350, 6000)
-	globals.set_int(global_overridebase + 2351, 8000)
-	globals.set_int(global_overridebase + 2352, 10000)
-	globals.set_int(global_overridebase + 7105, 1000)
-end
-
-local function setkills2()
-		local valuekd = globals.get_float(1853910 + 1 + ply + 205 + 26)
-		local egothisscriptisstolen = math.floor(valuekd * randomslonshit1)
-		globals.set_int(1853910 + 1 + ply + 205 + 28, egothisscriptisstolen)
-end
-local function setdeaths2()
-		globals.set_int(1853910 + 1 + ply + 205 + 29, randomslonshit1)
-end
-
-local function GetPlayerCount()
-	return player.get_number_of_players()
-end
-
-local function setkd()
-	if boolkd then
-		globals.set_float(1853910 + 1 + ply + 205 + 26, kd)
-		kills2_key = menu.register_hotkey(122, setkills2)
-		removeset7 = 1
-		deaths2_key = menu.register_hotkey(122, setdeaths2)
-		removeset8 = 1
-	else
-		globals.set_float(1853910 + 1 + ply + 205 + 26, kd)
-	end
-end
-
-local function Text(text) menu.add_action(text, function() end) end local fmC2020 = script("fm_pichocles_script_2022") local fmC = script("fm_pichocles_script") local PlayerIndex = stats.get_int("MPPLY_LAST_MP_CHAR") local mpx = PlayerIndex if PlayerIndex == 0 then mpx = "MP0_" else mpx = "MP1_" end local xox_00 = 1 local xox_01 = 1 local xox_0 = 1 local xox_1 = 1 local xox_2 = 1 local xox_3 = 1 local xox_4 = 1 local xox_5 = 1 local xox_6 = 1 local xox_7 = 1 local xox_8 = 1 local xox_9 = 1 local xox_10 = 1 local xox_11 = 1 local xox_12 = 1 local xox_13 = 1 local xox_14 = 1 local xox_15 = 1 local xox_16 = 1 local xox_17 = 1 local xox_18 = 1 local xox_19 = 1 local xox_20 = 1 local xox_21 = 1 local xox_22 = 1 local xox_23 = 1 local xox_24 = 1 local xox_25 = 1 local xox_26 = 1 local xox_27 = 1 local xox_28 = 1 local xox_29 = 1 local xox_30 = 1 local xox_31 = 1 local xox_32 = 1 local xox_33 = 1 local xox_34 = 1 local xox_35 = 1 local e0 = false local e1 = false local e2 = false local e3 = false local e4 = false local e5 = false local e6 = false local e7 = false local e8 = false local e9 = false local e10 = false local e11 = false local e12 = false local e13 = false local e14 = false local e15 = false local e16 = false local e17 = false local e18 = false local e19 = false local e20 = false local e21 = false local e22 = false local e23 = false local e24 = false local e25 = false local e26 = false local e27 = false local e28 = false local e29 = false local e30 = false local e31 = false local e32 = false local e33 = false local e34 = false local e35 = false local e36 = false local e37 = false local e38 = false local e39 = false local e40 = false local function TP(x, y, z, yaw, roll, pitch) if localplayer:is_in_vehicle() then localplayer:get_current_vehicle():set_position(x, y, z) localplayer:get_current_vehicle():set_rotation(yaw, roll, pitch) else localplayer:set_position(x, y, z) localplayer:set_rotation(yaw, roll, pitch) end end local mainMenu = menu.add_submenu("Ryze Script ")
+local function Text(text) menu.add_action(text, function() end) end local fmC2020 = script("fm_pichocles_script_2023") local fmC = script("fm_pichocles_script") local PlayerIndex = stats.get_int("MPPLY_LAST_MP_CHAR") local mpx = PlayerIndex if PlayerIndex == 0 then mpx = "MP0_" else mpx = "MP1_" end local xox_00 = 1 local xox_01 = 1 local xox_0 = 1 local xox_1 = 1 local xox_2 = 1 local xox_3 = 1 local xox_4 = 1 local xox_5 = 1 local xox_6 = 1 local xox_7 = 1 local xox_8 = 1 local xox_9 = 1 local xox_10 = 1 local xox_11 = 1 local xox_12 = 1 local xox_13 = 1 local xox_14 = 1 local xox_15 = 1 local xox_16 = 1 local xox_17 = 1 local xox_18 = 1 local xox_19 = 1 local xox_20 = 1 local xox_21 = 1 local xox_22 = 1 local xox_23 = 1 local xox_24 = 1 local xox_25 = 1 local xox_26 = 1 local xox_27 = 1 local xox_28 = 1 local xox_29 = 1 local xox_30 = 1 local xox_31 = 1 local xox_32 = 1 local xox_33 = 1 local xox_34 = 1 local xox_35 = 1 local e0 = false local e1 = false local e2 = false local e3 = false local e4 = false local e5 = false local e6 = false local e7 = false local e8 = false local e9 = false local e10 = false local e11 = false local e12 = false local e13 = false local e14 = false local e15 = false local e16 = false local e17 = false local e18 = false local e19 = false local e20 = false local e21 = false local e22 = false local e23 = false local e24 = false local e25 = false local e26 = false local e27 = false local e28 = false local e29 = false local e30 = false local e31 = false local e32 = false local e33 = false local e34 = false local e35 = false local e36 = false local e37 = false local e38 = false local e39 = false local e40 = false local function TP(x, y, z, yaw, roll, pitch) if localplayer:is_in_vehicle() then localplayer:get_current_vehicle():set_position(x, y, z) localplayer:get_current_vehicle():set_rotation(yaw, roll, pitch) else localplayer:set_position(x, y, z) localplayer:set_rotation(yaw, roll, pitch) end end local mainMenu = menu.add_submenu("Ryze Script ")
 
 modelMenu = mainMenu:add_submenu("Self")
 
 modelMenu:add_action("----------------- Self ----------------", function() end)
 
-badSp = modelMenu:add_submenu("Malos Perdedores")
-modSp = modelMenu:add_submenu("Modificaciones")
+badSp = modelMenu:add_submenu("Malos Perdedores (MU)")
+modSp = modelMenu:add_submenu("Modificaciones (MU)")
 
---Removed fast Run & Reload
+modSp:add_action("Correr Rapido Y Recargar", function() stats.set_int(mpx .. "CHAR_ABILITY_1_UNLCK", -1) stats.set_int(mpx .. "CHAR_ABILITY_2_UNLCK", -1) stats.set_int(mpx .. "CHAR_ABILITY_3_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_1_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_2_UNLCK", -1) stats.set_int(mpx .. "CHAR_FM_ABILITY_3_UNLCK", -1) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end) 
+modSp:add_action("Reiniciar Estado", function() stats.set_int(mpx .. "CHAR_ABILITY_1_UNLCK", 0) stats.set_int(mpx .. "CHAR_ABILITY_2_UNLCK", 0) stats.set_int(mpx .. "CHAR_ABILITY_3_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_1_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_2_UNLCK", 0) stats.set_int(mpx .. "CHAR_FM_ABILITY_3_UNLCK", 0) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
 
 modSp:add_action("Rellenar Inv y Armadura", function()	stats.set_int(mpx .. "NO_BOUGHT_YUM_SNACKS", 30) stats.set_int(mpx .. "NO_BOUGHT_HEALTH_SNACKS", 15) stats.set_int(mpx .. "NO_BOUGHT_EPIC_SNACKS", 5) stats.set_int(mpx .. "NUMBER_OF_CHAMP_BOUGHT", 5) stats.set_int(mpx .. "NUMBER_OF_ORANGE_BOUGHT", 11) stats.set_int(mpx .. "NUMBER_OF_BOURGE_BOUGHT", 10) stats.set_int(mpx .. "CIGARETTES_BOUGHT", 20) stats.set_int(mpx .. "MP_CHAR_ARMOUR_1_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_2_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_3_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_4_COUNT", 10) stats.set_int(mpx .. "MP_CHAR_ARMOUR_5_COUNT", 10) stats.set_int(mpx .. "BREATHING_APPAR_BOUGHT", 20) end) 
 
-
--- Removed BadSport related
+badSp:add_action("Añadir BadSports", function() stats.set_int("MPPLY_BADSPORT_MESSAGE", -1) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", -1) stats.set_float("MPPLY_OVERALL_BADSPORT", 60000) stats.set_bool("MPPLY_CHAR_IS_BADSPORT", true) globals.set_int(1575015, 0) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
+badSp:add_action("Remover BadSports", function() stats.set_int("MPPLY_BADSPORT_MESSAGE", 0) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", 0) stats.set_float("MPPLY_OVERALL_BADSPORT", 0) stats.set_bool("MPPLY_CHAR_IS_BADSPORT", false) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
 
 modelMenu:add_action("----------------- Misc ----------------", function() end)
 
@@ -196,7 +132,7 @@ repMenu:add_bare_item("", function() return "Ayudante:".. (string.format("%03d",
 
 OnlMenu:add_action("----------------- Misiones/Online ----------------", function() end)
 
-OnlMenu:add_array_item("Pedir Servicios", {"M.O.C", "Avenger", "TerrorByte", "Kosatka", "Bote", "Armadura Balistica"}, function() return xox_01 end, function(v) if v == 1 then globals.set_int(2815059 + 913, 1) elseif v == 2 then globals.set_int(2815059 + 921, 1) elseif v == 3 then globals.set_int(2815059 + 925, 1) elseif v == 4 then globals.set_int(2815059 + 933, 1) elseif v == 5 then globals.set_int(2815059 + 945, 1) else globals.set_int(2815059 + 884, 1) end xox_01 = v end)
+OnlMenu:add_array_item("Pedir Servicios", {"M.O.C", "Avenger", "TerrorByte", "Kosatka", "Bote", "Armadura Balistica"}, function() return xox_01 end, function(v) if v == 1 then globals.set_int(2793046 + 925, 1) elseif v == 2 then globals.set_int(2793046 + 933, 1) elseif v == 3 then globals.set_int(2793046 + 937, 1) elseif v == 4 then globals.set_int(2793046 + 954, 1) elseif v == 5 then globals.set_int(2793046 + 966, 1) else globals.set_int(2793046 + 886, 1) end xox_01 = v end)
 
 repvehmenu = OnlMenu:add_submenu("Opciones Para Autos")
  
@@ -204,20 +140,16 @@ repvehmenu:add_action("Destruir Todos Los Carros", function() for v in replayint
  
 repvehmenu:add_action("Reparar Todos Los Carros", function() for v in replayinterface.get_vehicles() do if v ~= nil then v:set_health(1000) end end end)
 
-OnlMenu:add_action("Resetear Servicio de Lester (bounty)", function()
-    resetoverrideBounty()
-end)
-
 function orb(e) if not localplayer then return end if e then stats.set_int(mpx.."ORBITAL_CANNON_COOLDOWN", 0) else stats.get_int(mpx.."ORBITAL_CANNON_COOLDOWN") end end
 OnlMenu:add_action("Quitar Delay Cañon Orbital", function() return e2 end, function() e2 = not e2 orb(e2) end)
 
--- Removed transaction error
+OnlMenu:add_action("Remover Error De Transaccion", function() if globals.get_int(4536679) == 20 or globals.get_int(4536679) == 4 then globals.set_int(4536679, 0) end end)
 OnlMenu:add_action("Remove CEO Cooldown", function() stats.set_int("MPPLY_VIPGAMEPLAYDISABLETIMER", 0) end)
 OnlMenu:add_action("Saltar misiones de Lamar", function() stats.set_bool(mpx .. "LOW_FLOW_CS_DRV_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_TRA_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_FUN_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_PHO_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_FIN_SEEN", true) stats.set_bool(mpx .. "LOW_BEN_INTRO_CS_SEEN", true) stats.set_int(mpx .. "LOWRIDER_FLOW_COMPLETE", 4) stats.set_int(mpx .. "LOW_FLOW_CURRENT_PROG", 9) stats.set_int(mpx .. "LOW_FLOW_CURRENT_CALL", 9) stats.set_int(mpx .. "LOW_FLOW_CS_HELPTEXT", 66) end) 
 OnlMenu:add_action("Saltar Misiones Yate", function() stats.set_int(mpx .. "YACHT_MISSION_PROG", 0) stats.set_int(mpx .. "YACHT_MISSION_FLOW", 21845) stats.set_int(mpx .. "CASINO_DECORATION_GIFT_1", -1) end)
--- Removed Peyote unlocker
-
--- Removed CEO related
+OnlMenu:add_toggle("Habilitar Peyote", function() return globals.get_boolean(262145+8352) end, function(v) globals.set_boolean(262145+8352, v) globals.set_boolean(262145+21697, v) end)
+local function FCv(e) if not localplayer then return end if e then for i = 262145+33877, 262145+13019 do globals.set_int(i, 0) end for j = DOCT3, 262145+31127 do globals.set_int(j, 0) end globals.set_int(262145+19682, 0) globals.set_int(262145+21119, 0) else globals.set_int(262145+33877, 20000) for i = 262145+24217, 262145+24744 do globals.set_int(i, 5000) end globals.set_int(262145+13019, 25000) globals.set_int(DOCT3, 10000) globals.set_int(262145+21673, 7000) globals.set_int(262145+31132, 9000) for j = XM28, RBD1 do globals.set_int(j, 5000) end globals.set_int(262145+19682, 5000) globals.set_int(262145+21119, 10000)end end 
+OnlMenu:add_toggle("Vehiculos De CEO Gratis", function() return e40 end, function() e40 = not e40 FCv(e40) end)
 
 OnlMenu:add_toggle("Fuera Del Radar", GetUndeadOffradar, SetUndeadOffradar)
 
@@ -242,7 +174,48 @@ OnlMenu:add_action("Habilidades 100%", function()
 	stats.set_int(mpx .. "SCRIPT_INCREASE_STRN", 100)
 end)
 
--- Removed RP correction
+OnlMenu:add_int_range("Dar Nivel (RP Correction)", 1, 0, 8000, function()
+	local mpIndex = globals.get_int(1574918)
+	if mpIndex > 1 or mpIndex < 0 then
+		return
+	end
+	
+	local currentRP = 0
+	
+	if mpIndex == 0 then
+		currentRP = stats.get_int("MP0_CHAR_SET_RP_GIFT_ADMIN")
+	else
+		currentRP = stats.get_int("MP1_CHAR_SET_RP_GIFT_ADMIN")
+	end
+	
+	if currentRP <= 0 then
+		currentRP = globals.get_int(1659760 + mpIndex)
+	end
+ 
+	local rpLevel = 0
+	for i = 0,8000 do
+		if currentRP < globals.get_int(297012 + i) then
+			break
+		else
+			rpLevel = i
+		end
+	end
+	
+	return rpLevel
+end, function(value)
+	local mpIndex = globals.get_int(1574918)
+	if mpIndex > 1 or mpIndex < 0 then
+		return
+	end
+	
+	local newRP = globals.get_int(297012 + value) + 100
+	
+	if mpIndex == 0 then
+		stats.set_int("MP0_CHAR_SET_RP_GIFT_ADMIN", newRP)
+	else
+		stats.set_int("MP1_CHAR_SET_RP_GIFT_ADMIN", newRP)
+	end
+end)
 
 OnlMenu:add_action("Completar Objetivos", function() stats.set_int(mpx .. "COMPLETEDAILYOBJ", 100) stats.set_int(mpx .. "COMPLETEDAILYOBJTOTAL", 100) stats.set_int(mpx .. "TOTALDAYCOMPLETED", 100) stats.set_int(mpx .. "TOTALWEEKCOMPLETED", 400) stats.set_int(mpx .. "TOTALMONTHCOMPLETED", 1800) stats.set_int(mpx .. "CONSECUTIVEDAYCOMPLETED", 30) stats.set_int(mpx .. "CONSECUTIVEWEEKCOMPLETED", 4) stats.set_int(mpx .. "CONSECUTIVEMONTHCOMPLETE", 1) stats.set_int(mpx .. "COMPLETEDAILYOBJSA", 100) stats.set_int(mpx .. "COMPLETEDAILYOBJTOTALSA", 100) stats.set_int(mpx .. "TOTALDAYCOMPLETEDSA", 100) stats.set_int(mpx .. "TOTALWEEKCOMPLETEDSA", 400) stats.set_int(mpx .. "TOTALMONTHCOMPLETEDSA", 1800) stats.set_int(mpx .. "CONSECUTIVEDAYCOMPLETEDSA", 30) stats.set_int(mpx .. "CONSECUTIVEWEEKCOMPLETEDSA", 4) stats.set_int(mpx .. "CONSECUTIVEMONTHCOMPLETESA", 1) stats.set_int(mpx .. "AWD_DAILYOBJCOMPLETEDSA", 100) stats.set_int(mpx .. "AWD_DAILYOBJCOMPLETED", 100) stats.set_bool(mpx .. "AWD_DAILYOBJMONTHBONUS", true) stats.set_bool(mpx .. "AWD_DAILYOBJWEEKBONUS", true) stats.set_bool(mpx .. "AWD_DAILYOBJWEEKBONUSSA", true) stats.set_bool(mpx .. "AWD_DAILYOBJMONTHBONUSSA", true) end) 
 
@@ -338,40 +311,43 @@ timestat:add_int_range("En botes", 1, 0, 24, function() return math.floor(stats.
 timestat:add_int_range("Conduciendo ATVs", 1, 0, 24, function() return math.floor(stats.get_int(mpx.."TIME_DRIVING_QUADBIKE")/86400000) end, function(value) stats.set_int(mpx.."TIME_DRIVING_QUADBIKE", value*86400000) end)
 timestat:add_int_range("En motos", 1, 0, 24, function() return math.floor(stats.get_int(mpx.."TIME_DRIVING_BICYCLE")/86400000) end, function(value) stats.set_int(mpx.."TIME_DRIVING_BICYCLE", value*86400000) end)
 
-multMenu = OnlMenu:add_submenu("Multiplicadores (Sin Testear)")
+multMenu = OnlMenu:add_submenu("Multiplicadores")
 multMenu:add_float_range("RP", 1, 1, 100000, function() return globals.get_float(262146) end, function(v) globals.set_float(262146, v) end)
-multMenu:add_float_range("AP", 1, 1, 100000, function() return globals.get_float(288059) end, function(v) globals.set_float(288059, v) end)
-multMenu:add_float_range("Carreras Callejeras", 1, 1, 100000, function() return globals.get_float(293782) end, function(v) globals.set_float(293782, v) end)
-multMenu:add_float_range("Persecuciones", 1, 1, 100000, function() return globals.get_float(293783) end, function(v) globals.set_float(293783, v) end)
-multMenu:add_float_range("Cara a Cara", 1, 1, 100000, function() return globals.get_float(293785) end, function(v) globals.set_float(293785, v) end)
-multMenu:add_float_range("LS Car Meet", 1, 1, 100000, function() return globals.get_float(293786) end, function(v) globals.set_float(293786, v) end)
-multMenu:add_float_range("LS Car Meet en Carrera", 1, 1, 100000, function() return globals.get_float(293787) end, function(v) globals.set_float(293787, v) end) local awa = 0 local awc = 0 local awr = 0
-multMenu:add_int_range("AP Arena Wars", 5000, 0, 500000, function() return awa end, function(v) for i = 286231, 286233 do globals.set_int(i, v) end for j = 286240, 286242 do globals.set_int(j, v) end awa = v end)
+multMenu:add_float_range("AP", 1, 1, 100000, function() return globals.get_float(288060) end, function(v) globals.set_float(288060, v) end)
+multMenu:add_float_range("Carreras Callejeras", 1, 1, 100000, function() return globals.get_float(293783) end, function(v) globals.set_float(293783, v) end)
+multMenu:add_float_range("Persecuciones", 1, 1, 100000, function() return globals.get_float(293784) end, function(v) globals.set_float(293784, v) end)
+multMenu:add_float_range("Face2Face", 1, 1, 100000, function() return globals.get_float(293786) end, function(v) globals.set_float(293786, v) end)
+multMenu:add_float_range("LS Juntada De Coches", 1, 1, 100000, function() return globals.get_float(293787) end, function(v) globals.set_float(293787, v) end)
+multMenu:add_float_range("LS Juntada De Coches Drift", 1, 1, 100000, function() return globals.get_float(293788) end, function(v) globals.set_float(293788, v) end) local awa = 0 local awc = 0 local awr = 0
+multMenu:add_int_range("AP Arena Wars", 5000, 0, 500000, function() return awa end, function(v) for i = 286232, 286234 do globals.set_int(i, v) end for j = 286241, 286243 do globals.set_int(j, v) end awa = v end)
 
 OnlMenu:add_action("--------------- Recovery / Misiones ----------------", function() end)
 
 local function Cctv(e) if not localplayer then return end if e then menu.remove_cctvs() else menu.remove_cctvs(nil) end end
-cayoPericoMenu = OnlMenu:add_submenu("Cayo Perico (Sin Testear)") cayoPericoMenu:add_array_item("Configs", {"H.Panther Only", "H.PinkD Only", "H.B.Bonds Only", "H.R.Necklace Only", "H.Tequila Only", "N.Panther Only", "N.PinkD Only", "N.B.Bonds Only", "N.R.Necklace Only", "N.Tequila Only"}, function() return xox_15 end, function(v) if v == 1 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 5) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT_V", 403500) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 2 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 3) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 3 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 2) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 4 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 1) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 5 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 0) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 6 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 5) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 7 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 3) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 8 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 2) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 9 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 1) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT_V", 403500) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 10 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 0) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) end xox_15 = v end)
+cayoPericoMenu = OnlMenu:add_submenu("Cayo Perico (MU)") 
+cayoPericoMenu:add_array_item("Configs", {"H.Panther Only", "H.PinkD Only", "H.B.Bonds Only", "H.R.Necklace Only", "H.Tequila Only", "N.Panther Only", "N.PinkD Only", "N.B.Bonds Only", "N.R.Necklace Only", "N.Tequila Only"}, function() return xox_15 end, function(v) if v == 1 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 5) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT_V", 403500) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 2 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 3) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 3 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 2) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 4 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 1) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 5 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 0) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 6 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 5) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 7 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 3) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 8 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 2) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 9 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 1) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT_V", 403500) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 10 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 0) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) end xox_15 = v end)
 cayoPericoMenu:add_array_item("Objetivos principales", {"Tequila", "Ruby Necklace", "Bearer Bonds", "Pink Diamond", "Panther Statue"}, function() return xox_0 end, function(value) xox_0 = value if value == 1 then stats.set_int(mpx .. "H4CNF_TARGET", 0) elseif value == 2 then stats.set_int(mpx .. "H4CNF_TARGET", 1) elseif value == 3 then stats.set_int(mpx .. "H4CNF_TARGET", 2) elseif value == 4 then stats.set_int(mpx .. "H4CNF_TARGET", 3) elseif value == 5 then stats.set_int(mpx .. "H4CNF_TARGET", 5) end end)
 StMenu = cayoPericoMenu:add_submenu("Objetivos secundarios") 
 StMenu:add_array_item("Almacenes de la isla", {"Gold", "Paintings", "Cocaine", "Weed", "Cash"}, function() return xox_1 end, function(value) if value == 1 then stats.set_int(mpx .. "H4LOOT_GOLD_C", -1) stats.set_int(mpx .. "H4LOOT_GOLD_C_SCOPED", -1) elseif value == 2 then stats.set_int(mpx .. "H4LOOT_PAINT", -1) stats.set_int(mpx .. "H4LOOT_PAINT_SCOPED", -1) stats.set_int(mpx .. "H4LOOT_PAINT_V", 403500) elseif value == 3 then stats.set_int(mpx .. "H4LOOT_COKE_C", -1) stats.set_int(mpx .. "H4LOOT_COKE_C_SCOPED", -1) elseif value == 4 then stats.set_int(mpx .. "H4LOOT_WEED_C", -1) stats.set_int(mpx .. "H4LOOT_WEED_C_SCOPED", -1) elseif value == 5 then stats.set_int(mpx .. "H4LOOT_CASH_C", -1) stats.set_int(mpx .. "H4LOOT_CASH_C_SCOPED", -1) end xox_1 = value end)
 cayoPericoMenu:add_action("Todas las preparativas", function() stats.set_int(mpx .. "H4CNF_BS_GEN", -1) stats.set_int(mpx .. "H4CNF_BS_ENTR", 63) stats.set_int(mpx .. "H4CNF_APPROACH", -1) end) 
 cayoPericoMenu:add_action("-------------------------", function() end)
 cayoPericoMenu:add_toggle("Remover camaras", function() return e6 end, function() e6 = not e6 Cctv(e6) end) 
-cayoPericoMenu:add_action("Saltar escena del drenaje", function() if fmC2020:is_active() then if fmC2020:get_int(27500) >= 3 or fmC2020:get_int(27500) <= 6 then fmC2020:set_int(27500, 6) end end end) 
-cayoPericoMenu:add_action("Saltar escena Clonar Huellas", function() if fmC and fmC:is_active() then if fmC:get_int(52962) == 4 then fmC:set_int(52962, 5) end end end)
+cayoPericoMenu:add_action("Saltar escena del drenaje", function() if fmC2020:is_active() then if fmC2020:get_int(277374) >= 3 or fmC2020:get_int(277374) <= 6 then fmC2020:set_int(277374, 6) end end end) 
+cayoPericoMenu:add_action("Saltar escena Clonar Huellas", function() if fmC and fmC:is_active() then if fmC:get_int(22032) == 4 then fmC:set_int(22032, 5) end end end)
 cayoPericoMenu:add_action("Saltar escena de hackear puerta", function() if fmC and fmC:is_active() then if fmC:get_int(54024) ~= 4 then fmC:set_int(54024, 5) end end end)
-cayoPericoMenu:add_action("Terminar Instantaneo", function() fmC2020:set_int(42280, 51338752) fmC2020:set_int(43655, 50) end)
-cayoPericoMenu:add_action("Usa unos segundos despues ", function() end)
-cayoPericoMenu:add_action("de la cinematica", function() end)
+cayoPericoMenu:add_action("Cortador Plasma Rapido", function() fmC2020:set_float(284959, 99.9) end) 
+cayoPericoMenu:add_int_range("Vidas En Cayo - Self", 1.0, 1, 999999999, function() return fmC2020:get_int(48647 + 865 + 1) end, function(life) if fmC2020 and fmC2020:is_active() then fmC2020:set_int(48647 + 865 + 1, life) end end)
 cayoPericoMenu:add_action("------------ Rapido -------------", function() end)
 cayoPericoMenu:add_action("Completar Las Preparaciones", function() stats.set_int(mpx .. "H4CNF_UNIFORM", -1) stats.set_int(mpx .. "H4CNF_GRAPPEL", -1) stats.set_int(mpx .. "H4CNF_TROJAN", 5) stats.set_int(mpx .. "H4CNF_WEP_DISRP", 3) stats.set_int(mpx .. "H4CNF_ARM_DISRP", 3) stats.set_int(mpx .. "H4CNF_HEL_DISRP", 3) end)
-cayoPericoMenu:add_action("Terminar Instantaneamente", function() fmC2020:set_int(38397, 51338752) fmC2020:set_int(39772, 50) end)
+cayoPericoMenu:add_action("Terminar Instantaneamente", function() fmC2020:set_int(19679, 12) fmC2020:set_int(19679 + 2686, 10000000) fmC2020:set_int(28298 + 1, 99999) fmC2020:set_int(31554 + 69, 99999) end)
+cayoPericoMenuc = cayoPericoMenu:add_submenu("Partes Para Jugadores") 
+cayoPericoMenu:add_int_range("Jugador 1", 1, 15, 300, function() return globals.get_int(271541) end, function(value) globals.set_int(271541, value) end) 
+cayoPericoMenu:add_int_range("Jugador 2", 1, 15, 300, function() return globals.get_int(283790) end, function(value) globals.set_int(283790, value) end) 
 
 nMenu = OnlMenu:add_submenu("Club Nocturno")
 nMenu:add_action("Popularidad al 100%", function() stats.set_int(mpx .. "CLUB_POPULARITY", 1000) end)
 
-cccMenu = OnlMenu:add_submenu("Casino (Sin Testear)")
+cccMenu = OnlMenu:add_submenu("Casino (MU)")
 
 local function casCctv(e) if not localplayer then return end if e then menu.remove_cctvs() else menu.remove_cctvs(nil) end end 
 cccMenu:add_array_item("Objetivo", {"Dinero", "Oro", "Arte", "Diamantes"}, function() return xox_8 end, function(v) if v == 1 then stats.set_int(mpx .. "H3OPT_TARGET", 0) elseif v == 2 then stats.set_int(mpx .. "H3OPT_TARGET", 1) elseif v == 3 then stats.set_int(mpx .. "H3OPT_TARGET", 2) elseif v == 4 then stats.set_int(mpx .. "H3OPT_TARGET", 3) end xox_8 = v end)
@@ -380,29 +356,30 @@ cccMenu:add_action("---[[Reiniciar Golpes]]---", function() stats.set_int(mpx ..
 cccMenu:add_action("------------------------------------------", function() end)
 cccMenu:add_action("Todos los puntos de acceso", function() stats.set_int(mpx .. "H3OPT_POI", -1) stats.set_int(mpx .. "H3OPT_ACCESSPOINTS", -1) end)
 cccMenu:add_action("Remover Cooldown Del Golpe", function() stats.set_int(mpx .. "H3_COMPLETEDPOSIX", -1) stats.set_int("MPPLY_H3_COOLDOWN", -1) end)
-cccMenu:add_action("Primero golpe/Desbloquea lester", function() stats.set_int(mpx .. "CAS_HEIST_NOTS", -1) stats.set_int(mpx .. "CAS_HEIST_FLOW", -1) end) local function DCHC(e) if not localplayer then return end if e then for i = 290950, 290964 do globals.set_int(i, 0) end globals.set_int(290600, 0) else globals.set_int(290600, 5) globals.set_int(290950, 5) globals.set_int(290951, 9) globals.set_int(290952, 7) globals.set_int(290953, 10) globals.set_int(290954, 8) globals.set_int(290955, 5) globals.set_int(290956, 7) globals.set_int(290957, 9) globals.set_int(290958, 6) globals.set_int(290959, 10) globals.set_int(290960, 3) globals.set_int(290961, 7) globals.set_int(290962, 5) globals.set_int(290963, 10) globals.set_int(290964, 9) end end 
+--cccMenu:add_action("Primero golpe/Desbloquea lester", function() stats.set_int(mpx .. "CAS_HEIST_NOTS", -1) stats.set_int(mpx .. "CAS_HEIST_FLOW", -1) end) local function DCHC(e) if not localplayer then return end if e then for i = 290950, 290964 do globals.set_int(i, 0) end globals.set_int(290600, 0) else globals.set_int(290600, 5) globals.set_int(290950, 5) globals.set_int(290951, 9) globals.set_int(290952, 7) globals.set_int(290953, 10) globals.set_int(290954, 8) globals.set_int(290955, 5) globals.set_int(290956, 7) globals.set_int(290957, 9) globals.set_int(290958, 6) globals.set_int(290959, 10) globals.set_int(290960, 3) globals.set_int(290961, 7) globals.set_int(290962, 5) globals.set_int(290963, 10) globals.set_int(290964, 9) end end 
 cccMenu:add_toggle("Remover Costos De Lester", function() return e8 end, function() e8 = not e8 DCHC(e8) end) 
 cccMenu:add_action("--------", function() end) 
 cccMenu:add_int_range("Vidas Del Casino - Tu Solo", 1, 1, 10, function() return fmC:get_int(26105 + 1322 + 1) end, function(life) if fmC and fmC:is_active() then fmC:set_int(26105 + 1322 + 1,life) end end)
 cccMenu:add_action("Suicidarse", function() menu.suicide_player() end) 
 cccMenu:add_action("Quitar Hackeo De Huellas ", function() if fmC and fmC:is_active() then if fmC:get_int(52962) == 4 then fmC:set_int(52962, 5) end end end)
 cccMenu:add_action("Quitar Hackeo De Puerta ", function() if fmC and fmC:is_active() then if fmC:get_int(54024) ~= 4 then fmC:set_int(54024, 5) end end end)
-cccMenu:add_action("Quitar Perforar Boveda", function() if fmC:is_active() then fmC:set_int(10098 + 7, 4) sleep(0.01) fmC:set_int(10098 + 7, 6) menu.send_key_press(1) end end)
+--cccMenu:add_action("Quitar Perforar Boveda", function() if fmC:is_active() then fmC:set_int(10098 + 7, 4) sleep(0.01) fmC:set_int(10098 + 7, 6) menu.send_key_press(1) end end)
 cccMenu:add_toggle("Quitar CCTV", function() return e7 end, function() e7 = not e7 casCctv(e7) end) 
 cccMenu:add_action("Matar NPC De La Mision", function() menu.kill_all_mission_peds() end) 
 cccMenu:add_action("Matar Todos los NPC", function() menu.kill_all_npcs() end)
 cccMenu:add_int_range("Real Take", 100000, 1000000, 10000000, function() return fmC:get_int(22365) end, function(v) fmC:set_int(22365, v) end)
 CDNCMenu = cccMenu:add_submenu("Cantidades") 
-CDNCMenu:add_array_item("Presets", {"85 all", "100 all"}, function() return xox_34 end, function(G) if G == 1 then for i = 1973221, 1973224 do globals.set_int(i, 85) end elseif G == 2 then for i = 1973221, 1973224 do globals.set_int(i, 100) end end xox_34 = value end)
-CDNCMenu:add_int_range("Jugador 1", 5, 15, 300, function() return globals.get_int(1973221) end, function(value) globals.set_int(1973221, value) end) 
-CDNCMenu:add_int_range("Jugador 2", 5, 15, 300, function() return globals.get_int(1973222) end, function(value) globals.set_int(1973222, value) end) 
-CDNCMenu:add_int_range("Jugador 3", 5, 15, 300, function() return globals.get_int(1973223) end, function(value) globals.set_int(1973223, value) end) 
-CDNCMenu:add_int_range("Jugador 4", 5, 15, 300, function() return globals.get_int(1973224) end, function(value) globals.set_int(1973224, value) end) 
-CDNPMenu = cccMenu:add_submenu("Editor Potencial")
+CDNCMenu:add_int_range("Jugador 1", 5, 15, 300, function() return globals.get_int(287987) end, function(value) globals.set_int(287987, value) end) 
+CDNCMenu:add_int_range("Jugador 2", 5, 15, 300, function() return globals.get_int(293046) end, function(value) globals.set_int(293046, value) end) 
+CDNCMenu:add_int_range("Jugador 3", 5, 15, 300, function() return globals.get_int(274990) end, function(value) globals.set_int(274990, value) end) 
+CDNCMenu:add_int_range("Jugador 4", 5, 15, 300, function() return globals.get_int(277944) end, function(value) globals.set_int(277944, value) end) 
+--CDNPMenu = cccMenu:add_submenu("Editor Potencial")
+--[[
 CDNPMenu:add_int_range("Dinero Potencial", 1000000000.0, 2115000, 1000000000, function() return globals.get_int(290938) end, function(value) globals.set_int(290938, value) end) 
 CDNPMenu:add_int_range("Arte Potencial", 1000000000.0, 2350000, 1000000000, function() return globals.get_int(290939) end, function(value) globals.set_int(290939, value) end) 
 CDNPMenu:add_int_range("Oro Potencial", 1000000000.0, 2585000, 1000000000, function() return globals.get_int(290940) end, function(value) globals.set_int(290940, value) end) 
 CDNPMenu:add_int_range("Diamante Potencial", 1000000000.0, 3290000, 1000000000, function() return globals.get_int(290941) end, function(value) globals.set_int(290941, value) end) 
+]]
 cccMenu:add_array_item("Teletransportes", {"Vault swipe", "Staff Door Exit", "Laundry room", "Bonus room", "Roof exit"}, function() return xox_14 end, function(value) if value == 1 then TP(2468.646973, -279.083374, -71.994194, -1.083554, 0.000000, 0.000000) elseif value == 2 then TP(2547.458496, -277.744507, -59.741863, -0.071993, 0.005218, -0.113118) elseif value == 3 then TP(2536.455078, -300.772522, -60.022968, 0.000000, 0.000000, 0.000000) elseif value == 4 then TP(2521.906494, -287.172882, -60.022964, 0.000000, 0.000000, 0.000000) elseif value == 5 then TP(2522.338379, -248.534760, -25.414972, 0.000000, 0.000000, 0.000000) end xox_14 = value end)
 
 csMenu = OnlMenu:add_submenu("Contratos")
@@ -529,9 +506,9 @@ end
 
 local function TransactionError(bool) 
 	if bool then 
-		globals.set_bool(1669797, true) 
+		globals.set_bool(4536679, true) 
 	else
-		globals.set_bool(1669797, false)
+		globals.set_bool(4536679, false)
 	end
 end
 
@@ -875,7 +852,7 @@ recMenu:add_action("Desbloquear Investi De bunker", function()
 	end
 end)
 
-recMenu:add_array_item("Inve De Bunker", {"Acelerar", "Resetear"}, function() return xox_26 end, function(value) if value == 1 then globals.set_int(283484, 1) globals.set_int(283736, 1) globals.set_int(283737, 1) globals.set_int(283738, 1) menu.trigger_bunker_research() elseif value == 2 then globals.set_int(283484, 60) globals.set_int(283737, 45000) globals.set_int(283736, 300000) globals.set_int(283738, 45000) end xox_26 = value end)
+recMenu:add_array_item("Inve De Bunker", {"Acelerar", "Resetear"}, function() return xox_26 end, function(value) if value == 1 then globals.set_int(286202, 1) globals.set_int(293353, 1) globals.set_int(283737, 1) globals.set_int(283275, 1) menu.trigger_bunker_research() elseif value == 2 then globals.set_int(286202, 60) globals.set_int(283737, 45000) globals.set_int(293353, 300000) globals.set_int(283275, 45000) end xox_26 = value end)
 
 recMenu:add_action("----------------- Misc ----------------", function() end)
 
@@ -997,7 +974,7 @@ recMenu:add_action("Campo De Tiro", function() stats.set_int(mpx .. "SR_HIGHSCOR
 recMenu:add_action("Vanilla Unicorn", function() stats.set_int(mpx .. "LAP_DANCED_BOUGHT", 0) stats.set_int(mpx .. "LAP_DANCED_BOUGHT", 5) stats.set_int(mpx .. "LAP_DANCED_BOUGHT", 10) stats.set_int(mpx .. "LAP_DANCED_BOUGHT", 15) stats.set_int(mpx .. "LAP_DANCED_BOUGHT", 25) stats.set_int(mpx .. "PROSTITUTES_FREQUENTED", 1000) end)
 recMenu:add_action("Desbloquear Tatuajes", function() stats.set_int(mpx .. "TATTOO_FM_CURRENT_32", -1) for i = 0, 47 do stats.set_int(mpx .. "TATTOO_FM_UNLOCKS_"..i, -1) end end)
 
-dinMenu = mainMenu:add_submenu("Dinero $$$ 'Test'")
+dinMenu = mainMenu:add_submenu("Dinero $$$")
 
 local function Text(text)
 	dinMenu:add_action(text, function() end)
@@ -1007,104 +984,16 @@ dinMenu:add_action("baneo, es seguro hasta cierto punto", function() end)
 dinMenu:add_action("Los quiero, picho <3", function() end)
 dinMenu:add_action("-------------------------------------------", function() end)
 
-cajMenu = dinMenu:add_submenu("Cajas CEO (Sin Testear)")
-
-cajMenu:add_action("Finalizar Mision De Venta", function()
-	sale_mission = script("gb_contraband_sell")
-	if sale_mission:is_active()
-		then
-			base_address = 540
-			sale_mission:set_int(base_address+1,99999)
-		end
-end)
-
-cajMenu:add_action("Finalizar Mision De Compra/Robo", function()
-	buy_mission = script("gb_contraband_buy")
-	if buy_mission:is_active()
-		then
-			base_address = 598
-			buy_mission:set_int(base_address+5, 1)
-			buy_mission:set_int(base_address+191, 6)
-			buy_mission:set_int(base_address+192, 4)
-		end
-end)
-
-cajMenu:add_action("Sin tiempo de espera / Venta", function()
-    globals.set_int(262145+15554, 0) 
-end)
-
-cajMenu:add_action("Poner Precio (5M)", function()
-    sale_price = 4000000
-	base_address = 15788
-    globals.set_int(262145+base_address, sale_price//1)
-    globals.set_int(262145+base_address+1, sale_price//2)
-    globals.set_int(262145+base_address+2, sale_price//3)
-    globals.set_int(262145+base_address+3, sale_price//5)
-    globals.set_int(262145+base_address+4, sale_price//7)
-    globals.set_int(262145+base_address+5, sale_price//9)
-    globals.set_int(262145+base_address+6, sale_price//14)
-    globals.set_int(262145+base_address+7, sale_price//19)
-    globals.set_int(262145+base_address+8, sale_price//24)
-    globals.set_int(262145+base_address+9, sale_price//29)
-    globals.set_int(262145+base_address+10, sale_price//34)
-    globals.set_int(262145+base_address+11, sale_price//39)
-    globals.set_int(262145+base_address+12, sale_price//44)
-    globals.set_int(262145+base_address+13, sale_price//49)
-    globals.set_int(262145+base_address+14, sale_price//59)
-    globals.set_int(262145+base_address+15, sale_price//69)
-    globals.set_int(262145+base_address+16, sale_price//79)
-    globals.set_int(262145+base_address+17, sale_price//89)
-    globals.set_int(262145+base_address+18, sale_price//99)
-    globals.set_int(262145+base_address+19, sale_price//110)
-    globals.set_int(262145+base_address+20, sale_price//111)
-end)
+cajMenu = dinMenu:add_submenu("Cajas CEO")
+local function CCooldown(e) if not localplayer then return end if e then globals.set_int(280702, 0) globals.set_int(283440, 0) else globals.set_int(280702, 300000) globals.set_int(283440, 1800000) end end 
+cajMenu:add_toggle("Remover Cooldowns", function() return e13 end, function() e13 = not e13 CCooldown(e13) end)
+cajMenu:add_toggle("Cargo Unica", function() return globals.get_boolean(292132) end, function(value) globals.set_boolean(292132, value) end) 
+cajMenu:add_array_item("Poner Cargamento Unico 'Sin Testear'", {"Huevito", "Minigun Dorada", "Diamante", "Pieles", "Disco De Peli", "Reloj Cohete"}, function() return xox_33 end, function(value) xox_33 = value if value == 1 then globals.set_int(292132, 1) globals.set_int(UNC2, 2) elseif value == 2 then globals.set_int(292132, 1) globals.set_int(UNC2, 4) elseif value == 3 then globals.set_int(292132, 1) globals.set_int(UNC2, 6) elseif value == 4 then globals.set_int(292132, 1) globals.set_int(UNC2, 7) elseif value == 5 then globals.set_int(292132, 1) globals.set_int(UNC2, 8) else globals.set_int(292132, 1) globals.set_int(UNC2, 9) end end) 
+cajMenu:add_action("-------Testeado:solo public; ~Max=6M------------", function() end)
 
 ediCaj = cajMenu:add_submenu("Editor de datos")
 
-ediCaj:add_action("Perfil Editor", function() end)
-ediCaj:add_int_range("Cambiar Ventas De Por Vida", 1, 0, 10000, function()
-PlayerIndex = globals.get_int(1574918)
-	if PlayerIndex == 0 then
-		mpx = "MP0_"
-	else
-		mpx = "MP1_"
-	end
-    return 
-        stats.get_int(mpx.."LIFETIME_SELL_COMPLETE") end,   function(value)
-        stats.set_int(mpx.."LIFETIME_BUY_COMPLETE", value) 
-        stats.set_int(mpx.."LIFETIME_BUY_UNDERTAKEN", value) 
-        stats.set_int(mpx.."LIFETIME_SELL_COMPLETE", value) 
-        stats.set_int(mpx.."LIFETIME_SELL_UNDERTAKEN", value)
-
-end)
-
-ediCaj:add_int_range("Ganancias De Por Vida", 200000.0, 0, 10000000, function()
-PlayerIndex = globals.get_int(1574918)
-	if PlayerIndex == 0 then
-		mpx = "MP0_"
-	else
-		mpx = "MP1_"
-	end
-                                       return 
-   stats.get_int(mpx.."LIFETIME_CONTRA_EARNINGS") end,           
-	   function(value) 
-stats.set_int(mpx.."LIFETIME_CONTRA_EARNINGS", value * 1)
-end)
-
-ediCaj:add_action(
-    "Re-Establecer Ventas-Ganancias a 0",
-    function()
-        stats.set_int(mpx .. "LIFETIME_BUY_COMPLETE",  0)
-        stats.set_int(mpx .. "LIFETIME_BUY_UNDERTAKEN", 0)
-        stats.set_int(mpx .. "LIFETIME_SELL_COMPLETE",  0)
-        stats.set_int(mpx .. "LIFETIME_SELL_UNDERTAKEN",  0)
-        stats.set_int(mpx .. "LIFETIME_CONTRA_EARNINGS",  0)
-        globals.set_int(1575017, 1)         ----PlayerSessionBlank--------
-        globals.set_int(1574589, 1)         ----PlayerSessionNew----------
-        sleep(0.2)
-        globals.set_int(1574589, 0)         ----PlayerSessionNew------
-    end
-)
+--cajMenu:add_int_range("Resetear Estatus De Ventas", 1, 0, 1000, function() return stats.get_int(mpx .. "LIFETIME_SELL_COMPLETE") end, function(value) stats.set_int(mpx .. "LIFETIME_BUY_COMPLETE", value) stats.set_int(mpx .. "LIFETIME_BUY_UNDERTAKEN", value) stats.set_int(mpx .. "LIFETIME_SELL_COMPLETE", value) stats.set_int(mpx .. "LIFETIME_SELL_UNDERTAKEN", value) stats.set_int(mpx .. "LIFETIME_CONTRA_EARNINGS", value * 20000) globals.set_int(SCG1, 1) globals.set_int(SCG2, 1) sleep(0.2) globals.set_int(SCG2, 0) end)
 
 ccMenu = dinMenu:add_submenu("Club Nocturno")
 
@@ -1112,74 +1001,61 @@ ccMenu = dinMenu:add_submenu("Club Nocturno")
 local isRunning = false
 ccMenu:add_toggle("Loop De Caja Fuerte $250k/10s (AFK)", function() return isRunning end, function() isRunning = not isRunning safeLoop(isRunning) end)
 
-acidMenu = dinMenu:add_submenu("Laboratorio De Acido 'Sin Testear'")
+e51 = false
+e52 = false
+e53 = false
+acidMenu = dinMenu:add_submenu("Laboratorio De Acido $$$")
+function AL(e) if not localplayer then return end if e then globals.set_int(279721, 0) else globals.set_int(279721, 135000) end end 
+function AC(e) if not localplayer then return end if e then globals.set_int(284958, 0) else globals.set_int(284958, 300000) end end 
+function ACL(e) if not localplayer then return end if e then globals.set_int(285557, 0) globals.set_int(277942, 0) else globals.set_int(285557, 12000) globals.set_int(277942, 12000) end end
+acidMenu:add_int_range("Poner $$", 50000, 10000, 2000000, function() return globals.get_int(290345) end, function(Val) globals.set_int(290345, Val) end) 
+acidMenu:add_toggle("Quitar Delay de produccion", function() return e52 end, function() e52 = not e52 AL(e52) end)
+acidMenu:add_toggle("Quitar Delay Suministros", function() return e53 end, function() e53 = not e53 AC(e53) end)
+acidMenu:add_toggle("Reducir Costos Suministros", function() return e51 end, function() e51 = not e51 ACL(e51) end)
 
-acidMenu:add_int_range("Aumentar Produccion", 1.0, 1, 10, function()
-	return globals.get_int(262145 + 32700)
-end, function(value)
-	globals.set_int(262145 + 32700, 0)
-end)
-
-acidMenu:add_int_range("Disminuir Estado de produccion", 1.0, 0, 100, function() 
-	return globals.get_int(262145 + 17396)
-end, function(value)
-	globals.set_int(262145 + 17396, value)
-end)
-
-acidMenu:add_int_range("Poner el valor de acido < 2M ", 10000.0, 10000, 99999, function()
-	return globals.get_int(262145 + 17425)
-	end, function(value)
-	globals.set_int(262145 + 17425, value)
-end)
-
-acidMenu:add_int_range("Costo de suministros", 1, 0, 10, function() 
-	return globals.get_int(262145+21869)
-end, function(value)
-	globals.set_int(262145+21869, value)
-end)
-
-mmHmenu = dinMenu:add_submenu("Cargo De Hangar (Sin Testear)")
+mmHmenu = dinMenu:add_submenu("Cargo De Hangar $$$")
 function Cooldown(e) if not localplayer then return end if e then for i = 284924, 284928 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(284924, 120000) globals.set_int(284925, 180000) globals.set_int(284926, 240000) globals.set_int(284927, 60000) globals.set_int(284928, 2000) end end mmHmenu:add_toggle("Remove Cooldowns", function() return e15 end, function() e15 = not e15 Cooldown(e15) end)
-mmHmenu:add_int_range("Cargamento Mixto", 50000, 10000, 3100000, function() return globals.get_int(284956) end, function(value) globals.set_int(284956, value) end)
-mmHmenu:add_int_range("Cargamento Animal", 50000, 10000, 3100000, function() return globals.get_int(284957) end, function(value) globals.set_int(284957, value) end)
-mmHmenu:add_int_range("Antiguedades y Arte", 50000, 10000, 3100000, function() return globals.get_int(284958) end, function(value) globals.set_int(284958, value) end)
-mmHmenu:add_int_range("Cargamento Quimico", 50000, 10000, 3100000, function() return globals.get_int(284959) end, function(value) globals.set_int(284959, value) end)
-mmHmenu:add_int_range("Dinero Falsificado", 50000, 10000, 3100000, function() return globals.get_int(284960) end, function(value) globals.set_int(284960, value) end)
-mmHmenu:add_int_range("Joyeria", 50000, 10000, 3100000, function() return globals.get_int(284961) end, function(value) globals.set_int(284961, value) end)
-mmHmenu:add_int_range("Cargamentos Medicos", 50000, 10000, 3100000, function() return globals.get_int(284962) end, function(value) globals.set_int(284962, value) end)
-mmHmenu:add_int_range("Cargamentos De Narcotico", 50000, 10000, 3100000, function() return globals.get_int(284963) end, function(value) globals.set_int(284963, value) end)
-mmHmenu:add_int_range("Tabacco Value", 50000, 10000, 3100000, function() return globals.get_int(284964) end, function(value) globals.set_int(284964, value) end)
-function ronC(e) if not localplayer then return end if e then globals.set_float(284966, 0) else globals.set_float(284966, 0.025) end end 
-mmHmenu:add_toggle("Remove Rons's cut", function() return e30 end, function() e30 = not e30 ronC(e30) end)
+mmHmenu:add_int_range("Cargamento Mixto", 50000, 10000, 3100000, function() return globals.get_int(296207) end, function(value) globals.set_int(296207, value) end)
+mmHmenu:add_int_range("Cargamento Animal", 50000, 10000, 3100000, function() return globals.get_int(294017) end, function(value) globals.set_int(294017, value) end)
+mmHmenu:add_int_range("Antiguedades y Arte", 50000, 10000, 3100000, function() return globals.get_int(292129) end, function(value) globals.set_int(292129, value) end)
+mmHmenu:add_int_range("Cargamento Quimico", 50000, 10000, 3100000, function() return globals.get_int(279538) end, function(value) globals.set_int(279538, value) end)
+mmHmenu:add_int_range("Dinero Falsificado", 50000, 10000, 3100000, function() return globals.get_int(281459) end, function(value) globals.set_int(281459, value) end)
+mmHmenu:add_int_range("Joyeria", 50000, 10000, 3100000, function() return globals.get_int(292446) end, function(value) globals.set_int(292446, value) end)
+mmHmenu:add_int_range("Cargamentos Medicos", 50000, 10000, 3100000, function() return globals.get_int(274855) end, function(value) globals.set_int(274855, value) end)
+--mmHmenu:add_int_range("Cargamentos De Narcotico", 50000, 10000, 3100000, function() return globals.get_int(284963) end, function(value) globals.set_int(284963, value) end)
+mmHmenu:add_int_range("Tabacco Value", 50000, 10000, 3100000, function() return globals.get_int(293281) end, function(value) globals.set_int(293281, value) end)
+function ronC(e) if not localplayer then return end if e then globals.set_float(271594, 0) else globals.set_float(271594, 0.025) end end 
+mmHmenu:add_toggle("Quitar Parte De Ron", function() return e30 end, function() e30 = not e30 ronC(e30) end)
 mmHmenu:add_int_range("Resetear Stats De Ventas", 1, 0, 500, function() return stats.get_int(mpx .. "LFETIME_HANGAR_SEL_COMPLET") end, function(value) stats.set_int(mpx .. "LFETIME_HANGAR_BUY_UNDETAK", value) stats.set_int(mpx .. "LFETIME_HANGAR_BUY_COMPLET", value) stats.set_int(mpx .. "LFETIME_HANGAR_SEL_UNDETAK", value) stats.set_int(mpx .. "LFETIME_HANGAR_SEL_COMPLET", value) stats.set_int(mpx .. "LFETIME_HANGAR_EARNINGS", value * 40000) globals.set_int(1575015, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end)
 
-mmVmenu = dinMenu:add_submenu("Cargamento Veh (Sin Testear)") local function Max(e) if not localplayer then return end if e then globals.set_int(281602, 155000) globals.set_int(281603, 155000) globals.set_int(281604, 155000) globals.set_float(281606, 0) globals.set_float(281607, 0) else globals.set_int(281602, 40000) globals.set_int(281603, 25000) globals.set_int(281604, 15000) globals.set_float(281606, 0.25) globals.set_float(281607, 0.5) end end mmVmenu:add_toggle("Maxear los rangos", function() return e17 end, function() e17 = not e17 Max(e17) end)
-mmVmenu:add_int_range("Auto god", 1000, 40000, 4000000, function() return globals.get_int(293281) end, function(value) globals.set_int(293281, value) end)
-mmVmenu:add_int_range("Auto meh", 1000, 25000, 4000000, function() return globals.get_int(293282) end, function(value) globals.set_int(293282, value) end)
-mmVmenu:add_int_range("Auto mierda", 1000, 15000, 4000000, function() return globals.get_int(293283) end, function(value) globals.set_int(293283, value) end)
-mmVmenu:add_float_range("Venta en el Showroom", 0.5, 1.5, 1000, function() return globals.get_float(281563) end, function(value) globals.set_float(281563, value) end)
-mmVmenu:add_float_range("Venta a especialista", 0.5, 2, 1000, function() return globals.get_float(281564) end, function(value) globals.set_float(281564, value) end)
-mmVmenu:add_float_range("Mejorar costo en Showroom", 0.25, 0, 1000, function() return globals.get_float(281561) end, function(value) globals.set_float(281561, value) end)
-mmVmenu:add_float_range("Mejorar costo en especialista", 0.25, 0, 1000, function() return globals.get_float(281562) end, function(value) globals.set_float(281562, value) end)
-mmVmenu:add_action("-----Testeado:solo public; ~Max=310k------------", function() end)
-
-mcMenu = dinMenu:add_submenu("Club De Moteros (Sin Testear)") local function Speed(e) if not localplayer then return end if e then for i = 279591, 279595 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(279594, 300000) globals.set_int(279595, 720000) globals.set_int(279593, 3000000) globals.set_int(279592, 1800000) globals.set_int(279591, 360000) end end 
-local function Speed(e) if not localplayer then return end if e then for i = 279536, 279540 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(279539, 300000) globals.set_int(279540, 720000) globals.set_int(279538, 3000000) globals.set_int(279537, 1800000) globals.set_int(279536, 360000) end end 
-local function MCgs(e) if not localplayer then return end if e then globals.set_int(280392, 0) else globals.set_int(280392, 40000) end end 
-local function VCD(e) if not localplayer then return end if e then for i = 281622, 281625 do globals.set_int(i, 0) sleep(1) globals.set_int(i, 1) end else globals.set_int(281622, 1200000) globals.set_int(281623, 1680000) globals.set_int(281624, 2340000) globals.set_int(281625, 2880000) end end 
-local function VRC(e) if not localplayer then return end if e then globals.set_int(281098, 1000) else globals.set_int(281098, 1000) end end 
-local function VRD(e) if not localplayer then return end if e then globals.set_int(281099, 10) else globals.set_int(281099, 600) end end 
+mcMenu = dinMenu:add_submenu("Club De Moteros $$$") local function Speed(e) if not localplayer then return end if e then for i = 279591, 279595 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(279594, 300000) globals.set_int(279595, 720000) globals.set_int(279593, 3000000) globals.set_int(279592, 1800000) globals.set_int(279591, 360000) end end 
+local function Speed(e) if not localplayer then return end if e then for i = 280715, 283274 do globals.set_int(i, 0) globals.set_int(i, 1) end else globals.set_int(279539, 300000) globals.set_int(283275, 720000) globals.set_int(279538, 3000000) globals.set_int(281211, 1800000) globals.set_int(280715, 360000) end end 
+local function EMCdt(e) if not localplayer then return end if e then globals.set_int(294004, 14400000) globals.set_int(278115, 6600000) globals.set_int(293332, 7200000) globals.set_int(281828, 7800000) globals.set_int(293872, 8400000) globals.set_int(279540, 9000000) globals.set_int(CCT4, 9600000) globals.set_int(290480, 10200000) globals.set_int(280170, 10800000) globals.set_int(283269, 11400000) globals.set_int(292136, 12000000) globals.set_int(286592, 12600000) globals.set_int(286205, 13200000) globals.set_int(284964, 13800000) else globals.set_int(294004, 1800000) globals.set_int(278115, 1800000) globals.set_int(293332, 1800000) globals.set_int(281828, 1800000) globals.set_int(293872, 1800000) globals.set_int(279540, 1800000) globals.set_int(CCT4, 1800000) globals.set_int(290480, 1800000) globals.set_int(280170, 900000) globals.set_int(283269, 900000) globals.set_int(292136, 1800000) globals.set_int(286592, 900000) globals.set_int(286205, 900000) globals.set_int(284964, 900000) end end 
+local function VRC(e) if not localplayer then return end if e then globals.set_int(274177, 1000) else globals.set_int(274177, 1000) end end 
+local function VRD(e) if not localplayer then return end if e then globals.set_int(274187, 10) else globals.set_int(274187, 600) end end 
 local function MCrr(e) if not localplayer then return end if e then for i = 0, 4 do stats.set_int(mpx.."PAYRESUPPLYTIMER"..i, 1) sleep(0.1) end else for i = 0, 4 do stats.set_int(mpx.."PAYRESUPPLYTIMER"..i, 0) end end end 
+local function MCgs(e) if not localplayer then return end if e then globals.set_int(283700, 0) else globals.set_int(283700, 40000) end end 
 
 mcMenu:add_toggle("Aumentar Produccion", function() return e16 end, function() e16 = not e16 Speed(e16) end)
-mcMenu:add_toggle("Remover Cooldown", function() return e18 end, function() e18 = not e18 VCD(e18) end)
-mcMenu:add_action("---", function() end)
-mcMenu:add_toggle("Remover costo de suministros", function() return e22 end, function() e22 = not e22 VRC(e22) end)
-mcMenu:add_toggle("Rellenar Suministros(beta)", function() return e25 end, function() e25 = not e25 MCrr(e25) end)
-mcMenu:add_toggle("Remover señal global", function() return e24 end, function() e24 = not e24 MCgs(e24) end)
-mcMenu:add_float_range("Multiplicador de venta", 0.5, 1, 1000, function() return globals.get_float(281256) end, function(value) globals.set_float(281256, value) globals.set_float(281257, value) end) 
-mcMenu:add_action(" ~Utilizar para obtener~ ", function() end)
-mcMenu:add_action(" ~Max 2.5M~ ", function() end)
+mmMCmenu:add_toggle("Aumentar Tiempo De Entrega", function() return e46 end, function() e46 = not e46 EMCdt(e46) end)
+mmMCmenu:add_toggle("Remover Costos Suministros", function() return e22 end, function() e22 = not e22 VRC(e22) end) 
+mmMCmenu:add_toggle("Remover Tiempo Suministros", function() return e42 end, function() e42 = not e42 VRD(e42) end)
+mmMCmenu:add_toggle("Dar Suministros (experimental)", function() return e25 end, function() e25 = not e25 MCrr(e25) end)
+mmMCmenu:add_toggle("Remover Señal Global", function() return e24 end, function() e24 = not e24 MCgs(e24) end)
+mmMCmenu:add_float_range("Multiplicador De Venta", 0.5, 1, 1000, function() return globals.get_float(283262) end, function(value) globals.set_float(283262, value) globals.set_float(283799, value) end) 
+mmMCmenu:add_action(" ~Usalo para obtener maximo 8m~ ", function() end)
+
+mmVmenu = dinMenu:add_submenu("Cargamento Veh $$$") local function Max(e) if not localplayer then return end if e then globals.set_int(281602, 155000) globals.set_int(281603, 155000) globals.set_int(281604, 155000) globals.set_float(281606, 0) globals.set_float(281607, 0) else globals.set_int(281602, 40000) globals.set_int(281603, 25000) globals.set_int(281604, 15000) globals.set_float(281606, 0.25) globals.set_float(281607, 0.5) end end mmVmenu:add_toggle("Maxear los rangos", function() return e17 end, function() e17 = not e17 Max(e17) end)
+local function ACCC(e) if not localplayer then return end if e then globals.set_int(290970, 0) else globals.set_int(290970, 2880) end end 
+local function etCC(e) if not localplayer then return end if e then globals.set_int(278114, 99999) else globals.set_int(278114, 600) end end 
+
+mmCCmenu:add_toggle("Remover Cooldown", function() return e35 end, function() e35 = not e35 ACCC(e35) end)
+mmCCmenu:add_int_range("% Chance", 5, 0, 100, function() return globals.get_int(277941) end, function(value) globals.set_int(277941, value) end)
+mmCCmenu:add_float_range("2 Multiplicador De Cooldown", 0.5, 0.0, 100, function() return globals.get_float(281807) end, function(value) globals.set_float(281807, value) end)
+mmCCmenu:add_toggle("Extender Tiempo", function() return e36 end, function() e36 = not e36 etCC(e36) end)
+mmCCmenu:add_int_range("Gama Baja", 5000, 20000, 100000, function() return globals.get_int(281261) end, function(value) globals.set_int(281261, value) end)
+mmCCmenu:add_int_range("Gama Media", 5000, 25000, 125000, function() return globals.get_int(290156) end, function(value) globals.set_int(290156, value) end)
+mmCCmenu:add_int_range("Gama Alta", 5000, 30000, 150000, function() return globals.get_int(274100) end, function(value) globals.set_int(274100, value) end)
 
 MMmenu = dinMenu:add_submenu("Money Loop 'SUPER RISKY'") local g = globals.set_int local m = 1969112 local x = 1 local y = 2 local z = 3 local k = 0 local s = sleep local p = 30 local q = 60 local r = 120 local enable1 = false local enable2 = false local enable3 = false local enable4 = false local enable5 = false local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
 
@@ -1198,6 +1074,4 @@ MMmenu:add_action("2 minutos antes de seleccionar una nueva.", function() end)
 
 CREDMenu = mainMenu:add_submenu("Creditos") 
 CREDMenu:add_action("Kiddions ", function() end) 
-CREDMenu:add_action("Pichocles#0427", function() end) 
-CREDMenu:add_action("En Especial ", function() end) 
-CREDMenu:add_action("Emir <3 ", function() end)
+CREDMenu:add_action("_picho_", function() end) 
