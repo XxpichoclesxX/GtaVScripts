@@ -407,178 +407,185 @@ csMenu:add_action("Saltar Golpe (instantaneo)", function()
 end)
 
 
-protMenu = mainMenu:add_submenu("Protecciones 'Test'")
+protMenu = mainMenu:add_submenu("Protecciones")
 
 local function Text(text)
 	protMenu:add_action(text, function() end)
 end
 
-Text("Protecciones (Sin Testear)")
+Text("Protecciones")
 Text("----------")
-
-local function AntiMod(bool)
-	if bool then
-		globals.set_bool(1669394 + 792, true)
-		globals.set_bool(1669394 + 504, true)
-	else
-		globals.set_bool(1669394 + 792, false)
-		globals.set_bool(1669394 + 504, false)
-	end
-end
 
 local function KickCrashes(bool)
 	if bool then 
-		globals.set_bool(1670036, true)
-		globals.set_bool(1670051, true)
-		globals.set_bool(1669951, true)
+		globals.set_bool(1669936, true)
+		globals.set_bool(1669663, true)
+		globals.set_bool(1669818, true)
+		globals.set_bool(1669833, true)
+		globals.set_bool(1669733, true)
+		globals.set_bool(1669810, true)
 		globals.set_bool(1670028, true)
-		globals.set_bool(1670238, true)
 	else
-		globals.set_bool(1670036, false)
-		globals.set_bool(1670051, false)
-		globals.set_bool(1669951, false)
+		globals.set_bool(1669936, false)
+		globals.set_bool(1669663, false)
+		globals.set_bool(1669818, false)
+		globals.set_bool(1669833, false)
+		globals.set_bool(1669733, false)
+		globals.set_bool(1669810, false)
 		globals.set_bool(1670028, false)
-		globals.set_bool(1670238, false)
 	end
 end
 
 local function CeoKick(bool)
 	if bool then 
-		globals.set_bool(1669984, true) 
+		globals.set_bool(1669766, true) 
 	else
-		globals.set_bool(1669984, false)
+		globals.set_bool(1669766, false)
 	end
 end
 
 local function CeoBan(bool)
 	if bool then 
-		globals.set_bool(1670006, true) 
+		globals.set_bool(1669788, true) 
 	else
-		globals.set_bool(1670006, false)
+		globals.set_bool(1669788, false)
 	end
 end
 
 local function SoundSpam(bool)
 	if bool then 
-		globals.set_bool(1669879, true)
-		globals.set_bool(1670243, true)
-		globals.set_bool(1669394, true)
+		globals.set_bool(1669661, true)
+		globals.set_bool(1670033, true)
+		globals.set_bool(1669211, true)
 		globals.set_bool(1670529, true)
-		globals.set_bool(1670058, true)
-		globals.set_bool(1669421, true)
+		globals.set_bool(1669840, true)
+		globals.set_bool(1669228, true)
 
 	else
-		globals.set_bool(1669879, false)
-		globals.set_bool(1670243, false) 
-		globals.set_bool(1669394, false) 
+		globals.set_bool(1669661, false)
+		globals.set_bool(1670033, false)
+		globals.set_bool(1669211, false)
 		globals.set_bool(1670529, false)
-		globals.set_bool(1670058, false)
-		globals.set_bool(1669421, false)
+		globals.set_bool(1669840, false)
+		globals.set_bool(1669228, false)
 	end
 end
 
 local function InfiniteLoad(bool)
 	if bool then 		
-		globals.set_bool(1669947, true) 
-		globals.set_bool(1670076, true)
+		globals.set_bool(1669729, true) 
+		globals.set_bool(1669858, true)
 	else
-		globals.set_bool(1669947, false)
-		globals.set_bool(1670076, false)
+		globals.set_bool(1669729, false)
+		globals.set_bool(1669858, false)
 	end
 end
 
 
 local function Collectibles(bool)
 	if bool then 
-		globals.set_bool(1670208, true) 
+		globals.set_bool(1669998, true) 
 	else
-		globals.set_bool(1670208, false)
+		globals.set_bool(1669998, false)
 	end
 end
 
 local function PassiveMode(bool)
 	if bool then 
-		globals.set_bool(1669996, true) 
+		globals.set_bool(1669778, true) 
 	else
-		globals.set_bool(1669996, false)
+		globals.set_bool(1669778, false)
 	end
 end
 
 local function TransactionError(bool) 
 	if bool then 
-		globals.set_bool(4536679, true) 
+		globals.set_bool(1669579, true) 
 	else
-		globals.set_bool(4536679, false)
+		globals.set_bool(1669579, false)
 	end
 end
 
 local function RemoveMoneyMessage(bool) 
 	if bool then 
-		globals.set_bool(1669880, true)
-		globals.set_bool(1669426, true)
-		globals.set_bool(1670057, true)
-		globals.set_bool(1669428, true)
+		globals.set_bool(1669662, true)
+		globals.set_bool(1669233, true)
+		globals.set_bool(1669839, true)
 	else
-		globals.set_bool(1669880, false)
-		globals.set_bool(1669426, false)
-		globals.set_bool(1670057, false)
-		globals.set_bool(1669428, false)
+		globals.set_bool(1669662, false)
+		globals.set_bool(1669233, false)
+		globals.set_bool(1669839, false)
 	end
 end
 
 local function ExtraTeleport(bool) 
 	if bool then 
-		globals.set_bool(1669741, true) 
-		globals.set_bool(1670138, true) 
+		globals.set_bool(1669534, true) 
+		globals.set_bool(1669928, true) 
+		globals.set_bool(1670027, true) 
+		globals.set_bool(1670028, true) 
+		globals.set_bool(1670023, true) 
 	else
-		globals.set_bool(1669741, false) 
-		globals.set_bool(1670138, false) 
+		globals.set_bool(1669534, false) 
+		globals.set_bool(1669928, false) 
+		globals.set_bool(1670027, false) 
+		globals.set_bool(1670028, false) 
+		globals.set_bool(1670023, false) 
 	end
 end
 
 
 local function ClearWanted(bool) 
 	if bool then 
-		globals.set_bool(1669938, true)
+		globals.set_bool(1669720, true)
 	else
-		globals.set_bool(1669938, false)
+		globals.set_bool(1669720, false)
 	end
 end
 
 local function OffTheRadar(bool) 
 	if bool then 
-		globals.set_bool(1669940, true)
+		globals.set_bool(1669722, true)
 	else
-		globals.set_bool(1669940, false)
+		globals.set_bool(1669722, false)
 	end
 end
 
 local function SendCutscene(bool) 
 	if bool then 
-		globals.set_bool(1670198, true)
+		globals.set_bool(1669988, true)
 	else
-		globals.set_bool(1670198, false)
+		globals.set_bool(1669988, false)
 	end
 end
 
 local function Godmode(bool) 
 	if bool then 
-		globals.set_bool(1669396, true)
+		globals.set_bool(1669213, true)
 	else
-		globals.set_bool(1669396, false)
+		globals.set_bool(1669213, false)
 	end
 end
 
 local function PersonalVehicleDestroy(bool) 
 	if bool then 
-		globals.set_bool(1669480, true)
-		globals.set_bool(1670063, true) 
-		globals.set_bool(1669947, true)
+		globals.set_bool(1669284, true)
+		globals.set_bool(1669845, true) 
 		
 	else
-		globals.set_bool(1669480, false)
-		globals.set_bool(1670063, false) 
-		globals.set_bool(1669947, false) 
+		globals.set_bool(1669284, false)
+		globals.set_bool(1669845, false) 
+	end
+end
+
+local function SocialClubSpam(bool) 
+	if bool then 
+		globals.set_bool(1669284, true)
+		globals.set_bool(1669845, true) 
+		
+	else
+		globals.set_bool(1669284, false)
+		globals.set_bool(1669845, false) 
 	end
 end
 
@@ -598,7 +605,6 @@ local function All(bool)
 	Collectibles(bool)
 	ExtraTeleport(bool)
 	KickCrashes(bool)
-	AntiMod(bool)
 end
 
 protMenu:add_toggle("Activar todo", function()
@@ -609,14 +615,6 @@ end, function()
 	
 end)
 Text("--")
-
-protMenu:add_toggle("Block Remote-Modifications", function()
-	return boolsec
-end, function()
-	boolsec = not boolsec
-	AntiMod(boolsec)
-	
-end)
 
 protMenu:add_toggle("Blockear SE Crash", function()
 	return boolcbt
