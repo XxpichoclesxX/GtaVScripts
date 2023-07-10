@@ -1,0 +1,32 @@
+Not official API for YimmMenu, i'm updating this when i found new API stuff's.
+By _picho_
+
+-----------------------------------------------------------------------------
+script_util / Is the way to call your own script.
+-----------------------------------------------------------------------------
+script_util:sleep(time in ms) / Is used to stop temporarly your function.
+
+localplayer / Is used to obtain player -1 or yourself.
+-----------------------------------------------------------------------------
+gui.get_tab(string) / Can be used to create tabs between Yimm Menu.
+
+local Example1 = gui.get_tab("Example")
+-----------------------------------------------------------------------------
+Example1:add_tab(string) / Can be used to add Tabs into the root tab.
+Example1:add_button(function(), function(), end) / Can be used to add buttons in Yimm Menu once having a tab created.
+Example1:add_checkbox(string, function(), end) / Can be used to add checkbox to the Yimm, also known has toggle.
+
+-----------------------------------------------------------------------------
+:set_position(vector3(x, y, z)) / Can be used to set the players position
+:set_rotation(yaw, roll, pitch) / Can be used to set the rotation of an entity.
+:is_in_vehicle() / Can be used to check if the given player is in a vehicle.
+:get_current_vehicle() / Can be used to get the given player vehicle hash.
+:get_config_flag() / Used to get the config flag from the Menu.
+-----------------------------------------------------------------------------
+script("script index") / Can be used to call the Gta V script.
+:is_active() / Can be used to double check if the called script is executing.
+
+globals.set_int(global) / Can be used to write Gta V globals.
+
+stats.set_bool("script index") / Can be used to write or read Gta V scripts.
+stats.get_int("script index") / Can be used to read Gta V globals.
