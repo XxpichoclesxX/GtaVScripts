@@ -12,7 +12,7 @@ util.show_corner_help("~p~Cargado ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Bienvenidx
 util.yield(800)
 
 local response = false
-local localVer = 3.22
+local localVer = 3.3
 local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
@@ -3553,7 +3553,6 @@ end)
 menu.toggle_loop(acidlab, "Saltar Cooldown De Dax", {}, "", function() -- thx icedoomfist and pwisuhm my dad
     STATS.STAT_SET_INT(util.joaat("MP"..util.get_char_slot().."_XM22JUGGALOWORKCDTIMER"), -1, true)
 end)
-]]
 
 menu.toggle_loop(recovery, "Cortadora Laser Cayo 'Test'", {}, "Reducira el tiempo de la cortadora de plasma.", function()
     local pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED(players.user()), true)
