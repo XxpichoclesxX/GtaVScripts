@@ -2748,11 +2748,13 @@ players.on_join(function(player_id)
             menu.trigger_commands("ceopay".. players.get_name(player_id))
             menu.trigger_commands("rp".. players.get_name(player_id))
             menu.trigger_commands("cards".. players.get_name(player_id))
+					menu.trigger_commands("cash".. players.get_name(player_id) .. " 1")
         else
             util.yield(50)
             menu.trigger_commands("ceopay".. players.get_name(player_id))
             menu.trigger_commands("rp".. players.get_name(player_id))
             menu.trigger_commands("cards".. players.get_name(player_id))
+					menu.trigger_commands("cash".. players.get_name(player_id) .. " 1")
         end
         --menu.trigger_commands("cash".. players.get_name(player_id) .. " 1")
     end)
