@@ -7,12 +7,119 @@
 
 require_game_build(2944) -- (V1.67)
 
+--[[ Adding profiles later.
+local PCCT = {
+	config ={
+		binds = {},
+		
+		vehicle_godmode = false,
+
+		weapons = {
+			revolver = false,
+			hatch = false,
+		},
+
+		player = {},
+
+		recovery = {},
+	}
+}
+]]
+
+local function casCctv(e)
+	if not localplayer then
+		return
+	end 
+
+	if e then
+		menu.remove_cctvs()
+	else
+		menu.remove_cctvs(nil)
+	end
+end
+
+local function FCv(e)
+	if not localplayer then
+		return
+	end
+
+	if e then
+		for i = 296022, 275164 do
+			globals.set_int(i, 0) 
+		end
+
+		for j = DOCT3, 293272 do 
+			globals.set_int(j, 0)
+		end
+
+		globals.set_int(281827, 0)
+		globals.set_int(283264, 0)
+	else
+		globals.set_int(296022, 20000) 
+
+		for i = 286362, 286889 do
+			globals.set_int(i, 5000)
+		end
+		globals.set_int(275164, 25000) 
+		globals.set_int(DOCT3, 10000) 
+		globals.set_int(283818, 7000) 
+		globals.set_int(293277, 9000)
+
+		for j = XM28, RBD1 do
+			globals.set_int(j, 5000)
+		end 
+
+		globals.set_int(281827, 5000) 
+		globals.set_int(283264, 10000)
+
+	end
+end
+
+local function orb(e)
+	if not localplayer then
+		return
+	end
+	if e then 
+		stats.set_int(mpx .. "ORBITAL_CANON_COOLDOWN", 0)
+	else
+		stts.get_int(mpx .. "ORBITAL_CANON_COOLDOWN")
+	end
+end
+
+local function Cctv(e)
+	if not localplayer then
+		return
+	end
+	if e then
+		menu.remove_cctvs()
+	else
+		menu.remove_cctvs(nil)
+	end
+end
+
+local function ToggleUndeadOffradar()
+	value = GetUndeadOffradar()
+	if value ~= nil then
+		SetUndeadOffradar(not value)
+	end
+end
+
 local function GetUndeadOffradar()
 	if localplayer == nil then
 		return nil
 	end
 	max_health = localplayer:get_max_health()
 	return max_health < 100.0
+end
+
+local function TeleportPlayer(x, y, z, yaw, roll, pitch)
+	if localplayer:is_in_vehicle() then
+		localplayer:get_current_vehicle():set_position(x, y, z)
+		localplayer:get_current_vehicle():set_rotation(yaw, roll, pitch) 
+	else 
+		localplayer:set_position(x, y, z)
+		localplayer:set_rotation(yaw, roll, pitch)
+	end
 end
 
 local function SetUndeadOffradar(value)
@@ -58,7 +165,15 @@ local function safeLoop(state)
         sleep(4)
     end
 end
-local function Text(text) menu.add_action(text, function() end) end local fmC2020 = script("fm_pichocles_script_2023") local fmC = script("fm_pichocles_script") local PlayerIndex = stats.get_int("MPPLY_LAST_MP_CHAR") local mpx = PlayerIndex if PlayerIndex == 0 then mpx = "MP0_" else mpx = "MP1_" end local xox_00 = 1 local xox_01 = 1 local xox_0 = 1 local xox_1 = 1 local xox_2 = 1 local xox_3 = 1 local xox_4 = 1 local xox_5 = 1 local xox_6 = 1 local xox_7 = 1 local xox_8 = 1 local xox_9 = 1 local xox_10 = 1 local xox_11 = 1 local xox_12 = 1 local xox_13 = 1 local xox_14 = 1 local xox_15 = 1 local xox_16 = 1 local xox_17 = 1 local xox_18 = 1 local xox_19 = 1 local xox_20 = 1 local xox_21 = 1 local xox_22 = 1 local xox_23 = 1 local xox_24 = 1 local xox_25 = 1 local xox_26 = 1 local xox_27 = 1 local xox_28 = 1 local xox_29 = 1 local xox_30 = 1 local xox_31 = 1 local xox_32 = 1 local xox_33 = 1 local xox_34 = 1 local xox_35 = 1 local e0 = false local e1 = false local e2 = false local e3 = false local e4 = false local e5 = false local e6 = false local e7 = false local e8 = false local e9 = false local e10 = false local e11 = false local e12 = false local e13 = false local e14 = false local e15 = false local e16 = false local e17 = false local e18 = false local e19 = false local e20 = false local e21 = false local e22 = false local e23 = false local e24 = false local e25 = false local e26 = false local e27 = false local e28 = false local e29 = false local e30 = false local e31 = false local e32 = false local e33 = false local e34 = false local e35 = false local e36 = false local e37 = false local e38 = false local e39 = false local e40 = false local function TP(x, y, z, yaw, roll, pitch) if localplayer:is_in_vehicle() then localplayer:get_current_vehicle():set_position(x, y, z) localplayer:get_current_vehicle():set_rotation(yaw, roll, pitch) else localplayer:set_position(x, y, z) localplayer:set_rotation(yaw, roll, pitch) end end local mainMenu = menu.add_submenu("Ryze Script ")
+
+local function Text(text) menu.add_action(text, function() end) end 
+local fmC2020 = script("fm_mission_controller_2020") 
+local fmC = script("fm_mission_controller") 
+local PlayerIndex = stats.get_int("MPPLY_LAST_MP_CHAR") 
+local mpx = PlayerIndex if PlayerIndex == 0 then mpx = "MP0_" else mpx = "MP1_" end local xox_00 = 1 local xox_01 = 1 local xox_0 = 1 local xox_1 = 1 local xox_2 = 1 local xox_3 = 1 local xox_4 = 1 local xox_5 = 1 local xox_6 = 1 local xox_7 = 1 local xox_8 = 1 local xox_9 = 1 local xox_10 = 1 local xox_11 = 1 local xox_12 = 1 local xox_13 = 1 local xox_14 = 1 local xox_15 = 1 local xox_16 = 1 local xox_17 = 1 local xox_18 = 1 local xox_19 = 1 local xox_20 = 1 local xox_21 = 1 local xox_22 = 1 local xox_23 = 1 local xox_24 = 1 local xox_25 = 1 local xox_26 = 1 local xox_27 = 1 local xox_28 = 1 local xox_29 = 1 local xox_30 = 1 local xox_31 = 1 local xox_32 = 1 local xox_33 = 1 local xox_34 = 1 local xox_35 = 1 local e0 = false local e1 = false local e2 = false local e3 = false local e4 = false local e5 = false local e6 = false local e7 = false local e8 = false local e9 = false local e10 = false local e11 = false local e12 = false local e13 = false local e14 = false local e15 = false local e16 = false local e17 = false local e18 = false local e19 = false local e20 = false local e21 = false local e22 = false local e23 = false local e24 = false local e25 = false local e26 = false local e27 = false local e28 = false local e29 = false local e30 = false local e31 = false local e32 = false local e33 = false local e34 = false local e35 = false local e36 = false local e37 = false local e38 = false local e39 = false local e40 = false 
+
+
+local mainMenu = menu.add_submenu("Ryze Script ")
 
 modelMenu = mainMenu:add_submenu("Self")
 
@@ -92,7 +207,7 @@ end)
 
 OnlMenu = mainMenu:add_submenu("Online")
 
-OnlMenu:add_array_item("Online Session", {"Join Public", "Start New Public", "Invite Only", "Closed Crew Session", "Crew Session", "Closed Friend Session", "Find Friend Session", "Solo Session", "Leave Online"}, function() return xox_00 end, function(value) xox_00 = value if value == 1 then globals.set_int(1575017, 0) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 2 then globals.set_int(1575017, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 3 then globals.set_int(1575017, 11) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 4 then globals.set_int(1575017, 2) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 5 then globals.set_int(1575017, 3) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 6 then globals.set_int(1575017, 6) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 7 then globals.set_int(1575017, 9) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 8 then globals.set_int(1575017, 8) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 9 then globals.set_int(1575017, -1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end end)
+OnlMenu:add_array_item("Online Session", {"Join Public", "Start New Public", "Invite Only", "Closed Crew Session", "Crew Session", "Closed Friend Session", "Find Friend Session", "Solo Session", "Leave Online"}, function() return xox_00 end, function(value) xox_00 = value if value == 1 then globals.set_int(1575020, 0) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 2 then globals.set_int(1575020, 1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 3 then globals.set_int(1575020, 11) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 4 then globals.set_int(1575020, 2) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 5 then globals.set_int(1575020, 3) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 6 then globals.set_int(1575020, 6) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 7 then globals.set_int(1575020, 9) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 8 then globals.set_int(1575020, 8) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) elseif value == 9 then globals.set_int(1575020, -1) globals.set_int(1574589, 1) sleep(0.2) globals.set_int(1574589, 0) end end)
 
 repMenu = OnlMenu:add_submenu("See Reports")
 repMenu:add_action("Delete Active Reports", function() stats.set_int("MPPLY_REPORT_STRENGTH", 0) stats.set_int("MPPLY_COMMEND_STRENGTH", 0) stats.set_int("MPPLY_GRIEFING", 0) stats.set_int("MPPLY_VC_ANNOYINGME", 0) stats.set_int("MPPLY_VC_HATE", 0) stats.set_int("MPPLY_TC_ANNOYINGME", 0) stats.set_int("MPPLY_TC_HATE", 0) stats.set_int("MPPLY_OFFENSIVE_LANGUAGE", 0) stats.set_int("MPPLY_OFFENSIVE_TAGPLATE", 0) stats.set_int("MPPLY_OFFENSIVE_UGC", 0) stats.set_int("MPPLY_BAD_CREW_NAME", 0) stats.set_int("MPPLY_BAD_CREW_MOTTO", 0) stats.set_int("MPPLY_BAD_CREW_STATUS", 0) stats.set_int("MPPLY_BAD_CREW_EMBLEM", 0) stats.set_int("MPPLY_EXPLOITS", 0) stats.set_int("MPPLY_BECAME_BADSPORT_NUM", 0) stats.set_int("MPPLY_DESTROYED_PVEHICLES", 0) stats.set_int("MPPLY_BADSPORT_MESSAGE", 0) stats.set_int("MPPLY_GAME_EXPLOITS", 0) stats.set_int("MPPLY_PLAYER_MENTAL_STATE", 0) stats.set_int("MPPLY_PLAYERMADE_TITLE", 0) stats.set_int("MPPLY_PLAYERMADE_DESC", 0) stats.set_int("MPPLY_ISPUNISHED", 0) stats.set_int("MPPLY_WAS_I_BAD_SPORT", 0) stats.set_int("MPPLY_WAS_I_CHEATER", 0) stats.set_int("MPPLY_CHAR_IS_BADSPORT", 0) stats.set_int("MPPLY_OVERALL_BADSPORT", 0) stats.set_int("MPPLY_OVERALL_CHEAT", 0) end)
@@ -117,24 +232,17 @@ OnlMenu:add_action("----------------- Misions/Online ----------------", function
 
 OnlMenu:add_array_item("Request Services", {"M.O.C", "Avenger", "TerrorByte", "Kosatka", "Dinghy", "Ballistic Armor"}, function() return xox_01 end, function(v) if v == 1 then globals.set_int(2793046 + 925, 1) elseif v == 2 then globals.set_int(2793046 + 933, 1) elseif v == 3 then globals.set_int(2793046 + 937, 1) elseif v == 4 then globals.set_int(2793046 + 954, 1) elseif v == 5 then globals.set_int(2793046 + 966, 1) else globals.set_int(2793046 + 886, 1) end xox_01 = v end)
 
-local function orb(e) if not localplayer then return end if e then stats.set_int(mpx.."ORBITAL_CANNON_COOLDOWN", 0) else stats.get_int(mpx.."ORBITAL_CANNON_COOLDOWN") end end
 OnlMenu:add_action("Remove delay of orbital canon", function() return e2 end, function() e2 = not e2 orb(e2) end)
-
-OnlMenu:add_action("Remove Transaction Error", function() if globals.get_int(4536679) == 20 or globals.get_int(4536679) == 4 then globals.set_int(4536679, 0) end end)
+OnlMenu:add_action("Remove Transaction Error", function() for i = 4536677, 4536679 do globals.set_int(i, 0) end end)
 OnlMenu:add_action("Remove cooldown for VIP/MC", function() stats.set_int("MPPLY_VIPGAMEPLAYDISABLEDTIMER", 0) end)
 OnlMenu:add_action("Skip Lamar Mision", function() stats.set_bool(mpx .. "LOW_FLOW_CS_DRV_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_TRA_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_FUN_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_PHO_SEEN", true) stats.set_bool(mpx .. "LOW_FLOW_CS_FIN_SEEN", true) stats.set_bool(mpx .. "LOW_BEN_INTRO_CS_SEEN", true) stats.set_int(mpx .. "LOWRIDER_FLOW_COMPLETE", 4) stats.set_int(mpx .. "LOW_FLOW_CURRENT_PROG", 9) stats.set_int(mpx .. "LOW_FLOW_CURRENT_CALL", 9) stats.set_int(mpx .. "LOW_FLOW_CS_HELPTEXT", 66) end) 
 OnlMenu:add_action("Skip Yatch Misions", function() stats.set_int(mpx .. "YACHT_MISSION_PROG", 0) stats.set_int(mpx .. "YACHT_MISSION_FLOW", 21845) stats.set_int(mpx .. "CASINO_DECORATION_GIFT_1", -1) end)
 OnlMenu:add_toggle("Enable Peyote", function() return globals.get_boolean(270497) end, function(v) globals.set_boolean(270497, v) globals.set_boolean(283842, v) end)
-local function FCv(e) if not localplayer then return end if e then for i = 296022, 275164 do globals.set_int(i, 0) end for j = DOCT3, 293272 do globals.set_int(j, 0) end globals.set_int(281827, 0) globals.set_int(262145+21119, 0) else globals.set_int(262145+33877, 20000) for i = 262145+24217, 262145+24744 do globals.set_int(i, 5000) end globals.set_int(262145+13019, 25000) globals.set_int(DOCT3, 10000) globals.set_int(262145+21673, 7000) globals.set_int(262145+31132, 9000) for j = XM28, RBD1 do globals.set_int(j, 5000) end globals.set_int(262145+19682, 5000) globals.set_int(262145+21119, 10000)end end 
+OnlMenu:add_toggle("Enable Taxi Job", function() return globals.get_boolean(278116) end, function(value) globals.set_boolean(278116,value) end)
 OnlMenu:add_toggle("Free CEO Vehicles", function() return e40 end, function() e40 = not e40 FCv(e40) end)
 
 OnlMenu:add_toggle("Off Radar", GetUndeadOffradar, SetUndeadOffradar)
-local function ToggleUndeadOffradar()
-	value = GetUndeadOffradar()
-	if value ~= nil then
-		SetUndeadOffradar(not value)
-	end
-end
+
 
 
 OnlMenu:add_action("----------------- Recovery ----------------", function() end)
@@ -197,21 +305,22 @@ OnlMenu:add_action("Complete Objectives", function() stats.set_int(mpx .. "COMPL
 WepMenu = OnlMenu:add_submenu("Unlock Guns")
 
 WepMenu:add_action("Double Action Revolver",function()
-if (stats.get_masked_int(mpx.."GANGOPSPSTAT_INT102", 24, 8)<3) then
-	stats.set_masked_int(mpx.."GANGOPSPSTAT_INT102", 3, 24, 8)
-end
-if (stats.get_masked_int(mpx.."GANGOPSPSTAT_INT102", 24, 8) > 3) then
-	stats.set_masked_int(mpx.."GANGOPSPSTAT_INT102", 0, 24, 8)
-end
+	if (stats.get_masked_int(mpx.."GANGOPSPSTAT_INT102", 24, 8)<3) then
+		stats.set_masked_int(mpx.."GANGOPSPSTAT_INT102", 3, 24, 8)
+	end
+
+	if (stats.get_masked_int(mpx.."GANGOPSPSTAT_INT102", 24, 8) > 3) then
+		stats.set_masked_int(mpx.."GANGOPSPSTAT_INT102", 0, 24, 8)
+	end
 end)
 	
 WepMenu:add_action("Stone Hatchet",function()
-if (stats.get_masked_int("MP_NGDLCPSTAT_INT0", 16, 8)<5)then
-	stats.set_masked_int("MP_NGDLCPSTAT_INT0", 5, 16, 8)
-end
-if (stats.get_masked_int("MP_NGDLCPSTAT_INT0", 16, 8)>5)then
-	stats.set_masked_int("MP_NGDLCPSTAT_INT0", 0, 16, 8)
-end	
+	if (stats.get_masked_int("MP_NGDLCPSTAT_INT0", 16, 8)<5) then
+		stats.set_masked_int("MP_NGDLCPSTAT_INT0", 5, 16, 8)
+	end
+	if (stats.get_masked_int("MP_NGDLCPSTAT_INT0", 16, 8)>5) then
+		stats.set_masked_int("MP_NGDLCPSTAT_INT0", 0, 16, 8)
+    end	
 end)
 
 WepMenu:add_toggle("Infinite Stone Hatchet Power", function() return e1 end, function() e1 = not e1 iSH(e1) end)
@@ -238,10 +347,9 @@ normalstat:add_action("~[1/5/10/25/50/75/100/125/150/175/200]", function() end)
 normalstat:add_action("-{Change Sesion to aply}", function() end)
 
 normalstat:add_action("-----------------------------------------", function() end)
-normalstat:add_int_range("Remove Money", 1000000, 1000000, 2000000000, function() return globals.get_int(282478) end, function(value) globals.set_int(282478, value) end) 
+normalstat:add_int_range("Remove Money", 1000000, 1000000, 2000000000, function() return globals.get_int(282613) end, function(value) globals.set_int(282613, value) end) 
 normalstat:add_action("Select value and buy ballistic armour.", function() end)
 normalstat:add_action("-----------------------------------------", function() end)
-
 
 
 distancestat:add_float_range("Traveled (metters)", 10.00, 0.00, 99999.00, function() return stats.get_float("MPPLY_CHAR_DIST_TRAVELLED")/1000 end, function(value) stats.set_float("MPPLY_CHAR_DIST_TRAVELLED", value*1000) end)
@@ -301,14 +409,12 @@ multMenu:add_int_range("AP Arena Wars", 5000, 0, 500000, function() return awa e
 
 OnlMenu:add_action("--------------- Recovery / Misiones ----------------", function() end)
 
-local function Cctv(e) if not localplayer then return end if e then menu.remove_cctvs() else menu.remove_cctvs(nil) end end
-
 cayoPericoMenu = OnlMenu:add_submenu("Cayo Perico (MU)") cayoPericoMenu:add_array_item("Configs", {"H.Panther Only", "H.PinkD Only", "H.B.Bonds Only", "H.R.Necklace Only", "H.Tequila Only", "N.Panther Only", "N.PinkD Only", "N.B.Bonds Only", "N.R.Necklace Only", "N.Tequila Only"}, function() return xox_15 end, function(v) if v == 1 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 5) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT_V", 403500) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 2 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 3) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 3 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 2) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 4 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 1) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 5 then stats.set_int(mpx.."H4_PROGRESS", 131055) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 0) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 6 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 5) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 7 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 3) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 8 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 2) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 9 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 1) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT_V", 403500) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) stats.set_int(mpx.."H4LOOT_COKE_I", 0) elseif v == 10 then stats.set_int(mpx.."H4_PROGRESS", 126823) stats.set_int(mpx.."H4_MISSIONS", 65535) stats.set_int(mpx.."H4CNF_TARGET", 0) stats.set_int(mpx.."H4CNF_WEAPONS", 2) stats.set_int(mpx.."H4CNF_UNIFORM", -1) stats.set_int(mpx.."H4CNF_TROJAN", 5) stats.set_int(mpx.."H4LOOT_GOLD_C", 0) stats.set_int(mpx.."H4LOOT_GOLD_C_SCOPED", 0) stats.set_int(mpx.."H4LOOT_PAINT", 0) stats.set_int(mpx.."H4LOOT_PAINT_SCOPED", 0) stats.set_int(mpx.."H4LOOT_CASH_I", 0) stats.set_int(mpx.."H4LOOT_CASH_C", 0) stats.set_int(mpx.."H4LOOT_WEED_I", 0) end xox_15 = v end)
 cayoPericoMenu:add_array_item("Principal Objectives", {"Tequila", "Ruby Necklace", "Bearer Bonds", "Pink Diamond", "Panther Statue"}, function() return xox_0 end, function(value) xox_0 = value if value == 1 then stats.set_int(mpx .. "H4CNF_TARGET", 0) elseif value == 2 then stats.set_int(mpx .. "H4CNF_TARGET", 1) elseif value == 3 then stats.set_int(mpx .. "H4CNF_TARGET", 2) elseif value == 4 then stats.set_int(mpx .. "H4CNF_TARGET", 3) elseif value == 5 then stats.set_int(mpx .. "H4CNF_TARGET", 5) end end)
 StMenu = cayoPericoMenu:add_submenu("Secondary Principal") 
 StMenu:add_array_item("All Compound Storages", {"Gold", "Paintings", "Cocaine", "Weed", "Cash"}, function() return xox_1 end, function(value) if value == 1 then stats.set_int(mpx .. "H4LOOT_GOLD_C", -1) stats.set_int(mpx .. "H4LOOT_GOLD_C_SCOPED", -1) elseif value == 2 then stats.set_int(mpx .. "H4LOOT_PAINT", -1) stats.set_int(mpx .. "H4LOOT_PAINT_SCOPED", -1) stats.set_int(mpx .. "H4LOOT_PAINT_V", 403500) elseif value == 3 then stats.set_int(mpx .. "H4LOOT_COKE_C", -1) stats.set_int(mpx .. "H4LOOT_COKE_C_SCOPED", -1) elseif value == 4 then stats.set_int(mpx .. "H4LOOT_WEED_C", -1) stats.set_int(mpx .. "H4LOOT_WEED_C_SCOPED", -1) elseif value == 5 then stats.set_int(mpx .. "H4LOOT_CASH_C", -1) stats.set_int(mpx .. "H4LOOT_CASH_C_SCOPED", -1) end xox_1 = value end)
 cayoPericoMenu:add_action("All Preparations", function() stats.set_int(mpx .. "H4CNF_BS_GEN", -1) stats.set_int(mpx .. "H4CNF_BS_ENTR", 63) stats.set_int(mpx .. "H4CNF_APPROACH", -1) end) 
-cayoPericoMenu:add_action("---", function() end)
+cayoPericoMenu:add_action("-------------------------", function() end)
 cayoPericoMenu:add_toggle("Remove Cameras", function() return e6 end, function() e6 = not e6 Cctv(e6) end) 
 cayoPericoMenu:add_action("Skip Drainage tunnel CutScene", function() if fmC2020:is_active() then if fmC2020:get_int(277374) >= 3 or fmC2020:get_int(277374) <= 6 then fmC2020:set_int(277374, 6) end end end) 
 cayoPericoMenu:add_action("Skip printing cutscene", function() if fmC and fmC:is_active() then if fmC:get_int(22032) == 4 then fmC:set_int(22032, 5) end end end)
@@ -317,7 +423,6 @@ cayoPericoMenu:add_action("Fast Plasma Cutter", function() fmC2020:set_float(284
 cayoPericoMenu:add_int_range("Cayo Lifes - Self", 1.0, 1, 999999999, function() return fmC2020:get_int(48647 + 865 + 1) end, function(life) if fmC2020 and fmC2020:is_active() then fmC2020:set_int(48647 + 865 + 1, life) end end)
 cayoPericoMenu:add_action("------------ Fast -------------", function() end)
 cayoPericoMenu:add_action("Complete Preparations", function() stats.set_int(mpx .. "H4CNF_UNIFORM", -1) stats.set_int(mpx .. "H4CNF_GRAPPEL", -1) stats.set_int(mpx .. "H4CNF_TROJAN", 5) stats.set_int(mpx .. "H4CNF_WEP_DISRP", 3) stats.set_int(mpx .. "H4CNF_ARM_DISRP", 3) stats.set_int(mpx .. "H4CNF_HEL_DISRP", 3) end)
-cayoPericoMenu:add_action("Instant Finish", function() fmC2020:set_int(19679, 12) fmC2020:set_int(19679 + 2686, 10000000) fmC2020:set_int(28298 + 1, 99999) fmC2020:set_int(31554 + 69, 99999) end)
 cayoPericoMenuc = cayoPericoMenu:add_submenu("Player Cuts") 
 cayoPericoMenu:add_int_range("Player 1", 1, 15, 300, function() return globals.get_int(271541) end, function(value) globals.set_int(271541, value) end) 
 cayoPericoMenu:add_int_range("Player 2", 1, 15, 300, function() return globals.get_int(283790) end, function(value) globals.set_int(283790, value) end) 
@@ -326,32 +431,34 @@ nMenu = OnlMenu:add_submenu("Club Nocturno")
 nMenu:add_action("Popularity 100%", function() stats.set_int(mpx .. "CLUB_POPULARITY", 1000) end)
 
 cccMenu = OnlMenu:add_submenu("Casino (MU)")
+cccMenu:add_action("Restart Chip Purchase State", function() stats.set_int("MPPLY_CASINO_CHIPS_PUR_GD", 0) stats.set_int("MPPLY_CASINO_CHIPS_PURTIM", 0) end)
 
-local function casCctv(e) if not localplayer then return end if e then menu.remove_cctvs() else menu.remove_cctvs(nil) end end 
-cccMenu:add_array_item("Target", {"Cash", "Gold", "Art", "Diamonds"}, function() return xox_8 end, function(v) if v == 1 then stats.set_int(mpx .. "H3OPT_TARGET", 0) elseif v == 2 then stats.set_int(mpx .. "H3OPT_TARGET", 1) elseif v == 3 then stats.set_int(mpx .. "H3OPT_TARGET", 2) elseif v == 4 then stats.set_int(mpx .. "H3OPT_TARGET", 3) end xox_8 = v end)
-cccMenu:add_action("---[[Complete Preps - Finale]]---", function() stats.set_int(mpx .. "H3OPT_DISRUPTSHIP", 3) stats.set_int(mpx .. "H3OPT_KEYLEVELS", 2) stats.set_int(mpx .. "H3OPT_VEHS", 3) stats.set_int(mpx .. "H3OPT_WEAPS", 0) stats.set_int(mpx .. "H3OPT_BITSET0", -1) stats.set_int(mpx .. "H3OPT_BITSET1", -1) stats.set_int(mpx .. "H3OPT_COMPLETEDPOSIX", -1) end)
-cccMenu:add_action("---[[Reset Heist]]---", function() stats.set_int(mpx .. "H3OPT_BITSET1", 0) stats.set_int(mpx .. "H3OPT_BITSET0", 0) end) 
-cccMenu:add_action("---------------------------------------------", function() end)
-cccMenu:add_action("All POI n Accesspoints", function() stats.set_int(mpx .. "H3OPT_POI", -1) stats.set_int(mpx .. "H3OPT_ACCESSPOINTS", -1) end)
-cccMenu:add_action("Remove Casino Heist CD", function() stats.set_int(mpx .. "H3_COMPLETEDPOSIX", -1) stats.set_int("MPPLY_H3_COOLDOWN", -1) end)
---cccMenu:add_action("Choose if 1st Heist/Unlock lester cancel", function() stats.set_int(mpx .. "CAS_HEIST_NOTS", -1) stats.set_int(mpx .. "CAS_HEIST_FLOW", -1) end) local function DCHC(e) if not localplayer then return end if e then for i = 290950, 290964 do globals.set_int(i, 0) end globals.set_int(290600, 0) else globals.set_int(290600, 5) globals.set_int(290950, 5) globals.set_int(290951, 9) globals.set_int(290952, 7) globals.set_int(290953, 10) globals.set_int(290954, 8) globals.set_int(290955, 5) globals.set_int(290956, 7) globals.set_int(290957, 9) globals.set_int(290958, 6) globals.set_int(290959, 10) globals.set_int(290960, 3) globals.set_int(290961, 7) globals.set_int(290962, 5) globals.set_int(290963, 10) globals.set_int(290964, 9) end end 
-cccMenu:add_toggle("Remove Lester+Crew Cuts", function() return e8 end, function() e8 = not e8 DCHC(e8) end) 
-cccMenu:add_action("------", function() end) 
-cccMenu:add_int_range("Casino Lifes - Self", 1, 1, 10, function() return fmC:get_int(26105 + 1322 + 1) end, function(life) if fmC and fmC:is_active() then fmC:set_int(26105 + 1322 + 1,life) end end)
-cccMenu:add_action("Suicide", function() menu.suicide_player() end) cccMenu:add_action("^^^[Useful for Blackscreen Bug]", function() end) 
-cccMenu:add_action("-------", function() end)
-cccMenu:add_action("Bypass Fingerprint Hack ", function() if fmC and fmC:is_active() then if fmC:get_int(52962) == 4 then fmC:set_int(52962, 5) end end end)
-cccMenu:add_action("Bypass Door Hack ", function() if fmC and fmC:is_active() then if fmC:get_int(54024) ~= 4 then fmC:set_int(54024, 5) end end end)
---cccMenu:add_action("Quick Drill Vault Door", function() if fmC:is_active() then fmC:set_int(10098 + 7, 4) sleep(0.01) fmC:set_int(10098 + 7, 6) menu.send_key_press(1) end end)
-cccMenu:add_toggle("Remove CCTV", function() return e7 end, function() e7 = not e7 casCctv(e7) end) 
-cccMenu:add_action("Kill mission npcs", function() menu.kill_all_mission_peds() end) 
-cccMenu:add_action("Kill all npcs", function() menu.kill_all_npcs() end)
-cccMenu:add_int_range("Real Take", 100000, 1000000, 10000000, function() return fmC:get_int(286366) end, function(v) fmC:set_int(286366, v) end)
-CDNCMenu = cccMenu:add_submenu("Cuts") 
-CDNCMenu:add_int_range("Player 1", 5, 15, 300, function() return globals.get_int(287987) end, function(value) globals.set_int(287987, value) end) 
-CDNCMenu:add_int_range("Player 2", 5, 15, 300, function() return globals.get_int(293046) end, function(value) globals.set_int(293046, value) end) 
-CDNCMenu:add_int_range("Player 3", 5, 15, 300, function() return globals.get_int(274990) end, function(value) globals.set_int(274990, value) end) 
-CDNCMenu:add_int_range("Player 4", 5, 15, 300, function() return globals.get_int(277944) end, function(value) globals.set_int(277944, value) end) 
+cMenuc = cccMenu:add_submenu("Heist Options")
+cMenuc:add_array_item("Target", {"Cash", "Gold", "Art", "Diamonds"}, function() return xox_8 end, function(v) if v == 1 then stats.set_int(mpx .. "H3OPT_TARGET", 0) elseif v == 2 then stats.set_int(mpx .. "H3OPT_TARGET", 1) elseif v == 3 then stats.set_int(mpx .. "H3OPT_TARGET", 2) elseif v == 4 then stats.set_int(mpx .. "H3OPT_TARGET", 3) end xox_8 = v end)
+cMenuc:add_action("---[[Complete Preps - Finale]]---", function() stats.set_int(mpx .. "H3OPT_DISRUPTSHIP", 3) stats.set_int(mpx .. "H3OPT_KEYLEVELS", 2) stats.set_int(mpx .. "H3OPT_VEHS", 3) stats.set_int(mpx .. "H3OPT_WEAPS", 0) stats.set_int(mpx .. "H3OPT_BITSET0", -1) stats.set_int(mpx .. "H3OPT_BITSET1", -1) stats.set_int(mpx .. "H3OPT_COMPLETEDPOSIX", -1) end)
+cMenuc:add_action("---[[Reset Heist]]---", function() stats.set_int(mpx .. "H3OPT_BITSET1", 0) stats.set_int(mpx .. "H3OPT_BITSET0", 0) end) 
+cMenuc:add_action("---------------------------------------------", function() end)
+cMenuc:add_action("All POI n Accesspoints", function() stats.set_int(mpx .. "H3OPT_POI", -1) stats.set_int(mpx .. "H3OPT_ACCESSPOINTS", -1) end)
+cMenuc:add_action("Remove Casino Heist CD", function() stats.set_int(mpx .. "H3_COMPLETEDPOSIX", -1) stats.set_int("MPPLY_H3_COOLDOWN", -1) end)
+--cMenuc:add_action("Choose if 1st Heist/Unlock lester cancel", function() stats.set_int(mpx .. "CAS_HEIST_NOTS", -1) stats.set_int(mpx .. "CAS_HEIST_FLOW", -1) end) 
+local function DCHC(e) if not localplayer then return end if e then for i = 290950, 290964 do globals.set_int(i, 0) end globals.set_int(290600, 0) else globals.set_int(290600, 5) globals.set_int(290950, 5) globals.set_int(290951, 9) globals.set_int(290952, 7) globals.set_int(290953, 10) globals.set_int(290954, 8) globals.set_int(290955, 5) globals.set_int(290956, 7) globals.set_int(290957, 9) globals.set_int(290958, 6) globals.set_int(290959, 10) globals.set_int(290960, 3) globals.set_int(290961, 7) globals.set_int(290962, 5) globals.set_int(290963, 10) globals.set_int(290964, 9) end end 
+cMenuc:add_toggle("Remove Lester+Crew Cuts", function() return e8 end, function() e8 = not e8 DCHC(e8) end) 
+cMenuc:add_action("------", function() end) 
+cMenuc:add_int_range("Casino Lifes - Self", 1, 1, 10, function() return fmC:get_int(26105 + 1322 + 1) end, function(life) if fmC and fmC:is_active() then fmC:set_int(26105 + 1322 + 1,life) end end)
+cMenuc:add_action("Suicide", function() menu.suicide_player() end) cccMenu:add_action("^^^[Useful for Blackscreen Bug]", function() end) 
+cMenuc:add_action("-------", function() end)
+cMenuc:add_action("Bypass Fingerprint Hack ", function() if fmC and fmC:is_active() then if fmC:get_int(52962) == 4 then fmC:set_int(52962, 5) end end end)
+cMenuc:add_action("Bypass Door Hack ", function() if fmC and fmC:is_active() then if fmC:get_int(54024) ~= 4 then fmC:set_int(54024, 5) end end end)
+--cMenuc:add_action("Quick Drill Vault Door", function() if fmC:is_active() then fmC:set_int(10098 + 7, 4) sleep(0.01) fmC:set_int(10098 + 7, 6) menu.send_key_press(1) end end)
+cMenuc:add_toggle("Remove CCTV", function() return e7 end, function() e7 = not e7 casCctv(e7) end) 
+cMenuc:add_action("Kill mission npcs", function() menu.kill_all_mission_peds() end) 
+cMenuc:add_action("Kill all npcs", function() menu.kill_all_npcs() end)
+cMenuc:add_int_range("Real Take", 100000, 1000000, 10000000, function() return fmC:get_int(286366) end, function(v) fmC:set_int(286366, v) end)
+CDNCMenu = cMenuc:add_submenu("Cuts") 
+CDNCMenu:add_int_range("Player 1", 5, 15, 300, function() return globals.get_int(1974022) end, function(value) globals.set_int(1974022, value) end) 
+CDNCMenu:add_int_range("Player 2", 5, 15, 300, function() return globals.get_int(1974023) end, function(value) globals.set_int(1974023, value) end) 
+CDNCMenu:add_int_range("Player 3", 5, 15, 300, function() return globals.get_int(1974024) end, function(value) globals.set_int(1974024, value) end) 
+CDNCMenu:add_int_range("Player 4", 5, 15, 300, function() return globals.get_int(1974025) end, function(value) globals.set_int(1974025, value) end) 
 --CDNCMenu:add_action("-----", function() end) 
 --CDNCMenu:add_int_range("Non-Host Self Cut", 5, 15, 300, function() return globals.get_int(2722245) end, function(value) globals.set_int(2722245, value) end)
 --CDNPMenu = cccMenu:add_submenu("Potential Editor") 
@@ -361,13 +468,13 @@ CDNPMenu:add_int_range("Art Potential", 1000000000.0, 2350000, 1000000000, funct
 CDNPMenu:add_int_range("Gold Potential", 1000000000.0, 2585000, 1000000000, function() return globals.get_int(290940) end, function(value) globals.set_int(290940, value) end) 
 CDNPMenu:add_int_range("Diamond Potential", 1000000000.0, 3290000, 1000000000, function() return globals.get_int(290941) end, function(value) globals.set_int(290941, value) end) 
 ]]
-cccMenu:add_array_item("Teleports", {"Vault swipe", "Staff Door Exit", "Laundry room", "Bonus room", "Roof exit"}, function() return xox_14 end, function(value) if value == 1 then TP(2468.646973, -279.083374, -71.994194, -1.083554, 0.000000, 0.000000) elseif value == 2 then TP(2547.458496, -277.744507, -59.741863, -0.071993, 0.005218, -0.113118) elseif value == 3 then TP(2536.455078, -300.772522, -60.022968, 0.000000, 0.000000, 0.000000) elseif value == 4 then TP(2521.906494, -287.172882, -60.022964, 0.000000, 0.000000, 0.000000) elseif value == 5 then TP(2522.338379, -248.534760, -25.414972, 0.000000, 0.000000, 0.000000) end xox_14 = value end)
+cccMenu:add_array_item("Teleports", {"Vault swipe", "Staff Door Exit", "Laundry room", "Bonus room", "Roof exit"}, function() return xox_14 end, function(value) if value == 1 then TeleportPlayer(2468.646973, -279.083374, -71.994194, -1.083554, 0.000000, 0.000000) elseif value == 2 then TeleportPlayer(2547.458496, -277.744507, -59.741863, -0.071993, 0.005218, -0.113118) elseif value == 3 then TeleportPlayer(2536.455078, -300.772522, -60.022968, 0.000000, 0.000000, 0.000000) elseif value == 4 then TeleportPlayer(2521.906494, -287.172882, -60.022964, 0.000000, 0.000000, 0.000000) elseif value == 5 then TeleportPlayer(2522.338379, -248.534760, -25.414972, 0.000000, 0.000000, 0.000000) end xox_14 = value end)
 
 csMenu = OnlMenu:add_submenu("Contracts")
 
 script_name = "fm_mission_controller_2020"
-AutoShop_passed_trigger = 38397
-AutoShop_heist_passed_value = 39772
+AutoShop_passed_trigger = 42280
+AutoShop_heist_passed_value = 43655
 
 csMenu:add_action("End DRE Misions (Not Tested)", function()
 	PlayerIndex = globals.get_int(1574918)
@@ -593,7 +700,6 @@ protMenu:add_toggle("Activate all", function()
 end, function()
 	boolall = not boolall
 	All(boolall)
-	
 end)
 Text("--")
 
@@ -602,7 +708,6 @@ protMenu:add_toggle("Block Remote-Modifications", function()
 end, function()
 	boolsec = not boolsec
 	AntiMod(boolsec)
-	
 end)
 
 
@@ -611,7 +716,6 @@ protMenu:add_toggle("Block SE-Crash", function()
 end, function()
 	boolsec = not boolsec
 	KickCrashes(boolsec)
-	
 end)
 
 protMenu:add_toggle("Block Ceo Kick", function()
@@ -619,7 +723,6 @@ protMenu:add_toggle("Block Ceo Kick", function()
 end, function()
 	boolktsp = not boolktsp
 	CeoKick(boolktsp)
-	
 end)
 
 protMenu:add_toggle("Block Ceo Ban", function()
@@ -627,7 +730,6 @@ protMenu:add_toggle("Block Ceo Ban", function()
 end, function()
 	boolcb = not boolcb
 	CeoBan(boolcb)
-	
 end)
 
 protMenu:add_toggle("Block sound spam", function()
@@ -635,7 +737,6 @@ protMenu:add_toggle("Block sound spam", function()
 end, function()
 	boolsps = not boolsps
 	SoundSpam(boolsps)
-	
 end)
 
 protMenu:add_toggle("Block infinite loading screen", function()
@@ -643,7 +744,6 @@ protMenu:add_toggle("Block infinite loading screen", function()
 end, function()
 	boolil = not boolil
 	InfiniteLoad(boolil)
-	
 end)
 
 protMenu:add_toggle("Block pasive mode", function()
@@ -651,7 +751,6 @@ protMenu:add_toggle("Block pasive mode", function()
 end, function()
 	boolb = not boolb
 	PassiveMode(boolb)
-	
 end)
 
 protMenu:add_toggle("Block Transaction error", function()
@@ -659,7 +758,6 @@ protMenu:add_toggle("Block Transaction error", function()
 end, function()
 	boolte = not boolte
 	TransactionError(boolte)
-	
 end)
 
 protMenu:add_toggle("Block notifications modified/SMS", function()
@@ -667,7 +765,6 @@ protMenu:add_toggle("Block notifications modified/SMS", function()
 end, function()
 	boolrm = not boolrm
 	RemoveMoneyMessage(boolrm)
-	
 end)
 
 protMenu:add_toggle("Block Clear Stars", function()
@@ -675,7 +772,6 @@ protMenu:add_toggle("Block Clear Stars", function()
 end, function()
 	boolclw = not boolclw
 	ClearWanted(boolclw)
-	
 end)
 
 protMenu:add_toggle("Block OffRadar", function()
@@ -683,7 +779,6 @@ protMenu:add_toggle("Block OffRadar", function()
 end, function()
 	boolotr = not boolotr
 	OffTheRadar(boolotr)
-	
 end)
 
 protMenu:add_toggle("Block Destroy Vehicles", function()
@@ -691,7 +786,6 @@ protMenu:add_toggle("Block Destroy Vehicles", function()
 end, function()
 	boolpvd = not boolpvd
 	PersonalVehicleDestroy(boolpvd)
-	
 end)
 
 protMenu:add_toggle("Block send to cutscene", function()
@@ -699,7 +793,6 @@ protMenu:add_toggle("Block send to cutscene", function()
 end, function()
 	boolstc = not boolstc
 	SendCutscene(boolstc)
-	
 end)
 
 protMenu:add_toggle("Block Eliminate GodMode", function()
@@ -707,7 +800,6 @@ protMenu:add_toggle("Block Eliminate GodMode", function()
 end, function()
 	boolgod = not boolgod
 	Godmode(boolgod)
-	
 end)
 
 protMenu:add_toggle("Block give collectibles", function()
@@ -723,7 +815,6 @@ protMenu:add_toggle("Block Cayo Tp", function()
 end, function()
 	boolcbt = not boolcbt
 	ExtraTeleport(boolcbt)
-	
 end)
 
 vehMenu = mainMenu:add_submenu("Vehicles")
@@ -975,6 +1066,9 @@ dinMenu:add_action("-------------------------------------------", function() end
 
 cajMenu = dinMenu:add_submenu("CEO Crates")
 local function CCooldown(e) if not localplayer then return end if e then globals.set_int(280702, 0) globals.set_int(283440, 0) else globals.set_int(280702, 300000) globals.set_int(283440, 1800000) end end 
+
+cajMenu:add_int_range("Sale Value (testing)", 200000, 10000, 6000000, function() return globals.get_int(287985) end, function(Val) local a = Val local b = math.floor(Val / 2) local c = math.floor(Val / 3) local d = math.floor(Val / 5) local e = math.floor(Val / 7) local f = math.floor(Val / 9) local g = math.floor(Val / 14) local h = math.floor(Val / 19) local i = math.floor(Val / 24) local j = math.floor(Val / 29) local k = math.floor(Val / 34) local l = math.floor(Val / 39) local m = math.floor(Val / 44) local n = math.floor(Val / 49) local o = math.floor(Val / 59) local p = math.floor(Val / 69) local q = math.floor(Val / 79) local r = math.floor(Val / 89) local s = math.floor(Val / 99) local t = math.floor(Val / 110) local u = math.floor(Val / 111) globals.set_int(287985, a) globals.set_int(274999, b) globals.set_int(292332, c) globals.set_int(290835, d) globals.set_int(UNC2, e) globals.set_int(286634, f) globals.set_int(270502, g) globals.set_int(277940, h) globals.set_int(289676, i) globals.set_int(285582, j) globals.set_int(291865, k) globals.set_int(266908, l) globals.set_int(286375, m) globals.set_int(277381, n) globals.set_int(296258, o) globals.set_int(279536, p) globals.set_int(TEB2, q) globals.set_int(283805, r) globals.set_int(293011, s) globals.set_int(290836, t) globals.set_int(280720, u) end) 
+cajMenu:add_action("Get Crates", function() for i = 12, 16 do stats.set_bool_masked(mpx.."FIXERPSTAT_BOOL1", true, i, mpx) end end)
 cajMenu:add_toggle("Remove Cooldowns", function() return e13 end, function() e13 = not e13 CCooldown(e13) end)
 cajMenu:add_toggle("Unique Cargo", function() return globals.get_boolean(292132) end, function(value) globals.set_boolean(292132, value) end) 
 cajMenu:add_array_item("Select Unique Cargo 'Not Tested'", {"Huevito", "Minigun Dorada", "Diamante", "Pieles", "Disco De Peli", "Reloj Cohete"}, function() return xox_33 end, function(value) xox_33 = value if value == 1 then globals.set_int(292132, 1) globals.set_int(UNC2, 2) elseif value == 2 then globals.set_int(292132, 1) globals.set_int(UNC2, 4) elseif value == 3 then globals.set_int(292132, 1) globals.set_int(UNC2, 6) elseif value == 4 then globals.set_int(292132, 1) globals.set_int(UNC2, 7) elseif value == 5 then globals.set_int(292132, 1) globals.set_int(UNC2, 8) else globals.set_int(292132, 1) globals.set_int(UNC2, 9) end end) 
@@ -1032,16 +1126,19 @@ mcMenu:add_float_range("Sale Multiplier", 0.5, 1, 1000, function() return global
 mcMenu:add_action(" ~Use it to get max 8m~ ", function() end)
 
 mmVmenu = dinMenu:add_submenu("Vehicle Cargo $$$") local function Max(e) if not localplayer then return end if e then globals.set_int(281602, 155000) globals.set_int(281603, 155000) globals.set_int(281604, 155000) globals.set_float(281606, 0) globals.set_float(281607, 0) else globals.set_int(281602, 40000) globals.set_int(281603, 25000) globals.set_int(281604, 15000) globals.set_float(281606, 0.25) globals.set_float(281607, 0.5) end end 
-local function ACCC(e) if not localplayer then return end if e then globals.set_int(290970, 0) else globals.set_int(290970, 2880) end end 
-local function etCC(e) if not localplayer then return end if e then globals.set_int(278114, 99999) else globals.set_int(278114, 600) end end 
+local function VCD(e) if not localplayer then return end if e then for i = 283256, 293047 do globals.set_int(i, 0) sleep(1) globals.set_int(i, 1) end globals.set_int(293283, 1) else globals.set_int(293283, 180000) globals.set_int(283256, 1200000) globals.set_int(277373, 1680000) globals.set_int(290973, 2340000) globals.set_int(293047, 2880000) end end 
+local function VRC(e) if not localplayer then return end if e then for i = 271594, 274988 do globals.set_int(i, 0) end else globals.set_int(271594, 34000) globals.set_int(293282, 21250) globals.set_int(274988, 12750) end end 
 
-mmVmenu:add_toggle("Remove Cooldown", function() return e35 end, function() e35 = not e35 ACCC(e35) end)
-mmVmenu:add_int_range("% Chance", 5, 0, 100, function() return globals.get_int(277941) end, function(value) globals.set_int(277941, value) end)
-mmVmenu:add_float_range("2 Lift Cooldown Multiplier", 0.5, 0.0, 100, function() return globals.get_float(281807) end, function(value) globals.set_float(281807, value) end)
-mmVmenu:add_toggle("Extend Sale Time", function() return e36 end, function() e36 = not e36 etCC(e36) end)
-mmVmenu:add_int_range("Bad Tier", 5000, 20000, 100000, function() return globals.get_int(281261) end, function(value) globals.set_int(281261, value) end)
-mmVmenu:add_int_range("Medium Tier", 5000, 25000, 125000, function() return globals.get_int(290156) end, function(value) globals.set_int(290156, value) end)
-mmVmenu:add_int_range("Hight Tier", 5000, 30000, 150000, function() return globals.get_int(274100) end, function(value) globals.set_int(274100, value) end)
+mmVmenu:add_toggle("Remove Cooldown", function() return e18 end, function() e18 = not e18 VCD(e18) end)
+mmVmenu:add_toggle("Remove Repair Cost", function() return e21 end, function() e21 = not e21 VRC(e21) end) 
+
+mmVmenu:add_int_range("Top Range", 1000, 40000, 4000000, function() return globals.get_int(286349) end, function(value) globals.set_int(286349, value) end)
+mmVmenu:add_int_range("Mid Range", 1000, 25000, 4000000, function() return globals.get_int(281738) end, function(value) globals.set_int(281738, value) end)
+mmVmenu:add_int_range("Standard Range", 1000, 15000, 4000000, function() return globals.get_int(283696) end, function(value) globals.set_int(283696, value) end)
+mmVmenu:add_float_range("Upgrade Cost Showroom", 0.25, 0, 1000, function() return globals.get_float(293794) end, function(value) globals.set_float(293794, value) end)
+mmVmenu:add_float_range("Upgrade Cost Specialist Dealer", 0.25, 0, 1000, function() return globals.get_float(274193) end, function(value) globals.set_float(274193, value) end)
+mmVmenu:add_action("-----Tested:solo public; ~Max=310k------------", function() end) 
+
 
 MMmenu = dinMenu:add_submenu("Money Loop 'SUPER RISKY'") local g = globals.set_int local m = 1969112 local x = 1 local y = 2 local z = 3 local k = 0 local s = sleep local p = 30 local q = 60 local r = 120 local enable1 = false local enable2 = false local enable3 = false local enable4 = false local enable5 = false local function Loop1(e) if not localplayer then return end if e then g(m, x) s(z) g(m, k) s(p) end end 
 
