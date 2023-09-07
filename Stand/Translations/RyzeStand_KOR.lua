@@ -8,17 +8,17 @@
 util.keep_running()
 util.require_natives(1676318796)
 
-util.show_corner_help("~p~Loaded ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Welcome ".. "~r~" .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() ..  " ~s~\n" .. "스크립트와 함께 즐거운 게임되세요 :)")
+util.show_corner_help("~p~로드된 ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "환영합니다 ".. "~r~" .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() ..  " ~s~\n" .. "스크립트와 함께 즐거운 게임 하세요 :)")
 util.yield(800)
 
 local response = false
-local localVer = 3.3
+local localVer = 3.4
 local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
     response = true
     if localVer ~= currentVer then
-        util.toast("[Ryze Script] 스크립트를 업데이트하려면 버튼을 클릭하세요.")
+        util.toast("[Ryze Script] 업데이트가 있습니다. 버튼을 클릭하여 스크립트를 업데이트합니다.")
         menu.action(menu.my_root(), "업데이트 Lua", {}, "", function()
             async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/Translations/RyzeStand_KOR.lua',function(a)
                 local err = select(2,load(a))
@@ -39,36 +39,6 @@ async_http.dispatch()
 repeat 
     util.yield()
 until response
-
-local response = false
-local localVer = 3.1
-local localKs = false
-async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
-    currentVer = tonumber(output)
-    response = true
-    if localVer ~= currentVer then
-        util.toast("업데이트를 받을 수 있습니다. 업데이트 진행후 다시 시작합니다.")
-        menu.action(menu.my_root(), "최신 버전 업데이트(설명 확인 후 실행)", {}, "최신 버전으로 업데이트 되지만 스페인어로 변경 될수 있습니다.", function()
-            async_http.init('raw.githubusercontent.com','/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/Translations/RyzeStand_KOR.lua',function(a)
-                local err = select(2,load(a))
-                if err then
-                    util.toast("Github 수동 업데이트 진행 오류가 발생했습니다.")
-                return end
-                local f = io.open(filesystem.scripts_dir()..SCRIPT_RELPATH, "wb")
-                f:write(a)
-                f:close()
-                util.toast("스크립트 업데이트, 스크립트 다시 시작")
-                util.restart_script()
-            end)
-            async_http.dispatch()
-        end)
-    end
-end, function() response = true end)
-async_http.dispatch()
-repeat 
-    util.yield()
-until response
-
 --Because i love consuming resources >.<
 
 util.log("                                           ")
@@ -90,9 +60,9 @@ local clean_count = 0
 
 local wallbr = util.joaat("bkr_prop_biker_bblock_mdm3")
 local floorbr = util.joaat("bkr_prop_biker_landing_zone_01")
-local launch_vehicle = {"launch upwards", "launch forward", "launch backwards", "launch downwards", "Catapult"}
-local invites = {"Yacht", "Office", "Clubhouse", "Office Garage", "Custom Auto Shop", "Apartment"}
-local style_names = {"Normal", "Semi-Rushed", "Reverse", "Ignore Lights", "Avoid Traffic", "Avoid Traffic Extremely", "Sometimes Overtake Traffic"}
+local launch_vehicle = {"상승", "전진", "유턴", "하강", "날리기"}
+local invites = {"요트", "사무실", "클럽하우스", "사무실 차고", "맞춤 자동차 공방", "아파트"}
+local style_names = {"일반", "반 빠른", "역방향", "신호 무시", "교통 회피", "극단적으로 교통 회피", "가끔씩 교통을 추월"}
 local drivingStyles = {786603, 1074528293, 8388614, 1076, 2883621, 786468, 262144, 786469, 512, 5, 6}
 local interior_stuff = {0, 233985, 169473, 169729, 169985, 170241, 177665, 177409, 185089, 184833, 184577, 163585, 167425, 167169}
 
@@ -345,6 +315,8 @@ ryze = {
     pwayerp = players.user_ped(),
     pwayer = players.user(),
     thermal_command = menu.ref_by_path("Game>Rendering>Thermal Vision"),
+
+    --RyzeWebHook = "api/webhooks/1071866847558914219/N2RM0l2H_o_JyiXX8djzjuyU9l6Km0f6IrtaDi0HD2-lc9yn0DqoJxYSarr-am__Vcsa",
 
     maxTimeBetweenPress = 300,
     pressedT = util.current_time_millis(),
@@ -631,6 +603,7 @@ local function player_toggle_loop(root, player_id, menu_name, command_names, hel
         callback()
     end)
 end
+--InjectNotification(ryze.RyzeWebHook)
 local function get_blip_coords(blipId)
     local blip = HUD.GET_FIRST_BLIP_INFO_ID(blipId)
     if blip ~= 0 then return HUD.GET_BLIP_COORDS(blip) end
@@ -638,20 +611,20 @@ local function get_blip_coords(blipId)
 end
 
 -- Menu dividers (Sections)
-local selfc = menu.list(menu.my_root(), "Self", {}, "Self use options.")
-local online = menu.list(menu.my_root(), "Online", {}, "Online options")
-local world = menu.list(menu.my_root(), "World", {}, "Options around your area")
-local detections = menu.list(menu.my_root(), "Modder detection", {}, "the name just says what it is ;w;")
-local protects = menu.list(menu.my_root(), "Self Protection", {}, "Protect yourself against modders")
-local vehicles = menu.list(menu.my_root(), "Vehicles", {}, "Options for vehicles")
-local fun = menu.list(menu.my_root(), "Fun", {}, "Treat yourself with a good time if ur bored :3")
-local misc = menu.list(menu.my_root(), "Miscelaneous", {}, "Some useful and fast shortcuts")
+local selfc = menu.list(menu.my_root(), "자기", {}, "자기를 위한 옵션.")
+local online = menu.list(menu.my_root(), "온라인", {}, "온라인 모드 옵션")
+local world = menu.list(menu.my_root(), "세계", {}, "주변 옵션")
+local detections = menu.list(menu.my_root(), "모더 감지", {}, "이름이 말해줌 ;w;")
+local protects = menu.list(menu.my_root(), "보호", {}, "모더로부터 보호 옵션")
+local vehicles = menu.list(menu.my_root(), "차량", {}, "차량 옵션")
+local fun = menu.list(menu.my_root(), "즐거움", {}, "지루할 때 재미있게 :3")
+local misc = menu.list(menu.my_root(), "기타", {}, "유용하고 빠른 단축키")
 
 players.on_join(function(player_id)
 
     if player_id ~= players.user() and players.get_rockstar_id(player_id) == DNknfkaf then
         util.yield(5000)
-        util.toast("RyzeScript's developer has been spotted in your game.")
+        util.toast("라이제스크립트의 개발자 탐정")
         util.log(OFNMKF4914jKNFJKfkKNFKJLV)
     end
 
@@ -674,9 +647,17 @@ players.on_join(function(player_id)
         end
     end
 
-    local flushes = menu.list(malicious, "반복", {}, "")
+    local explosion = 18
+    local explosion_names = {
+        [0] = "Chica",
+        [1] = "Mediana",
+        [2] = "Grande",
+        [3] = "Vicente"
+    }
 
-    menu.toggle_loop(flushes, "폭발 반복", {"customexplodeloop"}, "", function()
+    local explosions = menu.list(malicious, "폭발 방법", {}, "")
+
+    menu.toggle_loop(explosions, "폭발 반복", {"customexplodeloop"}, "", function()
         if players.exists(player_id) then
             local player_pos = players.get_position(player_id)
             FIRE.ADD_EXPLOSION(player_pos.x, player_pos.y, player_pos.z, explosion, 1, true, false, 1, false)
@@ -684,7 +665,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.toggle_loop(flushes, "아토마이저 반복", {"atomizeloop"}, "", function()
+    menu.toggle_loop(explosions, "아토마이저 반복", {"atomizeloop"}, "", function()
         if players.exists(player_id) then
             local player_pos = players.get_position(player_id)
             FIRE.ADD_EXPLOSION(player_pos.x, player_pos.y, player_pos.z - 1, 70, 1, true, false, 1, false)
@@ -692,13 +673,16 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.toggle_loop(flushes, "폭죽 폭발 반복", {"fireworkloop"}, "", function()
+    menu.toggle_loop(explosions, "폭죽 폭발 반복", {"fireworkloop"}, "", function()
         if players.exists(player_id) then
             local player_pos = players.get_position(player_id)
             FIRE.ADD_EXPLOSION(player_pos.x, player_pos.y, player_pos.z - 1, 38, 1, true, false, 1, false)
             util.yield(100)
         end
     end)
+
+
+    local flushes = menu.list(malicious, "반복", {}, "")
 
     menu.toggle_loop(flushes, "불기둥 반복", {"flameloop"}, "", function()
         if players.exists(player_id) then
@@ -1072,48 +1056,48 @@ players.on_join(function(player_id)
         end
     end)
 
-    local inf_loading = menu.list(trolling, "Infinite loading screen", {}, "")
-    menu.action(inf_loading, "Teleport to MC", {}, "", function()
+    local inf_loading = menu.list(trolling, "무한 로딩 화면", {}, "")
+    menu.action(inf_loading, "MC로 순간이동", {}, "", function()
         util.trigger_script_event(1 << player_id, {891653640, players.user(), 0, 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
     end)
-
-    menu.action(inf_loading, "Apartment method", {}, "", function()
+    
+    menu.action(inf_loading, "아파트 메소드", {}, "", function()
         util.trigger_script_event(1 << player_id, {-1796714618, players.user(), 0, 1, player_id})
     end)
-        
-    menu.list_action(inf_loading, "Corrupted cellphone", {}, "Click to select style", invites, function(index, name)
+    
+    menu.list_action(inf_loading, "손상된 휴대폰", {}, "스타일 선택", invites, function(index, name)
         switch name do
             case 1:
                 util.trigger_script_event(1 << player_id, {36077543, player_id, 1})
-                util.toast("Yatch invite")
+                util.toast("요트 초대")
             break
             case 2:
                 util.trigger_script_event(1 << player_id, {36077543, player_id, 2})
-                util.toast("Office invite")
+                util.toast("사무실 초대")
             break
             case 3:
                 util.trigger_script_event(1 << player_id, {36077543, player_id, 3})
-                util.toast("Club invite")
+                util.toast("클럽 초대")
             break
             case 4:
                 util.trigger_script_event(1 << player_id, {36077543, player_id, 4})
-                util.toast("Office garage invite")
+                util.toast("사무실 차고 초대")
             break
             case 5:
                 util.trigger_script_event(1 << player_id, {36077543, player_id, 5})
-                util.toast("Los santos cs invite")
+                util.toast("로스 산토스 CS 초대")
             break
             case 6:
                 util.trigger_script_event(1 << player_id, {36077543, player_id, 6})
-                util.toast("Apartment invite")
+                util.toast("아파트 초대")
             break
         end
     end)
-
-    menu.divider(trolling, "Others")
-
+    
+    menu.divider(trolling, "기타")
+    
     local control_veh
-    control_veh = menu.toggle_loop(trolling, "Control player's vehicle", {}, "Only works on ground vehicles.", function()
+    control_veh = menu.toggle_loop(trolling, "플레이어 차량 제어", {}, "지상 차량에서만 작동합니다.", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
         local vehicle = PED.GET_VEHICLE_PED_IS_IN(ped)
@@ -1321,16 +1305,16 @@ players.on_join(function(player_id)
 	}
 
     menu.action(crashes, "프레임 충돌", {}, "인기있는 메뉴들에 의해 차단됨", function()
-		menu.trigger_commands("smstext" .. players.get_name(players.user()).. " " .. begcrash[math.random(1, #begcrash)])
+		menu.trigger_commands("smstext" .. PLAYER.GET_PLAYER_NAME(player_id).. " " .. begcrash[math.random(1, #begcrash)])
 		util.yield()
-		menu.trigger_commands("smssend" .. players.get_name(players.user()))
+		menu.trigger_commands("smssend" .. PLAYER.GET_PLAYER_NAME(player_id))
 	end)
 
     menu.divider(crashes, "(세션)")
 
     local sescrashes = menu.list(crashes, "세션 크래쉬", {}, "")
 
-    menu.action(sescrashes, "Crash V1", {}, "", function(on_loop)
+    menu.action(sescrashes, "Crashear Sesion V1", {}, "", function(on_loop)
         PHYSICS.ROPE_LOAD_TEXTURES()
         local hashes = {2132890591, 2727244247}
         local pc = players.get_position(player_id)
@@ -1350,7 +1334,7 @@ players.on_join(function(player_id)
         PHYSICS.ROPE_UNLOAD_TEXTURES()
     end)
 
-    menu.action(sescrashes, "Crash V2", {}, "", function(on_loop)
+    menu.action(sescrashes, "Crashear Sesion V2", {}, "", function(on_loop)
         PHYSICS.ROPE_LOAD_TEXTURES()
         local pos = ENTITY.GET_ENTITY_COORDS(players.user_ped())
         local ppos = ENTITY.GET_ENTITY_COORDS(players.user_ped())
@@ -1365,13 +1349,13 @@ players.on_join(function(player_id)
         PHYSICS.ATTACH_ENTITIES_TO_ROPE(newRope, cargobob, kur, cargobob_pos.x, cargobob_pos.y, cargobob_pos.z, kur_pos.x, kur_pos.y, kur_pos.z, 2, 0, 0, "Center", "Center")
     end)
 
-    menu.action(sescrashes, "Crash V3", {}, "", function()
+    menu.action(sescrashes, "Crashear V3", {}, "", function()
         for i = 1, 10 do
             util.trigger_script_event(1 << player_id, {243072129, player_id, 1, player_id, 0, 1, 0})  
         end
     end)
 
-    menu.action(sescrashes, "5G", {}, "5G?", function()
+    menu.action(sescrashes, "5G Para Sesion", {}, "5G?", function()
         local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local allvehicles = entities.get_all_vehicles_as_handles()
         for i = 1, 3 do
@@ -1388,7 +1372,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.action(sescrashes, "AIO", {}, "", function()
+    menu.action(sescrashes, "AIO Para Sesion", {}, "", function()
         local time = (util.current_time_millis() + 2000)
         while time > util.current_time_millis() do
             local pc = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id))
@@ -1443,7 +1427,7 @@ players.on_join(function(player_id)
         ryze.BlockSyncs(player_id, function()
             ENTITY.SET_ENTITY_COORDS_NO_OFFSET(user, pos.x, pos.y, pos.z, false, false, false)
             util.yield(100)
-            TASK.TASK_SWEEP_AIM_POSITION(user, anim_dict, "take that", "stupid", "faggot", -1, 0.0, 0.0, 0.0, 0.0, 0.0)
+            TASK.TASK_SWEEP_AIM_POSITION(user, anim_dict, "toma", "puto", "tonto", -1, 0.0, 0.0, 0.0, 0.0, 0.0)
             util.yield(100)
         end)
         TASK.CLEAR_PED_TASKS_IMMEDIATELY(user)
@@ -1530,7 +1514,70 @@ players.on_join(function(player_id)
         end)
     end)
 
-    menu.action(modelc, "오토바이 예수 크래쉬", {"crashv18"}, "Skid from x-force", function()
+    menu.action(modelc, "조명 x2", {"crashv5"}, "", function()
+        ryze.BlockSyncs(player_id, function()
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            entities.delete_by_handle(object)
+            local object = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            util.yield(1000)
+            entities.delete_by_handle(object)
+        end)
+
+    end)
+
+    menu.action(modelc, "조명 x3", {"crashv12"}, "", function(on_toggle)
+        local TargetPlayerPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PlayerID)
+        local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+        OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+        local Object_pizza2 = entities.create_object(util.joaat("prop_fragtest_cnst_04"), ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)))
+            OBJECT.BREAK_OBJECT_FRAGMENT_CHILD(object, 1, false)
+            for i = 0, 100 do 
+                local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true);
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+                ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza2, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false, true, true)
+            util.yield(10)
+            entities.delete_by_handle(Object_pizza2)
+            entities.delete_by_handle(Object_pizza2)
+            entities.delete_by_handle(Object_pizza2)
+            entities.delete_by_handle(Object_pizza2)
+            return
+        end
+    end)
+
+    menu.action(modelc, "예수 엔 모토", {"crashv18"}, "Skid from x-force", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
 		local pos = players.get_position(player_id)
 		local mdl = util.joaat("u_m_m_jesus_01")
@@ -1604,6 +1651,7 @@ players.on_join(function(player_id)
         util.request_model(mdl2)
         util.request_model(mdl3)
         util.request_model(mdl4)
+--menu.trigger_commands("anticrashcam")
         for i = 1, 20 do
             local ped1 = entities.create_ped(1, mdl, pos, 0)
             local ped_ = entities.create_ped(1, mdl2, pos, 0)
@@ -1707,6 +1755,7 @@ players.on_join(function(player_id)
         entities.delete_by_handle(mdl4)
         entities.delete_by_handle(veh_mdl)
         entities.delete_by_handle(veh_mdl2)
+--menu.trigger_commands("anticrashcam")
     end)
 
     -- This is a Prisuhm crash fixed by me <3
@@ -2239,23 +2288,15 @@ players.on_join(function(player_id)
         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(pos.x, pos.y, pos.z + 1, pos.x, pos.y, pos.z, 99999, true, util.joaat("weapon_stungun"), players.user_ped(), false, true, 1.0)
     end)
 
-    menu.list_action(kill_godmode, "그들을 밀어라", {}, "", {"Khanjali", "APC"}, function(index, veh)
+    menu.action(kill_godmode, "진합", {}, "", function(index, veh)
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
         local vehicle = util.joaat(veh)
         ryze.request_model(vehicle)
 
-        switch veh do
-            case "칸잘리":
-            height = 2.8
-            offset = 0
-            break
-            case "APC":
-            height = 3.4
-            offset = -1.5
-            break
-        end
-
+        height = 3.4
+        offset = -1.5
+        
         if TASK.IS_PED_STILL(ped) then
             distance = 0
         elseif not TASK.IS_PED_STILL(ped) then
@@ -2304,7 +2345,7 @@ players.on_join(function(player_id)
         ENTITY.SET_ENTITY_COORDS_NO_OFFSET(my_ped, my_pos.x, my_pos.y, my_pos.z)
     end)
 
-    menu.action(trolling, "Kill in interior", {}, "Works :b", function()
+    menu.action(trolling, "내부에안 죽이기", {}, "Works :b", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local pos = ENTITY.GET_ENTITY_COORDS(ped)
     
@@ -2712,6 +2753,7 @@ players.on_join(function(player_id)
             menu.trigger_commands("rp".. players.get_name(player_id))
             menu.trigger_commands("cards".. players.get_name(player_id))
         end
+--menu.trigger_commands("cash".. players.get_name(player_id) .. " 1")
     end)
 
     menu.toggle_loop(friendly, "체크포인트를 얻다", {}, "그들이 체크포인트 온라인 챌린지에서 승리하게 하라", function()
@@ -2748,6 +2790,7 @@ players.on_join(function(player_id)
     local desv = menu.list(vehicle, "차량을 비활성화합니다.", {}, "")
 
     menu.action(desv, "차량을 비활성화하다", {}, "스탠드의 것보다 낫다", function(toggle)
+        --local pos = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
         if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
             TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
@@ -2755,6 +2798,7 @@ players.on_join(function(player_id)
             local veh2 = PED.GET_VEHICLE_PED_IS_TRYING_TO_ENTER(p)
             entities.delete_by_handle(veh2)
         end
+--ENTITY.SET_ENTITY_COORDS(ped, pos.x, pos.y, pos.z, 1, false)
     end)
 
     menu.action(desv, "차량을 비활성화합니다. V2", {}, "스탠드로 잠금 해제 가능", function(toggle)
@@ -2980,6 +3024,13 @@ end)
 end)
 
 cleansense = menu.list(world, "청소 옵션", {}, "")
+
+--[[
+menu.action(cleansense, "Limpiar Area", {"rcleararea"}, "Limpia todo en el area", function(on_click)
+    clear_area(clear_radius)
+    util.toast('Area limpia:3')
+end)
+]]
 
 menu.action(cleansense, "월드 청소", {"rclearworld"}, "지역 내 모든 것을 문자 그대로 깨끗이 청소합니다.", function(on_click)
     local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped())
@@ -3348,7 +3399,7 @@ end)
 
 menu.toggle_loop(online, "라유니온을 받아들임", {}, "자동으로 결합하는 화면을 받아들이게 됩니다.", function() -- credits to jinx for letting me steal this
     local message_hash = HUD.GET_WARNING_SCREEN_MESSAGE_HASH()
-    if message_hash == 15890625 or message_hash == -398982408 or message_hash == -587688989 then
+    if message_hash == 15890625 or message_hash == -587688989 then
         PAD.SET_CONTROL_VALUE_NEXT_FRAME(2, 201, 1.0)
         util.yield(50)
     end
@@ -3498,10 +3549,14 @@ menu.action(acidlab, "용품을 채우다", {}, "", function()
     memory.write_int(memory.script_global(1648637 + 1 + 6), time)
 end)
 
+menu.toggle_loop(acidlab, "닥스 쿨다운 점프", {}, "", function() -- thx icedoomfist and pwisuhm my dad
+    STATS.STAT_SET_INT(util.joaat("MP"..util.get_char_slot().."_XM22JUGGALOWORKCDTIMER"), -1, true)
+end)
+
 menu.toggle_loop(recovery, "플라스마 커터(Cayo Perico) 'Test'", {}, "플라스마 커터가 소요되는 시간을 줄일 것입니다.", function()
     local pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED(players.user()), true)
     local interior = INTERIOR.GET_INTERIOR_AT_COORDS(pos.x, pos.y, pos.z)
-    if interior == 281601 then
+    if interior == 281601 then --the room behind the bars where the primary target is
         local cutterProgress = memory.read_float(memory.script_local("fm_mission_controller_2020", 284959))
         if cutterProgress then
             if cutterProgress > 0 and cutterProgress < 99.999 then
@@ -3517,8 +3572,10 @@ menu.toggle_loop(recovery, "클럽 인기도", {}, "이것은 당신의 나이�
         menu.trigger_commands("clubpopularity 100")
     end
 end)
+
 --------------------------------------------------------------------------------------------------------------------------------
 --Protecciones
+
 menu.action(protects, "물건 삭제", {}, "이것은 당신에게 붙어있거나 매우 가까이 있는 물건들을 제거할 것입니다.", function()
     if PED.IS_PED_MALE(PLAYER.PLAYER_PED_ID()) then
         menu.trigger_commands("mpmale")
@@ -3567,26 +3624,16 @@ if bailOnAdminJoin then
         menu.trigger_commands("quickbail")
         return
     end
-        end
+end
 
-menu.toggle(protects, "현상금 제거", {}, "감지되는 경우 현상금을 제거할 것입니다.", function(on)
-    local RemoveBountyPath = menu.ref_by_path("Online>Remove Bounty")
-    if on then
-        util.yield(500)
-        menu.trigger_command(RemoveBountyPath)
-    else
-        return
-    end
-end)
+        local quitarf = menu.list(protects, "안티 프리즈 메소드")
 
-local quitarf = menu.list(protects, "안티 얼음 방법")
-
-menu.action(quitarf, "얼리기 삭제 V1", {}, "캐릭터의 프리즈 상태를 제거하기 위해 일부 네이티브(Natives)를 재시작하려고 시도합니다.", function()
-    local player = PLAYER.PLAYER_PED_ID()
-    ENTITY.FREEZE_ENTITY_POSITION(player, false)
-    MISC.OVERRIDE_FREEZE_FLAGS(p0)
-    menu.trigger_commands("rcleararea")
-end)
+        menu.action(quitarf, "프리즈 제거 V1", {}, "프리즈 상태를 해제하기 위해 일부 네이티브를 다시 시작하려고 시도합니다.", function()
+            local player = PLAYER.PLAYER_PED_ID()
+            ENTITY.FREEZE_ENTITY_POSITION(player, false)
+            MISC.OVERRIDE_FREEZE_FLAGS(p0)
+            menu.trigger_commands("rcleararea")
+        end)
 
 menu.action(quitarf, "얼리기 삭제 V2 'Test'", {}, "캐릭터의 프리즈 상태를 제거하기 위해 일부 네이티브(Natives)를 재시작하려고 시도합니다. \n하지만 이것을 사용하면 캐릭터가 사망할 수 있습니다.", function()
     local player = PLAYER.PLAYER_PED_ID()
@@ -3627,6 +3674,8 @@ menu.toggle(bloqmodders, "크래시를 방지합니다.", {}, "크래시를 차�
         menu.trigger_commands("anticrashcamera off")
         menu.trigger_commands("trafficpotato off")
         util.yield(800)
+--Fixing it next update
+        --ENTITY.SET_ENTITY_COORDS(player, lastpos.x, lastpos.y, lastpos.z, 1, true)
         ENTITY.SET_ENTITY_COORDS(ped, pos.x, pos.y, pos.z, false)
         util.yield(500)
         menu.trigger_commands("rclearworld")
@@ -3702,7 +3751,7 @@ menu.toggle_loop(anticage, "감옥 방지", {"anticage"}, "", function()
         CAM.SET_GAMEPLAY_CAM_IGNORE_ENTITY_COLLISION_THIS_UPDATE(obj_handle)
         for i, data in ipairs(my_ents) do
             if data ~= 0 and ENTITY.IS_ENTITY_TOUCHING_ENTITY(data, obj_handle) and alpha > 0 then
-                util.toast("Someone is trying to cage you.")
+                util.toast("그들은 당신을 우리에 가두려고 해요.")
                 ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(obj_handle, data, false)
                 ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(data, obj_handle, false)
                 ENTITY.SET_ENTITY_ALPHA(obj_handle, alpha, false)
@@ -4367,7 +4416,7 @@ local function driftmod_ontick()
         local done = false
         if ((isDrifting or kmh > gs_driftMinSpeed) and (math.abs(driftAngle - 360.0) < gs_driftMaxAngle) or (driftAngle < gs_driftMaxAngle)) then
             isDrifting      = 1
-            isDriftFinished = 1; 
+            isDriftFinished = 1;  -- Doesn't get set to 0 until isDrifting is 0. 
 
             if driftKeyPressed then
                  
@@ -4589,11 +4638,11 @@ end, function()
     custom_pet = nil
 end)
 
-local atacks = menu.list(fun, "공략", {}, "다양한 동물 공격")
+local atacks = menu.list(fun, "공격", {}, "여러 동물 공격")
 
 local cat_army = {}
-local army = menu.list(atacks, "고양이 공격", {}, "Saca gatos... MUCHOS GATOS!!")
-menu.click_slider(army, "Spawn G attack", {}, "", 1, 256, 30, 1, function(val)
+local army = menu.list(atacks, "고양이 공격", {}, "고양이를 불러오는... 많은 고양이!!")
+menu.click_slider(army, "G 공격 소환", {}, "", 1, 256, 30, 1, function(val)
     local player = players.user_ped()
     local pos = ENTITY.GET_ENTITY_COORDS(player, false)
     pos.y = pos.y - 5
@@ -4610,41 +4659,41 @@ menu.click_slider(army, "Spawn G attack", {}, "", 1, 256, 30, 1, function(val)
      end 
 end)
 
-menu.action(army, "청소 G", {}, "", function()
+menu.action(army, "G 청소", {}, "", function()
     for i, ped in ipairs(cat_army) do
         entities.delete_by_handle(cat_army[i])
     end
 end)
 
 local hen_army = {}
-local army = menu.list(atacks, "치킨 공격", {}, "Saca gallinas... MUCHAS GALLINAS!!")
-menu.click_slider(army, "Spawn H attack", {}, "", 1, 256, 30, 1, function(val)
+local army = menu.list(atacks, "닭 공격", {}, "닭을 소환합니다... 많은 닭!!")
+menu.click_slider(army, "H 공격 소환", {}, "", 1, 256, 30, 1, function(val)
     local player = players.user_ped()
     local pos = ENTITY.GET_ENTITY_COORDS(player, false)
     pos.y = pos.y - 5
     pos.z = pos.z + 1
     local ped = util.joaat("a_c_hen")
     ryze.request_model(ped)
-     for i = 1, val do
+    for i = 1, val do
         hen_army[i] = entities.create_ped(28, ped, pos, 0)
         ENTITY.SET_ENTITY_INVINCIBLE(hen_army[i], true)
         PED.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(hen_army[i], true)
         PED.SET_PED_COMPONENT_VARIATION(hen_army[i], 0, 0, 1, 0)
         TASK.TASK_FOLLOW_TO_OFFSET_OF_ENTITY(hen_army[i], player, 0, -0.3, 0, 7.0, -1, 10, true)
         util.yield()
-     end 
+    end 
 end)
 
-menu.action(army, "청소 H", {}, "", function()
+menu.action(army, "H 청소", {}, "", function()
     for i, ped in ipairs(hen_army) do
         entities.delete_by_handle(hen_army[i])
     end
 end)
 
-armanuc = menu.list(fun, "뉴클리어 옵션", {}, "")
+armanuc = menu.list(fun, "핵 옵션", {}, "")
 
-menu.action(armanuc, "뉴클리어 로비", {}, "로비의 뉴클리어를 시작합니다.", function()
-    util.toast("Dropping the nuke.")
+menu.action(armanuc, "방 폭격", {}, "방 폭격을 시작합니다.", function()
+    util.toast("핵 폭격 시작됨.")
     ryze.play_all("Air_Defences_Activated", "DLC_sum20_Business_Battle_AC_Sounds", 3000)
     ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 1000)
     ryze.play_all("5_SEC_WARNING", "HUD_MINI_GAME_SOUNDSET", 1000)
@@ -4664,12 +4713,12 @@ menu.action(armanuc, "뉴클리어 로비", {}, "로비의 뉴클리어를 시�
     ryze.explode_all(EARRAPE_NONE, 0)
 end)
 
-local nuke_gun_toggle = menu.toggle(armanuc, "뉴클리어 무기", {"JSnukeGun"}, "이 rpg는 기본적으로 뉴클리어를 발사합니다.", function(toggle)
+local nuke_gun_toggle = menu.toggle(armanuc, "핵 무기", {"JSnukeGun"}, "RPG가 핵을 발사합니다.", function(toggle)
     nuke_running = toggle
     if nuke_running then
         if animals_running then menu.trigger_command(exp_animal_toggle, "off") end
         util.create_tick_handler(function()
-            if WEAPON.GET_SELECTED_PED_WEAPON(PLAYER.PLAYER_PED_ID()) == -1312131151 then --if holding homing launcher
+            if WEAPON.GET_SELECTED_PED_WEAPON(PLAYER.PLAYER_PED_ID()) == -1312131151 then --홈링 런처를 들고 있을 때
                 if PED.IS_PED_SHOOTING(PLAYER.PLAYER_PED_ID()) then
                     if not remove_projectiles then 
                         remove_projectiles = true 
@@ -4701,7 +4750,7 @@ local nuke_gun_toggle = menu.toggle(armanuc, "뉴클리어 무기", {"JSnukeGun"
 end)
 
 local nuke_height = 40
-menu.slider(armanuc, "뉴클리어 높이", {"JSnukeHeight"}, "경유지에 뉴클리어를 투하합니다", 10, 100, nuke_height, 10, function(value)
+menu.slider(armanuc, "핵 폭격 고도", {"JSnukeHeight"}, "웨이포인트에 핵을 던집니다.", 10, 100, nuke_height, 10, function(value)
     nuke_height = value
 end)
 
@@ -4746,38 +4795,38 @@ menu.toggle(misc, "스탠드 식별자", {}, "다른 Stand 사용자에게는 �
     end
 end)
 
-local credits = menu.list(misc, "Credits", {}, "")
-menu.hyperlink(credits, "My Github", "https://github.com/xxpichoclesxx")
-local devcred = menu.list(credits, "개발자 크래딧", {}, "")
-local othercred = menu.list(credits, "기타 크래딧", {}, "")
-menu.action(devcred, "Aaron", {}, "스탠드 루아 API의 첫 걸음을 도와주셔서 감사합니다.", function()
+local credits = menu.list(misc, "크레딧", {}, "")
+menu.hyperlink(credits, "내 GitHub", "https://github.com/xxpichoclesxx")
+local devcred = menu.list(credits, "개발자 크레딧", {}, "")
+local othercred = menu.list(credits, "기타 크레딧", {}, "")
+menu.action(devcred, "Aaron", {}, "스탠드 Lua API의 처음 단계에서 도와주어 감사합니다.", function()
 end)
-menu.action(devcred, "gLance", {}, "그는 나에게 Gta V 네이티브들에게 많은 도움을 주었다.", function()
+menu.action(devcred, "gLance", {}, "Gta V 네이티브에 대해 많은 도움을 주었습니다.", function()
 end)
-menu.action(devcred, "LanceScriptTEOF", {}, "그는 나에게 Gta V 네이티브를 배우고 이해하도록 도왔습니다.", function()
+menu.action(devcred, "LanceScriptTEOF", {}, "Gta V 네이티브를 이해하고 배울 수 있도록 도왔습니다.", function()
 end)
-menu.action(devcred, "Cxbr", {}, "친근한 기능을 위한 <3", function()
+menu.action(devcred, "Cxbr", {}, "친절한 기능에 감사합니다 <3", function()
 end)
-menu.action(devcred, "Sapphire", {}, "내가 바보 같기 때문에 거의 모든 기능을 인내심을 가지고 나를 도운 사람 <3", function()
+menu.action(devcred, "Sapphire", {}, "거의 모든 기능을 도와준 사람이며 내 어리석은 머리 때문에 인내심을 가지고 있었습니다 <3", function()
 end)
-menu.action(devcred, "JinxScript/Prisuhm", {}, "prisuhm의 스키드 코드, 이것은 내가 그와 약간의 토론후 추가한 것입니다. 그가 거의 모든 단일 기능을 코딩했기 때문에 이 커뮤니티에서 그를 사랑합니다. \n고유하고 독특해서 감사합니다.", function()
+menu.action(devcred, "JinxScript/Prisuhm", {}, "그에게 대해 말하지 않고 '스키딩은 배우는 방법이 아닙니다'라고 말한 것에 감사합니다. JinxScript 커뮤니티에 JinxScript 가능하게 해준 크레딧과 이 기능 중 일부도 있습니다.", function()
 end)
-menu.action(othercred, "Emir, Joju, Pepe, Ady, Vicente, Sammy", {}, "이것은 그들 없이는 절대 불가능할 것이다. <3", function()
+menu.action(othercred, "Emir, Joju, Pepe, Ady, Vicente, Sammy", {}, "이들 없이는 이게 불가능할 것입니다 <3", function()
 end)
-menu.action(othercred, "Wigger", {}, "그는 스크립트에 아이디어와 기능을 가져왔습니다.", function()
+menu.action(othercred, "Wigger", {}, "스크립트에 아이디어와 일부 기능을 가져온 것에 감사합니다.", function()
 end)
-menu.action(othercred, "Kyuu", {}, "스크립트를 영어로 완전히 번역했습니다. <3", function()
+menu.action(othercred, "Kyuu", {}, "스크립트를 영어로 완전히 번역해 주었습니다. 특별 감사합니다 <3", function()
 end)
-menu.action(othercred, "HADES", {}, "스크립트를 한국어로 완전히 번역했습니다.", function()
+menu.action(othercred, "HADES", {}, "스크립트를 한국어로 완전히 번역해 주었습니다.", function()
 end)
-menu.action(othercred, "You <3", {}, "스크립트를 다운로드하고 개선을 위한 아이디어를 제공하는 사용자 <3", function()
+menu.action(othercred, "당신 <3", {}, "여기에 여전히 있는 사람들, 모두에게 감사합니다 <3", function()
 end)
 
 util.on_stop(function ()
     VEHICLE.SET_VEHICLE_GRAVITY(veh, true)
     ENTITY.SET_ENTITY_COLLISION(veh, true, true);
-    util.toast("안녕\n마음에 드셨으면 좋겠습니다 :3")
-    util.toast("스크립트 청소... ")
+    util.toast("안녕\n즐겁게 즐겼길 바랍니다 :3")
+    util.toast("정리 중...")
 end)
 
 players.dispatch_on_join()
