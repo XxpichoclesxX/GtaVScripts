@@ -9,10 +9,9 @@ util.keep_running()
 util.require_natives(1676318796)
 
 util.show_corner_help("~p~Cargado ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Bienvenidx ".. "~r~" .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() ..  " ~s~\n" .. "Disfruta Usando El Script :)")
-util.yield(800)
 
 local response = false
-local localVer = 3.4
+local localVer = 3.5
 local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
@@ -442,38 +441,6 @@ ryze = {
             end
         end
         util.yield(wait_for)
-    end,
-
-    kicks = {
-        1104117595,
-        697566862,
-        1268038438,
-        915462795,
-        697566862,
-        1268038438,
-        915462795
-    },
-
-    power_kick = function(player_id)
-        for i, v in pairs(ryze.kicks) do
-            arg1 = math.random(-2147483647, 2147483647)
-            arg2 = math.random(-1987543, 1987543)
-            arg3 = math.random(-19, 19)
-            util.trigger_script_event(1 << player_id, {v, pid, arg1, arg3, arg2, arg2, arg1, arg1, arg3, arg3, arg1, arg3, arg2, arg3, arg1, arg1, arg2, arg3, arg1, arg2, arg2, arg3, arg3})
-            util.yield()
-        end
-        util.toast("Sacaste a " .. PLAYER.GET_PLAYER_NAME(player_id))
-    end,
-
-    power_crash = function(player_id)
-        for i, v in pairs(ryze.kicks) do
-            arg1 = math.random(-2147483647, 2147483647)
-            arg2 = math.random(-1987543, 1987543)
-            arg3 = math.random(-19, 19)
-            util.trigger_script_event(1 << player_id, {v, player_id, arg1, arg3, arg2, arg2, arg1, arg1, arg3, arg3, arg1, arg3, arg2, arg3, arg1, arg1, arg2, arg3, arg1, arg2, arg2, arg3, arg3})
-            util.yield()
-        end
-        util.toast("Crasheado a " .. PLAYER.GET_PLAYER_NAME(player_id))
     end,
 
     clear_all_area = function()
@@ -1059,13 +1026,11 @@ players.on_join(function(player_id)
 
     local inf_loading = menu.list(trolling, "Pantalla de carga infinita", {}, "")
     menu.action(inf_loading, "Teleport a MC", {}, "", function()
-        util.trigger_script_event(1 << player_id, {891653640, players.user(), 0, 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
-    end)
-
-    menu.action(inf_loading, "Metodo Apartamento", {}, "", function()
-        util.trigger_script_event(1 << player_id, {-1796714618, players.user(), 0, 1, player_id})
+        local xx = NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id)
+        util.trigger_script_event(1 << player_id, {-1604421397, players.user(), 1, 4, xx, xx, xx, xx, 1, 1})
     end)
         
+    --[[
     menu.list_action(inf_loading, "Telefono corrupto", {}, "Click para seleccionar un estilo", invites, function(index, name)
         switch name do
             case 1:
@@ -1094,6 +1059,7 @@ players.on_join(function(player_id)
             break
         end
     end)
+    ]]
 
     menu.divider(trolling, "Otros")
 
@@ -1261,26 +1227,9 @@ players.on_join(function(player_id)
 
     local freeze = menu.list(malicious, "Metodos de Frezeo", {}, "")
 
-    player_toggle_loop(freeze, player_id, "Freeze de Escena", {}, "Funciona mejor que los demas.", function()
-        util.trigger_script_event(1 << player_id , {330622597, player_id, 0, 0, 0, 0, 0})
-    end)
-
-    player_toggle_loop(freeze, player_id, "Freeze Escena 2", {}, "Mas parcheado que el primero.", function()
-        util.trigger_script_event(1 << player_id, {-1796714618, player_id, 0, 1, 0, 0})
-        util.yield(500)
-    end)
-
     player_toggle_loop(freeze, player_id, "Freeze Nativo", {}, "Es practicamente inutil en la mayoria de menus.", function()
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         TASK.CLEAR_PED_TASKS_IMMEDIATELY(player_id)
-    end)
-
-    player_toggle_loop(freeze, player_id, "Freeze Potente", {}, "Tira todos al mismo tiempo.", function()
-        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
-        util.trigger_script_event(1 << player_id, {-93722397, player_id, 0, 0, 0, 0, 0})
-        util.trigger_script_event(1 << player_id, {330622597, player_id, 0, 0, 0, 0, 0})
-        TASK.CLEAR_PED_TASKS_IMMEDIATELY(player_id)
-        util.yield(500)
     end)
 
     local crashes = menu.list(malicious, "Crasheos", {}, "Crasheos Op", function(); end)
@@ -2154,83 +2103,9 @@ players.on_join(function(player_id)
         end)
     end
 
-    local kicks = menu.list(malicious, "Kicks", {}, "")
+    --local kicks = menu.list(malicious, "Kicks", {}, "")
 
-    if menu.get_edition() >= 2 then 
-        menu.action(kicks, "Kickeo Adaptivo", {}, "", function()
-            menu.trigger_commands("scripthost")
-            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 14, 3, 1})
-            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 167, 3, 1})
-            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 257, 3, 1})
-            menu.trigger_commands("breakup" .. players.get_name(player_id))
-        end)
-    else
-        menu.action(kicks, "Kickeo adaptivo V2", {}, "", function()
-            menu.trigger_commands("scripthost")
-            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 14, 3, 1})
-            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 167, 3, 1})
-            util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, 257, 3, 1})
-        end)
-    end
-
-    local sekicks = menu.list(kicks, "Kickeos Por Scripts", {}, "")
-
-    menu.action(sekicks, "Script kick v1", {}, "", function()
-        util.trigger_script_event(1 << player_id, {1104117595, player_id, 1, 0, 2, math.random(14, 267), 3, 1})
-        util.trigger_script_event(1 << player_id, {697566862, player_id, 0x4, -1, 1, 1, 1})
-        util.trigger_script_event(1 << player_id, {1268038438, player_id, memory.script_global(2657589 + 1 + (player_id * 466) + 321 + 8)}) 
-        util.trigger_script_event(1 << player_id, {915462795, players.user(), memory.read_int(memory.script_global(0x1CE15F + 1 + (player_id * 0x257) + 0x1FE))})
-        util.trigger_script_event(1 << player_id, {697566862, player_id, 0x4, -1, 1, 1, 1})
-        util.trigger_script_event(1 << player_id, {1268038438, player_id, memory.script_global(2657589 + 1 + (player_id * 466) + 321 + 8)})
-        util.trigger_script_event(1 << player_id, {915462795, players.user(), memory.read_int(memory.script_global(1894573 + 1 + (player_id * 608) + 510))})
-        menu.trigger_commands("givesh" .. players.get_name(player_id))
-    end)
-
-    local especialev = menu.list(malicious, "Eventos Especiales", {}, "Eventos descubiertos recientemente. \nNo abusar de ellos.")
-
-    menu.action(especialev, "Remote ILS 'Test'", {}, "(Infinite Loading Screen)", function()
-        menu.trigger_commands("scripthost")
-        for i = 1, 6 do
-            util.trigger_script_event(1 << player_id, {891653640, player_id, math.random(1, 32), 32, NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
-        end
-    end)
-
-    menu.action(especialev, "Remote ST 'Test'", {}, "(Re-Start Tutorial)", function()
-        menu.trigger_commands("scripthost")
-        local int = memory.read_int(memory.script_global(1894573 + 1 + (player_id * 608) + 510))
-        util.trigger_script_event(1 << player_id, {-95341040, players.user(), 20, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, int})
-        util.trigger_script_event(1 << player_id, {1742713914, players.user(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
-    end)
-
-    menu.action(especialev, "Remote ARC 'Test'", {}, "(Start arcade mini game)", function()
-        menu.trigger_commands("scripthost")
-        util.trigger_script_event(1 << player_id, {-95341040, players.user(), player_id, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, int})
-        util.trigger_script_event(1 << player_id, {1742713914, players.user(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
-    end)
-
-    menu.action(especialev, "Remote 1v1 'Test'", {}, "", function()
-        util.trigger_script_event(1 << player_id, {-95341040, players.user(), 197, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, int})
-        util.trigger_script_event(1 << player_id, {1742713914, players.user(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
-    end)
-    
-    menu.action(especialev, "Remote TE 'Test'", {}, "(Transaction Error)", function()
-        for i = 1, 8 do
-            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 403))})
-        end
-    end)
-
-    menu.action(especialev, "Remote GMODE 'Test'", {}, "", function()
-        for i = 1, 8 do
-            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 2))})
-        end
-    end)
-
-    menu.action(especialev, "Remote Payout 'Test'", {}, "(Will give them the GoodSport payout)", function()
-        for i = 1, 2 do
-            util.trigger_script_event(1 << player_id, {-957260626, player_id, memory.script_global(1669394 + 1 + (player_id * 85))})
-        end
-    end)
-
+    --local especialev = menu.list(malicious, "Eventos Especiales", {}, "Eventos descubiertos recientemente. \nNo abusar de ellos.")
 
     local scriptev = menu.list(malicious, "Errapes", {}, "Eventos causados por scripts. \nAquellos con mod menu de paga podran detectarte.")
 
@@ -2656,24 +2531,7 @@ players.on_join(function(player_id)
     end)
 
     menu.action(friendly, "Darles Nivel", {}, "Les subira el nivel de gta. \nPosible crash.", function()
-        util.trigger_script_event(1 << player_id, {1839167950, player_id, 5, 0, 1, 1, 1})
-        for i = 0, 9 do
-            util.trigger_script_event(1 << player_id, {1839167950, player_id, 0, i, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {1839167950, player_id, 1, i, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {1839167950, player_id, 2, i, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {1839167950, player_id, 10, i, 1, 1, 1})
-        end
-        for i = 0, 1 do
-            util.trigger_script_event(1 << player_id, {1839167950, player_id, 2, i, 1, 1, 1})
-            util.trigger_script_event(1 << player_id, {1839167950, player_id, 6, i, 1, 1, 1})
-        end
-        for i = 0, 19 do
-            util.trigger_script_event(1 << player_id, {1839167950, player_id, 4, i, 1, 1, 1})
-        end
-        for i = 0, 99 do
-            util.trigger_script_event(1 << player_id, {1839167950, player_id, 9, i, 1, 1, 1})
-            util.yield()
-        end
+        menu.trigger_commands("givecollectibles" .. players.get_name(player_id))
     end)
 
     menu.action(friendly, "Ganar daño criminal", {}, "Haslos ganar el desafio siempre", function()
@@ -2791,7 +2649,6 @@ players.on_join(function(player_id)
     local desv = menu.list(vehicle, "Deshabilitar vehiculos.", {}, "")
 
     menu.action(desv, "Deshabilitar Vehiculo", {}, "Es mejor que el de stand", function(toggle)
-        --local pos = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(p, false)
         if (PED.IS_PED_IN_ANY_VEHICLE(p)) then
             TASK.CLEAR_PED_TASKS_IMMEDIATELY(p)
@@ -2799,7 +2656,6 @@ players.on_join(function(player_id)
             local veh2 = PED.GET_VEHICLE_PED_IS_TRYING_TO_ENTER(p)
             entities.delete_by_handle(veh2)
         end
-        --ENTITY.SET_ENTITY_COORDS(ped, pos.x, pos.y, pos.z, 1, false)
     end)
 
     menu.action(desv, "Deshabilitar Vehiculo V2", {}, "Inbloqueable por stand", function(toggle)
@@ -2907,23 +2763,11 @@ players.on_join(function(player_id)
     local tps = menu.list(sevents, "Tp's", {}, "Eventos de tp a jugadores.") 
     
     menu.action(tps, "Cayo Perico", {}, "Bloqueado por casi todos los menus.", function()
-        util.trigger_script_event(1 << player_id, {330622597, player_id, 0, 0, 3, 1})
+        util.trigger_script_event(1 << player_id, {1669592503, player_id, 0, 0, 3, 1})
     end)
 
     menu.action(tps, "Cayo Perico v2", {}, "Bloqueado por casi todos los menus.", function()
-        util.trigger_script_event(1 << player_id, {-369672308, player_id, 1})
-    end)
-
-    menu.action(tps, "Golpe Listo", {}, "Bloqueado por casi todos los menus.", function()
-        util.trigger_script_event(1 << player_id, {-702866045, players.user(), player_id, -1, 1, 1, 0, 1, 0}) 
-    end) 
-
-    menu.action(tps, "Cayo Perico SC", {}, "Bloqueado por casi todos los menus.", function()
-        util.trigger_script_event(1 << player_id, {330622597, player_id, 0, 0, 4, 1})
-    end)
-
-    menu.action(tps, "Kickeado De Cayo", {}, "Bloqueado por casi todos los menus.", function()
-        util.trigger_script_event(1 << player_id, {330622597, player_id, 0, 0, 4, 0})
+        util.trigger_script_event(1 << player_id, {1669592503, player_id, 0, 0, 4, 0})
     end)
 
     local fuckrs = menu.list(sevents, "Rompedores", {}, "Eventos que les jodera.")
@@ -3025,13 +2869,6 @@ players.on_join(function(player_id)
 end)
 
 cleansense = menu.list(world, "Opciones De Limpiar", {}, "")
-
---[[
-menu.action(cleansense, "Limpiar Area", {"rcleararea"}, "Limpia todo en el area", function(on_click)
-    clear_area(clear_radius)
-    util.toast('Area limpia:3')
-end)
-]]
 
 menu.action(cleansense, "Limpiar Mundo", {"rclearworld"}, "Limpia literalmente todo lo del area incluyendo peds, coches, objetos, bools etc.", function(on_click)
     local coords = ENTITY.GET_ENTITY_COORDS(players.user_ped())
@@ -3298,11 +3135,14 @@ menu.toggle_loop(selfc, "Arma Termica", {}, "Todas tus armas tendran vision term
 end)
 
 menu.toggle_loop(selfc, "Respawn Rapido", {}, "Quitara la pantalla de carga.", function()
-    local gwobaw = memory.script_global(2672505 + 1685 + 756)
+    local gwobaw = memory.script_global(2672524 + 1685 + 756)
     if PED.IS_PED_DEAD_OR_DYING(ryze.pwayerp) then
         GRAPHICS.ANIMPOSTFX_STOP_ALL()
         memory.write_int(gwobaw, memory.read_int(gwobaw) | 1 << 1)
     end
+end, function()
+    local gwobaw = memory.script_global(2672524 + 1685 + 756)
+    memory.write_int(gwobaw, memory.read_int(gwobaw) & ~(1 << 1)) 
 end)
 
 local s_forcefield_range = 25
@@ -3382,14 +3222,6 @@ menu.toggle_loop(online, "Adicto SH", {}, "Te vuelves adicto al script host.", f
     end
 end)
 
-menu.toggle(online, "Revelar Jugadores 'Test'", {}, "Forzara a los jugadores a salir en el radar.", function(on)
-    if on then
-        util.trigger_script_event(1 << players.user(), {2793044, players.user(), 1})
-    else
-        util.trigger_script_event(1 << players.user(), {2793044, players.user(), 0})
-    end
-end)
-
 menu.toggle(online, "Anti-Chat", {}, "Hace que no salga cuando estas escribiendo el 'icono' encima de ti", function()
 	if on then
 		menu.trigger_commands("hidetyping on")
@@ -3434,7 +3266,7 @@ end)
 menu.toggle_loop(aimkrma, "Quitarle el godmode", {"JSgodAimKarma"}, "Si el jugador que te apunta tiene GodMode y un menu meirda, se lo quitaras.", function()
     if ryze.playerIsTargetingEntity(PLAYER.PLAYER_PED_ID()) and karma[PLAYER.PLAYER_PED_ID()] and players.is_godmode(karma[PLAYER.PLAYER_PED_ID()].player_id) then
         local karmaPid = karma[PLAYER.PLAYER_PED_ID()].player_id
-        util.trigger_script_event(1 << karmaPid, {801199324, karmaPid, 869796886})
+        util.trigger_script_event(1 << karmaPid, {800157557, karmaPid, 225624744, math.random(0, 9999)})
     end
 end)
 
@@ -3454,8 +3286,9 @@ menu.slider(maxps, "Espectadores Max", {}, "Espectadores maximos\nsolo funciona 
     end
 end)
 
-local servicios = menu.list(online, "Servicios", {}, "")
+--local servicios = menu.list(online, "Servicios", {}, "")
 
+--[[
 menu.action(servicios, "Pedir Heli", {}, "Pide un helicopter de lujo a tu ubicacion", function(on_toggle)
     if NETWORK.NETWORK_IS_SESSION_ACTIVE() and
 	not NETWORK.NETWORK_IS_SCRIPT_ACTIVE("am_heli_taxi", -1, true, 0) then
@@ -3463,6 +3296,7 @@ menu.action(servicios, "Pedir Heli", {}, "Pide un helicopter de lujo a tu ubicac
         ryze.int(2793046 + 895, 1)
 	end
 end)
+]]
 
 local warnlists = false
 recovery = menu.list(online, "Recovery", {}, "", function()
@@ -3476,55 +3310,6 @@ recovery = menu.list(online, "Recovery", {}, "", function()
     end)
 end)
 
-
---[[
-local coleccionables = menu.list(recovery, "Coleccionables 'RISKY'", {}, "")
-
-menu.click_slider(coleccionables, "Cintas", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0x0, i, 1, 1, 1})
-end)
-
-menu.click_slider(coleccionables, "Hidden Caches", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0x1, i, 1, 1, 1})
-end)
-
-menu.click_slider(coleccionables, "Cofres/Tesoro", {""}, "", 0, 1, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0x2, i, 1, 1, 1})
-end)
-
-menu.click_slider(coleccionables, "Antenas Radio", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0x3, i, 1, 1, 1})
-end)
-
-menu.click_slider(coleccionables, "USBs", {""}, "", 0, 19, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0x4, i, 1, 1, 1})
-end)
-
-menu.action(coleccionables, "Naufragios", {""}, "", function()
-    util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0x5, 0, 1, 1, 1})
-end)
-
-menu.click_slider(coleccionables, "Enterrados", {""}, "", 0, 1, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0x6, i, 1, 1, 1})
-end)
-
-menu.action(coleccionables, "Camisetas Halloween", {""}, "", function()
-    util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0x7, 1, 1, 1, 1})
-end)
-
-menu.click_slider(coleccionables, "Linternas", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0x8, i, 1, 1, 1})
-end)
-
-menu.click_slider(coleccionables, "Productos organicos lamar", {""}, "", 0, 99, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0x9, i, 1, 1, 1})
-end)
-
-menu.click_slider(coleccionables, "Junk Energy Vuelo Libre", {""}, "", 0, 9, 0, 1, function(i)
-    util.trigger_script_event(1 << players.user(), {1839167950, players.user(), 0xA, i, 1, 1, 1})
-end)
-]]
-
 local acidlab = menu.list(recovery, "Acid Lab 'Test'", {}, "Acido owo.")
 
 --[[
@@ -3533,6 +3318,7 @@ menu.click_slider(acidlab, "Capacidad De Producto", {}, "", 0, 1000, 160, 1, fun
 end)
 ]]
 
+--[[
 menu.toggle(acidlab, "Suministros Gratis", {}, "", function()
     memory.write_int(memory.script_global(285557), 0)
 end, function()
@@ -3549,6 +3335,7 @@ menu.action(acidlab, "Llenar Suministros", {}, "", function()
     local time = NETWORK.GET_CLOUD_TIME_AS_INT() - memory.read_int(memory.script_global(262145 + 18954))
     memory.write_int(memory.script_global(1648637 + 1 + 6), time)
 end)
+]]
 
 menu.toggle_loop(acidlab, "Saltar Cooldown De Dax", {}, "", function() -- thx icedoomfist and pwisuhm my dad
     STATS.STAT_SET_INT(util.joaat("MP"..util.get_char_slot().."_XM22JUGGALOWORKCDTIMER"), -1, true)
