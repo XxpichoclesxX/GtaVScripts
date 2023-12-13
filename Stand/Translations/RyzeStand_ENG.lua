@@ -59,7 +59,6 @@ local clean_count = 0
 
 local wallbr = util.joaat("bkr_prop_biker_bblock_mdm3")
 local floorbr = util.joaat("bkr_prop_biker_landing_zone_01")
-local launch_vehicle = {"launch upwards", "launch forward", "launch backwards", "launch downwards", "Catapult"}
 local invites = {"Yacht", "Office", "Clubhouse", "Office Garage", "Custom Auto Shop", "Apartment"}
 local style_names = {"Normal", "Semi-Rushed", "Reverse", "Ignore Lights", "Avoid Traffic", "Avoid Traffic Extremely", "Sometimes Overtake Traffic"}
 local drivingStyles = {786603, 1074528293, 8388614, 1076, 2883621, 786468, 262144, 786469, 512, 5, 6}
@@ -882,7 +881,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.list_action(glitchiar, "Yeet a player's vehicle", {}, "", launch_vehicle, function(index, value)
+    menu.list_action(glitchiar, "Yeet a player's vehicle", {}, "", {{1, "launch upwards"}, {2, "launch forward"}, {3, "launch backwards"}, {4, "launch downwards"}, {5, "Catapult"}}, function(index, value)
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(ped, false)
         if not PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
