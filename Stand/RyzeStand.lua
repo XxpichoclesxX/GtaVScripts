@@ -60,9 +60,6 @@ local clean_count = 0
 
 local wallbr = util.joaat("bkr_prop_biker_bblock_mdm3")
 local floorbr = util.joaat("bkr_prop_biker_landing_zone_01")
-local launch_vehicle = {"Lanzar Arriba", "Lanzar Adelante", "Lanzar Atras", "Lanzar Abajo", "Catapulta"}
-local invites = {"Yacht", "Office", "Clubhouse", "Office Garage", "Custom Auto Shop", "Apartment"}
-local style_names = {"Normal", "Semi-Rushed", "Reverse", "Ignore Lights", "Avoid Traffic", "Avoid Traffic Extremely", "Sometimes Overtake Traffic"}
 local drivingStyles = {786603, 1074528293, 8388614, 1076, 2883621, 786468, 262144, 786469, 512, 5, 6}
 local interior_stuff = {0, 233985, 169473, 169729, 169985, 170241, 177665, 177409, 185089, 184833, 184577, 163585, 167425, 167169}
 
@@ -897,7 +894,7 @@ players.on_join(function(player_id)
         end
     end)
 
-    menu.list_action(glitchiar, "Lanzar Coche De Jugador", {}, "", launch_vehicle, function(index, value)
+    menu.list_action(glitchiar, "Lanzar Coche De Jugador", {}, "", {{1, "Lanzar Arriba"}, {2, "Lanzar Adelante"}, {3, "Lanzar Atras"}, {4, "Lanzar Abajo"}, {5, "Catapulta"}}, function(index, value)
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
         local veh = PED.GET_VEHICLE_PED_IS_IN(ped, false)
         if not PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
@@ -1026,40 +1023,9 @@ players.on_join(function(player_id)
 
     local inf_loading = menu.list(trolling, "Pantalla de carga infinita", {}, "")
     menu.action(inf_loading, "Teleport a MC", {}, "", function()
-        local xx = NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id)
-        util.trigger_script_event(1 << player_id, {-1604421397, players.user(), 1, 4, xx, xx, xx, xx, 1, 1})
+        local handle = NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(player_id)
+        util.trigger_script_event(1 << player_id, {-1604421397, players.user(), 1, 4, handle, handle, handle, handle, 1, 1})
     end)
-        
-    --[[
-    menu.list_action(inf_loading, "Telefono corrupto", {}, "Click para seleccionar un estilo", invites, function(index, name)
-        switch name do
-            case 1:
-                util.trigger_script_event(1 << player_id, {36077543, player_id, 1})
-                util.toast("Invitacion a yate")
-            break
-            case 2:
-                util.trigger_script_event(1 << player_id, {36077543, player_id, 2})
-                util.toast("Invitacion a oficina")
-            break
-            case 3:
-                util.trigger_script_event(1 << player_id, {36077543, player_id, 3})
-                util.toast("Invitacion al club")
-            break
-            case 4:
-                util.trigger_script_event(1 << player_id, {36077543, player_id, 4})
-                util.toast("Invitacion al garage de oficina")
-            break
-            case 5:
-                util.trigger_script_event(1 << player_id, {36077543, player_id, 5})
-                util.toast("Invitacion a los santos cs")
-            break
-            case 6:
-                util.trigger_script_event(1 << player_id, {36077543, player_id, 6})
-                util.toast("Invitacion a apartamento")
-            break
-        end
-    end)
-    ]]
 
     menu.divider(trolling, "Otros")
 
@@ -1297,12 +1263,6 @@ players.on_join(function(player_id)
         ENTITY.SET_ENTITY_INVINCIBLE(kur, true)
         newRope = PHYSICS.ADD_ROPE(pos.x, pos.y, pos.z, 0, 0, 0, 1, 1, 0.0000000000000000000000000000000000001, 1, 1, true, true, true, 1.0, true, "Center")
         PHYSICS.ATTACH_ENTITIES_TO_ROPE(newRope, cargobob, kur, cargobob_pos.x, cargobob_pos.y, cargobob_pos.z, kur_pos.x, kur_pos.y, kur_pos.z, 2, 0, 0, "Center", "Center")
-    end)
-
-    menu.action(sescrashes, "Crashear Sesion V3", {}, "", function()
-        for i = 1, 10 do
-            util.trigger_script_event(1 << player_id, {243072129, player_id, 1, player_id, 0, 1, 0})  
-        end
     end)
 
     menu.action(sescrashes, "5G Para Sesion", {}, "5G?", function()
@@ -2195,14 +2155,14 @@ players.on_join(function(player_id)
     end)    
 
     player_toggle_loop(antimodder, player_id, "Remover godmode", {}, "Lo blokean muchos", function()
-        util.trigger_script_event(1 << player_id, {-1428749433, player_id, 448051697, math.random(0, 9999)})
+        util.trigger_script_event(1 << player_id, {800157557, players.user(), 225624744, math.random(0, 9999)})
     end)
 
     player_toggle_loop(antimodder, player_id, "Arma anti-godmode", {}, "", function()
         for _, player_id in ipairs (players.list(true, true, true)) do
             local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
             if PLAYER.IS_PLAYER_FREE_AIMING_AT_ENTITY(players.user(), ped) and players.is_godmode(player_id) then
-                util.trigger_script_event(1 << player_id, {-1428749433, player_id, 448051697, math.random(0, 9999)})
+                util.trigger_script_event(1 << player_id, {800157557, players.user(), 225624744, math.random(0, 9999)})
             end
         end
     end)
