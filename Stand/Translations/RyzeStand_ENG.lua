@@ -11,7 +11,7 @@ util.require_natives(1676318796)
 util.show_corner_help("~p~Loaded ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Welcome ".. "~r~" .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() ..  " ~s~\n" .. "Have a good game with the script :)")
 
 local response = false
-local localVer = 3.5
+local localVer = 3.6
 local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
@@ -2086,14 +2086,14 @@ players.on_join(function(player_id)
     end)   
 
     player_toggle_loop(antimodder, player_id, "Remove godmode", {}, "A of menus block it", function()
-        util.trigger_script_event(1 << player_id, {-1428749433, player_id, 448051697, math.random(0, 9999)})
+        util.trigger_script_event(1 << player_id, {800157557, player_id, 448051697, math.random(0, 9999)})
     end)
 
     player_toggle_loop(antimodder, player_id, "Anti-godmode gun", {}, "", function()
         for _, player_id in ipairs (players.list(true, true, true)) do
             local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id)
             if PLAYER.IS_PLAYER_FREE_AIMING_AT_ENTITY(players.user(), ped) and players.is_godmode(player_id) then
-                util.trigger_script_event(1 << player_id, {-1428749433, player_id, 448051697, math.random(0, 9999)})
+                util.trigger_script_event(1 << player_id, {800157557, player_id, 448051697, math.random(0, 9999)})
             end
         end
     end)
@@ -3156,7 +3156,7 @@ end)
 menu.toggle_loop(aimkrma, "Disable their godmode", {"JSgodAimKarma"}, "The player that aims at you will lose their godmode if they have one (and if they have a shitty menu).", function()
     if ryze.playerIsTargetingEntity(PLAYER.PLAYER_PED_ID()) and karma[PLAYER.PLAYER_PED_ID()] and players.is_godmode(karma[PLAYER.PLAYER_PED_ID()].player_id) then
         local karmaPid = karma[PLAYER.PLAYER_PED_ID()].player_id
-        util.trigger_script_event(1 << karmaPid, {801199324, karmaPid, 869796886})
+        util.trigger_script_event(1 << karmaPid, {800157557, karmaPid, 869796886})
     end
 end)
 
