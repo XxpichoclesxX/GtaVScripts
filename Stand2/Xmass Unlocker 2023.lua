@@ -20,7 +20,7 @@ end)
 menu.divider(yeti, "All yeti clues")
 
 for idx, coords in locations do
-    yeti:action("Clues " .. idx, {}, "Teleport to the yeti clues", function()
+    yeti:action("Clue " .. idx, {}, "Teleport to the yeti clues. \n(Clue number 6 is for the yeti deffault spawn).", function()
         util.teleport_2d(coords[1], coords[2])
     end)
 end
