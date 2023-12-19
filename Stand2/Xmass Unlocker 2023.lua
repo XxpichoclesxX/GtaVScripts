@@ -42,6 +42,14 @@ menu.action(menu.my_root(), "Unlock New Robery Mission", {}, "Will unlock newest
     util.toast("Should be already on the mission selector in the yunk yard.")
 end)
 
+menu.action(menu.my_root(), "New Skins In GunVan", {}, "Will unlock the newest skins. \n Testing.", function()
+    memory.write_byte(memory.script_global(262145 + 34365, 0), 1)  
+    memory.write_byte(memory.script_global(262145 + 34328 + 9, -1716189206), 1)  
+    memory.write_byte(memory.script_global(262145 + 34328 + 10, -1786099057), 1)  
+    memory.write_byte(memory.script_global(262145 + 34328), 1)  
+    util.toast("Should have already the skins.")
+end)
+
 menu.divider(menu.my_root(), "Unlock All (Might be risky)")
 
 menu.action(menu.my_root(), "Unlock All", {}, "Will bassicly unlock everything on the new DLC.", function()
