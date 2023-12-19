@@ -1,4 +1,3 @@
-
 menu.divider(menu.my_root(), "Yeti Event")
 local yeti = menu.list(menu.my_root(), "Yeti", {}, "Desbloqueara el yeti.")
 local locations = {
@@ -35,6 +34,12 @@ end)
 menu.action(menu.my_root(), "Unlock New Mission", {}, "Will unlock newest mission from the DLC", function()
     memory.write_byte(memory.script_global(262145 + 36058), 1)  
     memory.write_byte(memory.script_global(262145 + 36058), 1)  
+end)
+
+menu.action(menu.my_root(), "Unlock New Robery Mission", {}, "Will unlock newest rob mission from the DLC. \n Testing.", function()
+    memory.write_byte(memory.script_global(262145 + 34108 + 1), 1)  
+    memory.write_byte(memory.script_global(262145 + 34108), 1)  
+    util.toast("Should be already on the mission selector in the yunk yard.")
 end)
 
 menu.divider(menu.my_root(), "Unlock All (Might be risky)")
