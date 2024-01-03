@@ -45,6 +45,3 @@ No ETA for big updates also because i don't know actually if im going to be able
 ## About
 -  Probably Stand script is going to take a little bit more than kiddions, by now, kiddions script is in stand by me <3
 -  By the way to anyone who ask's about the stand script, is not entire mine, there is actually in credits every single person who i taked code from and who helped me with this.
-## Last Ryze Kiddions update: 09/07/2023
-## Last Ryze Stand update: 13/06/2023
-## Last Ryze FivemM update: 17/03/2023
