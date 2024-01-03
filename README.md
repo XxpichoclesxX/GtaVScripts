@@ -29,15 +29,14 @@ Im also thinking on some extra features, like more protections and trolling opti
 
 - Meaning Emojis:
 ✅ Undetected
-🚧 Working on
+🟨 Most Undetected
 🔻 Detected
 - Status of the Menu:
  * FiveM Undetected: Check redENGINE Status 
  * ChocoHax Status: ✅
  * GodZilla Status: ✅
- * FiveGuard Status: 🚧
- * FiveEye Status: 🚧
-
+ * FiveGuard Status: 🟨
+ * FiveEye Status: 🟨
 I'm aware and im working on anticheat detections, just becarefull with "SafeMode" this should make the Menu undetected for majority of servers.
 --------------------------------------------------------------------------------------------------
 No ETA for big updates also because i don't know actually if im going to be able to continue this script (boths) because i have a life and i need to study. This is a helpfull and fun project for everyone who wants to use it, is free and you can use my script has a template.
