@@ -11,7 +11,7 @@ util.require_natives(1676318796)
 util.show_corner_help("~p~Loaded ~y~" .. SCRIPT_NAME .. " ~s~\n" .. "Welcome ".. "~r~" .. SOCIALCLUB.SC_ACCOUNT_INFO_GET_NICKNAME() ..  " ~s~\n" .. "Have a good game with the script :)")
 
 local response = false
-local localVer = 3.6
+local localVer = 3.61
 local localKs = false
 async_http.init("raw.githubusercontent.com", "/XxpichoclesxX/GtaVScripts/Ryze-Scripts/Stand/RyzeScriptVersion.lua", function(output)
     currentVer = tonumber(output)
@@ -938,16 +938,15 @@ players.on_join(function(player_id)
     local glitch_player_list = menu.list(glitchiar, "Glitch player", {"glitchdelay"}, "")
     local object_stuff = {
         names = {
-            "Ferris Wheel",
-            "UFO",
-            "Cement Mixer",
-            "Scaffolding",
-            "Garage Door",
-            "Big Bowling Ball",
-            "Big Soccer Ball",
-            "Big Orange Ball",
-            "Stunt Ramp",
-
+            {1, "Ferris Wheel"},
+            {2, "UFO"},
+            {3, "Cement Mixer"},
+            {4, "Scaffolding"},
+            {5, "Garage Door"},
+            {6, "Big Bowling Ball"},
+            {7, "Big Soccer Ball"},
+            {8, "Big Orange Ball"},
+            {9, "Stunt Ramp"},
         },
         objects = {
             "prop_ld_ferris_wheel",
