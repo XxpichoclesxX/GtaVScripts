@@ -951,16 +951,15 @@ players.on_join(function(player_id)
     local glitch_player_list = menu.list(glitchiar, "Glitchear Jugador", {"glitchdelay"}, "")
     local object_stuff = {
         names = {
-            "Ferris Wheel",
-            "UFO",
-            "Cement Mixer",
-            "Scaffolding",
-            "Garage Door",
-            "Big Bowling Ball",
-            "Big Soccer Ball",
-            "Big Orange Ball",
-            "Stunt Ramp",
-
+            {1, "Ferris Wheel"},
+            {2, "UFO"},
+            {3, "Cement Mixer"},
+            {4, "Scaffolding"},
+            {5, "Garage Door"},
+            {6, "Big Bowling Ball"},
+            {7, "Big Soccer Ball"},
+            {8, "Big Orange Ball"},
+            {9, "Stunt Ramp"},
         },
         objects = {
             "prop_ld_ferris_wheel",
@@ -3700,6 +3699,47 @@ menu.toggle_loop(vehicles, "Luces Indicadoras", {}, "", function()
         else
             VEHICLE.SET_VEHICLE_INDICATOR_LIGHTS(vehicle, 0, false)
             VEHICLE.SET_VEHICLE_INDICATOR_LIGHTS(vehicle, 1, false)
+        end
+    end
+end)
+
+counterflares = menu.list(vehicles, "Bengalas", {""}, "")
+
+player_cur_car = 0
+menu.toggle_loop(counterflares, "Forzar Bengalas Realistas", {}, "Spawnea las bengalas realistas afuerza sin importar el avion.", function()    
+    if PAD.IS_CONTROL_PRESSED(46, 46) then
+        if PED.IS_PED_IN_ANY_VEHICLE(players.user_ped(), false) then
+            local vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped())
+            local class = VEHICLE.GET_VEHICLE_CLASS(vehicle)
+            if class == 16 then
+                --util.toast(class)
+                for i = 0, 10, 1 do 
+                    local target = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(players.user_ped(), 0, -2, -1)
+                    local target2 = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(players.user_ped(), 0, -20, -15)
+                    MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target['x'], target['y'], target['z'], target2['x'], target2['y'], target2['z'], 100.0, true, 1198879012, players.user_ped(), true, false, 25.0)
+                    util.yield(200)
+                end
+                util.toast("Bengalas Recargando...")
+                util.yield(2000)
+                util.toast("Bengalas Listas")
+            elseif class == 15 then
+                for i = 0, 10, 1 do 
+                    local target = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(players.user_ped(), 0, -2, -1)
+                    local target2 = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(players.user_ped(), -20, -20, 2)
+                    MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target['x'], target['y'], target['z'], target2['x'], target2['y'], target2['z'], 100.0, true, 1198879012, players.user_ped(), true, false, 25.0)
+                    util.yield(220)
+                    local target3 = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(players.user_ped(), 0, -2, -1)
+                    local target4 = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(players.user_ped(), 20, -12, 2)
+                    MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(target3['x'], target3['y'], target3['z'], target4['x'], target4['y'], target4['z'], 100.0, true, 1198879012, players.user_ped(), true, false, 25.0)
+                end
+                util.toast("Bengalas Recargando...")
+                util.yield(2000)
+                util.toast("Bengalas Listas")
+            else
+                util.toast("El vehiculo necesita ser un avion o helicoptero.")
+            end
+        else
+            util.toast("Sube tus nalgas a un carro D:")
         end
     end
 end)
